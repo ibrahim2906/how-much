@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Much - Life Tracker</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --bg-light: #f3f4f6;
+            --bg-dark: #111827;
+            --card-light: #ffffff;
+            --card-dark: #1f2937;
+            --text-light: #1f2937;
+            --text-dark: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Arabic Font Override */
+        body.rtl {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple span {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+        }
+
+        /* Drag and Drop */
+        .dragging {
+            opacity: 0.5;
+            border: 2px dashed var(--primary);
+        }
+
+        /* Canvas Container */
+        #drawing-modal {
+            z-index: 5000;
+        }
+        canvas {
+            touch-action: none; /* Prevent scrolling while drawing */
+            background-color: white;
+            border-radius: 0.5rem;
+            cursor: crosshair;
+        }
+
+        /* Navigation Active State */
+        .nav-item.active {
+            color: var(--primary);
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+        .nav-item.active i {
+            transform: scale(1.1);
+        }
+        
+        /* AI Gradient Text */
+        .ai-text {
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        
+        .ai-btn {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            border: none;
+        }
+        .ai-btn:hover {
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Chat Bubble */
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            word-wrap: break-word;
+        }
+        .chat-user {
+            background-color: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-ai {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark .chat-ai {
+            background-color: var(--card-dark);
+            color: var(--text-dark);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .chat-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+        .dark .chat-error {
+            background-color: #450a0a;
+            color: #fca5a5;
+            border: 1px solid #7f1d1d;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .loader-dark {
+            border: 3px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #6366f1;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <i class="fas fa-cubes text-6xl mb-4 animate-bounce"></i>
+        <h1 class="text-3xl font-bold">How Much</h1>
+        <p class="text-sm opacity-80 mt-2">Track your life progress</p>
+    </div>
+
+    <!-- Auth / Login Screen -->
+    <div id="login-screen" class="hidden fixed inset-0 z-40 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
+        <div class="max-w-md w-full glass p-8 rounded-2xl shadow-2xl text-center transform transition-all hover:scale-105 duration-300">
+            <div class="w-20 h-20 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/50">
+                <i class="fas fa-chart-pie text-3xl text-white"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-2" data-i18n="welcome">Welcome Back</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-8" data-i18n="loginSubtitle">Sign in to sync your data across devices.</p>
+            
+            <button onclick="handleGoogleLogin()" class="ripple w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-sm">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-6 h-6" alt="Google">
+                <span data-i18n="continueGoogle">Continue with Google</span>
+            </button>
+            
+            <div class="mt-6">
+                <button onclick="enterAsGuest()" class="text-sm text-indigo-500 hover:underline" data-i18n="continueGuest">Continue as Guest (Offline)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Layout -->
+    <div id="app-container" class="hidden flex h-screen overflow-hidden relative">
+        
+        <!-- Desktop Sidebar -->
+        <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col glass border-r border-gray-200 dark:border-gray-800 z-20 transition-all duration-300 ease-in-out overflow-hidden">
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+                    <i class="fas fa-cubes text-indigo-500 text-2xl"></i>
+                    <h1 class="text-xl font-bold tracking-tight">How Much</h1>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+                <button onclick="showPage('courses')" class="nav-item w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 text-left whitespace-nowrap overflow-hidden">
+                    <i class="fas fa-graduation-cap w-6 text-center"></i>
+                    <span data-i18n="courses">Courses</span>
+                </button>
+                <button onclick="showPage('tasks')" class="nav-item w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 text-left whitespace-nowrap overflow-hidden">
+                    <i class="fas fa-tasks w-6 text-center"></i>
+                    <span data-i18n="tasks">Tasks</span>
+                </button>
+                <button onclick="showPage('books')" class="nav-item w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 text-left whitespace-nowrap overflow-hidden">
+                    <i class="fas fa-book-open w-6 text-center"></i>
+                    <span data-i18n="books">Books</span>
+                </button>
+                <button onclick="showPage('ai')" class="nav-item w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 text-left whitespace-nowrap overflow-hidden">
+                    <i class="fas fa-robot w-6 text-center text-pink-500"></i>
+                    <span data-i18n="askAi" class="ai-text">Ask AI</span>
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <button onclick="showPage('settings')" class="nav-item w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 text-left whitespace-nowrap overflow-hidden">
+                    <i class="fas fa-cog w-6 text-center"></i>
+                    <span data-i18n="settings">Settings</span>
+                </button>
+                <div id="user-profile-desktop" class="mt-4 flex items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 whitespace-nowrap overflow-hidden">
+                    <!-- User info injected here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col relative h-full overflow-hidden">
+            
+            <!-- Desktop Show Sidebar Button -->
+            <button id="show-sidebar-btn" onclick="toggleSidebar()" class="hidden absolute top-4 left-4 z-20 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md text-gray-500 hover:text-indigo-500 transition-all">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Mobile Header -->
+            <header class="md:hidden h-16 glass flex items-center justify-between px-4 z-30 shadow-sm shrink-0">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-cubes text-indigo-500 text-xl"></i>
+                    <h1 class="text-lg font-bold">How Much</h1>
+                </div>
+                <button onclick="showPage('settings')" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </header>
+
+            <!-- Content Area -->
+            <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 scroll-smooth relative">
+                
+                <!-- COURSES PAGE -->
+                <section id="page-courses" class="page-section hidden space-y-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold" data-i18n="courses">Courses</h2>
+                            <p class="text-sm text-gray-500" data-i18n="trackLearning">Track your learning journey</p>
+                        </div>
+                        <button onclick="openModal('course-modal')" class="ripple bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-lg shadow-indigo-500/30 flex items-center gap-2 transition-transform active:scale-95">
+                            <i class="fas fa-plus"></i> <span class="hidden sm:inline" data-i18n="add">Add</span>
+                        </button>
+                    </div>
+                    <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered via JS -->
+                    </div>
+                </section>
+
+                <!-- TASKS PAGE -->
+                <section id="page-tasks" class="page-section hidden space-y-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold" data-i18n="tasks">Tasks</h2>
+                            <p class="text-sm text-gray-500" data-i18n="manageTasks">Drag to reorder & draw details</p>
+                        </div>
+                        <button onclick="openModal('task-modal')" class="ripple bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl shadow-lg shadow-purple-500/30 flex items-center gap-2 transition-transform active:scale-95">
+                            <i class="fas fa-plus"></i> <span class="hidden sm:inline" data-i18n="add">Add</span>
+                        </button>
+                    </div>
+                    <div id="tasks-list" class="space-y-3">
+                        <!-- Rendered via JS -->
+                    </div>
+                </section>
+
+                <!-- BOOKS PAGE -->
+                <section id="page-books" class="page-section hidden space-y-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold" data-i18n="books">Books</h2>
+                            <p class="text-sm text-gray-500" data-i18n="trackReading">Pages read & daily streaks</p>
+                        </div>
+                        <button onclick="openModal('book-modal')" class="ripple bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-lg shadow-emerald-500/30 flex items-center gap-2 transition-transform active:scale-95">
+                            <i class="fas fa-plus"></i> <span class="hidden sm:inline" data-i18n="add">Add</span>
+                        </button>
+                    </div>
+                    <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Rendered via JS -->
+                    </div>
+                </section>
+
+                <!-- AI PAGE -->
+                <section id="page-ai" class="page-section hidden flex flex-col h-full max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <div>
+                            <h2 class="text-2xl font-bold flex items-center gap-2">
+                                <span class="ai-text">AI Assistant</span> <i class="fas fa-sparkles text-yellow-400"></i>
+                            </h2>
+                            <p class="text-sm text-gray-500">Ask anything about your studies, tasks, or books.</p>
+                        </div>
+                        <button onclick="clearChat()" class="text-xs text-gray-400 hover:text-red-500 transition-colors">
+                            <i class="fas fa-trash"></i> Clear Chat
+                        </button>
+                    </div>
+                    
+                    <!-- Chat History -->
+                    <div id="chat-container" class="flex-1 overflow-y-auto glass rounded-2xl p-4 mb-4 flex flex-col gap-2 shadow-inner">
+                        <div class="chat-ai chat-bubble">
+                            Hello! I'm your AI assistant. How can I help you organize your life today?
+                        </div>
+                    </div>
+                    
+                    <!-- Input -->
+                    <div class="shrink-0 flex gap-2 relative">
+                        <input type="text" id="chat-input" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 pr-12 focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm" placeholder="Ask something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
+                        <button onclick="sendAIChat()" class="absolute right-2 top-2 bottom-2 aspect-square bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center justify-center transition-transform active:scale-95">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- SETTINGS PAGE -->
+                <section id="page-settings" class="page-section hidden space-y-6 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6" data-i18n="settings">Settings</h2>
+                    
+                    <div class="glass p-6 rounded-2xl shadow-sm space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-gray-200 dark:bg-gray-700 rounded-lg"><i class="fas fa-moon"></i></div>
+                                <span data-i18n="darkMode">Dark Mode</span>
+                            </div>
+                            <button id="theme-toggle" onclick="toggleTheme()" class="w-12 h-6 bg-gray-300 rounded-full relative transition-colors duration-300 focus:outline-none">
+                                <div class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform duration-300 shadow-md"></div>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-gray-200 dark:bg-gray-700 rounded-lg"><i class="fas fa-language"></i></div>
+                                <span data-i18n="language">Language</span>
+                            </div>
+                            <button onclick="toggleLanguage()" class="px-4 py-1 bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200 rounded-lg font-medium transition-colors">
+                                <span id="current-lang-display">English</span>
+                            </button>
+                        </div>
+
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                            <h3 class="font-semibold mb-4" data-i18n="dataSync">Data Sync</h3>
+                            <div id="user-status" class="mb-4 text-sm text-gray-500"></div>
+                            <button onclick="handleLogout()" class="w-full border border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 py-2 rounded-xl transition-colors" data-i18n="logout">
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Mobile Bottom Nav -->
+            <nav class="md:hidden glass fixed bottom-0 w-full h-16 flex justify-around items-center border-t border-gray-200 dark:border-gray-700 z-30 pb-safe">
+                <button onclick="showPage('courses')" class="nav-item flex flex-col items-center gap-1 p-2 text-xs text-gray-500 transition-colors">
+                    <i class="fas fa-graduation-cap text-lg"></i>
+                    <span data-i18n="courses">Courses</span>
+                </button>
+                <button onclick="showPage('tasks')" class="nav-item flex flex-col items-center gap-1 p-2 text-xs text-gray-500 transition-colors">
+                    <i class="fas fa-tasks text-lg"></i>
+                    <span data-i18n="tasks">Tasks</span>
+                </button>
+                <button onclick="showPage('books')" class="nav-item flex flex-col items-center gap-1 p-2 text-xs text-gray-500 transition-colors">
+                    <i class="fas fa-book-open text-lg"></i>
+                    <span data-i18n="books">Books</span>
+                </button>
+                <button onclick="showPage('ai')" class="nav-item flex flex-col items-center gap-1 p-2 text-xs text-gray-500 transition-colors">
+                    <i class="fas fa-robot text-lg text-pink-500"></i>
+                    <span data-i18n="askAi">Ask AI</span>
+                </button>
+            </nav>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300" onclick="closeAllModals()"></div>
+
+    <!-- Course Modal -->
+    <div id="course-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
+            <h3 class="text-xl font-bold mb-4" data-i18n="addCourse">Add/Edit Course</h3>
+            <input type="hidden" id="course-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1" data-i18n="labelName">Name</label>
+                    <input type="text" id="course-name" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1" data-i18n="labelTotalHrs">Total Hours</label>
+                        <input type="number" id="course-total" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1" data-i18n="labelDoneHrs">Completed</label>
+                        <input type="number" id="course-done" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+                
+                <!-- AI Feature: Syllabus Generator + Audio Notes -->
+                <div>
+                     <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs text-gray-500">Syllabus / Notes</label>
+                        <div class="flex gap-2">
+                            <button onclick="toggleAudioRecording(this, 'course')" id="btn-record-note" class="text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
+                                <i class="fas fa-microphone"></i> <span>Record</span>
+                            </button>
+                            <button onclick="generateCourseSyllabus(this)" class="text-xs ai-btn px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
+                                <i class="fas fa-magic"></i> ✨ Suggest
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="course-notes" rows="3" placeholder="Add notes or generate a syllabus..." class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                    
+                    <!-- Audio Player Container -->
+                    <div id="course-audio-player-container" class="hidden mt-2 bg-gray-100 dark:bg-gray-700 p-2 rounded-xl flex items-center gap-2 animate-fade-in">
+                        <audio id="course-audio-player" controls class="w-full h-8"></audio>
+                        <button onclick="deleteAudioNote('course')" class="text-red-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+
+                <button onclick="saveCourse()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-transform active:scale-95" data-i18n="save">Save</button>
+                <button onclick="deleteCourse()" id="btn-delete-course" class="w-full text-red-500 py-2 text-sm hover:underline hidden" data-i18n="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
+            <h3 class="text-xl font-bold mb-4" data-i18n="addTask">Add/Edit Task</h3>
+            <input type="hidden" id="task-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1" data-i18n="labelName">Task Name</label>
+                    <input type="text" id="task-name" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-purple-500 outline-none">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs text-gray-500" data-i18n="labelDesc">Description</label>
+                        <div class="flex gap-2">
+                            <button onclick="toggleAudioRecording(this, 'task')" id="btn-record-task" class="text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
+                                <i class="fas fa-microphone"></i> <span>Record</span>
+                            </button>
+                            <button onclick="generateTaskDescription(this)" class="text-xs ai-btn px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
+                                <i class="fas fa-magic"></i> ✨ Auto-Expand
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="task-desc" rows="3" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-purple-500 outline-none"></textarea>
+                    
+                    <!-- Audio Player Container -->
+                    <div id="task-audio-player-container" class="hidden mt-2 bg-gray-100 dark:bg-gray-700 p-2 rounded-xl flex items-center gap-2 animate-fade-in">
+                        <audio id="task-audio-player" controls class="w-full h-8"></audio>
+                        <button onclick="deleteAudioNote('task')" class="text-red-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                
+                <button onclick="openDrawingCanvas()" class="w-full border border-purple-500 text-purple-500 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-50 dark:hover:bg-purple-900/20">
+                    <i class="fas fa-paint-brush"></i> <span data-i18n="openCanvas">Open Drawing Canvas</span>
+                </button>
+                <button onclick="saveTask()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-medium transition-transform active:scale-95" data-i18n="save">Save</button>
+                <button onclick="deleteTask()" id="btn-delete-task" class="w-full text-red-500 py-2 text-sm hover:underline hidden" data-i18n="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Modal -->
+    <div id="book-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
+            <h3 class="text-xl font-bold mb-4" data-i18n="addBook">Add/Edit Book</h3>
+            <input type="hidden" id="book-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1" data-i18n="labelName">Book Title</label>
+                    <input type="text" id="book-name" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                         <label class="block text-xs text-gray-500" data-i18n="labelAuthor">Author / Summary</label>
+                         <button onclick="generateBookSummary(this)" class="text-xs ai-btn px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
+                            <i class="fas fa-magic"></i> ✨ Get Summary
+                        </button>
+                    </div>
+                    <textarea id="book-desc" rows="2" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1" data-i18n="labelTotalPages">Total Pages</label>
+                        <input type="number" id="book-total" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1" data-i18n="labelDonePages">Read</label>
+                        <input type="number" id="book-done" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                </div>
+                <button onclick="saveBook()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium transition-transform active:scale-95" data-i18n="save">Save</button>
+                <button onclick="deleteBook()" id="btn-delete-book" class="w-full text-red-500 py-2 text-sm hover:underline hidden" data-i18n="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawing Canvas Modal (Full Screen) -->
+    <div id="drawing-modal" class="fixed inset-0 bg-gray-900 hidden flex-col">
+        <!-- Toolbar -->
+        <div class="h-16 bg-gray-800 flex items-center justify-between px-4 shrink-0 border-b border-gray-700">
+            <button onclick="closeDrawingModal()" class="text-gray-300 hover:text-white"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span></button>
+            <div class="flex items-center gap-4">
+                <input type="color" id="brush-color" class="w-8 h-8 rounded overflow-hidden border-0" value="#000000">
+                <input type="range" id="brush-size" min="2" max="20" value="5" class="w-24">
+                <button onclick="setEraser()" class="p-2 rounded bg-gray-700 hover:bg-gray-600 text-white"><i class="fas fa-eraser"></i></button>
+                <button onclick="clearCanvas()" class="p-2 rounded bg-red-600 hover:bg-red-700 text-white"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="downloadCanvas()" class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                    <i class="fas fa-download"></i> PNG
+                </button>
+                <button onclick="saveCanvasDrawing()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-bold">
+                    <i class="fas fa-save"></i> <span data-i18n="save">Save</span>
+                </button>
+            </div>
+        </div>
+        <!-- Canvas Area -->
+        <div class="flex-1 relative overflow-hidden bg-gray-100 flex items-center justify-center" id="canvas-container">
+            <canvas id="paint-canvas" class="shadow-lg"></canvas>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // ==========================================
+        // 🔧 FIREBASE CONFIGURATION (USER EDIT HERE)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX4Fh87PnqTNaLkAG_-0DomLyFIko68q4",
+            authDomain: "how-much-29bcc.firebaseapp.com",
+            projectId: "how-much-29bcc",
+            storageBucket: "how-much-29bcc.firebasestorage.app",
+            messagingSenderId: "59810590652",
+            appId: "1:59810590652:web:708b0848c175695c8b05b9",
+            measurementId: "G-DTWDMYRR3K"
+        };
+
+        let app, auth, db;
+        let currentUser = null;
+        let isGuest = false;
+
+        // Initialize Firebase safely
+        try {
+            if (firebaseConfig.apiKey) {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+            } else {
+                console.warn("Firebase config missing. Running in Demo Mode.");
+            }
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        // Expose functions to global window for HTML onclick handlers
+        window.authObj = auth;
+        window.providerObj = new GoogleAuthProvider();
+        
+        window.handleGoogleLogin = async () => {
+            if (!auth) {
+                alert("Please add Firebase Config in code to enable Login.");
+                return;
+            }
+            try {
+                await signInWithPopup(auth, window.providerObj);
+                // onAuthStateChanged will handle the rest
+            } catch (error) {
+                console.error(error);
+                alert("Login Failed: " + error.message);
+            }
+        };
+
+        window.handleLogout = async () => {
+            if (auth) await signOut(auth);
+            localStorage.removeItem('hm_user');
+            window.location.reload();
+        };
+
+        // Auth State Observer
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    isGuest = false;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('flex');
+                    
+                    // Update UI
+                    const profileHtml = `
+                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full">
+                        <div class="text-xs overflow-hidden">
+                            <div class="font-bold truncate">${user.displayName}</div>
+                            <div class="text-gray-500 truncate">${user.email}</div>
+                        </div>
+                    `;
+                    document.getElementById('user-profile-desktop').innerHTML = profileHtml;
+                    document.getElementById('user-status').innerText = `Logged in as ${user.email}`;
+                    
+                    // Load Data
+                    loadDataFromFirestore(user.uid);
+                } else {
+                    if(!localStorage.getItem('hm_guest')) {
+                        document.getElementById('login-screen').classList.remove('hidden');
+                        document.getElementById('login-screen').classList.add('flex');
+                        document.getElementById('app-container').classList.add('hidden');
+                    }
+                }
+            });
+        } else {
+            // No firebase config, default to demo screen
+            // Wait for splash animation
+        }
+
+        // Firestore Functions
+        async function saveDataToFirestore() {
+            if (!currentUser || !db) return;
+            const data = {
+                courses: window.appData.courses,
+                tasks: window.appData.tasks,
+                books: window.appData.books,
+                settings: window.appData.settings,
+                lastUpdated: new Date().toISOString()
+            };
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), data);
+                // console.log("Synced to Cloud");
+            } catch (e) {
+                console.error("Sync Error", e);
+            }
+        }
+
+        async function loadDataFromFirestore(uid) {
+            if (!db) return;
+            // Realtime listener
+            onSnapshot(doc(db, "users", uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    // Merge strategy: If cloud is newer or local is empty
+                    window.appData = { ...window.appData, ...data };
+                    window.appData.settings = data.settings || window.appData.settings;
+                    refreshAllUI();
+                }
+            });
+        }
+        
+        // Expose saver to global
+        window.triggerCloudSave = saveDataToFirestore;
+    </script>
+
+    <!-- Main App Logic (Vanilla JS) -->
+    <script>
+        // ==========================================
+        // 🤖 GEMINI API CONFIG
+        // ==========================================
+        // TODO: IMPORTANT: PASTE YOUR API KEY INSIDE THE QUOTES BELOW
+        const apiKey = "AIzaSyAfd415BZTMfXmRRXv8TrfHK_HhSueuhCc"; 
+
+        async function callGeminiAPI(prompt) {
+            if (!apiKey) {
+                alert("Please enter a Gemini API Key in the code to use AI features!");
+                return null;
+            }
+            
+            // Using the standard stable model
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{
+                    parts: [{ text: prompt }]
+                }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                
+                // Catch API errors specifically (400/403 etc)
+                if(data.error) {
+                    console.error("API Response Error:", data.error);
+                    throw new Error(`API Error: ${data.error.message}`);
+                }
+                
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Gemini Fetch Error:", error);
+                // Return the error message string so it appears in the chat for debugging
+                return `Error: ${error.message}. Please check your API Key.`;
+            }
+        }
+
+        // AI Handlers
+        async function generateTaskDescription(btn) {
+            const name = document.getElementById('task-name').value;
+            if (!name) return alert("Please enter a task name first!");
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<div class="loader-dark"></div> Gener...`;
+            btn.disabled = true;
+
+            const lang = window.appData.settings.lang;
+            let prompt = "";
+            
+            if (lang === 'ar') {
+                prompt = `للمهمة "${name}"، قدم وصفاً مختصراً من جملتين ثم قائمة مرجعية بسيطة من 3-5 خطوات قابلة للتنفيذ. نسق النص كنص عادي مع شرطات للقائمة.`;
+            } else {
+                prompt = `For the task "${name}", provide a concise 2-sentence description followed by a simple checklist of 3-5 actionable sub-steps. Format as plain text with dashes for the list.`;
+            }
+            
+            const result = await callGeminiAPI(prompt);
+            if (result) {
+                // If result is an error message, alert it, otherwise set value
+                if(result.startsWith("Error:")) {
+                    alert(result);
+                } else {
+                    document.getElementById('task-desc').value = result;
+                }
+            }
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+
+        async function generateBookSummary(btn) {
+            const name = document.getElementById('book-name').value;
+            if (!name) return alert("Please enter a book name first!");
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<div class="loader-dark"></div> Fetching...`;
+            btn.disabled = true;
+
+            const lang = window.appData.settings.lang;
+            let prompt = "";
+
+            if (lang === 'ar') {
+                prompt = `اكتب ملخصاً للكتاب "${name}". اذكر اسم المؤلف في البداية. اجعل الملخص أقل من 3 جمل. نسق النص كنص عادي.`;
+            } else {
+                prompt = `Write a summary of the book "${name}". Include the author's name at the start. Keep it under 3 sentences. Format as plain text.`;
+            }
+
+            const result = await callGeminiAPI(prompt);
+            if (result) {
+                 if(result.startsWith("Error:")) {
+                    alert(result);
+                } else {
+                    document.getElementById('book-desc').value = result;
+                }
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+
+        async function generateCourseSyllabus(btn) {
+            const name = document.getElementById('course-name').value;
+            const hours = document.getElementById('course-total').value || "some";
+            if (!name) return alert("Please enter a course name first!");
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<div class="loader-dark"></div> Planning...`;
+            btn.disabled = true;
+
+            const lang = window.appData.settings.lang;
+            let prompt = "";
+
+            if (lang === 'ar') {
+                prompt = `لدورة تدريبية بعنوان "${name}" ومدتها حوالي ${hours} ساعات، اقترح منهجاً دراسياً بسيطاً يحتوي على 5 مواضيع رئيسية. نسق النص كقائمة بسيطة مع شرطات.`;
+            } else {
+                prompt = `For a course named "${name}" that lasts about ${hours} hours, suggest a simple study syllabus with 5 key topics. Format as a simple list with dashes.`;
+            }
+
+            const result = await callGeminiAPI(prompt);
+            if (result) {
+                 if(result.startsWith("Error:")) {
+                    alert(result);
+                } else {
+                    document.getElementById('course-notes').value = result;
+                }
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+
+
+        // --- CHATBOT HANDLERS ---
+        async function sendAIChat() {
+            const input = document.getElementById('chat-input');
+            const container = document.getElementById('chat-container');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Append User Message
+            appendMessage(message, 'user');
+            input.value = '';
+
+            // Loading State
+            const loadingId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = loadingId;
+            loadingDiv.className = 'chat-ai chat-bubble';
+            loadingDiv.innerHTML = '<div class="loader-dark"></div>';
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            // API Call
+            const lang = window.appData.settings.lang;
+            let systemInstruction = "";
+            if (lang === 'ar') {
+                systemInstruction = "أجب باختصار ولطف باللغة العربية (أنت مساعد شخصي): ";
+            } else {
+                systemInstruction = "Answer nicely and briefly (You are a personal assistant): ";
+            }
+
+            const result = await callGeminiAPI(systemInstruction + message);
+            
+            // Remove loader
+            document.getElementById(loadingId).remove();
+
+            // Check for errors
+            if (result && result.startsWith("Error:")) {
+                appendMessage(result, 'error');
+            } else {
+                // Append AI Message
+                appendMessage(result || "Sorry, unexpected error.", 'ai');
+            }
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById('chat-container');
+            const div = document.createElement('div');
+            
+            let className = 'chat-bubble ';
+            if (sender === 'user') className += 'chat-user';
+            else if (sender === 'error') className += 'chat-ai chat-error';
+            else className += 'chat-ai';
+            
+            div.className = className;
+            
+            // Simple markdown parser for lists and bold
+            let formatted = text.replace(/\n/g, '<br>')
+                                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                                .replace(/- /g, '• ');
+                                
+            div.innerHTML = formatted;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearChat() {
+            const container = document.getElementById('chat-container');
+            container.innerHTML = `<div class="chat-ai chat-bubble">Hello! I'm your AI assistant. How can I help you organize your life today?</div>`;
+        }
+
+
+        // --- SIDEBAR TOGGLE ---
+        let sidebarOpen = true;
+        function toggleSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            const btn = document.getElementById('show-sidebar-btn');
+            
+            if (sidebarOpen) {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-0', 'opacity-0', 'p-0');
+                btn.classList.remove('hidden');
+                sidebarOpen = false;
+            } else {
+                sidebar.classList.add('w-64');
+                sidebar.classList.remove('w-0', 'opacity-0', 'p-0');
+                btn.classList.add('hidden');
+                sidebarOpen = true;
+            }
+        }
+
+
+        // --- AUDIO RECORDING ---
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let tempAudioBase64 = null;
+        let activeAudioContext = null; // 'course' or 'task'
+
+        async function toggleAudioRecording(btn, context) {
+            const label = btn.querySelector('span');
+            const icon = btn.querySelector('i');
+
+            if (!isRecording) {
+                // Start Recording
+                activeAudioContext = context; // Set context
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            tempAudioBase64 = reader.result;
+                            showAudioPlayer(tempAudioBase64, activeAudioContext);
+                        };
+                        // Stop all tracks
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    
+                    // UI Update
+                    btn.classList.add('bg-red-500', 'text-white');
+                    btn.classList.remove('text-red-500', 'hover:bg-red-50');
+                    label.innerText = "Stop";
+                    icon.className = "fas fa-stop animate-pulse";
+                    
+                } catch (err) {
+                    console.error(err);
+                    alert("Microphone access denied. Please enable permissions.");
+                }
+            } else {
+                // Stop Recording
+                // Only stop if context matches or if force stop needed
+                mediaRecorder.stop();
+                isRecording = false;
+                
+                // UI Update
+                btn.classList.remove('bg-red-500', 'text-white');
+                btn.classList.add('text-red-500', 'hover:bg-red-50');
+                label.innerText = "Record";
+                icon.className = "fas fa-microphone";
+            }
+        }
+
+        function showAudioPlayer(src, context) {
+            // Determine ID prefix
+            const prefix = context === 'task' ? 'task' : 'course';
+            const container = document.getElementById(`${prefix}-audio-player-container`);
+            const player = document.getElementById(`${prefix}-audio-player`);
+            
+            if(player && container) {
+                player.src = src;
+                container.classList.remove('hidden');
+            }
+        }
+
+        function deleteAudioNote(context) {
+            tempAudioBase64 = null;
+            
+            const prefix = context === 'task' ? 'task' : 'course';
+            const container = document.getElementById(`${prefix}-audio-player-container`);
+            const player = document.getElementById(`${prefix}-audio-player`);
+            
+            if(player) {
+                player.pause();
+                player.src = "";
+            }
+            if(container) {
+                container.classList.add('hidden');
+            }
+        }
+
+
+        // --- State Management ---
+        window.appData = {
+            courses: [],
+            tasks: [],
+            books: [],
+            settings: {
+                theme: 'light',
+                lang: 'en'
+            }
+        };
+
+        // --- Initialization ---
+        window.onload = () => {
+            // Load Local Data first
+            const localData = localStorage.getItem('hm_data');
+            if (localData) {
+                window.appData = JSON.parse(localData);
+            }
+
+            // Splash Animation
+            const tl = gsap.timeline();
+            tl.to("#splash-screen i", { rotation: 360, duration: 1, ease: "back.out(1.7)" })
+              .to("#splash-screen", { opacity: 0, duration: 0.5, display: "none" });
+            
+            // Apply settings
+            applyTheme(window.appData.settings.theme);
+            applyLanguage(window.appData.settings.lang);
+
+            // Check Guest
+            if(localStorage.getItem('hm_guest')) {
+                enterAsGuest();
+            } else if (!window.authObj && !localStorage.getItem('hm_data')) {
+                // If no firebase and no data, show login (which allows guest)
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('login-screen').classList.add('flex');
+            }
+
+            refreshAllUI();
+            setupCanvas();
+        };
+
+        function enterAsGuest() {
+            localStorage.setItem('hm_guest', 'true');
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('flex');
+            document.getElementById('app-container').classList.remove('hidden');
+            document.getElementById('app-container').classList.add('flex');
+            
+            document.getElementById('user-profile-desktop').innerHTML = `
+                <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white"><i class="fas fa-user"></i></div>
+                <div class="text-xs"><div class="font-bold">Guest Mode</div><div class="text-gray-500">Local Storage Only</div></div>
+            `;
+            document.getElementById('user-status').innerText = "Guest Mode (Offline)";
+            refreshAllUI();
+            showPage('courses'); // Default page
+        }
+
+        function saveLocal() {
+            localStorage.setItem('hm_data', JSON.stringify(window.appData));
+            if(window.triggerCloudSave) window.triggerCloudSave();
+        }
+
+        // --- Navigation ---
+        let activePage = 'courses';
+        function showPage(pageId) {
+            activePage = pageId;
+            
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(el => {
+                el.classList.add('hidden');
+                gsap.set(el, { opacity: 0, y: 20 });
+            });
+            
+            // Nav active states
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            // Show target
+            const target = document.getElementById(`page-${pageId}`);
+            target.classList.remove('hidden');
+            gsap.to(target, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" });
+
+            // Update active nav icons
+            // Mobile and Desktop navs have slightly different structure but same onclick
+            document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
+            
+            // If on mobile, scroll to top
+            if(window.innerWidth < 768) document.getElementById('content-area').scrollTop = 0;
+        }
+
+        function refreshAllUI() {
+            renderCourses();
+            renderTasks();
+            renderBooks();
+        }
+
+        // --- COURSES MODULE ---
+        function renderCourses() {
+            const list = document.getElementById('courses-list');
+            list.innerHTML = '';
+            
+            window.appData.courses.forEach(course => {
+                const percent = course.total > 0 ? Math.round((course.done / course.total) * 100) : 0;
+                const card = document.createElement('div');
+                card.className = 'glass p-5 rounded-2xl hover:shadow-lg transition-all cursor-pointer border-l-4 border-indigo-500';
+                card.onclick = (e) => { if(!e.target.closest('button')) editCourse(course.id); };
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg">${course.name}</h3>
+                            <div class="flex gap-2 mt-1">
+                                ${course.notes ? '<span class="text-[10px] text-indigo-500"><i class="fas fa-sticky-note"></i> Notes</span>' : ''}
+                                ${course.audioNote ? '<span class="text-[10px] text-red-500"><i class="fas fa-microphone"></i> Audio</span>' : ''}
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200 px-2 py-1 rounded">${percent}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2 overflow-hidden">
+                        <div class="bg-indigo-500 h-2 rounded-full transition-all duration-1000" style="width: ${percent}%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>${course.done} hrs done</span>
+                        <span>${course.total} hrs total</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function editCourse(id) {
+            const c = window.appData.courses.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('course-id').value = c.id;
+            document.getElementById('course-name').value = c.name;
+            document.getElementById('course-total').value = c.total;
+            document.getElementById('course-done').value = c.done;
+            document.getElementById('course-notes').value = c.notes || '';
+            
+            // Handle Audio
+            tempAudioBase64 = c.audioNote || null;
+            if (tempAudioBase64) {
+                showAudioPlayer(tempAudioBase64, 'course');
+            } else {
+                deleteAudioNote('course'); // hide player
+            }
+
+            document.getElementById('btn-delete-course').classList.remove('hidden');
+            openModal('course-modal');
+        }
+
+        function saveCourse() {
+            const id = document.getElementById('course-id').value;
+            const name = document.getElementById('course-name').value;
+            const total = Number(document.getElementById('course-total').value);
+            const done = Number(document.getElementById('course-done').value);
+            const notes = document.getElementById('course-notes').value;
+
+            if (!name) return;
+
+            if (id) {
+                const idx = window.appData.courses.findIndex(x => x.id == id);
+                if (idx > -1) window.appData.courses[idx] = { 
+                    ...window.appData.courses[idx], 
+                    name, total, done, notes, 
+                    audioNote: tempAudioBase64 
+                };
+            } else {
+                window.appData.courses.push({ 
+                    id: Date.now(), 
+                    name, total, done, notes, 
+                    audioNote: tempAudioBase64 
+                });
+            }
+            saveLocal();
+            closeAllModals();
+            renderCourses();
+        }
+
+        function deleteCourse() {
+            const id = document.getElementById('course-id').value;
+            window.appData.courses = window.appData.courses.filter(x => x.id != id);
+            saveLocal();
+            closeAllModals();
+            renderCourses();
+        }
+
+        // --- TASKS MODULE ---
+        let draggedItem = null;
+
+        function renderTasks() {
+            const list = document.getElementById('tasks-list');
+            list.innerHTML = '';
+            
+            window.appData.tasks.forEach((task, index) => {
+                const el = document.createElement('div');
+                el.className = `glass p-4 rounded-xl flex items-center gap-4 cursor-grab active:cursor-grabbing transition-transform hover:scale-[1.01] ${task.completed ? 'opacity-60' : ''}`;
+                el.draggable = true;
+                
+                // Drag Events
+                el.addEventListener('dragstart', (e) => { draggedItem = index; el.classList.add('dragging'); });
+                el.addEventListener('dragend', () => { draggedItem = null; el.classList.remove('dragging'); });
+                el.addEventListener('dragover', (e) => e.preventDefault());
+                el.addEventListener('drop', () => handleDrop(index));
+
+                el.innerHTML = `
+                    <div onclick="toggleTask(${task.id})" class="w-6 h-6 rounded-full border-2 ${task.completed ? 'bg-purple-500 border-purple-500' : 'border-gray-400'} flex items-center justify-center cursor-pointer transition-colors">
+                        ${task.completed ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                    </div>
+                    <div class="flex-1" onclick="editTask(${task.id})">
+                        <h4 class="font-semibold ${task.completed ? 'line-through text-gray-500' : ''}">${task.name}</h4>
+                        ${task.desc ? `<p class="text-xs text-gray-500 truncate">${task.desc}</p>` : ''}
+                        <div class="flex gap-2 mt-1">
+                             ${task.drawing ? `<span class="text-[10px] text-purple-500 flex items-center gap-1"><i class="fas fa-image"></i> Drawing</span>` : ''}
+                             ${task.audioNote ? `<span class="text-[10px] text-red-500 flex items-center gap-1"><i class="fas fa-microphone"></i> Voice Note</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="text-gray-400 cursor-grab"><i class="fas fa-grip-lines"></i></div>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function handleDrop(targetIndex) {
+            if (draggedItem === null || draggedItem === targetIndex) return;
+            const item = window.appData.tasks.splice(draggedItem, 1)[0];
+            window.appData.tasks.splice(targetIndex, 0, item);
+            saveLocal();
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            const t = window.appData.tasks.find(x => x.id === id);
+            if(t) {
+                t.completed = !t.completed;
+                // Animate check
+                saveLocal();
+                renderTasks();
+            }
+        }
+
+        function editTask(id) {
+            const t = window.appData.tasks.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('task-id').value = t.id;
+            document.getElementById('task-name').value = t.name;
+            document.getElementById('task-desc').value = t.desc || '';
+            
+            // Handle Drawing
+            currentDrawingTask = t; 
+            
+            // Handle Audio
+            tempAudioBase64 = t.audioNote || null;
+            if (tempAudioBase64) {
+                showAudioPlayer(tempAudioBase64, 'task');
+            } else {
+                deleteAudioNote('task');
+            }
+
+            document.getElementById('btn-delete-task').classList.remove('hidden');
+            openModal('task-modal');
+        }
+
+        function saveTask() {
+            const id = document.getElementById('task-id').value;
+            const name = document.getElementById('task-name').value;
+            const desc = document.getElementById('task-desc').value;
+
+            if (!name) return;
+
+            if (id) {
+                const idx = window.appData.tasks.findIndex(x => x.id == id);
+                if (idx > -1) {
+                    window.appData.tasks[idx] = { 
+                        ...window.appData.tasks[idx], 
+                        name, desc,
+                        audioNote: tempAudioBase64 
+                    };
+                    // Update drawing if changed in canvas
+                    if(tempDrawingData) window.appData.tasks[idx].drawing = tempDrawingData; 
+                }
+            } else {
+                window.appData.tasks.push({ 
+                    id: Date.now(), 
+                    name, desc, 
+                    completed: false, 
+                    drawing: tempDrawingData,
+                    audioNote: tempAudioBase64 
+                });
+            }
+            
+            tempDrawingData = null; // Reset temp
+            saveLocal();
+            closeAllModals();
+            renderTasks();
+        }
+
+        function deleteTask() {
+            const id = document.getElementById('task-id').value;
+            window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
+            saveLocal();
+            closeAllModals();
+            renderTasks();
+        }
+
+        // --- DRAWING CANVAS ---
+        let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
+        let currentDrawingTask = null;
+        // let tempDrawingData = null; // Handled in audio section scope or shared scope carefully
+        // Re-declaring to ensure scope availability if not global
+        if (typeof tempDrawingData === 'undefined') var tempDrawingData = null;
+
+        function setupCanvas() {
+            canvas = document.getElementById('paint-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // Resize logic
+            const resize = () => {
+                canvas.width = window.innerWidth > 600 ? 600 : window.innerWidth - 40;
+                canvas.height = window.innerHeight * 0.6;
+                if(currentDrawingTask && currentDrawingTask.drawing) loadCanvasImage(currentDrawingTask.drawing);
+            };
+            window.addEventListener('resize', resize);
+            // Initial size set when modal opens
+        }
+
+        function openDrawingCanvas() {
+            document.getElementById('drawing-modal').classList.remove('hidden');
+            document.getElementById('drawing-modal').classList.add('flex');
+            
+            // Setup sizing
+            canvas.width = window.innerWidth > 600 ? 600 : window.innerWidth - 40;
+            canvas.height = window.innerHeight * 0.6;
+            
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.fillStyle = "white";
+            ctx.fillRect(0,0, canvas.width, canvas.height);
+
+            // Load existing
+            if(currentDrawingTask && currentDrawingTask.drawing) {
+                loadCanvasImage(currentDrawingTask.drawing);
+            } else if (tempDrawingData) {
+                loadCanvasImage(tempDrawingData);
+            }
+
+            // Events
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseout', stopDraw);
+            
+            // Touch
+            canvas.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                lastX = touch.clientX - rect.left;
+                lastY = touch.clientY - rect.top;
+                isDrawing = true;
+                e.preventDefault();
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                if(!isDrawing) return;
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                drawMove(touch.clientX - rect.left, touch.clientY - rect.top);
+                e.preventDefault();
+            });
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function startDraw(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        function draw(e) {
+            if (!isDrawing) return;
+            drawMove(e.offsetX, e.offsetY);
+        }
+        function drawMove(x, y) {
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = document.getElementById('brush-color').value;
+            ctx.lineWidth = document.getElementById('brush-size').value;
+            ctx.stroke();
+            [lastX, lastY] = [x, y];
+        }
+        function stopDraw() { isDrawing = false; }
+        function setEraser() { document.getElementById('brush-color').value = '#ffffff'; }
+        function clearCanvas() { 
+            ctx.fillStyle = "white";
+            ctx.fillRect(0,0, canvas.width, canvas.height); 
+        }
+        function loadCanvasImage(dataUrl) {
+            const img = new Image();
+            img.onload = () => ctx.drawImage(img, 0, 0);
+            img.src = dataUrl;
+        }
+
+        function saveCanvasDrawing() {
+            tempDrawingData = canvas.toDataURL('image/png');
+            closeDrawingModal();
+            // Show feedback
+            const btn = document.querySelector('button[onclick="openDrawingCanvas()"] span');
+            btn.innerText = "Drawing Saved (Pending Save Task)";
+        }
+        
+        function downloadCanvas() {
+            const link = document.createElement('a');
+            link.download = 'how-much-sketch.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function closeDrawingModal() {
+            document.getElementById('drawing-modal').classList.add('hidden');
+            document.getElementById('drawing-modal').classList.remove('flex');
+        }
+
+
+        // --- BOOKS MODULE ---
+        function renderBooks() {
+            const list = document.getElementById('books-list');
+            list.innerHTML = '';
+            
+            window.appData.books.forEach(book => {
+                const percent = book.total > 0 ? Math.round((book.done / book.total) * 100) : 0;
+                
+                // Streak Logic: check if lastRead was today
+                const today = new Date().toDateString();
+                const isStreakAlive = book.lastRead === today;
+                
+                const el = document.createElement('div');
+                el.className = 'glass p-5 rounded-2xl border-b-4 border-emerald-500 hover:scale-[1.02] transition-transform cursor-pointer';
+                el.onclick = (e) => { if(!e.target.closest('button')) editBook(book.id); };
+
+                el.innerHTML = `
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <h3 class="font-bold text-lg">${book.name}</h3>
+                            <p class="text-xs text-gray-500 line-clamp-2 max-w-[150px]">${book.desc || 'No author'}</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-emerald-600 dark:text-emerald-400">${book.streak || 0} 🔥</div>
+                            <div class="text-[10px] text-gray-400">STREAK</div>
+                        </div>
+                    </div>
+                    <div class="flex items-end justify-between mb-1">
+                        <span class="text-sm font-medium">${book.done} / ${book.total} pgs</span>
+                        <span class="text-sm font-bold text-emerald-600">${percent}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden mb-3">
+                        <div class="bg-emerald-500 h-3 rounded-full transition-all duration-1000" style="width: ${percent}%"></div>
+                    </div>
+                    <button onclick="readBookToday(${book.id}, event)" class="w-full py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors">
+                        <i class="fas fa-check-circle"></i> Mark Read Today
+                    </button>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function readBookToday(id, e) {
+            e.stopPropagation();
+            const b = window.appData.books.find(x => x.id === id);
+            const today = new Date().toDateString();
+            
+            if (b.lastRead !== today) {
+                // Check if streak continues (yesterday)
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (b.lastRead === yesterday.toDateString()) {
+                    b.streak = (b.streak || 0) + 1;
+                } else {
+                    b.streak = 1; // Reset or start
+                }
+                b.lastRead = today;
+                
+                // Confetti effect using simple particles (simulated via animation on button)
+                const btn = e.target.closest('button');
+                btn.innerText = "Streak Updated!";
+                gsap.fromTo(btn, {scale: 0.9}, {scale: 1, duration: 0.3, ease:"elastic.out"});
+                
+                saveLocal();
+                renderBooks();
+            } else {
+                alert("You already marked this book as read today!");
+            }
+        }
+
+        function editBook(id) {
+            const b = window.appData.books.find(x => x.id === id);
+            if (!b) return;
+            document.getElementById('book-id').value = b.id;
+            document.getElementById('book-name').value = b.name;
+            document.getElementById('book-desc').value = b.desc;
+            document.getElementById('book-total').value = b.total;
+            document.getElementById('book-done').value = b.done;
+            document.getElementById('btn-delete-book').classList.remove('hidden');
+            openModal('book-modal');
+        }
+
+        function saveBook() {
+            const id = document.getElementById('book-id').value;
+            const name = document.getElementById('book-name').value;
+            const desc = document.getElementById('book-desc').value;
+            const total = Number(document.getElementById('book-total').value);
+            const done = Number(document.getElementById('book-done').value);
+
+            if (!name) return;
+
+            if (id) {
+                const idx = window.appData.books.findIndex(x => x.id == id);
+                if (idx > -1) {
+                    const old = window.appData.books[idx];
+                    window.appData.books[idx] = { ...old, name, desc, total, done };
+                }
+            } else {
+                window.appData.books.push({ id: Date.now(), name, desc, total, done, streak: 0, lastRead: null });
+            }
+            saveLocal();
+            closeAllModals();
+            renderBooks();
+        }
+
+        function deleteBook() {
+            const id = document.getElementById('book-id').value;
+            window.appData.books = window.appData.books.filter(x => x.id != id);
+            saveLocal();
+            closeAllModals();
+            renderBooks();
+        }
+
+        // --- SHARED UI UTILS ---
+        function openModal(id) {
+            // Reset Fields
+            if(id === 'course-modal' && !document.getElementById('course-id').value) {
+                document.getElementById('course-id').value = '';
+                document.getElementById('course-name').value = '';
+                document.getElementById('course-total').value = '';
+                document.getElementById('course-done').value = '';
+                document.getElementById('course-notes').value = '';
+                deleteAudioNote('course'); // Reset audio
+                document.getElementById('btn-delete-course').classList.add('hidden');
+            }
+             if(id === 'task-modal' && !document.getElementById('task-id').value) {
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-name').value = '';
+                document.getElementById('task-desc').value = '';
+                currentDrawingTask = null;
+                tempDrawingData = null;
+                deleteAudioNote('task');
+                document.getElementById('btn-delete-task').classList.add('hidden');
+            }
+            if(id === 'book-modal' && !document.getElementById('book-id').value) {
+                document.getElementById('book-id').value = '';
+                document.getElementById('book-name').value = '';
+                document.getElementById('book-desc').value = '';
+                document.getElementById('book-total').value = '';
+                document.getElementById('book-done').value = '';
+                document.getElementById('btn-delete-book').classList.add('hidden');
+            }
+
+            const m = document.getElementById(id);
+            const overlay = document.getElementById('modal-overlay');
+            
+            m.classList.remove('hidden');
+            overlay.classList.remove('hidden');
+            
+            // Force reflow
+            void m.offsetWidth; 
+            
+            overlay.classList.remove('opacity-0');
+            m.querySelector('div').classList.remove('scale-95', 'opacity-0');
+        }
+
+        function closeAllModals() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.add('opacity-0');
+            
+            document.querySelectorAll('[id$="-modal"]').forEach(m => {
+                if(m.id === 'drawing-modal') return; 
+                const inner = m.querySelector('div');
+                if(inner) inner.classList.add('scale-95', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                document.querySelectorAll('[id$="-modal"]').forEach(m => {
+                    if(m.id !== 'drawing-modal') m.classList.add('hidden');
+                });
+                // Reset IDs
+                document.getElementById('course-id').value = '';
+                document.getElementById('task-id').value = '';
+                document.getElementById('book-id').value = '';
+            }, 300);
+        }
+
+        // --- SETTINGS (Theme & Lang) ---
+        const dictionary = {
+            en: {
+                courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", askAi: "Ask AI",
+                welcome: "Welcome Back", loginSubtitle: "Sign in to sync your data",
+                continueGoogle: "Continue with Google", continueGuest: "Continue as Guest",
+                trackLearning: "Track your learning journey", manageTasks: "Drag to reorder & draw details",
+                trackReading: "Pages read & daily streaks", add: "Add", save: "Save", delete: "Delete",
+                addCourse: "Add/Edit Course", addTask: "Add/Edit Task", addBook: "Add/Edit Book",
+                darkMode: "Dark Mode", language: "Language", dataSync: "Data Sync", logout: "Logout",
+                labelName: "Name", labelTotalHrs: "Total Hours", labelDoneHrs: "Completed",
+                labelDesc: "Description", openCanvas: "Open Drawing Canvas", back: "Back",
+                labelTotalPages: "Total Pages", labelDonePages: "Read", labelAuthor: "Author / Desc"
+            },
+            ar: {
+                courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", askAi: "المساعد الذكي",
+                welcome: "أهلاً بك", loginSubtitle: "سجل الدخول لمزامنة بياناتك",
+                continueGoogle: "المتابعة باستخدام جوجل", continueGuest: "الدخول كزائر",
+                trackLearning: "تتبع رحلة تعلمك", manageTasks: "اسحب للترتيب وارسم التفاصيل",
+                trackReading: "الصفحات المقروءة والتتابع اليومي", add: "إضافة", save: "حفظ", delete: "حذف",
+                addCourse: "إضافة/تعديل دورة", addTask: "إضافة/تعديل مهمة", addBook: "إضافة/تعديل كتاب",
+                darkMode: "الوضع الليلي", language: "اللغة", dataSync: "مزامنة البيانات", logout: "خروج",
+                labelName: "الاسم", labelTotalHrs: "مجموع الساعات", labelDoneHrs: "المكتمل",
+                labelDesc: "الوصف", openCanvas: "فتح لوحة الرسم", back: "رجوع",
+                labelTotalPages: "مجموع الصفحات", labelDonePages: "تمت قراءته", labelAuthor: "المؤلف / الوصف"
+            }
+        };
+
+        function toggleTheme() {
+            const newTheme = window.appData.settings.theme === 'light' ? 'dark' : 'light';
+            window.appData.settings.theme = newTheme;
+            applyTheme(newTheme);
+            saveLocal();
+        }
+
+        function applyTheme(theme) {
+            const toggle = document.querySelector('#theme-toggle div');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                toggle.style.transform = 'translateX(1.5rem)';
+            } else {
+                document.documentElement.classList.remove('dark');
+                toggle.style.transform = 'translateX(0)';
+            }
+        }
+
+        function toggleLanguage() {
+            const newLang = window.appData.settings.lang === 'en' ? 'ar' : 'en';
+            window.appData.settings.lang = newLang;
+            applyLanguage(newLang);
+            saveLocal();
+            refreshAllUI(); // To update text inside lists
+        }
+
+        function applyLanguage(lang) {
+            const body = document.body;
+            const display = document.getElementById('current-lang-display');
+            
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+                display.innerText = "العربية";
+            } else {
+                body.classList.remove('rtl');
+                display.innerText = "English";
+            }
+
+            // Update all data-i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(dictionary[lang][key]) el.innerText = dictionary[lang][key];
+            });
+        }
+
+        // Ripples
+        document.addEventListener('click', e => {
+            const target = e.target.closest('.ripple');
+            if (target) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(target.clientWidth, target.clientHeight);
+                const radius = diameter / 2;
+                const rect = target.getBoundingClientRect();
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - rect.left - radius}px`;
+                circle.style.top = `${e.clientY - rect.top - radius}px`;
+                target.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            }
+        });
+
+        // Init Default Page
+        showPage('courses');
+
+    </script>
+</body>
+</html>
