@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Much - Life Tracker</title>
     
-    <!-- Tailwind CSS -->
+    <link rel="icon" href="logo.png?v=2" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png?v=2">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -217,14 +216,12 @@
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-    <!-- Splash Screen -->
     <div id="splash-screen">
-        <i class="fas fa-cubes text-6xl mb-4 animate-bounce"></i>
+        <img src="logo.png?v=2" class="w-24 h-24 mb-4 animate-bounce object-contain">
         <h1 class="text-3xl font-bold">How Much</h1>
         <p class="text-sm opacity-80 mt-2">Track your life progress</p>
     </div>
 
-    <!-- Auth / Login Screen -->
     <div id="login-screen" class="hidden fixed inset-0 z-40 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
         <div class="max-w-md w-full glass p-8 rounded-2xl shadow-2xl text-center transform transition-all hover:scale-105 duration-300">
             <div class="w-20 h-20 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/50">
@@ -244,14 +241,12 @@
         </div>
     </div>
 
-    <!-- Main App Layout -->
     <div id="app-container" class="hidden flex h-screen overflow-hidden relative">
         
-        <!-- Desktop Sidebar -->
         <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col glass border-r border-gray-200 dark:border-gray-800 z-20 transition-all duration-300 ease-in-out overflow-hidden">
             <div class="p-6 flex items-center justify-between">
                 <div class="flex items-center gap-3 overflow-hidden whitespace-nowrap">
-                    <i class="fas fa-cubes text-indigo-500 text-2xl"></i>
+                    <img src="logo.png?v=2" class="w-8 h-8 object-contain">
                     <h1 class="text-xl font-bold tracking-tight">How Much</h1>
                 </div>
                 <button onclick="toggleSidebar()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
@@ -284,23 +279,19 @@
                     <span data-i18n="settings">Settings</span>
                 </button>
                 <div id="user-profile-desktop" class="mt-4 flex items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 whitespace-nowrap overflow-hidden">
-                    <!-- User info injected here -->
-                </div>
+                    </div>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col relative h-full overflow-hidden">
             
-            <!-- Desktop Show Sidebar Button -->
             <button id="show-sidebar-btn" onclick="toggleSidebar()" class="hidden absolute top-4 left-4 z-20 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md text-gray-500 hover:text-indigo-500 transition-all">
                 <i class="fas fa-bars"></i>
             </button>
 
-            <!-- Mobile Header -->
             <header class="md:hidden h-16 glass flex items-center justify-between px-4 z-30 shadow-sm shrink-0">
                 <div class="flex items-center gap-2">
-                    <i class="fas fa-cubes text-indigo-500 text-xl"></i>
+                    <img src="logo.png?v=2" class="w-8 h-8 object-contain">
                     <h1 class="text-lg font-bold">How Much</h1>
                 </div>
                 <button onclick="showPage('settings')" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -308,10 +299,8 @@
                 </button>
             </header>
 
-            <!-- Content Area -->
             <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 scroll-smooth relative">
                 
-                <!-- COURSES PAGE -->
                 <section id="page-courses" class="page-section hidden space-y-6">
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -323,11 +312,9 @@
                         </button>
                     </div>
                     <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Rendered via JS -->
-                    </div>
+                        </div>
                 </section>
 
-                <!-- TASKS PAGE -->
                 <section id="page-tasks" class="page-section hidden space-y-6">
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -339,11 +326,9 @@
                         </button>
                     </div>
                     <div id="tasks-list" class="space-y-3">
-                        <!-- Rendered via JS -->
-                    </div>
+                        </div>
                 </section>
 
-                <!-- BOOKS PAGE -->
                 <section id="page-books" class="page-section hidden space-y-6">
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -355,11 +340,9 @@
                         </button>
                     </div>
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Rendered via JS -->
-                    </div>
+                        </div>
                 </section>
 
-                <!-- AI PAGE -->
                 <section id="page-ai" class="page-section hidden flex flex-col h-full max-w-3xl mx-auto">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <div>
@@ -373,14 +356,12 @@
                         </button>
                     </div>
                     
-                    <!-- Chat History -->
                     <div id="chat-container" class="flex-1 overflow-y-auto glass rounded-2xl p-4 mb-4 flex flex-col gap-2 shadow-inner">
                         <div class="chat-ai chat-bubble">
                             Hello! I'm your AI assistant. How can I help you organize your life today?
                         </div>
                     </div>
                     
-                    <!-- Input -->
                     <div class="shrink-0 flex gap-2 relative">
                         <input type="text" id="chat-input" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 pr-12 focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm" placeholder="Ask something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
                         <button onclick="sendAIChat()" class="absolute right-2 top-2 bottom-2 aspect-square bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center justify-center transition-transform active:scale-95">
@@ -389,7 +370,6 @@
                     </div>
                 </section>
 
-                <!-- SETTINGS PAGE -->
                 <section id="page-settings" class="page-section hidden space-y-6 max-w-2xl mx-auto">
                     <h2 class="text-2xl font-bold mb-6" data-i18n="settings">Settings</h2>
                     
@@ -426,7 +406,6 @@
 
             </div>
 
-            <!-- Mobile Bottom Nav -->
             <nav class="md:hidden glass fixed bottom-0 w-full h-16 flex justify-around items-center border-t border-gray-200 dark:border-gray-700 z-30 pb-safe">
                 <button onclick="showPage('courses')" class="nav-item flex flex-col items-center gap-1 p-2 text-xs text-gray-500 transition-colors">
                     <i class="fas fa-graduation-cap text-lg"></i>
@@ -448,10 +427,8 @@
         </main>
     </div>
 
-    <!-- MODALS -->
     <div id="modal-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300" onclick="closeAllModals()"></div>
 
-    <!-- Course Modal -->
     <div id="course-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
         <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
             <h3 class="text-xl font-bold mb-4" data-i18n="addCourse">Add/Edit Course</h3>
@@ -472,9 +449,8 @@
                     </div>
                 </div>
                 
-                <!-- AI Feature: Syllabus Generator + Audio Notes -->
                 <div>
-                     <div class="flex justify-between items-center mb-1">
+                      <div class="flex justify-between items-center mb-1">
                         <label class="block text-xs text-gray-500">Syllabus / Notes</label>
                         <div class="flex gap-2">
                             <button onclick="toggleAudioRecording(this, 'course')" id="btn-record-note" class="text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded-lg flex items-center gap-1 transition-transform active:scale-95">
@@ -487,7 +463,6 @@
                     </div>
                     <textarea id="course-notes" rows="3" placeholder="Add notes or generate a syllabus..." class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
                     
-                    <!-- Audio Player Container -->
                     <div id="course-audio-player-container" class="hidden mt-2 bg-gray-100 dark:bg-gray-700 p-2 rounded-xl flex items-center gap-2 animate-fade-in">
                         <audio id="course-audio-player" controls class="w-full h-8"></audio>
                         <button onclick="deleteAudioNote('course')" class="text-red-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"><i class="fas fa-trash"></i></button>
@@ -500,7 +475,6 @@
         </div>
     </div>
 
-    <!-- Task Modal -->
     <div id="task-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
         <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
             <h3 class="text-xl font-bold mb-4" data-i18n="addTask">Add/Edit Task</h3>
@@ -524,7 +498,6 @@
                     </div>
                     <textarea id="task-desc" rows="3" class="w-full bg-gray-100 dark:bg-gray-700 border-0 rounded-xl p-3 focus:ring-2 focus:ring-purple-500 outline-none"></textarea>
                     
-                    <!-- Audio Player Container -->
                     <div id="task-audio-player-container" class="hidden mt-2 bg-gray-100 dark:bg-gray-700 p-2 rounded-xl flex items-center gap-2 animate-fade-in">
                         <audio id="task-audio-player" controls class="w-full h-8"></audio>
                         <button onclick="deleteAudioNote('task')" class="text-red-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"><i class="fas fa-trash"></i></button>
@@ -540,7 +513,6 @@
         </div>
     </div>
 
-    <!-- Book Modal -->
     <div id="book-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden pointer-events-none">
         <div class="bg-white dark:bg-gray-800 w-full max-w-md mx-4 rounded-2xl p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 pointer-events-auto">
             <h3 class="text-xl font-bold mb-4" data-i18n="addBook">Add/Edit Book</h3>
@@ -575,9 +547,7 @@
         </div>
     </div>
 
-    <!-- Drawing Canvas Modal (Full Screen) -->
     <div id="drawing-modal" class="fixed inset-0 bg-gray-900 hidden flex-col">
-        <!-- Toolbar -->
         <div class="h-16 bg-gray-800 flex items-center justify-between px-4 shrink-0 border-b border-gray-700">
             <button onclick="closeDrawingModal()" class="text-gray-300 hover:text-white"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span></button>
             <div class="flex items-center gap-4">
@@ -595,13 +565,11 @@
                 </button>
             </div>
         </div>
-        <!-- Canvas Area -->
         <div class="flex-1 relative overflow-hidden bg-gray-100 flex items-center justify-center" id="canvas-container">
             <canvas id="paint-canvas" class="shadow-lg"></canvas>
         </div>
     </div>
 
-    <!-- Firebase SDKs (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -733,7 +701,6 @@
         window.triggerCloudSave = saveDataToFirestore;
     </script>
 
-    <!-- Main App Logic (Vanilla JS) -->
     <script>
         // ==========================================
         // 🤖 GEMINI API CONFIG
@@ -1072,7 +1039,7 @@
 
             // Splash Animation
             const tl = gsap.timeline();
-            tl.to("#splash-screen i", { rotation: 360, duration: 1, ease: "back.out(1.7)" })
+            tl.to("#splash-screen img", { rotation: 360, duration: 1, ease: "back.out(1.7)" }) // Changed to img
               .to("#splash-screen", { opacity: 0, duration: 0.5, display: "none" });
             
             // Apply settings
