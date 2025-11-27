@@ -437,7 +437,7 @@
                 </section>
 
                 <!-- Counters / Timers Page -->
-                <section id="page-counters" class="page-section hidden max-w-3xl mx-auto pt-4 md:pt-0 h-full flex flex-col justify-center">
+                <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-10">
                     <div class="text-center mb-6">
                         <h2 class="text-2xl md:text-3xl font-bold accent-text mb-2" style="color: var(--accent-color)" data-i18n="timers">Time & Tally</h2>
                         <div class="flex justify-center gap-4 bg-black/20 p-1.5 rounded-xl inline-flex mx-auto">
@@ -447,7 +447,7 @@
                     </div>
 
                     <!-- Clock View -->
-                    <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500">
+                    <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
                         <!-- Mode Toggle -->
                         <div class="flex bg-black/20 p-1 rounded-xl mb-8">
                             <button onclick="setTimerMode('stopwatch')" id="btn-mode-stopwatch" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="stopwatch">Stopwatch</button>
@@ -478,7 +478,7 @@
                     </div>
 
                     <!-- Tally Counter View -->
-                    <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500">
+                    <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
                         <div class="flex bg-black/20 p-1 rounded-xl mb-8">
                             <button onclick="setTallyMode('up')" id="btn-tally-up" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="tasbih">Tasbih (Up)</button>
                             <button onclick="setTallyMode('down')" id="btn-tally-down" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="countdown">Countdown</button>
@@ -685,6 +685,23 @@
                     </div>
                 </div>
 
+                <!-- ADDED: Drawing Tools UI -->
+                <div class="glass-panel p-3 rounded-xl bg-black/10">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
+                        <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                            <i class="fas fa-pencil-alt"></i> <span id="btn-draw-label">Add Drawing</span>
+                        </button>
+                    </div>
+                    <div id="task-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
+                        <img id="task-drawing-img" src="" class="max-h-32 rounded border border-white/10">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+
                 <textarea id="task-desc" rows="3" placeholder="Description..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
                 <div class="flex gap-2 justify-end">
                     <button onclick="deleteTask()" id="btn-delete-task" class="p-3 text-red-400 hidden hover:bg-red-500/10 rounded-xl"><i class="fas fa-trash"></i></button>
@@ -720,6 +737,7 @@
             <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Exit</span></button>
             <div class="flex items-center gap-4 bg-black/20 p-1.5 rounded-lg border border-white/5">
                 <input type="color" id="brush-color" class="w-8 h-8 rounded cursor-pointer bg-transparent border-0" value="#ffffff">
+                <input type="range" id="brush-size" min="1" max="20" value="4" class="w-20 accent-indigo-500">
                 <div class="w-px h-6 bg-white/10"></div>
                 <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center"><i class="fas fa-eraser"></i></button>
                 <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center"><i class="fas fa-trash-alt"></i></button>
@@ -779,7 +797,7 @@
     </script>
 
     <script>
-        const defaultApiKey = "AIzaSyAfd415BZTMfXmRRXv8TrfHK_HhSueuhCc"; 
+        const defaultApiKey = "AIzaSyCG-DD-25eAhVANOoxEDOnj8TZgmmHXbJA"; 
         
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
         function saveApiKey(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); }
@@ -838,6 +856,13 @@
                 document.getElementById('task-name').value = '';
                 document.getElementById('task-desc').value = '';
                 deleteAudioNote('task');
+                
+                // Reset Drawing UI
+                tempDrawingData = null;
+                document.getElementById('task-drawing-preview').classList.add('hidden');
+                document.getElementById('task-drawing-img').src = '';
+                document.getElementById('btn-draw-label').innerText = "Add Drawing";
+
                 document.getElementById('btn-delete-task').classList.add('hidden');
                 openModal('task-modal');
             } else if(type === 'book') {
@@ -872,6 +897,19 @@
                 document.getElementById('task-desc').value = t.desc || '';
                 tempAudioBase64 = t.audioNote || null;
                 if(t.audioNote) showAudioPlayer('task'); else deleteAudioNote('task');
+                
+                // Load Drawing
+                tempDrawingData = t.drawing || null;
+                if(t.drawing) {
+                    document.getElementById('task-drawing-preview').classList.remove('hidden');
+                    document.getElementById('task-drawing-img').src = t.drawing;
+                    document.getElementById('btn-draw-label').innerText = "Edit Drawing";
+                } else {
+                    document.getElementById('task-drawing-preview').classList.add('hidden');
+                    document.getElementById('task-drawing-img').src = '';
+                    document.getElementById('btn-draw-label').innerText = "Add Drawing";
+                }
+
                 document.getElementById('btn-delete-task').classList.remove('hidden');
                 openModal('task-modal');
             } else if(type === 'book') {
@@ -1082,7 +1120,10 @@
                             ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
                         </button>
                         <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
-                            <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
+                                ${t.drawing ? '<i class="fas fa-palette text-blue-400 text-xs"></i>' : ''}
+                            </div>
                             <p class="text-xs text-slate-400">${t.desc || ''}</p>
                             ${t.audioNote ? '<div class="text-[10px] text-red-400 mt-1 flex items-center gap-1"><i class="fas fa-microphone"></i> Audio Note</div>' : ''}
                         </div>
@@ -1120,7 +1161,14 @@
         };
         window.saveTask = () => {
             const id = document.getElementById('task-id').value || Date.now();
-            const newItem = { id: Number(id), name: document.getElementById('task-name').value, desc: document.getElementById('task-desc').value, completed: false, audioNote: tempAudioBase64 };
+            const newItem = { 
+                id: Number(id), 
+                name: document.getElementById('task-name').value, 
+                desc: document.getElementById('task-desc').value, 
+                completed: false, 
+                audioNote: tempAudioBase64,
+                drawing: tempDrawingData 
+            };
             const idx = window.appData.tasks.findIndex(x => x.id == id);
             if(idx > -1) { newItem.completed = window.appData.tasks[idx].completed; window.appData.tasks[idx] = newItem; } else window.appData.tasks.push(newItem);
             saveLocal(); closeAllModals(); renderTasks();
@@ -1137,6 +1185,12 @@
         window.deleteCourse = () => { window.appData.courses = window.appData.courses.filter(x => x.id != document.getElementById('course-id').value); saveLocal(); closeAllModals(); renderCourses(); };
         window.deleteTask = () => { window.appData.tasks = window.appData.tasks.filter(x => x.id != document.getElementById('task-id').value); saveLocal(); closeAllModals(); renderTasks(); };
         window.deleteBook = () => { window.appData.books = window.appData.books.filter(x => x.id != document.getElementById('book-id').value); saveLocal(); closeAllModals(); renderBooks(); };
+        window.deleteDrawing = () => {
+            tempDrawingData = null;
+            document.getElementById('task-drawing-preview').classList.add('hidden');
+            document.getElementById('task-drawing-img').src = '';
+            document.getElementById('btn-draw-label').innerText = "Add Drawing";
+        };
 
         // --- Localization & Theme ---
         function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
@@ -1157,18 +1211,56 @@
         window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
         window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         
-        // --- AI (Restored) ---
-        async function callGeminiAPI(prompt, systemInstruction = "") {
+        // --- AI (FIXED: Recursive Fallback for Robustness) ---
+        // Models to try in order: specialized preview model (for online editor), then standard public models (for local/export).
+        const geminiModels = [
+            'gemini-2.5-flash-preview-09-2025', 
+            'gemini-1.5-flash', 
+            'gemini-1.5-flash-001', 
+            'gemini-1.5-pro'
+        ];
+
+        async function callGeminiAPI(prompt, systemInstruction = "", modelIndex = 0) {
             const apiKey = getApiKey();
-            if (!apiKey) return "API Key Missing.";
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            if (!apiKey) {
+                alert("API Key Missing. Check settings.");
+                return "API Key Missing.";
+            }
+
+            if (modelIndex >= geminiModels.length) {
+                return "Error: All AI models failed. Please check API Key.";
+            }
+
+            const modelName = geminiModels[modelIndex];
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+            
             const fullPrompt = systemInstruction ? `${systemInstruction}\n\nUser: ${prompt}` : prompt;
+            
             try {
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] }) });
+                const response = await fetch(url, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: fullPrompt }] }] 
+                    }) 
+                });
+
                 const data = await response.json();
+                
+                // If model not found (404) or other error, try next model
+                if (data.error) {
+                    console.warn(`Model ${modelName} failed:`, data.error.message);
+                    return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1);
+                }
+
                 return data.candidates[0].content.parts[0].text;
-            } catch (error) { return "AI Error"; }
+            } catch (error) { 
+                console.error(`Network Error with ${modelName}:`, error);
+                // Retry with next model on network error too
+                return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1); 
+            }
         }
+
         async function sendAIChat() {
             const input = document.getElementById('chat-input');
             const txt = input.value.trim();
@@ -1179,11 +1271,16 @@
             const id = 'loader-' + Date.now();
             container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
             container.scrollTop = container.scrollHeight;
-            const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY in this format: {"action": "addTask", "data": {"name": "Name", "desc": "Description"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Syllabus", "total": 10}} if adding items.`;
+            
+            const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY in this format: {"action": "addTask", "data": {"name": "Name", "desc": "Description"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Syllabus", "total": 10}} if adding items. If not adding items, reply normally.`;
+            
             const res = await callGeminiAPI(txt, systemPrompt);
             document.getElementById(id).remove();
+            
             try {
+                // Clean markdown code blocks if AI wraps JSON
                 const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
+                
                 if(cleanJson.startsWith('{')) {
                     const action = JSON.parse(cleanJson);
                     if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
@@ -1191,6 +1288,7 @@
                     if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
                 }
             } catch(e) {}
+            
             container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${res.replace(/\n/g, '<br>')}</div></div>`;
             container.scrollTop = container.scrollHeight;
         }
@@ -1241,6 +1339,7 @@
         let canvas, ctx, isDrawing = false, currentDrawingTask = null, tempDrawingData = null;
         function setupCanvas() {
             canvas = document.getElementById('paint-canvas');
+            if(!canvas) return; // Safety check
             ctx = canvas.getContext('2d');
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
@@ -1258,27 +1357,46 @@
             canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', move, {passive: false}); canvas.addEventListener('touchend', end);
         }
         function resizeCanvas() {
+             if(!canvas) return;
              canvas.width = window.innerWidth; canvas.height = window.innerHeight;
              ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-             ctx.strokeStyle = document.getElementById('brush-color').value;
-             ctx.lineWidth = document.getElementById('brush-size').value || 4;
+             
+             // FIXED: Safety check for brush size element
+             const brushColorEl = document.getElementById('brush-color');
+             const brushSizeEl = document.getElementById('brush-size');
+             
+             if(brushColorEl) ctx.strokeStyle = brushColorEl.value;
+             if(brushSizeEl) ctx.lineWidth = brushSizeEl.value || 4;
         }
         window.openDrawingCanvas = () => {
             document.getElementById('drawing-modal').classList.remove('hidden');
             document.getElementById('drawing-modal').classList.add('flex');
             resizeCanvas();
+            
+            // Load existing if present
+            if(tempDrawingData && ctx) {
+                const img = new Image();
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = tempDrawingData;
+            } else {
+                clearCanvas();
+            }
         };
         window.closeDrawingModal = () => {
             document.getElementById('drawing-modal').classList.add('hidden');
             document.getElementById('drawing-modal').classList.remove('flex');
         };
         window.saveCanvasDrawing = () => {
-            // In a real app, save to task. Here just close for UI demo
+            tempDrawingData = canvas.toDataURL();
+            document.getElementById('task-drawing-preview').classList.remove('hidden');
+            document.getElementById('task-drawing-img').src = tempDrawingData;
+            document.getElementById('btn-draw-label').innerText = "Edit Drawing";
             closeDrawingModal();
         };
         window.clearCanvas = () => { ctx.clearRect(0,0,canvas.width,canvas.height); };
         window.setEraser = () => { ctx.globalCompositeOperation = 'destination-out'; };
-        document.getElementById('brush-color').onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
+        const colorPicker = document.getElementById('brush-color');
+        if(colorPicker) colorPicker.onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
 
         // Expose
         window.setTimerMode = setTimerMode; window.toggleTimer = toggleTimer; window.resetTimer = resetTimer; window.toggleSidebar = toggleSidebar; window.sendAIChat = sendAIChat; window.clearChat = clearChat; window.enterAsGuest = enterAsGuest;
@@ -1289,6 +1407,7 @@
         window.saveTask = saveTask; window.deleteTask = deleteTask;
         window.saveBook = saveBook; window.deleteBook = deleteBook;
         window.toggleTask = toggleTask; window.readBookToday = readBookToday;
+        window.deleteDrawing = deleteDrawing;
     </script>
 </body>
 </html>
