@@ -757,7 +757,7 @@
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {
-              apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
+            apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
               authDomain: "how-much-v2.firebaseapp.com",
               projectId: "how-much-v2",
               storageBucket: "how-much-v2.firebasestorage.app",
@@ -770,7 +770,12 @@
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Firebase Init Error:", e); }
 
         window.handleGoogleLogin = async () => { if (auth) await signInWithPopup(auth, new GoogleAuthProvider()); };
-        window.handleLogout = async () => { if (auth) await signOut(auth); localStorage.removeItem('hm_user'); window.location.reload(); };
+        window.handleLogout = async () => { 
+            if (auth) await signOut(auth); 
+            localStorage.removeItem('hm_user'); 
+            localStorage.removeItem('hm_guest'); 
+            window.location.reload(); 
+        };
 
         if (auth) {
             onAuthStateChanged(auth, (user) => {
@@ -1411,4 +1416,3 @@
     </script>
 </body>
 </html>
-
