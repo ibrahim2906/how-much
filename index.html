@@ -550,6 +550,11 @@
                     
                     <div class="glass-panel rounded-3xl overflow-hidden mb-8">
                         <div class="p-6 border-b border-white/5">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
+                                <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                            </div>
+                            
                             <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-key text-yellow-400"></i> <span data-i18n="apiConfig">API Configuration</span></h3>
                              <label class="text-xs text-slate-400 block mb-2" id="api-label-status">Default Key Active (Optional Override below)</label>
                             <input type="password" id="api-key-input" placeholder="Paste custom API Key here (Optional)..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm font-mono focus:outline-none focus:border-indigo-500 text-base" onchange="saveApiKey(this.value)">
@@ -757,14 +762,16 @@
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
-              authDomain: "how-much-v2.firebaseapp.com",
-              projectId: "how-much-v2",
-              storageBucket: "how-much-v2.firebasestorage.app",
-              messagingSenderId: "1036316370452",
-              appId: "1:1036316370452:web:f46292e034ada3bd2ea901",
-              measurementId: "G-84F0PKHDFV"
+            apiKey: "AIzaSyBfLR88a4s-wDOStbsmiEZp-R-FRDBchkc",
+            authDomain: "how-much-29bcc.firebaseapp.com",
+            projectId: "how-much-29bcc",
+            storageBucket: "how-much-29bcc.firebasestorage.app",
+            messagingSenderId: "59810590652",
+            appId: "1:59810590652:web:708b0848c175695c8b05b9",
+            measurementId: "G-DTWDMYRR3K"
         };
+
+        const appId = "how-much-29bcc"; // Defined explicitly as per requirements
 
         let app, auth, db, currentUser = null;
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Firebase Init Error:", e); }
@@ -796,8 +803,33 @@
             });
         }
 
-        async function saveData() { if(currentUser) await setDoc(doc(db, "users", currentUser.uid), window.appData); }
-        async function loadData(uid) { onSnapshot(doc(db, "users", uid), (s) => { if(s.exists()) { window.appData = { ...window.appData, ...s.data() }; refreshAllUI(); } }); }
+        // FIXED: Updated Firestore paths to match strict requirement
+        async function saveData() { 
+            if(currentUser) {
+                try {
+                    // Using subcollection path: /artifacts/{appId}/users/{userId}/data/profile
+                    await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
+                    document.getElementById('cloud-status').innerText = "Synced";
+                    document.getElementById('cloud-status').classList.add('text-green-400');
+                } catch(e) {
+                    console.error("Save Error:", e);
+                    document.getElementById('cloud-status').innerText = "Sync Failed";
+                    document.getElementById('cloud-status').classList.replace('text-slate-400', 'text-red-400');
+                }
+            }
+        }
+        
+        async function loadData(uid) { 
+            // Using strict path for loading
+            onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
+                if(s.exists()) { 
+                    window.appData = { ...window.appData, ...s.data() }; 
+                    refreshAllUI();
+                    document.getElementById('cloud-status').innerText = "Synced";
+                    document.getElementById('cloud-status').classList.add('text-green-400');
+                } 
+            }); 
+        }
         window.triggerCloudSave = saveData;
     </script>
 
@@ -1216,52 +1248,36 @@
         window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
         window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         
-        // --- AI (FIXED: Recursive Fallback for Robustness) ---
-        // Models to try in order: specialized preview model (for online editor), then standard public models (for local/export).
-        const geminiModels = [
-            'gemini-2.5-flash-preview-09-2025', 
-            'gemini-1.5-flash', 
-            'gemini-1.5-flash-001', 
-            'gemini-1.5-pro'
-        ];
+        // --- AI (FIXED: Stable Model Only) ---
+        // Removed unstable preview models to prevent 404 errors
+        const geminiModels = ['gemini-1.5-flash', 'gemini-1.5-flash-latest'];
 
         async function callGeminiAPI(prompt, systemInstruction = "", modelIndex = 0) {
             const apiKey = getApiKey();
-            if (!apiKey) {
-                alert("API Key Missing. Check settings.");
-                return "API Key Missing.";
-            }
+            if (!apiKey) return "API Key Missing. Check settings.";
 
-            if (modelIndex >= geminiModels.length) {
-                return "Error: All AI models failed. Please check API Key.";
-            }
+            if (modelIndex >= geminiModels.length) return "Error: AI Service Unavailable.";
 
             const modelName = geminiModels[modelIndex];
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            
             const fullPrompt = systemInstruction ? `${systemInstruction}\n\nUser: ${prompt}` : prompt;
             
             try {
                 const response = await fetch(url, { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: fullPrompt }] }] 
-                    }) 
+                    body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] }) 
                 });
 
                 const data = await response.json();
                 
-                // If model not found (404) or other error, try next model
                 if (data.error) {
-                    console.warn(`Model ${modelName} failed:`, data.error.message);
+                    // console.warn(`Model ${modelName} failed:`, data.error.message);
                     return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1);
                 }
 
                 return data.candidates[0].content.parts[0].text;
             } catch (error) { 
-                console.error(`Network Error with ${modelName}:`, error);
-                // Retry with next model on network error too
                 return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1); 
             }
         }
@@ -1283,9 +1299,7 @@
             document.getElementById(id).remove();
             
             try {
-                // Clean markdown code blocks if AI wraps JSON
                 const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
-                
                 if(cleanJson.startsWith('{')) {
                     const action = JSON.parse(cleanJson);
                     if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
