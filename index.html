@@ -551,8 +551,14 @@
                     <div class="glass-panel rounded-3xl overflow-hidden mb-8">
                         <div class="p-6 border-b border-white/5">
                             <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
-                                <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                                <div>
+                                    <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
+                                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                                    <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync"><i class="fas fa-sync-alt text-xs"></i></button>
+                                </div>
                             </div>
                             
                             <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-key text-yellow-400"></i> <span data-i18n="apiConfig">API Configuration</span></h3>
@@ -762,16 +768,15 @@
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
-            authDomain: "how-much-v2.firebaseapp.com",
-            projectId: "how-much-v2",
-            storageBucket: "how-much-v2.firebasestorage.app",
-            messagingSenderId: "1036316370452",
-            appId: "1:1036316370452:web:f46292e034ada3bd2ea901",
-            measurementId: "G-84F0PKHDFV"
+            apiKey: "AIzaSyBfLR88a4s-wDOStbsmiEZp-R-FRDBchkc",
+            authDomain: "how-much-29bcc.firebaseapp.com",
+            projectId: "how-much-29bcc",
+            storageBucket: "how-much-29bcc.firebasestorage.app",
+            messagingSenderId: "59810590652",
+            appId: "1:59810590652:web:708b0848c175695c8b05b9",
+            measurementId: "G-DTWDMYRR3K"
         };
 
-        // DYNAMIC APP ID FETCH (CRITICAL FIX)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'how-much-29bcc';
 
         let app, auth, db, currentUser = null;
@@ -789,25 +794,39 @@
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
+                    // Update UI to show logged in state immediately
+                    const emailDisplay = document.getElementById('user-email-display');
+                    if(emailDisplay) emailDisplay.innerText = "Logged in as: " + user.email;
+                    
                     gsap.to('#login-screen', {opacity: 0, duration: 0.5, onComplete: () => {
                         document.getElementById('login-screen').classList.add('hidden');
                         document.getElementById('app-container').classList.remove('hidden');
                         gsap.from('#app-container', {opacity: 0, y: 20});
                     }});
+                    
                     if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').src = user.photoURL;
                     if(document.getElementById('settings-icon-container')) document.getElementById('settings-icon-container').classList.add('hidden');
                     if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').classList.remove('hidden');
+                    
+                    // Trigger cloud save immediately on login to ensure document exists
+                    document.getElementById('cloud-status').innerText = "Syncing...";
+                    saveData(); // Force save to create profile if new
                     loadData(user.uid);
                 } else if(!localStorage.getItem('hm_guest')) {
                     document.getElementById('login-screen').classList.remove('hidden');
+                } else {
+                    // Guest Mode
+                    const emailDisplay = document.getElementById('user-email-display');
+                    if(emailDisplay) emailDisplay.innerText = "Guest Mode (Local Only)";
+                    document.getElementById('cloud-status').innerText = "Not Synced";
                 }
             });
         }
 
-        // FIXED: Using correct path /artifacts/{appId}/users/{userId}/data/profile
         async function saveData() { 
             if(currentUser) {
                 try {
+                    // Using subcollection path: /artifacts/{appId}/users/{userId}/data/profile
                     await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
                     const statusEl = document.getElementById('cloud-status');
                     if(statusEl) {
@@ -827,7 +846,6 @@
         }
         
         async function loadData(uid) { 
-            // FIXED: Using correct path for loading
             onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
                 if(s.exists()) { 
                     window.appData = { ...window.appData, ...s.data() }; 
@@ -837,14 +855,17 @@
                         statusEl.innerText = "Synced";
                         statusEl.classList.add('text-green-400');
                     }
-                } 
+                } else {
+                    // If no data exists, save current default data to initialize
+                    saveData();
+                }
             }); 
         }
         window.triggerCloudSave = saveData;
     </script>
 
     <script>
-        const defaultApiKey = "AIzaSyDI30b29SMAQdFlMI2xtOe9SsCyMNBlsT4"; 
+        const defaultApiKey = "AIzaSyCG-DD-25eAhVANOoxEDOnj8TZgmmHXbJA"; 
         
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
         function saveApiKey(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); }
@@ -1258,36 +1279,52 @@
         window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
         window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         
-        // --- AI (FIXED: Stable Model Only) ---
-        // Removed unstable preview models to prevent 404 errors
-        const geminiModels = ['gemini-1.5-flash', 'gemini-1.5-flash-latest'];
+        // --- AI (FIXED: Recursive Fallback for Robustness) ---
+        // Models to try in order: specialized preview model (for online editor), then standard public models (for local/export).
+        const geminiModels = [
+            'gemini-2.5-flash-preview-09-2025', 
+            'gemini-1.5-flash', 
+            'gemini-1.5-flash-001', 
+            'gemini-1.5-pro'
+        ];
 
         async function callGeminiAPI(prompt, systemInstruction = "", modelIndex = 0) {
             const apiKey = getApiKey();
-            if (!apiKey) return "API Key Missing. Check settings.";
+            if (!apiKey) {
+                alert("API Key Missing. Check settings.");
+                return "API Key Missing.";
+            }
 
-            if (modelIndex >= geminiModels.length) return "Error: AI Service Unavailable.";
+            if (modelIndex >= geminiModels.length) {
+                return "Error: All AI models failed. Please check API Key.";
+            }
 
             const modelName = geminiModels[modelIndex];
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+            
             const fullPrompt = systemInstruction ? `${systemInstruction}\n\nUser: ${prompt}` : prompt;
             
             try {
                 const response = await fetch(url, { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] }) 
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: fullPrompt }] }] 
+                    }) 
                 });
 
                 const data = await response.json();
                 
+                // If model not found (404) or other error, try next model
                 if (data.error) {
-                    // console.warn(`Model ${modelName} failed:`, data.error.message);
+                    console.warn(`Model ${modelName} failed:`, data.error.message);
                     return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1);
                 }
 
                 return data.candidates[0].content.parts[0].text;
             } catch (error) { 
+                console.error(`Network Error with ${modelName}:`, error);
+                // Retry with next model on network error too
                 return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1); 
             }
         }
@@ -1309,7 +1346,9 @@
             document.getElementById(id).remove();
             
             try {
+                // Clean markdown code blocks if AI wraps JSON
                 const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
+                
                 if(cleanJson.startsWith('{')) {
                     const action = JSON.parse(cleanJson);
                     if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
