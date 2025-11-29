@@ -249,9 +249,67 @@
             50% { transform: scale(0.92); }
             100% { transform: scale(1); }
         }
+
+        /* New Floating Widget Styles */
+        .widget-pill {
+            position: fixed;
+            z-index: 49; /* Just below AI button */
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideInWidget 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .widget-pill:hover {
+            transform: translateY(-2px) scale(1.02);
+            border-color: var(--accent-glow);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        @keyframes slideInWidget {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Mobile Position */
+        @media (max-width: 767px) {
+            .widget-pill {
+                bottom: 90px;
+                right: 85px; /* Left of the AI button on mobile */
+                height: 48px;
+                padding: 0 16px;
+                border-radius: 24px;
+            }
+        }
+        /* Desktop Position */
+        @media (min-width: 768px) {
+            .widget-pill {
+                bottom: 30px;
+                right: 100px; /* Left of the AI button on desktop */
+                height: 60px;
+                padding: 0 24px;
+                border-radius: 30px;
+            }
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
 
     <!-- Dynamic Background -->
     <div class="nebula-bg"></div>
@@ -610,6 +668,25 @@
                 </section>
             </div>
 
+            <!-- New Floating Widget -->
+            <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
+                <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-r border-white/10 pr-3 mr-1 hidden">
+                    <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
+                    <span id="widget-timer-val" class="font-mono font-bold text-sm">00:00</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-tasks text-purple-400 text-sm"></i>
+                    <span id="widget-tasks-val" class="font-bold text-sm text-white">0</span>
+                </div>
+                <div class="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center relative ml-1">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+                        <path id="widget-progress-ring" class="text-indigo-500 transition-all duration-500" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+                    </svg>
+                    <i class="fas fa-chevron-up text-[8px] text-white/50 group-hover:-translate-y-0.5 transition-transform"></i>
+                </div>
+            </div>
+
             <!-- Floating AI Button -->
             <button onclick="showPage('ai')" class="floating-ai-btn hover:scale-110 active:scale-95">
                 <i class="fas fa-wand-magic-sparkles"></i>
@@ -638,6 +715,33 @@
 
     <!-- Modals (Courses, Tasks, Books) -->
     <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeAllModals()"></div>
+
+    <!-- Widget Detail Modal -->
+    <div id="widget-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-end md:items-center justify-center pointer-events-none p-4 pb-24 md:pb-4">
+        <div class="modal-content glass-panel w-full max-w-sm rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
+            <button onclick="closeAllModals()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-white mb-1">Daily Snapshot</h3>
+            <p class="text-xs text-slate-400 mb-4">Here is how you are doing today.</p>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-white/5 rounded-xl p-3 text-center">
+                    <div class="text-2xl font-bold text-purple-400" id="detail-tasks-done">0</div>
+                    <div class="text-[10px] uppercase tracking-wide text-slate-400">Tasks Done</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-3 text-center">
+                    <div class="text-2xl font-bold text-indigo-400" id="detail-tasks-left">0</div>
+                    <div class="text-[10px] uppercase tracking-wide text-slate-400">Remaining</div>
+                </div>
+            </div>
+            
+            <div class="mb-2">
+                <div class="flex justify-between text-xs text-slate-300 mb-1"><span>Daily Progress</span><span id="detail-progress-txt">0%</span></div>
+                <div class="w-full bg-black/20 h-2 rounded-full overflow-hidden">
+                    <div id="detail-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 w-0 transition-all duration-1000"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Course Modal -->
     <div id="course-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
@@ -842,24 +946,30 @@
         }
         
         async function loadData(uid) { 
-            onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
-                if(s.exists()) { 
-                    console.log("Cloud data found. Syncing down.");
-                    window.appData = { ...window.appData, ...s.data() }; 
-                    localStorage.setItem('hm_data', JSON.stringify(window.appData));
-                    refreshAllUI();
-                    
-                    const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) {
-                        statusEl.innerText = "Synced";
-                        statusEl.classList.add('text-green-400');
-                    }
-                } else {
-                    console.log("No cloud data. Syncing up.");
-                    saveData();
-                }
-            }); 
+    onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
+        if(s.exists()) { 
+            console.log("Cloud data found. Syncing down.");
+            // دمج البيانات السحابية مع المحلية
+            window.appData = { ...window.appData, ...s.data() }; 
+            localStorage.setItem('hm_data', JSON.stringify(window.appData));
+            refreshAllUI();
+            
+            // تحديث حالة المزامنة في الإعدادات
+            const statusEl = document.getElementById('cloud-status');
+            if(statusEl) {
+                statusEl.innerText = "Synced";
+                statusEl.classList.remove('text-red-400');
+                statusEl.classList.add('text-green-400');
+            }
+        } else {
+            console.log("No cloud data yet.");
+            // التعديل هنا: لا تقم بالحفظ التلقائي فوراً إلا إذا كان لدينا بيانات محلية لنرفعها
+            if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) {
+                saveData();
+            }
         }
+    }); 
+}
         window.triggerCloudSave = saveData;
     </script>
 
@@ -1149,14 +1259,22 @@
                     } 
                 }
                 updateTimerDisplay();
+                updateWidget(); // Update widget timer
             }, 1000);
+            updateWidget();
         }
-        function stopTimer() { timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; }
-        function resetTimer() { stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); }
+        function stopTimer() { 
+            timerRunning = false; 
+            clearInterval(timerInterval); 
+            document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
+            updateWidget();
+        }
+        function resetTimer() { stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); }
         function updateTimerDisplay() {
             const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const s = (timerSeconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${m}:${s}`;
+            const timeStr = `${m}:${s}`;
+            document.getElementById('timer-display').innerText = timeStr;
             const circle = document.getElementById('timer-progress');
             const radius = circle.r.baseVal.value;
             const circumference = radius * 2 * Math.PI;
@@ -1188,7 +1306,12 @@
             if(pageId === 'tasks') renderTasks();
             if(pageId === 'books') renderBooks();
         }
-        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); }
+        function refreshAllUI() { 
+            renderCourses(); 
+            renderTasks(); 
+            renderBooks();
+            updateWidget(); // Refresh widget
+        }
 
         // --- Rendering ---
         function renderCourses() {
@@ -1203,11 +1326,12 @@
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
                 list.innerHTML += `
                     <div class="glass-card p-5 rounded-3xl relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onclick="openEditModal('course', '${c.id}')">
+                        <div class="absolute top-0 right-0 p-4 text-2xl font-bold opacity-20 accent-text" style="color:var(--accent-color)">${percent}%</div>
                         <div class="absolute top-0 left-0 w-1 h-full accent-bg opacity-50" style="background:var(--accent-color)"></div>
                         <h3 class="font-bold text-lg text-white mb-2">${c.name}</h3>
                         ${c.audioNote ? '<div class="text-[10px] text-red-400 mb-2 flex items-center gap-1"><i class="fas fa-microphone"></i> Audio Note</div>' : ''}
-                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg" style="width:${percent}%; background:var(--accent-color)"></div></div>
-                        <div class="flex justify-between text-xs text-slate-400"><span>${c.done}/${c.total} ${doneText}</span><span>${percent}%</span></div>
+                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
+                        <div class="flex justify-between text-xs text-slate-400"><span>${c.done}/${c.total} ${doneText}</span><span class="font-bold text-accent">${percent}% Completed</span></div>
                     </div>`;
             });
             document.getElementById("stat-active-courses").innerText = active;
@@ -1241,18 +1365,109 @@
                 const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
                 list.innerHTML += `
                     <div class="glass-card p-5 rounded-3xl group cursor-pointer active:scale-[0.98] transition-all" onclick="openEditModal('book', '${b.id}')">
-                        <div class="flex justify-between items-start mb-2"><div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div><div class="text-right"><div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div></div></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div>
+                            <div class="text-right">
+                                <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div>
+                                <div class="text-xs font-bold text-white/50">${percent}%</div>
+                            </div>
+                        </div>
                         <h3 class="font-bold text-white">${b.name}</h3>
-                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg" style="width:${percent}%; background:var(--accent-color)"></div></div>
+                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
                         <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">${markText}</button>
                     </div>`;
             });
         }
 
+        // --- Confetti Logic ---
+        function triggerConfetti(grand = false) {
+            const cvs = document.getElementById('confetti-canvas');
+            const ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth;
+            cvs.height = window.innerHeight;
+            
+            const particles = [];
+            const particleCount = grand ? 150 : 60;
+            const colors = ['#6366f1', '#a855f7', '#ec4899', '#ffffff'];
+            
+            for(let i=0; i<particleCount; i++) {
+                particles.push({
+                    x: cvs.width / 2,
+                    y: cvs.height / 2,
+                    vx: (Math.random() - 0.5) * (grand ? 25 : 15),
+                    vy: (Math.random() - 0.5) * (grand ? 25 : 15),
+                    size: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 100
+                });
+            }
+            
+            function animateConfetti() {
+                ctx.clearRect(0,0,cvs.width,cvs.height);
+                let active = false;
+                particles.forEach(p => {
+                    if(p.life > 0) {
+                        active = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.5; // gravity
+                        p.life -= 2;
+                        ctx.fillStyle = p.color;
+                        ctx.globalAlpha = p.life / 100;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                });
+                if(active) requestAnimationFrame(animateConfetti);
+                else ctx.clearRect(0,0,cvs.width,cvs.height);
+            }
+            animateConfetti();
+        }
+
+        // --- Widget Logic ---
+        function updateWidget() {
+            // Count remaining tasks
+            const remainingTasks = window.appData.tasks.filter(t => !t.completed).length;
+            const totalTasks = window.appData.tasks.length;
+            document.getElementById('widget-tasks-val').innerText = remainingTasks + " Tasks Left";
+            
+            // Calculate Progress for ring
+            const doneTasks = totalTasks - remainingTasks;
+            const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+            document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
+            
+            // Timer
+            const timerContainer = document.getElementById('widget-timer-container');
+            if(timerRunning) {
+                timerContainer.classList.remove('hidden');
+                const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+                const s = (timerSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('widget-timer-val').innerText = `${m}:${s}`;
+            } else {
+                timerContainer.classList.add('hidden');
+            }
+        }
+        
+        window.openWidgetDetail = () => {
+            const remainingTasks = window.appData.tasks.filter(t => !t.completed).length;
+            const totalTasks = window.appData.tasks.length;
+            const doneTasks = totalTasks - remainingTasks;
+            const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById('detail-tasks-done').innerText = doneTasks;
+            document.getElementById('detail-tasks-left').innerText = remainingTasks;
+            document.getElementById('detail-progress-txt').innerText = progress + "%";
+            document.getElementById('detail-progress-bar').style.width = progress + "%";
+            
+            openModal('widget-modal');
+        };
+
         // --- Data Operations ---
         // NEW FUNCTION: Commits data. Saves to localStorage AND triggers cloud save if online.
         function commitData() {
             localStorage.setItem('hm_data', JSON.stringify(window.appData));
+            updateWidget(); // Refresh widget on any save
             if(window.triggerCloudSave) window.triggerCloudSave();
         }
 
@@ -1261,6 +1476,10 @@
             const newItem = { id: Number(id), name: document.getElementById('course-name').value, total: document.getElementById('course-total').value, done: document.getElementById('course-done').value, notes: document.getElementById('course-notes').value, audioNote: tempAudioBase64 };
             const idx = window.appData.courses.findIndex(x => x.id == id);
             if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
+            
+            // Check completion for animation
+            if(newItem.done >= newItem.total && newItem.total > 0) triggerConfetti(true);
+            
             commitData(); closeAllModals(); renderCourses();
         };
         window.saveTask = () => {
@@ -1282,10 +1501,22 @@
             const newItem = { id: Number(id), name: document.getElementById('book-name').value, total: document.getElementById('book-total').value, done: document.getElementById('book-done').value, desc: document.getElementById('book-desc').value, streak: 0 };
             const idx = window.appData.books.findIndex(x => x.id == id);
             if(idx > -1) { newItem.streak = window.appData.books[idx].streak; window.appData.books[idx] = newItem; } else window.appData.books.push(newItem);
+            
+            // Check completion
+            if(newItem.done >= newItem.total && newItem.total > 0) triggerConfetti(true);
+            
             commitData(); closeAllModals(); renderBooks();
         };
-        window.toggleTask = (id) => { const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; commitData(); renderTasks(); }};
-        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; commitData(); renderBooks(); }};
+        window.toggleTask = (id) => { 
+            const t = window.appData.tasks.find(x => x.id === id); 
+            if(t){ 
+                t.completed = !t.completed; 
+                if(t.completed) triggerConfetti(false); // Small confetti
+                commitData(); 
+                renderTasks(); 
+            }
+        };
+        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
         window.deleteCourse = () => { window.appData.courses = window.appData.courses.filter(x => x.id != document.getElementById('course-id').value); commitData(); closeAllModals(); renderCourses(); };
         window.deleteTask = () => { window.appData.tasks = window.appData.tasks.filter(x => x.id != document.getElementById('task-id').value); commitData(); closeAllModals(); renderTasks(); };
         window.deleteBook = () => { window.appData.books = window.appData.books.filter(x => x.id != document.getElementById('book-id').value); commitData(); closeAllModals(); renderBooks(); };
