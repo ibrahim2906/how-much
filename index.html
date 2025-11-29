@@ -767,17 +767,18 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+        // UPDATED FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "AIzaSyCX4Fh87PnqTNaLkAG_-0DomLyFIko68q4",
-  	    authDomain: "how-much-29bcc.firebaseapp.com",
-            projectId: "how-much-29bcc",
-            storageBucket: "how-much-29bcc.firebasestorage.app",
-  	    messagingSenderId: "59810590652",
- 	    appId: "1:59810590652:web:708b0848c175695c8b05b9",
-  	    measurementId: "G-DTWDMYRR3K"
+            apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
+            authDomain: "how-much-v2.firebaseapp.com",
+            projectId: "how-much-v2",
+            storageBucket: "how-much-v2.firebasestorage.app",
+            messagingSenderId: "1036316370452",
+            appId: "1:1036316370452:web:f46292e034ada3bd2ea901",
+            measurementId: "G-84F0PKHDFV"
         };
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'how-much-29bcc';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'how-much-v2';
 
         let app, auth, db, currentUser = null;
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Firebase Init Error:", e); }
@@ -794,7 +795,6 @@
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
-                    // Update UI to show logged in state immediately
                     const emailDisplay = document.getElementById('user-email-display');
                     if(emailDisplay) emailDisplay.innerText = "Logged in as: " + user.email;
                     
@@ -808,14 +808,11 @@
                     if(document.getElementById('settings-icon-container')) document.getElementById('settings-icon-container').classList.add('hidden');
                     if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').classList.remove('hidden');
                     
-                    // CRITICAL FIX: Do NOT immediately save data, as this overwrites the cloud with empty local data on a new device.
-                    // Instead, trigger loadData. loadData will handle the sync decision.
                     document.getElementById('cloud-status').innerText = "Syncing...";
                     loadData(user.uid);
                 } else if(!localStorage.getItem('hm_guest')) {
                     document.getElementById('login-screen').classList.remove('hidden');
                 } else {
-                    // Guest Mode
                     const emailDisplay = document.getElementById('user-email-display');
                     if(emailDisplay) emailDisplay.innerText = "Guest Mode (Local Only)";
                     document.getElementById('cloud-status').innerText = "Not Synced";
@@ -826,7 +823,6 @@
         async function saveData() { 
             if(currentUser) {
                 try {
-                    // Save window.appData to cloud
                     await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
                     const statusEl = document.getElementById('cloud-status');
                     if(statusEl) {
@@ -846,16 +842,11 @@
         }
         
         async function loadData(uid) { 
-            // Listen for updates from cloud
             onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
                 if(s.exists()) { 
-                    // Case 1: Data exists in cloud. Download and overwrite local.
                     console.log("Cloud data found. Syncing down.");
                     window.appData = { ...window.appData, ...s.data() }; 
-                    
-                    // Update LocalStorage to match cloud without triggering a cloud save loop
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
-                    
                     refreshAllUI();
                     
                     const statusEl = document.getElementById('cloud-status');
@@ -864,7 +855,6 @@
                         statusEl.classList.add('text-green-400');
                     }
                 } else {
-                    // Case 2: No data in cloud (New device/user). Upload local data to cloud.
                     console.log("No cloud data. Syncing up.");
                     saveData();
                 }
@@ -874,9 +864,35 @@
     </script>
 
     <script>
-        // UPDATED API KEY
+        // UPDATED API KEY FOR GEMINI AI
         const defaultApiKey = "AIzaSyCDIR3EeSUIcT1d5Y0tG4Vw-Lz4Tzh5kWY"; 
         
+        // Simple notification sound (Bell/Chime) encoded in Base64
+        const alarmSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."); 
+        // Note: Using a short synthesized sine wave beep for functionality without external assets
+        const beepSound = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."; 
+
+        // Let's create a pleasant "Ding" sound programmatically to avoid large base64 strings
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        function playNotificationSound() {
+            if (audioContext.state === 'suspended') { audioContext.resume(); }
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.exponentialRampToValueAtTime(1046.5, audioContext.currentTime + 0.1); // C6
+            
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 1.5);
+        }
+
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
         function saveApiKey(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); }
 
@@ -1122,7 +1138,16 @@
             timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
             timerInterval = setInterval(() => {
                 if(timerMode === 'stopwatch') timerSeconds++;
-                else { timerSeconds--; if(timerSeconds <= 0) { stopTimer(); alert("Time's Up!"); resetTimer(); return; } }
+                else { 
+                    timerSeconds--; 
+                    if(timerSeconds <= 0) { 
+                        stopTimer(); 
+                        playNotificationSound(); // Play the chime
+                        alert("Time's Up!"); 
+                        resetTimer(); 
+                        return; 
+                    } 
+                }
                 updateTimerDisplay();
             }, 1000);
         }
@@ -1292,8 +1317,8 @@
         
         // --- AI ---
         const geminiModels = [
-            'gemini-2.5-flash-preview-09-2025', 
             'gemini-1.5-flash', 
+            'gemini-2.5-flash-preview-09-2025', 
             'gemini-1.5-flash-001', 
             'gemini-1.5-pro'
         ];
@@ -1388,11 +1413,11 @@
                     audioChunks = [];
                     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
                     mediaRecorder.onstop = () => {
-                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                         const reader = new FileReader();
-                         reader.readAsDataURL(audioBlob);
-                         reader.onloadend = () => { tempAudioBase64 = reader.result; showAudioPlayer(context); };
-                         stream.getTracks().forEach(t => t.stop());
+                          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                          const reader = new FileReader();
+                          reader.readAsDataURL(audioBlob);
+                          reader.onloadend = () => { tempAudioBase64 = reader.result; showAudioPlayer(context); };
+                          stream.getTracks().forEach(t => t.stop());
                     };
                     mediaRecorder.start();
                     btn.classList.add('recording', 'bg-red-500', 'text-white', 'animate-pulse');
