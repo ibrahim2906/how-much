@@ -11,6 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- SortableJS for Drag and Drop -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -82,13 +84,32 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
+            position: relative;
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--accent-glow);
-            box-shadow: 0 10px 40px -10px var(--accent-glow);
-            transform: translateY(-5px);
+        /* Drag Handle Styles */
+        .drag-handle {
+            cursor: grab;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .glass-card:hover .drag-handle {
+            opacity: 0.5;
+        }
+        .drag-handle:hover {
+            opacity: 1 !important;
+        }
+        .sortable-ghost {
+            opacity: 0.4;
+            background: var(--accent-color);
+        }
+
+        .delete-btn-preview {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .glass-card:hover .delete-btn-preview {
+            opacity: 1;
         }
 
         /* Light Mode Overrides */
@@ -135,24 +156,6 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         body.light-mode ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
 
-        /* Loader */
-        .loader-ring {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-        }
-        .loader-ring:after {
-            content: " ";
-            display: block;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            border-color: #fff transparent #fff transparent;
-            animation: ring 1.2s linear infinite;
-        }
-        @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         /* Navigation Active State */
         .nav-link { position: relative; transition: all 0.3s ease; opacity: 0.6; }
         .nav-link:hover { opacity: 1; }
@@ -187,12 +190,6 @@
             opacity: 1;
         }
         
-        /* AI Chat */
-        .chat-bubble {
-            backdrop-filter: blur(4px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
         /* Floating AI Button */
         .floating-ai-btn {
             position: fixed;
@@ -223,34 +220,13 @@
                 height: 60px;
             }
         }
-
         @keyframes pulse-glow {
             0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
             100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
 
-        /* Circular Progress for Timer */
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.35s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        /* Tally Clicker Animation */
-        .clicker-btn:active {
-            transform: scale(0.95);
-        }
-        .clicker-btn.clicked {
-            animation: clickerPop 0.1s linear;
-        }
-        @keyframes clickerPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.92); }
-            100% { transform: scale(1); }
-        }
-
-        /* New Floating Widget Styles */
+        /* Widget */
         .widget-pill {
             position: fixed;
             z-index: 49; /* Just below AI button */
@@ -272,8 +248,6 @@
         @keyframes slideInWidget {
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Mobile Position */
         @media (max-width: 767px) {
             .widget-pill {
                 bottom: 90px;
@@ -283,7 +257,6 @@
                 border-radius: 24px;
             }
         }
-        /* Desktop Position */
         @media (min-width: 768px) {
             .widget-pill {
                 bottom: 30px;
@@ -297,12 +270,27 @@
         /* Confetti Canvas */
         #confetti-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1000;
+        }
+
+        /* Loader */
+        .loader-ring { display: inline-block; width: 20px; height: 20px; }
+        .loader-ring:after {
+            content: " "; display: block; width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid #fff; border-color: #fff transparent #fff transparent;
+            animation: ring 1.2s linear infinite;
+        }
+        @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* File Upload */
+        .file-drop-zone {
+            border: 2px dashed rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.05);
         }
     </style>
 </head>
@@ -395,12 +383,12 @@
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="timers">Timers</span>
                 </button>
-
-                <button onclick="showPage('ai')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
-                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400 group-hover:bg-pink-500 group-hover:text-white transition-all flex-shrink-0">
-                        <i class="fas fa-wand-magic-sparkles text-lg"></i>
+                
+                <button onclick="showPage('trash')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                    <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 group-hover:bg-red-500 group-hover:text-white transition-all flex-shrink-0">
+                        <i class="fas fa-trash-alt text-lg"></i>
                     </div>
-                    <span class="font-medium nav-text whitespace-nowrap" data-i18n="askAi">AI Assistant</span>
+                    <span class="font-medium nav-text whitespace-nowrap" data-i18n="trash">Trash Bin</span>
                 </button>
             </nav>
 
@@ -418,7 +406,7 @@
         <!-- Main Content -->
         <main class="flex-1 flex flex-col relative h-full overflow-hidden w-full">
             
-            <!-- Mobile Header (with Toggle) -->
+            <!-- Mobile Header -->
             <header class="md:hidden flex items-center justify-between p-4 glass-panel m-4 rounded-2xl z-30 shrink-0">
                 <div class="flex items-center gap-3">
                     <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
@@ -432,7 +420,7 @@
                 </button>
             </header>
 
-            <!-- Toggle Button Desktop (Top Left of Main Area) -->
+            <!-- Toggle Button Desktop -->
             <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 left-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5">
                 <i class="fas fa-bars"></i>
             </button>
@@ -444,23 +432,11 @@
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
-                            <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills, one hour at a time.</p>
+                            <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills.</p>
                         </div>
                         <button onclick="openAddModal('course')" class="accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
                         </button>
-                    </div>
-
-                    <!-- Stats Row -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="glass-card p-4 rounded-2xl">
-                            <div class="text-slate-400 text-xs uppercase font-bold mb-1" data-i18n="active">Active</div>
-                            <div class="text-2xl font-bold text-white" id="stat-active-courses">0</div>
-                        </div>
-                        <div class="glass-card p-4 rounded-2xl">
-                            <div class="text-slate-400 text-xs uppercase font-bold mb-1" data-i18n="hoursDone">Hours Done</div>
-                            <div class="text-2xl font-bold accent-text" style="color: var(--accent-color)" id="stat-total-hours">0</div>
-                        </div>
                     </div>
 
                     <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -493,8 +469,22 @@
                     </div>
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 </section>
+                
+                <!-- Trash Page -->
+                <section id="page-trash" class="page-section hidden max-w-4xl mx-auto pt-4 md:pt-0">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-1 text-red-400" data-i18n="trash">Trash Bin</h2>
+                            <p class="text-slate-400 text-xs md:text-sm">Recover items or delete them permanently.</p>
+                        </div>
+                        <button onclick="emptyTrash()" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition-all">
+                            <i class="fas fa-dumpster-fire mr-2"></i> Empty Trash
+                        </button>
+                    </div>
+                    <div id="trash-list" class="space-y-3"></div>
+                </section>
 
-                <!-- Counters / Timers Page -->
+                <!-- Counters / AI / Settings (Existing structure preserved) -->
                 <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-10">
                     <div class="text-center mb-6">
                         <h2 class="text-2xl md:text-3xl font-bold accent-text mb-2" style="color: var(--accent-color)" data-i18n="timers">Time & Tally</h2>
@@ -503,16 +493,11 @@
                             <button onclick="switchCounterTab('tally')" id="tab-tally" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white transition-all" data-i18n="counter">Counter</button>
                         </div>
                     </div>
-
-                    <!-- Clock View -->
                     <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
-                        <!-- Mode Toggle -->
                         <div class="flex bg-black/20 p-1 rounded-xl mb-8">
                             <button onclick="setTimerMode('stopwatch')" id="btn-mode-stopwatch" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="stopwatch">Stopwatch</button>
                             <button onclick="setTimerMode('timer')" id="btn-mode-timer" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="timer">Timer</button>
                         </div>
-
-                        <!-- Circular Display -->
                         <div class="relative w-64 h-64 max-w-[70vw] max-h-[70vw] mb-8">
                             <svg class="w-full h-full" viewBox="0 0 100 100">
                                 <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
@@ -523,8 +508,6 @@
                                 <input type="number" id="timer-input" class="hidden w-24 bg-transparent border-b border-white/20 text-center text-2xl font-mono text-white focus:outline-none focus:border-indigo-500 mt-2 text-base" placeholder="Min" min="1" value="25">
                             </div>
                         </div>
-
-                        <!-- Controls -->
                         <div class="flex gap-4">
                             <button onclick="toggleTimer()" id="btn-timer-toggle" class="w-16 h-16 rounded-full accent-bg flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg accent-glow" style="background-color: var(--accent-color)">
                                 <i class="fas fa-play" id="icon-timer-toggle"></i>
@@ -534,37 +517,29 @@
                             </button>
                         </div>
                     </div>
-
-                    <!-- Tally Counter View -->
                     <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
                         <div class="flex bg-black/20 p-1 rounded-xl mb-8">
                             <button onclick="setTallyMode('up')" id="btn-tally-up" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="tasbih">Tasbih (Up)</button>
                             <button onclick="setTallyMode('down')" id="btn-tally-down" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="countdown">Countdown</button>
                         </div>
-
                         <div id="tally-input-container" class="hidden mb-4">
                             <label class="text-xs text-slate-400 block text-center mb-1" data-i18n="startValue">Start Value</label>
                             <input type="number" id="tally-start-val" value="33" class="w-24 bg-transparent border-b border-white/20 text-center text-xl font-mono text-white focus:outline-none text-base" onchange="resetTally()">
                         </div>
-
-                        <!-- Big Clicker Button -->
                         <button onclick="clickTally()" id="tally-btn" class="clicker-btn w-64 h-64 max-w-[70vw] max-h-[70vw] rounded-full border-8 border-white/5 bg-gradient-to-br from-black/20 to-black/40 flex flex-col items-center justify-center mb-8 shadow-2xl active:shadow-inner transition-all relative overflow-hidden group">
                             <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
                             <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2" id="tally-label" data-i18n="count">Count</span>
                             <span id="tally-display" class="text-7xl font-mono font-bold text-white drop-shadow-lg select-none">0</span>
                         </button>
-
                         <button onclick="resetTally()" class="text-sm text-slate-400 hover:text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/5">
                             <i class="fas fa-undo"></i> <span data-i18n="reset">Reset Counter</span>
                         </button>
                     </div>
                 </section>
 
-                <!-- AI Page -->
                 <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-4 md:pt-0">
                     <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
-                        
                         <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
@@ -575,11 +550,8 @@
                                     <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active</p>
                                 </div>
                             </div>
-                            <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold" data-i18n="clear">
-                                Clear
-                            </button>
+                            <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold" data-i18n="clear">Clear</button>
                         </div>
-
                         <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4">
                             <div class="flex gap-3">
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
@@ -590,7 +562,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="p-4 bg-black/20 backdrop-blur-md">
                             <div class="relative">
                                 <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
@@ -602,10 +573,8 @@
                     </div>
                 </section>
 
-                <!-- Settings Page -->
                 <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-4 md:pt-0">
                     <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
-                    
                     <div class="glass-panel rounded-3xl overflow-hidden mb-8">
                         <div class="p-6 border-b border-white/5">
                             <div class="flex justify-between items-center mb-4">
@@ -618,12 +587,10 @@
                                     <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync"><i class="fas fa-sync-alt text-xs"></i></button>
                                 </div>
                             </div>
-                            
                             <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-key text-yellow-400"></i> <span data-i18n="apiConfig">API Configuration</span></h3>
                              <label class="text-xs text-slate-400 block mb-2" id="api-label-status">Default Key Active (Optional Override below)</label>
                             <input type="password" id="api-key-input" placeholder="Paste custom API Key here (Optional)..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm font-mono focus:outline-none focus:border-indigo-500 text-base" onchange="saveApiKey(this.value)">
                         </div>
-
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-palette accent-text"></i></div>
@@ -634,7 +601,6 @@
                             </div>
                             <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)">
                         </div>
-
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-moon"></i></div>
@@ -647,7 +613,6 @@
                                 <div class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 transition-transform shadow-md"></div>
                             </button>
                         </div>
-
                         <div class="p-6 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-language"></i></div>
@@ -661,7 +626,6 @@
                             </button>
                         </div>
                     </div>
-                    
                     <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2">
                         <i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span>
                     </button>
@@ -694,26 +658,16 @@
 
             <!-- Mobile Dock Nav -->
             <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20">
-                <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]">
-                    <i class="fas fa-graduation-cap text-xl"></i>
-                </button>
-                <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]">
-                    <i class="fas fa-check-circle text-xl"></i>
-                </button>
-                <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]">
-                    <i class="fas fa-stopwatch text-xl"></i>
-                </button>
-                <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]">
-                    <i class="fas fa-book-open text-xl"></i>
-                </button>
-                <button onclick="showPage('ai')" class="nav-link flex flex-col items-center gap-1 p-2 text-pink-400 min-h-[44px]">
-                    <i class="fas fa-wand-magic-sparkles text-xl"></i>
-                </button>
+                <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-graduation-cap text-xl"></i></button>
+                <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-check-circle text-xl"></i></button>
+                <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-stopwatch text-xl"></i></button>
+                <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-book-open text-xl"></i></button>
+                <button onclick="showPage('ai')" class="nav-link flex flex-col items-center gap-1 p-2 text-pink-400 min-h-[44px]"><i class="fas fa-wand-magic-sparkles text-xl"></i></button>
             </nav>
         </main>
     </div>
 
-    <!-- Modals (Courses, Tasks, Books) -->
+    <!-- Modals -->
     <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeAllModals()"></div>
 
     <!-- Widget Detail Modal -->
@@ -722,7 +676,6 @@
             <button onclick="closeAllModals()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fas fa-times"></i></button>
             <h3 class="text-xl font-bold text-white mb-1">Daily Snapshot</h3>
             <p class="text-xs text-slate-400 mb-4">Here is how you are doing today.</p>
-            
             <div class="grid grid-cols-2 gap-3 mb-4">
                 <div class="bg-white/5 rounded-xl p-3 text-center">
                     <div class="text-2xl font-bold text-purple-400" id="detail-tasks-done">0</div>
@@ -733,7 +686,6 @@
                     <div class="text-[10px] uppercase tracking-wide text-slate-400">Remaining</div>
                 </div>
             </div>
-            
             <div class="mb-2">
                 <div class="flex justify-between text-xs text-slate-300 mb-1"><span>Daily Progress</span><span id="detail-progress-txt">0%</span></div>
                 <div class="w-full bg-black/20 h-2 rounded-full overflow-hidden">
@@ -743,73 +695,59 @@
         </div>
     </div>
 
-    <!-- Course Modal -->
-    <div id="course-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
-        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl shadow-indigo-500/20">
-            <h3 class="text-2xl font-bold mb-6 text-white" data-i18n="addCourse">Manage Course</h3>
-            <input type="hidden" id="course-id">
-            <div class="space-y-5">
-                <input type="text" id="course-name" placeholder="Course Name" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" data-i18n="totalHrs">Total Hrs</label><input type="number" id="course-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
-                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" data-i18n="doneHrs">Done Hrs</label><input type="number" id="course-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
-                </div>
+    <!-- Generic Template for Add/Edit (Course/Task/Book) -->
+    <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
+        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
+            <input type="hidden" id="modal-type">
+            <input type="hidden" id="modal-id">
+            
+            <div class="space-y-4">
+                <input type="text" id="modal-name" placeholder="Title/Name" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base">
                 
-                <!-- Voice Recorder UI -->
+                <div id="modal-stats-row" class="grid grid-cols-2 gap-4 hidden">
+                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-total">Total</label><input type="number" id="modal-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
+                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done">Done</label><input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
+                </div>
+
+                <textarea id="modal-desc" rows="2" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
+
+                <!-- Voice Note -->
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-slate-400" data-i18n="voiceNote">VOICE NOTE</span>
-                        <button onclick="toggleAudioRecording(this, 'course')" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
+                        <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
+                        <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
                             <i class="fas fa-microphone"></i> <span>Record</span>
                         </button>
                     </div>
-                    <div id="course-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
-                        <audio id="course-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
-                        <button onclick="deleteAudioNote('course')" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
+                    <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
+                        <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
+                        <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
 
-                <textarea id="course-notes" rows="3" placeholder="Syllabus / Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
-                <div class="flex gap-2 justify-end">
-                    <button onclick="deleteCourse()" id="btn-delete-course" class="p-3 text-red-400 hidden hover:bg-red-500/10 rounded-xl"><i class="fas fa-trash"></i></button>
-                    <button onclick="saveCourse()" class="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors" data-i18n="save">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Task Modal -->
-    <div id="task-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
-        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl shadow-purple-500/20">
-            <h3 class="text-2xl font-bold mb-6 text-white" data-i18n="addTask">Manage Task</h3>
-            <input type="hidden" id="task-id">
-            <div class="space-y-5">
-                <input type="text" id="task-name" placeholder="Task Name" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors text-base">
-                
-                <!-- Voice Recorder UI -->
+                <!-- Files Upload -->
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-slate-400" data-i18n="voiceNote">VOICE NOTE</span>
-                        <button onclick="toggleAudioRecording(this, 'task')" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
-                            <i class="fas fa-microphone"></i> <span>Record</span>
-                        </button>
+                     <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
+                        <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                            <i class="fas fa-paperclip"></i> <span>Attach</span>
+                            <input type="file" multiple class="hidden" onchange="handleFileUpload(this)">
+                        </label>
                     </div>
-                    <div id="task-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
-                        <audio id="task-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
-                        <button onclick="deleteAudioNote('task')" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
-                    </div>
+                    <div id="file-list-preview" class="space-y-2 mt-2"></div>
                 </div>
 
-                <!-- ADDED: Drawing Tools UI -->
-                <div class="glass-panel p-3 rounded-xl bg-black/10">
+                <!-- Drawing (Tasks only) -->
+                <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10 hidden">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
                         <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
                             <i class="fas fa-pencil-alt"></i> <span id="btn-draw-label">Add Drawing</span>
                         </button>
                     </div>
-                    <div id="task-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
-                        <img id="task-drawing-img" src="" class="max-h-32 rounded border border-white/10">
+                    <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
+                        <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10">
                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white"><i class="fas fa-edit"></i></button>
                             <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white"><i class="fas fa-trash"></i></button>
@@ -817,36 +755,14 @@
                     </div>
                 </div>
 
-                <textarea id="task-desc" rows="3" placeholder="Description..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
-                <div class="flex gap-2 justify-end">
-                    <button onclick="deleteTask()" id="btn-delete-task" class="p-3 text-red-400 hidden hover:bg-red-500/10 rounded-xl"><i class="fas fa-trash"></i></button>
-                    <button onclick="saveTask()" class="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-500 transition-colors" data-i18n="save">Save</button>
+                <div class="flex gap-2 justify-end pt-2">
+                    <button onclick="saveItem()" class="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Book Modal -->
-    <div id="book-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
-        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl shadow-emerald-500/20">
-            <h3 class="text-2xl font-bold mb-6 text-white" data-i18n="addBook">Manage Book</h3>
-            <input type="hidden" id="book-id">
-            <div class="space-y-5">
-                <input type="text" id="book-name" placeholder="Book Title" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-emerald-500 transition-colors text-base">
-                <textarea id="book-desc" rows="2" placeholder="Author..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" data-i18n="totalPages">Total Pages</label><input type="number" id="book-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
-                    <div><label class="text-[10px] text-slate-400 uppercase font-bold" data-i18n="readPages">Read Pages</label><input type="number" id="book-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
-                </div>
-                <div class="flex gap-2 justify-end">
-                    <button onclick="deleteBook()" id="btn-delete-book" class="p-3 text-red-400 hidden hover:bg-red-500/10 rounded-xl"><i class="fas fa-trash"></i></button>
-                    <button onclick="saveBook()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-500 transition-colors" data-i18n="save">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Drawing Modal (Mobile Optimized) -->
+    <!-- Drawing Modal -->
     <div id="drawing-modal" class="fixed inset-0 bg-[#0f172a] hidden flex-col z-[70] animate-fade-in">
         <div class="h-16 bg-[#1e293b] flex items-center justify-between px-4 shrink-0 border-b border-white/10 shadow-lg relative z-10">
             <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Exit</span></button>
@@ -887,7 +803,21 @@
         let app, auth, db, currentUser = null;
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Firebase Init Error:", e); }
 
-        window.handleGoogleLogin = async () => { if (auth) await signInWithPopup(auth, new GoogleAuthProvider()); };
+        window.handleGoogleLogin = async () => { 
+            if (auth) {
+                try {
+                    await signInWithPopup(auth, new GoogleAuthProvider()); 
+                } catch (error) {
+                    console.error("Login Error:", error);
+                    if (error.code === 'auth/unauthorized-domain') {
+                        alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)' for this preview.");
+                    } else {
+                        alert("Login Failed: " + error.message);
+                    }
+                }
+            }
+        };
+
         window.handleLogout = async () => { 
             if (auth) await signOut(auth); 
             localStorage.removeItem('hm_user'); 
@@ -938,7 +868,7 @@
                     console.error("Save Error:", e);
                     const statusEl = document.getElementById('cloud-status');
                     if(statusEl) {
-                        statusEl.innerText = "Sync Error";
+                        statusEl.innerText = "Sync Error (Size?)";
                         statusEl.classList.add('text-red-400');
                     }
                 }
@@ -946,228 +876,121 @@
         }
         
         async function loadData(uid) { 
-    onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
-        if(s.exists()) { 
-            console.log("Cloud data found. Syncing down.");
-            // دمج البيانات السحابية مع المحلية
-            window.appData = { ...window.appData, ...s.data() }; 
-            localStorage.setItem('hm_data', JSON.stringify(window.appData));
-            refreshAllUI();
-            
-            // تحديث حالة المزامنة في الإعدادات
-            const statusEl = document.getElementById('cloud-status');
-            if(statusEl) {
-                statusEl.innerText = "Synced";
-                statusEl.classList.remove('text-red-400');
-                statusEl.classList.add('text-green-400');
-            }
-        } else {
-            console.log("No cloud data yet.");
-            // التعديل هنا: لا تقم بالحفظ التلقائي فوراً إلا إذا كان لدينا بيانات محلية لنرفعها
-            if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) {
-                saveData();
-            }
+            onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
+                if(s.exists()) { 
+                    window.appData = { ...window.appData, ...s.data() }; 
+                    localStorage.setItem('hm_data', JSON.stringify(window.appData));
+                    refreshAllUI();
+                    
+                    const statusEl = document.getElementById('cloud-status');
+                    if(statusEl) {
+                        statusEl.innerText = "Synced";
+                        statusEl.classList.remove('text-red-400');
+                        statusEl.classList.add('text-green-400');
+                    }
+                } else {
+                    if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) {
+                        saveData();
+                    }
+                }
+            }); 
         }
-    }); 
-}
         window.triggerCloudSave = saveData;
     </script>
 
     <script>
-        // UPDATED API KEY FOR GEMINI AI
-        const defaultApiKey = "AIzaSyBJtxfgtCzLq9yx36QkuWYwzrdpYHZ02aM"; 
-        
-        // Simple notification sound (Bell/Chime) encoded in Base64
-        const alarmSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."); 
-        // Note: Using a short synthesized sine wave beep for functionality without external assets
-        const beepSound = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."; 
-
-        // Let's create a pleasant "Ding" sound programmatically to avoid large base64 strings
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        function playNotificationSound() {
-            if (audioContext.state === 'suspended') { audioContext.resume(); }
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-            oscillator.frequency.exponentialRampToValueAtTime(1046.5, audioContext.currentTime + 0.1); // C6
-            
-            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + 1.5);
-        }
-
-        function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
-        function saveApiKey(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); }
-
-        // --- Translation Data ---
-        const translations = {
-            en: {
-                courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", askAi: "AI Assistant",
-                timers: "Timers", active: "Active", hoursDone: "Hours Done", add: "Add", save: "Save",
-                addCourse: "Manage Course", addTask: "Manage Task", addBook: "Manage Book",
-                clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer",
-                tasbih: "Tasbih (Up)", countdown: "Countdown", startValue: "Start Value",
-                count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant",
-                assistantStatus: "Agent Mode Active", clear: "Clear",
-                aiWelcome: "Hello! I can add tasks, books, or courses for you. Try 'Add a 300 page book named Atomic Habits'.",
-                apiConfig: "API Configuration", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
-                themeMode: "Dark/Light Mode", switchEnv: "Switch environment", language: "Language", logout: "Logout",
-                welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.",
-                continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
-                trackLearning: "Master your skills, one hour at a time.", manageTasks: "Organize your chaos.",
-                trackReading: "Build your knowledge base.", totalHrs: "Total Hrs", doneHrs: "Done Hrs",
-                voiceNote: "VOICE NOTE", totalPages: "Total Pages", readPages: "Read Pages", back: "Exit"
-            },
-            ar: {
-                courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", askAi: "المساعد الذكي",
-                timers: "المؤقتات", active: "نشط", hoursDone: "ساعات منجزة", add: "إضافة", save: "حفظ",
-                addCourse: "إدارة الدورة", addTask: "إدارة المهمة", addBook: "إدارة الكتاب",
-                clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت",
-                tasbih: "تسبيح (تصاعدي)", countdown: "عد تنازلي", startValue: "قيمة البدء",
-                count: "عد", reset: "إعادة تعيين", assistantTitle: "مساعد جيمناي",
-                assistantStatus: "الوضع الذكي نشط", clear: "مسح",
-                aiWelcome: "مرحباً! يمكنني إضافة مهام أو كتب أو دورات لك. جرب 'أضف كتاباً باسم عادات ذرية من 300 صفحة'.",
-                apiConfig: "إعدادات API", nebulaColor: "لون السديم", customizeAccent: "تخصيص لون التمييز",
-                themeMode: "الوضع الداكن/الفاتح", switchEnv: "تبديل البيئة", language: "اللغة", logout: "تسجيل خروج",
-                welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك عبر الأبعاد.",
-                continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف (غير متصل)",
-                trackLearning: "أتقن مهاراتك، ساعة بساعة.", manageTasks: "نظم فوضى حياتك.",
-                trackReading: "ابنِ قاعدتك المعرفية.", totalHrs: "إجمالي الساعات", doneHrs: "المنجز",
-                voiceNote: "ملاحظة صوتية", totalPages: "إجمالي الصفحات", readPages: "المقروء", back: "خروج"
-            }
+        // --- Core App Logic & State ---
+        window.appData = { 
+            courses: [], 
+            tasks: [], 
+            books: [], 
+            settings: { theme: 'dark', lang: 'en', accent: '#6366f1' } 
         };
 
-        // --- Helper functions for Edit/Add ---
-        window.openAddModal = (type) => {
-            if(type === 'course') {
-                document.getElementById('course-id').value = '';
-                document.getElementById('course-name').value = '';
-                document.getElementById('course-total').value = '';
-                document.getElementById('course-done').value = '';
-                document.getElementById('course-notes').value = '';
-                deleteAudioNote('course');
-                document.getElementById('btn-delete-course').classList.add('hidden');
-                openModal('course-modal');
-            } else if(type === 'task') {
-                document.getElementById('task-id').value = '';
-                document.getElementById('task-name').value = '';
-                document.getElementById('task-desc').value = '';
-                deleteAudioNote('task');
-                
-                // Reset Drawing UI
-                tempDrawingData = null;
-                document.getElementById('task-drawing-preview').classList.add('hidden');
-                document.getElementById('task-drawing-img').src = '';
-                document.getElementById('btn-draw-label').innerText = "Add Drawing";
-
-                document.getElementById('btn-delete-task').classList.add('hidden');
-                openModal('task-modal');
-            } else if(type === 'book') {
-                document.getElementById('book-id').value = '';
-                document.getElementById('book-name').value = '';
-                document.getElementById('book-desc').value = '';
-                document.getElementById('book-total').value = '';
-                document.getElementById('book-done').value = '';
-                document.getElementById('btn-delete-book').classList.add('hidden');
-                openModal('book-modal');
-            }
-        };
-
-        window.openEditModal = (type, id) => {
-            if(type === 'course') {
-                const c = window.appData.courses.find(x => x.id == id);
-                if(!c) return;
-                document.getElementById('course-id').value = c.id;
-                document.getElementById('course-name').value = c.name;
-                document.getElementById('course-total').value = c.total;
-                document.getElementById('course-done').value = c.done;
-                document.getElementById('course-notes').value = c.notes || '';
-                tempAudioBase64 = c.audioNote || null;
-                if(c.audioNote) showAudioPlayer('course'); else deleteAudioNote('course');
-                document.getElementById('btn-delete-course').classList.remove('hidden');
-                openModal('course-modal');
-            } else if(type === 'task') {
-                const t = window.appData.tasks.find(x => x.id == id);
-                if(!t) return;
-                document.getElementById('task-id').value = t.id;
-                document.getElementById('task-name').value = t.name;
-                document.getElementById('task-desc').value = t.desc || '';
-                tempAudioBase64 = t.audioNote || null;
-                if(t.audioNote) showAudioPlayer('task'); else deleteAudioNote('task');
-                
-                // Load Drawing
-                tempDrawingData = t.drawing || null;
-                if(t.drawing) {
-                    document.getElementById('task-drawing-preview').classList.remove('hidden');
-                    document.getElementById('task-drawing-img').src = t.drawing;
-                    document.getElementById('btn-draw-label').innerText = "Edit Drawing";
-                } else {
-                    document.getElementById('task-drawing-preview').classList.add('hidden');
-                    document.getElementById('task-drawing-img').src = '';
-                    document.getElementById('btn-draw-label').innerText = "Add Drawing";
-                }
-
-                document.getElementById('btn-delete-task').classList.remove('hidden');
-                openModal('task-modal');
-            } else if(type === 'book') {
-                const b = window.appData.books.find(x => x.id == id);
-                if(!b) return;
-                document.getElementById('book-id').value = b.id;
-                document.getElementById('book-name').value = b.name;
-                document.getElementById('book-desc').value = b.desc || '';
-                document.getElementById('book-total').value = b.total;
-                document.getElementById('book-done').value = b.done;
-                document.getElementById('btn-delete-book').classList.remove('hidden');
-                openModal('book-modal');
-            }
-        };
-
-        // --- Core App Logic ---
-        window.appData = { courses: [], tasks: [], books: [], settings: { theme: 'dark', lang: 'en', accent: '#6366f1' } };
-
-        window.onload = () => {
-            const localData = localStorage.getItem('hm_data');
-            if (localData) window.appData = JSON.parse(localData);
-
-            gsap.timeline()
-                .from("#splash-screen svg", { scale: 0, rotation: -90, duration: 1.5, ease: "elastic.out(1, 0.5)" })
-                .to("#splash-screen", { opacity: 0, duration: 0.8, delay: 0.5, onComplete: () => { document.getElementById("splash-screen").style.display = 'none'; }});
-
-            applyTheme(window.appData.settings.theme);
-            applyLanguage(window.appData.settings.lang);
-            applyAccentColor(window.appData.settings.accent || '#6366f1');
-
-            if(localStorage.getItem('hm_api_key')) document.getElementById('api-label-status').innerText = "Custom API Key Active";
-
-            if(localStorage.getItem('hm_guest')) enterAsGuest();
-            else if (!window.authObj && !localStorage.getItem('hm_data')) {
-                document.getElementById('login-screen').classList.remove('hidden');
-            }
-
+        // --- Attach UI Functions to Window IMMEDIATELY ---
+        window.enterAsGuest = function() {
+            localStorage.setItem('hm_guest', 'true');
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
             refreshAllUI();
-            setupCanvas();
-            
-            document.addEventListener('mousemove', (e) => {
-                document.querySelectorAll('.glass-card').forEach(card => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-                });
-            });
+            showPage('courses');
         };
+
+        window.toggleSidebar = function() {
+            const sb = document.getElementById('desktop-sidebar');
+            if(sb.classList.contains('sidebar-collapsed')) sb.classList.remove('sidebar-collapsed'); else sb.classList.add('sidebar-collapsed');
+        };
+
+        // --- Timer State ---
+        let timerInterval = null, timerSeconds = 0, timerTarget = 0, timerMode = 'stopwatch', timerRunning = false;
+        
+        window.setTimerMode = function(mode) {
+            timerMode = mode; window.stopTimer();
+            const btnSw = document.getElementById('btn-mode-stopwatch');
+            const btnTm = document.getElementById('btn-mode-timer');
+            const input = document.getElementById('timer-input');
+            const display = document.getElementById('timer-display');
+            if(mode === 'stopwatch') {
+                btnSw.classList.replace('text-slate-400', 'text-white'); btnSw.classList.replace('hover:text-white', 'bg-white/10');
+                btnTm.classList.replace('text-white', 'text-slate-400'); btnTm.classList.replace('bg-white/10', 'hover:text-white');
+                input.classList.add('hidden'); display.classList.remove('hidden');
+                timerSeconds = 0; updateTimerDisplay();
+            } else {
+                btnTm.classList.replace('text-slate-400', 'text-white'); btnTm.classList.replace('hover:text-white', 'bg-white/10');
+                btnSw.classList.replace('text-white', 'text-slate-400'); btnSw.classList.replace('bg-white/10', 'hover:text-white');
+                input.classList.remove('hidden'); display.classList.add('hidden');
+            }
+        };
+
+        window.toggleTimer = function() { if(timerRunning) window.stopTimer(); else window.startTimer(); };
+        
+        window.startTimer = function() {
+            if(timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
+                const mins = parseInt(document.getElementById('timer-input').value) || 25;
+                timerTarget = mins * 60; timerSeconds = timerTarget;
+                document.getElementById('timer-input').classList.add('hidden'); document.getElementById('timer-display').classList.remove('hidden');
+            }
+            timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
+            timerInterval = setInterval(() => {
+                if(timerMode === 'stopwatch') timerSeconds++;
+                else { 
+                    timerSeconds--; 
+                    if(timerSeconds <= 0) { 
+                        window.stopTimer(); 
+                        alert("Time's Up!"); 
+                        window.resetTimer(); 
+                        return; 
+                    } 
+                }
+                updateTimerDisplay();
+                updateWidget();
+            }, 1000);
+            updateWidget();
+        };
+
+        window.stopTimer = function() { 
+            timerRunning = false; 
+            clearInterval(timerInterval); 
+            document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
+            updateWidget();
+        };
+
+        window.resetTimer = function() { window.stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); };
+        
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const s = (timerSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+            const circle = document.getElementById('timer-progress');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            if(timerMode === 'timer' && timerTarget > 0) circle.style.strokeDashoffset = circumference - ((timerSeconds / timerTarget) * circumference);
+            else circle.style.strokeDashoffset = 0;
+        }
 
         // --- Tally Logic ---
         let tallyMode = 'up'; let tallyCount = 0;
-        function switchCounterTab(tab) {
+        window.switchCounterTab = function(tab) {
             if(tab === 'clock') {
                 document.getElementById('view-clock').classList.remove('hidden');
                 document.getElementById('view-tally').classList.add('hidden');
@@ -1183,8 +1006,9 @@
                 document.getElementById('tab-clock').classList.replace('text-white', 'text-slate-400');
                 document.getElementById('tab-clock').classList.remove('bg-white/10');
             }
-        }
-        function setTallyMode(mode) {
+        };
+
+        window.setTallyMode = function(mode) {
             tallyMode = mode;
             const btnUp = document.getElementById('btn-tally-up');
             const btnDown = document.getElementById('btn-tally-down');
@@ -1197,106 +1021,478 @@
                 btnDown.classList.replace('text-white', 'text-slate-400'); btnDown.classList.remove('bg-white/10');
                 inputContainer.classList.add('hidden');
                 label.innerText = translations[lang].tasbih;
-                resetTally();
+                window.resetTally();
             } else {
                 btnDown.classList.replace('text-slate-400', 'text-white'); btnDown.classList.add('bg-white/10');
                 btnUp.classList.replace('text-white', 'text-slate-400'); btnUp.classList.remove('bg-white/10');
                 inputContainer.classList.remove('hidden');
                 label.innerText = translations[lang].countdown;
-                resetTally();
+                window.resetTally();
             }
-        }
-        function clickTally() {
+        };
+
+        window.clickTally = function() {
             if(tallyMode === 'up') tallyCount++; else if(tallyCount > 0) tallyCount--;
             document.getElementById('tally-display').innerText = tallyCount;
             const btn = document.getElementById('tally-btn');
             btn.classList.add('clicked');
             setTimeout(() => btn.classList.remove('clicked'), 100);
             if(navigator.vibrate) navigator.vibrate(20);
-        }
-        function resetTally() {
+        };
+
+        window.resetTally = function() {
             tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33);
             document.getElementById('tally-display').innerText = tallyCount;
-        }
+        };
 
-        // --- Timer Logic ---
-        let timerInterval = null, timerSeconds = 0, timerTarget = 0, timerMode = 'stopwatch', timerRunning = false;
-        function setTimerMode(mode) {
-            timerMode = mode; stopTimer();
-            const btnSw = document.getElementById('btn-mode-stopwatch');
-            const btnTm = document.getElementById('btn-mode-timer');
-            const input = document.getElementById('timer-input');
-            const display = document.getElementById('timer-display');
-            if(mode === 'stopwatch') {
-                btnSw.classList.replace('text-slate-400', 'text-white'); btnSw.classList.replace('hover:text-white', 'bg-white/10');
-                btnTm.classList.replace('text-white', 'text-slate-400'); btnTm.classList.replace('bg-white/10', 'hover:text-white');
-                input.classList.add('hidden'); display.classList.remove('hidden');
-                timerSeconds = 0; updateTimerDisplay();
-            } else {
-                btnTm.classList.replace('text-slate-400', 'text-white'); btnTm.classList.replace('hover:text-white', 'bg-white/10');
-                btnSw.classList.replace('text-white', 'text-slate-400'); btnSw.classList.replace('bg-white/10', 'hover:text-white');
-                input.classList.remove('hidden'); display.classList.add('hidden');
-            }
-        }
-        function toggleTimer() { if(timerRunning) stopTimer(); else startTimer(); }
-        function startTimer() {
-            if(timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
-                const mins = parseInt(document.getElementById('timer-input').value) || 25;
-                timerTarget = mins * 60; timerSeconds = timerTarget;
-                document.getElementById('timer-input').classList.add('hidden'); document.getElementById('timer-display').classList.remove('hidden');
-            }
-            timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
-            timerInterval = setInterval(() => {
-                if(timerMode === 'stopwatch') timerSeconds++;
-                else { 
-                    timerSeconds--; 
-                    if(timerSeconds <= 0) { 
-                        stopTimer(); 
-                        playNotificationSound(); // Play the chime
-                        alert("Time's Up!"); 
-                        resetTimer(); 
-                        return; 
-                    } 
+        const defaultApiKey = "AIzaSyBJtxfgtCzLq9yx36QkuWYwzrdpYHZ02aM"; 
+
+        // Temporary state for the modal
+        let tempAudioBase64 = null;
+        let tempDrawingData = null;
+        let tempFiles = [];
+
+        // --- Init ---
+        window.onload = () => {
+            try {
+                const localData = localStorage.getItem('hm_data');
+                if (localData) {
+                    try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); }
                 }
-                updateTimerDisplay();
-                updateWidget(); // Update widget timer
-            }, 1000);
-            updateWidget();
-        }
-        function stopTimer() { 
-            timerRunning = false; 
-            clearInterval(timerInterval); 
-            document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
-            updateWidget();
-        }
-        function resetTimer() { stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); }
-        function updateTimerDisplay() {
-            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-            const s = (timerSeconds % 60).toString().padStart(2, '0');
-            const timeStr = `${m}:${s}`;
-            document.getElementById('timer-display').innerText = timeStr;
-            const circle = document.getElementById('timer-progress');
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
-            if(timerMode === 'timer' && timerTarget > 0) circle.style.strokeDashoffset = circumference - ((timerSeconds / timerTarget) * circumference);
-            else circle.style.strokeDashoffset = 0;
+
+                // Migration: Ensure all items have `deleted` property
+                ['courses','tasks','books'].forEach(cat => {
+                    if(window.appData[cat]) window.appData[cat].forEach(x => { if(typeof x.deleted === 'undefined') x.deleted = false; if(!x.files) x.files = []; });
+                });
+
+                gsap.timeline()
+                    .from("#splash-screen svg", { scale: 0, rotation: -90, duration: 1.5, ease: "elastic.out(1, 0.5)" })
+                    .to("#splash-screen", { opacity: 0, duration: 0.8, delay: 0.5, onComplete: () => { document.getElementById("splash-screen").style.display = 'none'; }});
+
+                applyTheme(window.appData.settings.theme);
+                applyLanguage(window.appData.settings.lang);
+                applyAccentColor(window.appData.settings.accent || '#6366f1');
+
+                if(localStorage.getItem('hm_api_key')) document.getElementById('api-label-status').innerText = "Custom API Key Active";
+
+                if(localStorage.getItem('hm_guest')) window.enterAsGuest();
+                else if (!window.authObj && !localStorage.getItem('hm_data')) {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                }
+
+                refreshAllUI();
+                setupCanvas();
+                if(window.Sortable) initSortables(); // Drag & Drop Init
+            
+                // Mouse effect
+                document.addEventListener('mousemove', (e) => {
+                    document.querySelectorAll('.glass-card').forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        card.style.setProperty('--mouse-x', `${x}px`);
+                        card.style.setProperty('--mouse-y', `${y}px`);
+                    });
+                });
+            } catch(err) {
+                console.error("Init Error:", err);
+            }
+        };
+
+        function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
+        window.saveApiKey = function(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); };
+
+        // --- Drag & Drop (SortableJS) ---
+        function initSortables() {
+            const lists = ['courses-list', 'books-list'];
+            lists.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    new Sortable(el, {
+                        handle: '.drag-handle',
+                        animation: 150,
+                        ghostClass: 'sortable-ghost',
+                        onEnd: function (evt) {
+                            const type = id === 'courses-list' ? 'courses' : 'books';
+                            // Reorder array based on DOM order
+                            const newOrder = [];
+                            const children = Array.from(el.children);
+                            children.forEach(child => {
+                                const itemId = child.getAttribute('data-id');
+                                const item = window.appData[type].find(x => x.id == itemId);
+                                if(item) newOrder.push(item);
+                            });
+                            const deletedItems = window.appData[type].filter(x => x.deleted);
+                            window.appData[type] = [...newOrder, ...deletedItems]; 
+                            commitData();
+                        }
+                    });
+                }
+            });
         }
 
-        // --- Sidebar & General ---
-        let sidebarCollapsed = false;
-        function toggleSidebar() {
-            const sb = document.getElementById('desktop-sidebar');
-            if(sidebarCollapsed) sb.classList.remove('sidebar-collapsed'); else sb.classList.add('sidebar-collapsed');
-            sidebarCollapsed = !sidebarCollapsed;
+        // --- Translations ---
+        const translations = {
+            en: {
+                courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", trash: "Trash Bin", askAi: "AI Assistant",
+                timers: "Timers", add: "Add", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.",
+                trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.",
+                continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
+                clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "Tasbih (Up)", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", apiConfig: "API Configuration", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", themeMode: "Dark/Light Mode", switchEnv: "Switch environment", language: "Language", logout: "Logout", back: "Exit"
+            },
+            ar: {
+                courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", trash: "سلة المهملات", askAi: "المساعد الذكي",
+                timers: "المؤقتات", add: "إضافة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.",
+                trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.",
+                continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
+                clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "تسبيح", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", apiConfig: "إعدادات API", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", themeMode: "الوضع", switchEnv: "تبديل", language: "اللغة", logout: "خروج", back: "رجوع"
+            }
+        };
+
+        // --- Unified Modal Logic ---
+        window.openAddModal = function(type) {
+            resetModalInputs();
+            document.getElementById('modal-type').value = type;
+            document.getElementById('modal-title').innerText = type === 'course' ? 'Add Course' : type === 'task' ? 'Add Task' : 'Add Book';
+            
+            // Stats inputs visibility
+            const statsRow = document.getElementById('modal-stats-row');
+            if(type === 'task') {
+                statsRow.classList.add('hidden');
+                document.getElementById('modal-drawing-section').classList.remove('hidden');
+            } else {
+                statsRow.classList.remove('hidden');
+                document.getElementById('modal-drawing-section').classList.add('hidden');
+                const lblTotal = document.getElementById('lbl-total');
+                const lblDone = document.getElementById('lbl-done');
+                if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
+                else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
+            }
+            window.openModal('generic-modal');
+        };
+
+        window.openEditModal = function(type, id) {
+            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            const item = list.find(x => x.id == id);
+            if(!item) return;
+
+            resetModalInputs();
+            document.getElementById('modal-type').value = type;
+            document.getElementById('modal-id').value = id;
+            document.getElementById('modal-name').value = item.name;
+            document.getElementById('modal-desc').value = item.desc || item.notes || '';
+            document.getElementById('modal-title').innerText = 'Edit ' + (type.charAt(0).toUpperCase() + type.slice(1));
+
+            // Populate Fields
+            if(type !== 'task') {
+                document.getElementById('modal-stats-row').classList.remove('hidden');
+                document.getElementById('modal-total').value = item.total;
+                document.getElementById('modal-done').value = item.done;
+                const lblTotal = document.getElementById('lbl-total');
+                const lblDone = document.getElementById('lbl-done');
+                if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
+                else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
+                document.getElementById('modal-drawing-section').classList.add('hidden');
+            } else {
+                document.getElementById('modal-stats-row').classList.add('hidden');
+                document.getElementById('modal-drawing-section').classList.remove('hidden');
+                tempDrawingData = item.drawing || null;
+                if(tempDrawingData) {
+                    document.getElementById('modal-drawing-preview').classList.remove('hidden');
+                    document.getElementById('modal-drawing-img').src = tempDrawingData;
+                    document.getElementById('btn-draw-label').innerText = "Edit Drawing";
+                }
+            }
+
+            // Audio
+            tempAudioBase64 = item.audioNote || null;
+            if(tempAudioBase64) {
+                document.getElementById('modal-audio-player-container').classList.remove('hidden');
+                document.getElementById('modal-audio-player').src = tempAudioBase64;
+            }
+
+            // Files
+            if(item.files && item.files.length > 0) {
+                tempFiles = [...item.files];
+                renderFilePreview();
+            }
+
+            window.openModal('generic-modal');
+        };
+
+        function resetModalInputs() {
+            document.getElementById('modal-id').value = '';
+            document.getElementById('modal-name').value = '';
+            document.getElementById('modal-desc').value = '';
+            document.getElementById('modal-total').value = '';
+            document.getElementById('modal-done').value = '';
+            tempAudioBase64 = null;
+            tempDrawingData = null;
+            tempFiles = [];
+            document.getElementById('modal-audio-player-container').classList.add('hidden');
+            document.getElementById('modal-audio-player').src = "";
+            document.getElementById('modal-drawing-preview').classList.add('hidden');
+            document.getElementById('modal-drawing-img').src = "";
+            document.getElementById('btn-draw-label').innerText = "Add Drawing";
+            renderFilePreview();
         }
-        function enterAsGuest() {
-            localStorage.setItem('hm_guest', 'true');
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
+
+        window.saveItem = function() {
+            const type = document.getElementById('modal-type').value;
+            const id = document.getElementById('modal-id').value || Date.now();
+            const name = document.getElementById('modal-name').value;
+            const desc = document.getElementById('modal-desc').value;
+            const total = document.getElementById('modal-total').value;
+            const done = document.getElementById('modal-done').value;
+
+            if(!name) return alert("Name is required");
+
+            const newItem = {
+                id: Number(id),
+                name: name,
+                desc: desc, // Unified description field
+                notes: desc, // Legacy support for courses
+                audioNote: tempAudioBase64,
+                files: tempFiles,
+                deleted: false
+            };
+
+            if(type === 'task') {
+                newItem.completed = false; // Default state, preserving if editing needs lookup
+                newItem.drawing = tempDrawingData;
+                const idx = window.appData.tasks.findIndex(x => x.id == id);
+                if(idx > -1) newItem.completed = window.appData.tasks[idx].completed;
+                if(idx > -1) window.appData.tasks[idx] = newItem; else window.appData.tasks.push(newItem);
+            } else if(type === 'book') {
+                newItem.total = total; newItem.done = done; newItem.streak = 0;
+                const idx = window.appData.books.findIndex(x => x.id == id);
+                if(idx > -1) { newItem.streak = window.appData.books[idx].streak; window.appData.books[idx] = newItem; } 
+                else window.appData.books.push(newItem);
+                if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
+            } else if(type === 'course') {
+                newItem.total = total; newItem.done = done;
+                const idx = window.appData.courses.findIndex(x => x.id == id);
+                if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
+                if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
+            }
+
+            commitData();
+            window.closeAllModals();
             refreshAllUI();
-            showPage('courses');
+        };
+
+        // --- File Handling ---
+        window.handleFileUpload = function(input) {
+            const files = Array.from(input.files);
+            if(files.length === 0) return;
+
+            files.forEach(file => {
+                // Constraint: Strict limit due to Firestore Doc size (1MB max total doc)
+                if(file.size > 300 * 1024) { // 300KB Limit per file
+                    alert(`File ${file.name} is too large (>300KB). Please optimize it.`);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    tempFiles.push({
+                        name: file.name,
+                        type: file.type,
+                        data: e.target.result // Base64
+                    });
+                    renderFilePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+            input.value = ''; // Reset
+        };
+
+        function renderFilePreview() {
+            const container = document.getElementById('file-list-preview');
+            container.innerHTML = '';
+            tempFiles.forEach((f, idx) => {
+                let icon = 'fa-file';
+                if(f.type.includes('image')) icon = 'fa-image';
+                if(f.type.includes('pdf')) icon = 'fa-file-pdf';
+                if(f.type.includes('video')) icon = 'fa-video';
+                if(f.type.includes('audio')) icon = 'fa-music';
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <i class="fas ${icon} text-slate-400"></i>
+                            <span class="truncate max-w-[150px]">${f.name}</span>
+                        </div>
+                        <div class="flex gap-2">
+                             <a href="${f.data}" download="${f.name}" class="text-blue-400 hover:text-white"><i class="fas fa-download"></i></a>
+                             <button onclick="removeTempFile(${idx})" class="text-red-400 hover:text-white"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
         }
-        function showPage(pageId) {
+
+        window.removeTempFile = function(idx) {
+            tempFiles.splice(idx, 1);
+            renderFilePreview();
+        };
+
+        // --- Trash Logic ---
+        window.moveToTrash = function(type, id, e) {
+            e.stopPropagation();
+            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            const item = list.find(x => x.id == id);
+            if(item) {
+                item.deleted = true;
+                item.deletedAt = Date.now();
+                commitData();
+                refreshAllUI();
+            }
+        };
+
+        window.restoreFromTrash = function(type, id) {
+            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            const item = list.find(x => x.id == id);
+            if(item) {
+                item.deleted = false;
+                commitData();
+                refreshAllUI();
+            }
+        };
+
+        window.permanentDelete = function(type, id) {
+             if(type === 'course') window.appData.courses = window.appData.courses.filter(x => x.id != id);
+             if(type === 'task') window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
+             if(type === 'book') window.appData.books = window.appData.books.filter(x => x.id != id);
+             commitData();
+             refreshAllUI();
+        };
+
+        window.emptyTrash = function() {
+            if(!confirm("Permanently delete all items in trash?")) return;
+            window.appData.courses = window.appData.courses.filter(x => !x.deleted);
+            window.appData.tasks = window.appData.tasks.filter(x => !x.deleted);
+            window.appData.books = window.appData.books.filter(x => !x.deleted);
+            commitData();
+            refreshAllUI();
+        };
+
+        // --- Rendering ---
+        function renderCourses() {
+            const list = document.getElementById('courses-list'); list.innerHTML = '';
+            window.appData.courses.filter(c => !c.deleted).forEach(c => {
+                const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
+                list.innerHTML += `
+                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')">
+                         <div class="absolute top-3 right-3 flex gap-2 z-10">
+                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button>
+                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
+                        </div>
+                        <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3>
+                        ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''}
+                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span>
+                            <span class="font-bold text-accent">${percent}%</span>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function renderBooks() {
+            const list = document.getElementById('books-list'); list.innerHTML = '';
+            window.appData.books.filter(b => !b.deleted).forEach(b => {
+                const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
+                list.innerHTML += `
+                    <div class="glass-card p-5 rounded-3xl group cursor-pointer active:scale-[0.98] transition-all" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')">
+                        <div class="absolute top-3 right-3 flex gap-2 z-10">
+                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button>
+                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div>
+                            <div class="text-right mt-6">
+                                <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white mr-8">${b.name}</h3>
+                         ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''}
+                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>${b.done} / ${b.total} Pgs</span>
+                            <span>${percent}%</span>
+                        </div>
+                        <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button>
+                    </div>`;
+            });
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('tasks-list'); list.innerHTML = '';
+            window.appData.tasks.filter(t => !t.deleted).forEach(t => {
+                list.innerHTML += `
+                    <div class="glass-card p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} active:scale-[0.99] transition-all relative group">
+                        <button onclick="toggleTask(${t.id})" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''}" style="${t.completed ? 'background:var(--accent-color)' : ''}">
+                            ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
+                        </button>
+                        <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
+                                <div class="flex gap-2">
+                                     ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''}
+                                     ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''}
+                                     ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''}
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400">${t.desc || ''}</p>
+                        </div>
+                        <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button>
+                    </div>`;
+            });
+        }
+
+        function renderTrash() {
+            const list = document.getElementById('trash-list'); list.innerHTML = '';
+            const allTrash = [
+                ...window.appData.courses.filter(x => x.deleted).map(x => ({...x, type: 'course', icon: 'fa-graduation-cap'})),
+                ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
+                ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'}))
+            ];
+
+            if(allTrash.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>';
+                return;
+            }
+
+            allTrash.forEach(item => {
+                list.innerHTML += `
+                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400">
+                                <i class="fas ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">${item.name}</h4>
+                                <p class="text-[10px] text-slate-500 uppercase">${item.type}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button>
+                            <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- Standard Logic (Copied/Adapted) ---
+        function commitData() {
+            localStorage.setItem('hm_data', JSON.stringify(window.appData));
+            updateWidget();
+            if(window.triggerCloudSave) window.triggerCloudSave();
+        }
+
+        window.showPage = function(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
             gsap.from(`#page-${pageId}`, {opacity: 0, y: 10, duration: 0.3});
@@ -1305,332 +1501,51 @@
             if(pageId === 'courses') renderCourses();
             if(pageId === 'tasks') renderTasks();
             if(pageId === 'books') renderBooks();
-        }
-        function refreshAllUI() { 
-            renderCourses(); 
-            renderTasks(); 
-            renderBooks();
-            updateWidget(); // Refresh widget
-        }
+            if(pageId === 'trash') renderTrash();
+        };
 
-        // --- Rendering ---
-        function renderCourses() {
-            const list = document.getElementById('courses-list'); list.innerHTML = '';
-            let active = 0, totalHrs = 0;
-            const lang = window.appData.settings.lang;
-            const doneText = lang === 'ar' ? 'منجز' : 'Hrs';
-            
-            window.appData.courses.forEach(c => {
-                if(c.done < c.total) active++;
-                totalHrs += Number(c.done);
-                const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-                list.innerHTML += `
-                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onclick="openEditModal('course', '${c.id}')">
-                        <div class="absolute top-0 right-0 p-4 text-2xl font-bold opacity-20 accent-text" style="color:var(--accent-color)">${percent}%</div>
-                        <div class="absolute top-0 left-0 w-1 h-full accent-bg opacity-50" style="background:var(--accent-color)"></div>
-                        <h3 class="font-bold text-lg text-white mb-2">${c.name}</h3>
-                        ${c.audioNote ? '<div class="text-[10px] text-red-400 mb-2 flex items-center gap-1"><i class="fas fa-microphone"></i> Audio Note</div>' : ''}
-                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
-                        <div class="flex justify-between text-xs text-slate-400"><span>${c.done}/${c.total} ${doneText}</span><span class="font-bold text-accent">${percent}% Completed</span></div>
-                    </div>`;
-            });
-            document.getElementById("stat-active-courses").innerText = active;
-            document.getElementById("stat-total-hours").innerText = totalHrs;
-        }
+        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); updateWidget(); if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); }
 
-        function renderTasks() {
-            const list = document.getElementById('tasks-list'); list.innerHTML = '';
-            window.appData.tasks.forEach(t => {
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} active:scale-[0.99] transition-all">
-                        <button onclick="toggleTask(${t.id})" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''}" style="${t.completed ? 'background:var(--accent-color)' : ''}">
-                            ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
-                        </button>
-                        <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
-                                ${t.drawing ? '<i class="fas fa-palette text-blue-400 text-xs"></i>' : ''}
-                            </div>
-                            <p class="text-xs text-slate-400">${t.desc || ''}</p>
-                            ${t.audioNote ? '<div class="text-[10px] text-red-400 mt-1 flex items-center gap-1"><i class="fas fa-microphone"></i> Audio Note</div>' : ''}
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function renderBooks() {
-            const list = document.getElementById('books-list'); list.innerHTML = '';
-            const markText = window.appData.settings.lang === 'ar' ? 'حدد كمقروء' : 'Mark Read';
-            window.appData.books.forEach(b => {
-                const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
-                list.innerHTML += `
-                    <div class="glass-card p-5 rounded-3xl group cursor-pointer active:scale-[0.98] transition-all" onclick="openEditModal('book', '${b.id}')">
-                        <div class="flex justify-between items-start mb-2">
-                            <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div>
-                            <div class="text-right">
-                                <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div>
-                                <div class="text-xs font-bold text-white/50">${percent}%</div>
-                            </div>
-                        </div>
-                        <h3 class="font-bold text-white">${b.name}</h3>
-                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
-                        <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">${markText}</button>
-                    </div>`;
-            });
-        }
-
-        // --- Confetti Logic ---
         function triggerConfetti(grand = false) {
             const cvs = document.getElementById('confetti-canvas');
             const ctx = cvs.getContext('2d');
-            cvs.width = window.innerWidth;
-            cvs.height = window.innerHeight;
-            
+            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
             const particles = [];
-            const particleCount = grand ? 150 : 60;
-            const colors = ['#6366f1', '#a855f7', '#ec4899', '#ffffff'];
-            
-            for(let i=0; i<particleCount; i++) {
-                particles.push({
-                    x: cvs.width / 2,
-                    y: cvs.height / 2,
-                    vx: (Math.random() - 0.5) * (grand ? 25 : 15),
-                    vy: (Math.random() - 0.5) * (grand ? 25 : 15),
-                    size: Math.random() * 5 + 2,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    life: 100
-                });
-            }
-            
-            function animateConfetti() {
+            for(let i=0; i<(grand?150:60); i++) particles.push({ x: cvs.width/2, y: cvs.height/2, vx: (Math.random()-0.5)*(grand?25:15), vy: (Math.random()-0.5)*(grand?25:15), size: Math.random()*5+2, color: ['#6366f1','#a855f7','#ec4899'][Math.floor(Math.random()*3)], life: 100 });
+            function animate() {
                 ctx.clearRect(0,0,cvs.width,cvs.height);
                 let active = false;
-                particles.forEach(p => {
-                    if(p.life > 0) {
-                        active = true;
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        p.vy += 0.5; // gravity
-                        p.life -= 2;
-                        ctx.fillStyle = p.color;
-                        ctx.globalAlpha = p.life / 100;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                        ctx.fill();
-                    }
-                });
-                if(active) requestAnimationFrame(animateConfetti);
-                else ctx.clearRect(0,0,cvs.width,cvs.height);
+                particles.forEach(p => { if(p.life > 0) { active = true; p.x+=p.vx; p.y+=p.vy; p.vy+=0.5; p.life-=2; ctx.fillStyle=p.color; ctx.globalAlpha=p.life/100; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); }});
+                if(active) requestAnimationFrame(animate); else ctx.clearRect(0,0,cvs.width,cvs.height);
             }
-            animateConfetti();
+            animate();
         }
 
-        // --- Widget Logic ---
         function updateWidget() {
-            // Count remaining tasks
-            const remainingTasks = window.appData.tasks.filter(t => !t.completed).length;
-            const totalTasks = window.appData.tasks.length;
-            document.getElementById('widget-tasks-val').innerText = remainingTasks + " Tasks Left";
+            const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
+            const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
+            const done = totalTasks - activeTasks.length;
+            const progress = totalTasks > 0 ? (done / totalTasks) * 100 : 0;
             
-            // Calculate Progress for ring
-            const doneTasks = totalTasks - remainingTasks;
-            const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+            document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
             document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
-            
-            // Timer
-            const timerContainer = document.getElementById('widget-timer-container');
-            if(timerRunning) {
-                timerContainer.classList.remove('hidden');
-                const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-                const s = (timerSeconds % 60).toString().padStart(2, '0');
-                document.getElementById('widget-timer-val').innerText = `${m}:${s}`;
-            } else {
-                timerContainer.classList.add('hidden');
-            }
         }
-        
+
         window.openWidgetDetail = () => {
-            const remainingTasks = window.appData.tasks.filter(t => !t.completed).length;
-            const totalTasks = window.appData.tasks.length;
-            const doneTasks = totalTasks - remainingTasks;
-            const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-            
-            document.getElementById('detail-tasks-done').innerText = doneTasks;
-            document.getElementById('detail-tasks-left').innerText = remainingTasks;
+            const active = window.appData.tasks.filter(t => !t.completed && !t.deleted).length;
+            const total = window.appData.tasks.filter(t => !t.deleted).length;
+            const done = total - active;
+            const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+            document.getElementById('detail-tasks-done').innerText = done;
+            document.getElementById('detail-tasks-left').innerText = active;
             document.getElementById('detail-progress-txt').innerText = progress + "%";
             document.getElementById('detail-progress-bar').style.width = progress + "%";
-            
-            openModal('widget-modal');
+            window.openModal('widget-modal');
         };
 
-        // --- Data Operations ---
-        // NEW FUNCTION: Commits data. Saves to localStorage AND triggers cloud save if online.
-        function commitData() {
-            localStorage.setItem('hm_data', JSON.stringify(window.appData));
-            updateWidget(); // Refresh widget on any save
-            if(window.triggerCloudSave) window.triggerCloudSave();
-        }
-
-        window.saveCourse = () => {
-            const id = document.getElementById('course-id').value || Date.now();
-            const newItem = { id: Number(id), name: document.getElementById('course-name').value, total: document.getElementById('course-total').value, done: document.getElementById('course-done').value, notes: document.getElementById('course-notes').value, audioNote: tempAudioBase64 };
-            const idx = window.appData.courses.findIndex(x => x.id == id);
-            if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
-            
-            // Check completion for animation
-            if(newItem.done >= newItem.total && newItem.total > 0) triggerConfetti(true);
-            
-            commitData(); closeAllModals(); renderCourses();
-        };
-        window.saveTask = () => {
-            const id = document.getElementById('task-id').value || Date.now();
-            const newItem = { 
-                id: Number(id), 
-                name: document.getElementById('task-name').value, 
-                desc: document.getElementById('task-desc').value, 
-                completed: false, 
-                audioNote: tempAudioBase64,
-                drawing: tempDrawingData 
-            };
-            const idx = window.appData.tasks.findIndex(x => x.id == id);
-            if(idx > -1) { newItem.completed = window.appData.tasks[idx].completed; window.appData.tasks[idx] = newItem; } else window.appData.tasks.push(newItem);
-            commitData(); closeAllModals(); renderTasks();
-        };
-        window.saveBook = () => {
-            const id = document.getElementById('book-id').value || Date.now();
-            const newItem = { id: Number(id), name: document.getElementById('book-name').value, total: document.getElementById('book-total').value, done: document.getElementById('book-done').value, desc: document.getElementById('book-desc').value, streak: 0 };
-            const idx = window.appData.books.findIndex(x => x.id == id);
-            if(idx > -1) { newItem.streak = window.appData.books[idx].streak; window.appData.books[idx] = newItem; } else window.appData.books.push(newItem);
-            
-            // Check completion
-            if(newItem.done >= newItem.total && newItem.total > 0) triggerConfetti(true);
-            
-            commitData(); closeAllModals(); renderBooks();
-        };
-        window.toggleTask = (id) => { 
-            const t = window.appData.tasks.find(x => x.id === id); 
-            if(t){ 
-                t.completed = !t.completed; 
-                if(t.completed) triggerConfetti(false); // Small confetti
-                commitData(); 
-                renderTasks(); 
-            }
-        };
-        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
-        window.deleteCourse = () => { window.appData.courses = window.appData.courses.filter(x => x.id != document.getElementById('course-id').value); commitData(); closeAllModals(); renderCourses(); };
-        window.deleteTask = () => { window.appData.tasks = window.appData.tasks.filter(x => x.id != document.getElementById('task-id').value); commitData(); closeAllModals(); renderTasks(); };
-        window.deleteBook = () => { window.appData.books = window.appData.books.filter(x => x.id != document.getElementById('book-id').value); commitData(); closeAllModals(); renderBooks(); };
-        window.deleteDrawing = () => {
-            tempDrawingData = null;
-            document.getElementById('task-drawing-preview').classList.add('hidden');
-            document.getElementById('task-drawing-img').src = '';
-            document.getElementById('btn-draw-label').innerText = "Add Drawing";
-        };
-
-        // --- Localization & Theme ---
-        function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
-        function applyLanguage(l) { 
-            document.body.classList.toggle('rtl', l==='ar'); 
-            document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; 
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(translations[l] && translations[l][key]) el.innerText = translations[l][key];
-            });
-            // Refresh lists to update dynamic text
-            refreshAllUI();
-        }
-        window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
-        window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); commitData(); };
-        window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); commitData(); };
-        function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
-        window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
-        window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
-        
-        // --- AI ---
-        const geminiModels = [
-            'gemini-1.5-flash', 
-            'gemini-2.5-flash-preview-09-2025', 
-            'gemini-1.5-flash-001', 
-            'gemini-1.5-pro'
-        ];
-
-        async function callGeminiAPI(prompt, systemInstruction = "", modelIndex = 0) {
-            const apiKey = getApiKey();
-            if (!apiKey) {
-                alert("API Key Missing. Check settings.");
-                return "API Key Missing.";
-            }
-
-            if (modelIndex >= geminiModels.length) {
-                return "Error: All AI models failed. Please check API Key.";
-            }
-
-            const modelName = geminiModels[modelIndex];
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            
-            const fullPrompt = systemInstruction ? `${systemInstruction}\n\nUser: ${prompt}` : prompt;
-            
-            try {
-                const response = await fetch(url, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: fullPrompt }] }] 
-                    }) 
-                });
-
-                const data = await response.json();
-                
-                // If model not found (404) or other error, try next model
-                if (data.error) {
-                    console.warn(`Model ${modelName} failed:`, data.error.message);
-                    return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1);
-                }
-
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) { 
-                console.error(`Network Error with ${modelName}:`, error);
-                // Retry with next model on network error too
-                return await callGeminiAPI(prompt, systemInstruction, modelIndex + 1); 
-            }
-        }
-
-        async function sendAIChat() {
-            const input = document.getElementById('chat-input');
-            const txt = input.value.trim();
-            if(!txt) return;
-            input.value = '';
-            const container = document.getElementById('chat-container');
-            container.innerHTML += `<div class="flex gap-3 justify-end"><div class="glass-panel p-3 rounded-2xl rounded-tr-none bg-indigo-500/20 text-white text-sm chat-bubble max-w-[85%]">${txt}</div></div>`;
-            const id = 'loader-' + Date.now();
-            container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
-            container.scrollTop = container.scrollHeight;
-            
-            const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY in this format: {"action": "addTask", "data": {"name": "Name", "desc": "Description"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Syllabus", "total": 10}} if adding items. If not adding items, reply normally.`;
-            
-            const res = await callGeminiAPI(txt, systemPrompt);
-            document.getElementById(id).remove();
-            
-            try {
-                // Clean markdown code blocks if AI wraps JSON
-                const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
-                
-                if(cleanJson.startsWith('{')) {
-                    const action = JSON.parse(cleanJson);
-                    if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
-                    if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
-                    if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
-                }
-            } catch(e) {}
-            
-            container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${res.replace(/\n/g, '<br>')}</div></div>`;
-            container.scrollTop = container.scrollHeight;
-        }
-        function clearChat() { document.getElementById('chat-container').innerHTML = ''; }
-
-        // --- Voice Recording ---
-        let mediaRecorder, audioChunks = [], tempAudioBase64 = null;
-        async function toggleAudioRecording(btn, context) {
+        // --- Voice & Canvas ---
+        let mediaRecorder, audioChunks = [];
+        window.toggleAudioRecording = async (btn) => {
             const label = btn.querySelector('span');
             if (btn.classList.contains('recording')) {
                 mediaRecorder.stop();
@@ -1647,7 +1562,11 @@
                           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                           const reader = new FileReader();
                           reader.readAsDataURL(audioBlob);
-                          reader.onloadend = () => { tempAudioBase64 = reader.result; showAudioPlayer(context); };
+                          reader.onloadend = () => { 
+                              tempAudioBase64 = reader.result; 
+                              document.getElementById('modal-audio-player-container').classList.remove('hidden');
+                              document.getElementById('modal-audio-player').src = tempAudioBase64;
+                          };
                           stream.getTracks().forEach(t => t.stop());
                     };
                     mediaRecorder.start();
@@ -1656,93 +1575,94 @@
                     label.innerText = "Stop";
                 } catch(e) { alert("Mic Permission Denied"); }
             }
-        }
-        function showAudioPlayer(ctx) {
-             const div = document.getElementById(`${ctx}-audio-player-container`);
-             const player = document.getElementById(`${ctx}-audio-player`);
-             if(player && tempAudioBase64) player.src = tempAudioBase64;
-             if(div) div.classList.remove('hidden');
-        }
-        function deleteAudioNote(ctx) {
-            tempAudioBase64 = null;
-            document.getElementById(`${ctx}-audio-player-container`).classList.add('hidden');
-            document.getElementById(`${ctx}-audio-player`).src = "";
-        }
+        };
+        window.deleteAudioNote = () => { tempAudioBase64 = null; document.getElementById('modal-audio-player-container').classList.add('hidden'); document.getElementById('modal-audio-player').src = ""; };
 
-        // --- Canvas ---
-        let canvas, ctx, isDrawing = false, currentDrawingTask = null, tempDrawingData = null;
+        let canvas, ctx, isDrawing = false;
         function setupCanvas() {
-            canvas = document.getElementById('paint-canvas');
-            if(!canvas) return; // Safety check
+            canvas = document.getElementById('paint-canvas'); if(!canvas) return;
             ctx = canvas.getContext('2d');
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas(); window.addEventListener('resize', resizeCanvas);
             const start = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top); };
-            const move = (e) => { 
-                if(!isDrawing) return; 
-                e.preventDefault();
-                const x = e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left;
-                const y = e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top;
-                ctx.lineTo(x, y); ctx.stroke(); 
-            };
+            const move = (e) => { if(!isDrawing) return; e.preventDefault(); ctx.lineTo(e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top); ctx.stroke(); };
             const end = () => { isDrawing = false; };
-            
             canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
             canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', move, {passive: false}); canvas.addEventListener('touchend', end);
         }
-        function resizeCanvas() {
-             if(!canvas) return;
-             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-             ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-             
-             // FIXED: Safety check for brush size element
-             const brushColorEl = document.getElementById('brush-color');
-             const brushSizeEl = document.getElementById('brush-size');
-             
-             if(brushColorEl) ctx.strokeStyle = brushColorEl.value;
-             if(brushSizeEl) ctx.lineWidth = brushSizeEl.value || 4;
-        }
-        window.openDrawingCanvas = () => {
-            document.getElementById('drawing-modal').classList.remove('hidden');
-            document.getElementById('drawing-modal').classList.add('flex');
-            resizeCanvas();
-            
-            // Load existing if present
-            if(tempDrawingData && ctx) {
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0);
-                img.src = tempDrawingData;
-            } else {
-                clearCanvas();
-            }
-        };
-        window.closeDrawingModal = () => {
-            document.getElementById('drawing-modal').classList.add('hidden');
-            document.getElementById('drawing-modal').classList.remove('flex');
-        };
-        window.saveCanvasDrawing = () => {
-            tempDrawingData = canvas.toDataURL();
-            document.getElementById('task-drawing-preview').classList.remove('hidden');
-            document.getElementById('task-drawing-img').src = tempDrawingData;
-            document.getElementById('btn-draw-label').innerText = "Edit Drawing";
-            closeDrawingModal();
-        };
+        function resizeCanvas() { if(!canvas) return; canvas.width = window.innerWidth; canvas.height = window.innerHeight; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if(document.getElementById('brush-color')) ctx.strokeStyle = document.getElementById('brush-color').value; if(document.getElementById('brush-size')) ctx.lineWidth = document.getElementById('brush-size').value || 4; }
+        
+        window.openDrawingCanvas = () => { document.getElementById('drawing-modal').classList.remove('hidden'); document.getElementById('drawing-modal').classList.add('flex'); resizeCanvas(); if(tempDrawingData) { const img = new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src = tempDrawingData; } else window.clearCanvas(); };
+        window.closeDrawingModal = () => { document.getElementById('drawing-modal').classList.add('hidden'); document.getElementById('drawing-modal').classList.remove('flex'); };
+        window.saveCanvasDrawing = () => { tempDrawingData = canvas.toDataURL(); document.getElementById('modal-drawing-preview').classList.remove('hidden'); document.getElementById('modal-drawing-img').src = tempDrawingData; document.getElementById('btn-draw-label').innerText = "Edit Drawing"; window.closeDrawingModal(); };
         window.clearCanvas = () => { ctx.clearRect(0,0,canvas.width,canvas.height); };
         window.setEraser = () => { ctx.globalCompositeOperation = 'destination-out'; };
-        const colorPicker = document.getElementById('brush-color');
-        if(colorPicker) colorPicker.onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
+        if(document.getElementById('brush-color')) document.getElementById('brush-color').onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
+        
+        // --- AI ---
+        window.sendAIChat = async function() {
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+            input.value = '';
+            const container = document.getElementById('chat-container');
+            container.innerHTML += `<div class="flex gap-3 justify-end"><div class="glass-panel p-3 rounded-2xl rounded-tr-none bg-indigo-500/20 text-white text-sm chat-bubble max-w-[85%]">${txt}</div></div>`;
+            const id = 'loader-' + Date.now();
+            container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
+            container.scrollTop = container.scrollHeight;
 
-        // Expose
-        window.setTimerMode = setTimerMode; window.toggleTimer = toggleTimer; window.resetTimer = resetTimer; window.toggleSidebar = toggleSidebar; window.sendAIChat = sendAIChat; window.clearChat = clearChat; window.enterAsGuest = enterAsGuest;
-        window.setTallyMode = setTallyMode; window.clickTally = clickTally; window.resetTally = resetTally; window.switchCounterTab = switchCounterTab;
-        window.toggleAudioRecording = toggleAudioRecording; window.deleteAudioNote = deleteAudioNote;
-        window.openAddModal = openAddModal; window.openEditModal = openEditModal;
-        window.saveCourse = saveCourse; window.deleteCourse = deleteCourse;
-        window.saveTask = saveTask; window.deleteTask = deleteTask;
-        window.saveBook = saveBook; window.deleteBook = deleteBook;
-        window.toggleTask = toggleTask; window.readBookToday = readBookToday;
-        window.deleteDrawing = deleteDrawing;
+            const apiKey = getApiKey();
+            if(!apiKey) {
+                 document.getElementById(id).innerText = "Error: Missing API Key.";
+                 return;
+            }
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY in this format: {"action": "addTask", "data": {"name": "Name", "desc": "Description"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Syllabus", "total": 10}} if adding items. If not adding items, reply normally.`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: systemPrompt + "\n\nUser: " + txt }] }]
+                    })
+                });
+                
+                const data = await response.json();
+                const resText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating response.";
+                document.getElementById(id).remove();
+
+                // Process JSON actions
+                try {
+                     const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
+                     if(cleanJson.startsWith('{')) {
+                        const action = JSON.parse(cleanJson);
+                        if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
+                        if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
+                        if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
+                     }
+                } catch(e) {}
+
+                container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${resText.replace(/\n/g, '<br>')}</div></div>`;
+            } catch (err) {
+                 document.getElementById(id).innerHTML = "Error connecting to AI.";
+            }
+            container.scrollTop = container.scrollHeight;
+        };
+        
+        window.clearChat = function() { document.getElementById('chat-container').innerHTML = ''; };
+
+        // Expose helpers
+        window.toggleTask = (id) => { const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; if(t.completed) triggerConfetti(false); commitData(); renderTasks(); }};
+        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
+        window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
+        window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
+        window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); commitData(); };
+        window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); commitData(); };
+        function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
+        function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
+        function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
+        window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
     </script>
 </body>
 </html>
-
