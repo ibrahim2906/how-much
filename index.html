@@ -768,13 +768,13 @@
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
-          authDomain: "how-much-v2.firebaseapp.com",
-          projectId: "how-much-v2",
-          storageBucket: "how-much-v2.firebasestorage.app",
-          messagingSenderId: "1036316370452",
-          appId: "1:1036316370452:web:f46292e034ada3bd2ea901",
-         measurementId: "G-84F0PKHDFV"
+            apiKey: "AIzaSyBfLR88a4s-wDOStbsmiEZp-R-FRDBchkc",
+            authDomain: "how-much-29bcc.firebaseapp.com",
+            projectId: "how-much-29bcc",
+            storageBucket: "how-much-29bcc.firebasestorage.app",
+            messagingSenderId: "59810590652",
+            appId: "1:59810590652:web:708b0848c175695c8b05b9",
+            measurementId: "G-DTWDMYRR3K"
         };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'how-much-29bcc';
@@ -808,9 +808,9 @@
                     if(document.getElementById('settings-icon-container')) document.getElementById('settings-icon-container').classList.add('hidden');
                     if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').classList.remove('hidden');
                     
-                    // Trigger cloud save immediately on login to ensure document exists
+                    // CRITICAL FIX: Do NOT immediately save data, as this overwrites the cloud with empty local data on a new device.
+                    // Instead, trigger loadData. loadData will handle the sync decision.
                     document.getElementById('cloud-status').innerText = "Syncing...";
-                    saveData(); // Force save to create profile if new
                     loadData(user.uid);
                 } else if(!localStorage.getItem('hm_guest')) {
                     document.getElementById('login-screen').classList.remove('hidden');
@@ -826,7 +826,7 @@
         async function saveData() { 
             if(currentUser) {
                 try {
-                    // Using subcollection path: /artifacts/{appId}/users/{userId}/data/profile
+                    // Save window.appData to cloud
                     await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
                     const statusEl = document.getElementById('cloud-status');
                     if(statusEl) {
@@ -846,17 +846,26 @@
         }
         
         async function loadData(uid) { 
+            // Listen for updates from cloud
             onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
                 if(s.exists()) { 
+                    // Case 1: Data exists in cloud. Download and overwrite local.
+                    console.log("Cloud data found. Syncing down.");
                     window.appData = { ...window.appData, ...s.data() }; 
+                    
+                    // Update LocalStorage to match cloud without triggering a cloud save loop
+                    localStorage.setItem('hm_data', JSON.stringify(window.appData));
+                    
                     refreshAllUI();
+                    
                     const statusEl = document.getElementById('cloud-status');
                     if(statusEl) {
                         statusEl.innerText = "Synced";
                         statusEl.classList.add('text-green-400');
                     }
                 } else {
-                    // If no data exists, save current default data to initialize
+                    // Case 2: No data in cloud (New device/user). Upload local data to cloud.
+                    console.log("No cloud data. Syncing up.");
                     saveData();
                 }
             }); 
@@ -865,7 +874,8 @@
     </script>
 
     <script>
-        const defaultApiKey = "AIzaSyCG-DD-25eAhVANOoxEDOnj8TZgmmHXbJA"; 
+        // UPDATED API KEY
+        const defaultApiKey = "AIzaSyCDIR3EeSUIcT1d5Y0tG4Vw-Lz4Tzh5kWY"; 
         
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
         function saveApiKey(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); }
@@ -1215,7 +1225,8 @@
         }
 
         // --- Data Operations ---
-        function saveLocal() {
+        // NEW FUNCTION: Commits data. Saves to localStorage AND triggers cloud save if online.
+        function commitData() {
             localStorage.setItem('hm_data', JSON.stringify(window.appData));
             if(window.triggerCloudSave) window.triggerCloudSave();
         }
@@ -1225,7 +1236,7 @@
             const newItem = { id: Number(id), name: document.getElementById('course-name').value, total: document.getElementById('course-total').value, done: document.getElementById('course-done').value, notes: document.getElementById('course-notes').value, audioNote: tempAudioBase64 };
             const idx = window.appData.courses.findIndex(x => x.id == id);
             if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
-            saveLocal(); closeAllModals(); renderCourses();
+            commitData(); closeAllModals(); renderCourses();
         };
         window.saveTask = () => {
             const id = document.getElementById('task-id').value || Date.now();
@@ -1239,20 +1250,20 @@
             };
             const idx = window.appData.tasks.findIndex(x => x.id == id);
             if(idx > -1) { newItem.completed = window.appData.tasks[idx].completed; window.appData.tasks[idx] = newItem; } else window.appData.tasks.push(newItem);
-            saveLocal(); closeAllModals(); renderTasks();
+            commitData(); closeAllModals(); renderTasks();
         };
         window.saveBook = () => {
             const id = document.getElementById('book-id').value || Date.now();
             const newItem = { id: Number(id), name: document.getElementById('book-name').value, total: document.getElementById('book-total').value, done: document.getElementById('book-done').value, desc: document.getElementById('book-desc').value, streak: 0 };
             const idx = window.appData.books.findIndex(x => x.id == id);
             if(idx > -1) { newItem.streak = window.appData.books[idx].streak; window.appData.books[idx] = newItem; } else window.appData.books.push(newItem);
-            saveLocal(); closeAllModals(); renderBooks();
+            commitData(); closeAllModals(); renderBooks();
         };
-        window.toggleTask = (id) => { const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; saveLocal(); renderTasks(); }};
-        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; saveLocal(); renderBooks(); }};
-        window.deleteCourse = () => { window.appData.courses = window.appData.courses.filter(x => x.id != document.getElementById('course-id').value); saveLocal(); closeAllModals(); renderCourses(); };
-        window.deleteTask = () => { window.appData.tasks = window.appData.tasks.filter(x => x.id != document.getElementById('task-id').value); saveLocal(); closeAllModals(); renderTasks(); };
-        window.deleteBook = () => { window.appData.books = window.appData.books.filter(x => x.id != document.getElementById('book-id').value); saveLocal(); closeAllModals(); renderBooks(); };
+        window.toggleTask = (id) => { const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; commitData(); renderTasks(); }};
+        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; commitData(); renderBooks(); }};
+        window.deleteCourse = () => { window.appData.courses = window.appData.courses.filter(x => x.id != document.getElementById('course-id').value); commitData(); closeAllModals(); renderCourses(); };
+        window.deleteTask = () => { window.appData.tasks = window.appData.tasks.filter(x => x.id != document.getElementById('task-id').value); commitData(); closeAllModals(); renderTasks(); };
+        window.deleteBook = () => { window.appData.books = window.appData.books.filter(x => x.id != document.getElementById('book-id').value); commitData(); closeAllModals(); renderBooks(); };
         window.deleteDrawing = () => {
             tempDrawingData = null;
             document.getElementById('task-drawing-preview').classList.add('hidden');
@@ -1272,15 +1283,14 @@
             // Refresh lists to update dynamic text
             refreshAllUI();
         }
-        window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); saveLocal(); };
-        window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); saveLocal(); };
-        window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); saveLocal(); };
+        window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
+        window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); commitData(); };
+        window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); commitData(); };
         function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
         window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
         window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         
-        // --- AI (FIXED: Recursive Fallback for Robustness) ---
-        // Models to try in order: specialized preview model (for online editor), then standard public models (for local/export).
+        // --- AI ---
         const geminiModels = [
             'gemini-2.5-flash-preview-09-2025', 
             'gemini-1.5-flash', 
@@ -1351,9 +1361,9 @@
                 
                 if(cleanJson.startsWith('{')) {
                     const action = JSON.parse(cleanJson);
-                    if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
-                    if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
-                    if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); saveLocal(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
+                    if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
+                    if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
+                    if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
                 }
             } catch(e) {}
             
@@ -1479,4 +1489,3 @@
     </script>
 </body>
 </html>
-
