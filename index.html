@@ -55,6 +55,7 @@
             opacity: 0.4;
             transition: background-color 0.5s ease;
             animation: floatOrb 10s infinite alternate;
+            pointer-events: none; /* Fix: click through to content */
         }
 
         /* Dynamic classes for user color selection */
@@ -90,14 +91,12 @@
         /* Drag Handle Styles */
         .drag-handle {
             cursor: grab;
-            opacity: 0;
+            opacity: 0.5; /* More visible on mobile */
             transition: opacity 0.2s;
+            touch-action: none; /* Fix for dragging on touch */
         }
         .glass-card:hover .drag-handle {
-            opacity: 0.5;
-        }
-        .drag-handle:hover {
-            opacity: 1 !important;
+            opacity: 1;
         }
         .sortable-ghost {
             opacity: 0.4;
@@ -105,11 +104,13 @@
         }
 
         .delete-btn-preview {
-            opacity: 0;
+            opacity: 1; /* Always visible on mobile for usability */
             transition: opacity 0.2s;
         }
-        .glass-card:hover .delete-btn-preview {
-            opacity: 1;
+        @media (min-width: 768px) {
+            .delete-btn-preview { opacity: 0; }
+            .glass-card:hover .delete-btn-preview { opacity: 1; }
+            .drag-handle { opacity: 0; }
         }
 
         /* Light Mode Overrides */
@@ -176,7 +177,9 @@
         /* Mobile Dock */
         .mobile-dock {
             padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
         
         /* Modal Animation */
@@ -205,7 +208,7 @@
             color: white;
             font-size: 24px;
             box-shadow: 0 10px 30px var(--accent-glow);
-            z-index: 50;
+            z-index: 40; /* Lower than modal, higher than content */
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: pulse-glow 3s infinite;
         }
@@ -229,7 +232,7 @@
         /* Widget */
         .widget-pill {
             position: fixed;
-            z-index: 49; /* Just below AI button */
+            z-index: 39; /* Just below AI button */
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -425,7 +428,8 @@
                 <i class="fas fa-bars"></i>
             </button>
 
-            <div id="content-area" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 pb-32 md:pb-8 scroll-smooth w-full">
+            <!-- Content Area - Added pb-36 for mobile -->
+            <div id="content-area" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 pb-40 md:pb-8 scroll-smooth w-full">
                 
                 <!-- Courses Page -->
                 <section id="page-courses" class="page-section hidden max-w-5xl mx-auto pt-4 md:pt-0">
@@ -442,7 +446,7 @@
                     <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </section>
 
-                <!-- Tasks Page -->
+                <!-- Tasks Page (Modified for Sublists) -->
                 <section id="page-tasks" class="page-section hidden max-w-4xl mx-auto pt-4 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
@@ -453,7 +457,18 @@
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
                         </button>
                     </div>
-                    <div id="tasks-list" class="space-y-3"></div>
+                    
+                    <!-- Main Tasks -->
+                    <div class="mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
+                        <i class="fas fa-star text-yellow-500"></i> Priority
+                    </div>
+                    <div id="tasks-list-main" class="space-y-3 min-h-[50px]"></div>
+
+                    <!-- Optional Tasks -->
+                    <div class="mt-8 mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
+                        <i class="fas fa-coffee text-blue-400"></i> Side Quests (Optional)
+                    </div>
+                    <div id="tasks-list-optional" class="space-y-3 min-h-[50px] border-t border-white/5 pt-4"></div>
                 </section>
 
                 <!-- Books Page -->
@@ -710,6 +725,12 @@
                     <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done">Done</label><input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
                 </div>
 
+                <!-- Optional Task Checkbox -->
+                <div id="modal-optional-row" class="hidden flex items-center gap-3 bg-black/10 p-3 rounded-xl border border-white/5">
+                    <input type="checkbox" id="modal-optional" class="w-5 h-5 rounded border-white/10 bg-black/20 accent-indigo-500">
+                    <label for="modal-optional" class="text-sm text-slate-300 select-none cursor-pointer">Mark as Optional (Side Quest)</label>
+                </div>
+
                 <textarea id="modal-desc" rows="2" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
 
                 <!-- Voice Note -->
@@ -728,7 +749,7 @@
 
                 <!-- Files Upload -->
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
-                     <div class="flex justify-between items-center mb-2">
+                      <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
                         <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
                             <i class="fas fa-paperclip"></i> <span>Attach</span>
@@ -1060,9 +1081,14 @@
                     try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); }
                 }
 
-                // Migration: Ensure all items have `deleted` property
+                // Migration: Ensure all items have properties
                 ['courses','tasks','books'].forEach(cat => {
-                    if(window.appData[cat]) window.appData[cat].forEach(x => { if(typeof x.deleted === 'undefined') x.deleted = false; if(!x.files) x.files = []; });
+                    if(window.appData[cat]) window.appData[cat].forEach(x => { 
+                        if(typeof x.deleted === 'undefined') x.deleted = false; 
+                        if(!x.files) x.files = []; 
+                        // Migration for Optional Tasks
+                        if(cat === 'tasks' && typeof x.optional === 'undefined') x.optional = false;
+                    });
                 });
 
                 gsap.timeline()
@@ -1104,8 +1130,8 @@
 
         // --- Drag & Drop (SortableJS) ---
         function initSortables() {
-            const lists = ['courses-list', 'books-list'];
-            lists.forEach(id => {
+            // Courses & Books (Existing)
+            ['courses-list', 'books-list'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     new Sortable(el, {
@@ -1114,21 +1140,81 @@
                         ghostClass: 'sortable-ghost',
                         onEnd: function (evt) {
                             const type = id === 'courses-list' ? 'courses' : 'books';
-                            // Reorder array based on DOM order
-                            const newOrder = [];
-                            const children = Array.from(el.children);
-                            children.forEach(child => {
-                                const itemId = child.getAttribute('data-id');
-                                const item = window.appData[type].find(x => x.id == itemId);
-                                if(item) newOrder.push(item);
-                            });
-                            const deletedItems = window.appData[type].filter(x => x.deleted);
-                            window.appData[type] = [...newOrder, ...deletedItems]; 
-                            commitData();
+                            updateOrder(type, el);
                         }
                     });
                 }
             });
+
+            // Tasks - Main & Optional (New Feature)
+            const mainTasks = document.getElementById('tasks-list-main');
+            const optionalTasks = document.getElementById('tasks-list-optional');
+            
+            if(mainTasks && optionalTasks) {
+                const taskSortableOptions = {
+                    group: 'tasks', // Allows dragging between lists
+                    handle: '.drag-handle',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd: function (evt) {
+                        // We rebuild the entire task list based on DOM order of BOTH lists
+                        rebuildTaskArray();
+                    }
+                };
+                new Sortable(mainTasks, taskSortableOptions);
+                new Sortable(optionalTasks, taskSortableOptions);
+            }
+        }
+
+        function updateOrder(type, el) {
+             const newOrder = [];
+             const children = Array.from(el.children);
+             children.forEach(child => {
+                 const itemId = child.getAttribute('data-id');
+                 const item = window.appData[type].find(x => x.id == itemId);
+                 if(item) newOrder.push(item);
+             });
+             // Keep deleted items
+             const deletedItems = window.appData[type].filter(x => x.deleted);
+             window.appData[type] = [...newOrder, ...deletedItems]; 
+             commitData();
+        }
+
+        function rebuildTaskArray() {
+            // Get all tasks currently in DOM
+            const mainContainer = document.getElementById('tasks-list-main');
+            const optContainer = document.getElementById('tasks-list-optional');
+            
+            const newTasks = [];
+            
+            // Process Main
+            Array.from(mainContainer.children).forEach(child => {
+                 const id = child.getAttribute('data-id');
+                 const task = window.appData.tasks.find(x => x.id == id);
+                 if(task) {
+                     task.optional = false; // Update status
+                     newTasks.push(task);
+                 }
+            });
+
+            // Process Optional
+            Array.from(optContainer.children).forEach(child => {
+                 const id = child.getAttribute('data-id');
+                 const task = window.appData.tasks.find(x => x.id == id);
+                 if(task) {
+                     task.optional = true; // Update status
+                     newTasks.push(task);
+                 }
+            });
+
+            // Keep deleted tasks hidden but safely stored
+            const deletedTasks = window.appData.tasks.filter(x => x.deleted);
+            
+            window.appData.tasks = [...newTasks, ...deletedTasks];
+            commitData();
+            // We don't call renderTasks() here to prevent jumpiness during drag, 
+            // but we call updateWidget to reflect counts
+            updateWidget();
         }
 
         // --- Translations ---
@@ -1157,11 +1243,15 @@
             
             // Stats inputs visibility
             const statsRow = document.getElementById('modal-stats-row');
+            const optionalRow = document.getElementById('modal-optional-row');
+            
             if(type === 'task') {
                 statsRow.classList.add('hidden');
+                optionalRow.classList.remove('hidden');
                 document.getElementById('modal-drawing-section').classList.remove('hidden');
             } else {
                 statsRow.classList.remove('hidden');
+                optionalRow.classList.add('hidden');
                 document.getElementById('modal-drawing-section').classList.add('hidden');
                 const lblTotal = document.getElementById('lbl-total');
                 const lblDone = document.getElementById('lbl-done');
@@ -1186,6 +1276,7 @@
             // Populate Fields
             if(type !== 'task') {
                 document.getElementById('modal-stats-row').classList.remove('hidden');
+                document.getElementById('modal-optional-row').classList.add('hidden');
                 document.getElementById('modal-total').value = item.total;
                 document.getElementById('modal-done').value = item.done;
                 const lblTotal = document.getElementById('lbl-total');
@@ -1195,6 +1286,9 @@
                 document.getElementById('modal-drawing-section').classList.add('hidden');
             } else {
                 document.getElementById('modal-stats-row').classList.add('hidden');
+                document.getElementById('modal-optional-row').classList.remove('hidden');
+                document.getElementById('modal-optional').checked = item.optional || false;
+                
                 document.getElementById('modal-drawing-section').classList.remove('hidden');
                 tempDrawingData = item.drawing || null;
                 if(tempDrawingData) {
@@ -1226,6 +1320,7 @@
             document.getElementById('modal-desc').value = '';
             document.getElementById('modal-total').value = '';
             document.getElementById('modal-done').value = '';
+            document.getElementById('modal-optional').checked = false;
             tempAudioBase64 = null;
             tempDrawingData = null;
             tempFiles = [];
@@ -1260,6 +1355,7 @@
             if(type === 'task') {
                 newItem.completed = false; // Default state, preserving if editing needs lookup
                 newItem.drawing = tempDrawingData;
+                newItem.optional = document.getElementById('modal-optional').checked;
                 const idx = window.appData.tasks.findIndex(x => x.id == id);
                 if(idx > -1) newItem.completed = window.appData.tasks[idx].completed;
                 if(idx > -1) window.appData.tasks[idx] = newItem; else window.appData.tasks.push(newItem);
@@ -1427,27 +1523,43 @@
             });
         }
 
+        // Modified Render Tasks to support two lists
         function renderTasks() {
-            const list = document.getElementById('tasks-list'); list.innerHTML = '';
-            window.appData.tasks.filter(t => !t.deleted).forEach(t => {
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} active:scale-[0.99] transition-all relative group">
-                        <button onclick="toggleTask(${t.id})" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''}" style="${t.completed ? 'background:var(--accent-color)' : ''}">
-                            ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
-                        </button>
-                        <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
-                                <div class="flex gap-2">
-                                     ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''}
-                                     ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''}
-                                     ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''}
-                                </div>
+            const mainList = document.getElementById('tasks-list-main'); 
+            const optList = document.getElementById('tasks-list-optional');
+            
+            mainList.innerHTML = '';
+            optList.innerHTML = '';
+
+            const generateTaskHTML = (t) => `
+                <div class="glass-card p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} active:scale-[0.99] transition-all relative group" data-id="${t.id}">
+                    <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}">
+                        ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
+                    </button>
+                    <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
+                            <div class="flex gap-2">
+                                 ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''}
+                                 ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''}
+                                 ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''}
                             </div>
-                            <p class="text-xs text-slate-400">${t.desc || ''}</p>
                         </div>
+                        <p class="text-xs text-slate-400">${t.desc || ''}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
                         <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button>
-                    </div>`;
+                        <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
+                    </div>
+                </div>`;
+
+            window.appData.tasks.filter(t => !t.deleted).forEach(t => {
+                const html = generateTaskHTML(t);
+                if(t.optional) {
+                    optList.innerHTML += html;
+                } else {
+                    mainList.innerHTML += html;
+                }
             });
         }
 
@@ -1634,13 +1746,13 @@
 
                 // Process JSON actions
                 try {
-                     const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
-                     if(cleanJson.startsWith('{')) {
+                      const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
+                      if(cleanJson.startsWith('{')) {
                         const action = JSON.parse(cleanJson);
-                        if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
+                        if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false, optional: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
                         if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
                         if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
-                     }
+                      }
                 } catch(e) {}
 
                 container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${resText.replace(/\n/g, '<br>')}</div></div>`;
@@ -1653,7 +1765,16 @@
         window.clearChat = function() { document.getElementById('chat-container').innerHTML = ''; };
 
         // Expose helpers
-        window.toggleTask = (id) => { const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; if(t.completed) triggerConfetti(false); commitData(); renderTasks(); }};
+        window.toggleTask = (id, e) => { 
+            if(e) e.stopPropagation(); 
+            const t = window.appData.tasks.find(x => x.id === id); 
+            if(t){ 
+                t.completed = !t.completed; 
+                if(t.completed) triggerConfetti(false); 
+                commitData(); 
+                renderTasks(); 
+            }
+        };
         window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
         window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
