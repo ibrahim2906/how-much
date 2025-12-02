@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,26 +49,21 @@
 
         /* --- 2. ANIMATIONS --- */
         
-        /* Page Sections Container - Optimization for Genie Effect */
         .page-section {
-            /* Hardware acceleration hints */
             will-change: transform, opacity, clip-path;
-            transform-origin: center bottom; /* Starts expansion from bottom center */
+            transform-origin: center bottom;
         }
 
-        /* Staggered Entrance for Items (Cards) */
         @keyframes slideInUp {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
         
         .stagger-entry {
-            opacity: 0; /* Start hidden */
+            opacity: 0;
             animation: slideInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            /* Delay slightly so they appear AFTER the genie page opens */
         }
 
-        /* Swipe/Slide to Delete */
         @keyframes slideOutRight {
             0% { transform: translateX(0); opacity: 1; }
             100% { transform: translateX(100%); opacity: 0; }
@@ -75,14 +71,7 @@
 
         .slide-out-right {
             animation: slideOutRight 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
-            pointer-events: none; /* Prevent clicks during exit */
-        }
-
-        /* Bouncy Modal Pop */
-        @keyframes modalPop {
-            0% { opacity: 0; transform: scale(0.8); }
-            60% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
+            pointer-events: none;
         }
 
         /* Animated Nebula Background */
@@ -173,9 +162,12 @@
         /* Mobile Dock */
         .mobile-dock { padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
-        /* Modal */
-        .modal-content { opacity: 0; transform: scale(0.8); }
-        .modal-open .modal-content { animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        /* Modal & Genie Optimization */
+        .modal-content {
+            /* Hardware acceleration for smooth genie effect */
+            will-change: transform, width, height, opacity, border-radius; 
+            transform-origin: center center;
+        }
         
         /* Floating AI */
         .floating-ai-btn {
@@ -357,7 +349,8 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills.</p>
                         </div>
-                        <button onclick="openAddModal('course')" class="accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
+                        <!-- Updated onclick to pass event -->
+                        <button onclick="openAddModal('course', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
                         </button>
                     </div>
@@ -372,18 +365,17 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="tasks">Tasks</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="manageTasks">Organize your chaos.</p>
                         </div>
-                        <button onclick="openAddModal('task')" class="accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
+                        <!-- Updated onclick to pass event -->
+                        <button onclick="openAddModal('task', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
                         </button>
                     </div>
                     
-                    <!-- Main Tasks -->
                     <div class="mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
                         <i class="fas fa-star text-yellow-500"></i> Priority
                     </div>
                     <div id="tasks-list-main" class="space-y-3 min-h-[50px]"></div>
 
-                    <!-- Optional Tasks -->
                     <div class="mt-8 mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
                         <i class="fas fa-coffee text-blue-400"></i> Side Quests (Optional)
                     </div>
@@ -397,7 +389,8 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="books">Books</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackReading">Build your knowledge base.</p>
                         </div>
-                        <button onclick="openAddModal('book')" class="accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
+                        <!-- Updated onclick to pass event -->
+                        <button onclick="openAddModal('book', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Book</span>
                         </button>
                     </div>
@@ -509,80 +502,45 @@
                 </section>
 
                 <!-- Settings Page -->
-<section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
-    <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
-
-    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
-
-        <!-- Cloud Status -->
-        <div class="p-6 border-b border-white/5">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h3 class="font-bold flex items-center gap-2">
-                        <i class="fas fa-cloud text-blue-400"></i> Cloud Status
-                    </h3>
-                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">
-                        Not Synced
-                    </span>
-                    <button onclick="triggerCloudSave()" 
-                        class="p-2 bg-white/10 rounded-lg hover:bg-white/20" 
-                        title="Force Sync">
-                        <i class="fas fa-sync-alt text-xs"></i>
-                    </button>
-                </div>
+                <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
+                    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+                        <div class="p-6 border-b border-white/5">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
+                                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                                    <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync"><i class="fas fa-sync-alt text-xs"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-palette accent-text"></i></div>
+                                <div>
+                                    <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
+                                    <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
+                                </div>
+                            </div>
+                            <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)">
+                        </div>
+                        <div class="p-6 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-language"></i></div>
+                                <div>
+                                    <h3 class="font-bold" data-i18n="language">Language</h3>
+                                    <p class="text-xs text-slate-400">English / Arabic</p>
+                                </div>
+                            </div>
+                            <button onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold"><span id="current-lang-display">English</span></button>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></button>
+                </section>
             </div>
-        </div>
-
-        <!-- Nebula Accent Color -->
-        <div class="p-6 border-b border-white/5 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white/5">
-                    <i class="fas fa-palette accent-text"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
-                    <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
-                </div>
-            </div>
-
-            <input 
-                type="color" 
-                id="accent-color-picker" 
-                class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" 
-                onchange="updateAccentColor(this.value)">
-        </div>
-
-        <!-- Language Switch -->
-        <div class="p-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-language"></i></div>
-                <div>
-                    <h3 class="font-bold" data-i18n="language">Language</h3>
-                    <p class="text-xs text-slate-400">English / Arabic</p>
-                </div>
-            </div>
-
-            <button onclick="toggleLanguage()" 
-                class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold">
-                <span id="current-lang-display">English</span>
-            </button>
-        </div>
-
-    </div>
-
-    <!-- Logout -->
-    <button onclick="handleLogout()" 
-        class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2">
-        <i class="fas fa-sign-out-alt"></i> 
-        <span data-i18n="logout">Logout</span>
-    </button>
-
-</section>
-
 
             <!-- New Floating Widget -->
             <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
@@ -648,8 +606,9 @@
     </div>
 
     <!-- Generic Template for Add/Edit -->
+    <!-- Added ID for easier GSAP targeting of content -->
     <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
-        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
             <input type="hidden" id="modal-type">
             <input type="hidden" id="modal-id">
@@ -662,7 +621,6 @@
                     <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done">Done</label><input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
                 </div>
 
-                <!-- Optional Task Checkbox -->
                 <div id="modal-optional-row" class="hidden flex items-center gap-3 bg-black/10 p-3 rounded-xl border border-white/5">
                     <input type="checkbox" id="modal-optional" class="w-5 h-5 rounded border-white/10 bg-black/20 accent-indigo-500">
                     <label for="modal-optional" class="text-sm text-slate-300 select-none cursor-pointer">Mark as Optional (Side Quest)</label>
@@ -670,7 +628,6 @@
 
                 <textarea id="modal-desc" rows="2" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
 
-                <!-- Voice Note -->
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
@@ -684,7 +641,6 @@
                     </div>
                 </div>
 
-                <!-- Files Upload -->
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
                       <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
@@ -696,7 +652,6 @@
                     <div id="file-list-preview" class="space-y-2 mt-2"></div>
                 </div>
 
-                <!-- Drawing (Tasks only) -->
                 <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10 hidden">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
@@ -740,12 +695,12 @@
         </div>
     </div>
 
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
             authDomain: "how-much-v2.firebaseapp.com",
@@ -757,21 +712,15 @@
         };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'how-much-v2';
-
         let app, auth, db, currentUser = null;
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Firebase Init Error:", e); }
 
         window.handleGoogleLogin = async () => { 
             if (auth) {
-                try {
-                    await signInWithPopup(auth, new GoogleAuthProvider()); 
-                } catch (error) {
+                try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) {
                     console.error("Login Error:", error);
-                    if (error.code === 'auth/unauthorized-domain') {
-                        alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)' for this preview.");
-                    } else {
-                        alert("Login Failed: " + error.message);
-                    }
+                    if (error.code === 'auth/unauthorized-domain') alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)'.");
+                    else alert("Login Failed: " + error.message);
                 }
             }
         };
@@ -817,19 +766,8 @@
                 try {
                     await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
                     const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) {
-                        statusEl.innerText = "Synced";
-                        statusEl.classList.remove('text-red-400');
-                        statusEl.classList.add('text-green-400');
-                    }
-                } catch(e) {
-                    console.error("Save Error:", e);
-                    const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) {
-                        statusEl.innerText = "Sync Error (Size?)";
-                        statusEl.classList.add('text-red-400');
-                    }
-                }
+                    if(statusEl) { statusEl.innerText = "Synced"; statusEl.classList.remove('text-red-400'); statusEl.classList.add('text-green-400'); }
+                } catch(e) { console.error("Save Error:", e); }
             }
         }
         
@@ -839,17 +777,10 @@
                     window.appData = { ...window.appData, ...s.data() }; 
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
                     refreshAllUI();
-                    
                     const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) {
-                        statusEl.innerText = "Synced";
-                        statusEl.classList.remove('text-red-400');
-                        statusEl.classList.add('text-green-400');
-                    }
+                    if(statusEl) { statusEl.innerText = "Synced"; statusEl.classList.remove('text-red-400'); statusEl.classList.add('text-green-400'); }
                 } else {
-                    if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) {
-                        saveData();
-                    }
+                    if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) saveData();
                 }
             }); 
         }
@@ -859,9 +790,7 @@
     <script>
         // --- Core App Logic & State ---
         window.appData = { 
-            courses: [], 
-            tasks: [], 
-            books: [], 
+            courses: [], tasks: [], books: [], 
             settings: { theme: 'dark', lang: 'en', accent: '#6366f1' } 
         };
 
@@ -879,77 +808,37 @@
             if(sb.classList.contains('sidebar-collapsed')) sb.classList.remove('sidebar-collapsed'); else sb.classList.add('sidebar-collapsed');
         };
 
-        // --- NAVIGATION & GENIE ANIMATION ---
         window.showPage = function(pageId) {
-            // 1. Handle Active State Nav
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
-
-            // 2. Hide all sections & Reset animation props
             document.querySelectorAll('.page-section').forEach(el => {
                 if(!el.classList.contains('hidden')) {
-                   // Ensure clean exit if necessary, currently we just hide
                    el.classList.add('hidden');
-                   // Clear any GSAP inline styles to reset state
                    gsap.set(el, {clearProps: "all"}); 
                 }
             });
-
-            // 3. Prepare Target
             const target = document.getElementById(`page-${pageId}`);
             if(!target) return;
             
             target.classList.remove('hidden');
 
-            // 4. Render Dynamic Content
             if(pageId === 'courses') renderCourses();
             if(pageId === 'tasks') renderTasks();
             if(pageId === 'books') renderBooks();
             if(pageId === 'trash') renderTrash();
 
-            // 5. THE CURVE GENIE ANIMATION (GSAP)
-            // Starts small, "squeezed" at the bottom with a rounded clip-path
-            // Expands to full size with a bouncy elastic ease
             gsap.fromTo(target, 
-                { 
-                    clipPath: "inset(40% 40% 40% 40% round 80px)", // Starts like a small bubble
-                    opacity: 0,
-                    y: 60,
-                    scale: 0.9,
-                    filter: "blur(8px)"
-                },
-                { 
-                    clipPath: "inset(0% 0% 0% 0% round 0px)", // Expands to fill
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    filter: "blur(0px)",
-                    duration: 0.45,
-                    ease: "power3.out", // Smooth, fast, natural expansion
-                    clearProps: "filter, clipPath, transform" // Clean up for performance after
-                }
+                { clipPath: "inset(40% 40% 40% 40% round 80px)", opacity: 0, y: 60, scale: 0.9, filter: "blur(8px)" },
+                { clipPath: "inset(0% 0% 0% 0% round 0px)", opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out", clearProps: "filter, clipPath, transform" }
             );
         };
 
-        // --- Rendering Logic (With Staggered Delay) ---
+        // --- Rendering Logic ---
         function renderCourses() {
             const list = document.getElementById('courses-list'); list.innerHTML = '';
             window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-                list.innerHTML += `
-                    <div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')">
-                         <div class="absolute top-3 right-3 flex gap-2 z-10">
-                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button>
-                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
-                        </div>
-                        <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3>
-                        ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''}
-                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span>
-                            <span class="font-bold text-accent">${percent}%</span>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
             });
         }
 
@@ -957,68 +846,20 @@
             const list = document.getElementById('books-list'); list.innerHTML = '';
             window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
                 const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
-                list.innerHTML += `
-                    <div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')">
-                        <div class="absolute top-3 right-3 flex gap-2 z-10">
-                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button>
-                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
-                        </div>
-                        <div class="flex justify-between items-start mb-2">
-                            <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div>
-                            <div class="text-right mt-6">
-                                <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div>
-                            </div>
-                        </div>
-                        <h3 class="font-bold text-white mr-8">${b.name}</h3>
-                         ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''}
-                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div>
-                        <div class="flex justify-between text-xs text-slate-400 mt-1">
-                            <span>${b.done} / ${b.total} Pgs</span>
-                            <span>${percent}%</span>
-                        </div>
-                        <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button>
-                    </div>`;
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white mr-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
             });
         }
 
         function renderTasks() {
             const mainList = document.getElementById('tasks-list-main'); 
             const optList = document.getElementById('tasks-list-optional');
-            
-            mainList.innerHTML = '';
-            optList.innerHTML = '';
+            mainList.innerHTML = ''; optList.innerHTML = '';
+            const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
 
-            const generateTaskHTML = (t, index) => `
-                <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}">
-                    <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}">
-                        ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
-                    </button>
-                    <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
-                        <div class="flex justify-between items-start">
-                            <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
-                            <div class="flex gap-2">
-                                 ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''}
-                                 ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''}
-                                 ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''}
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-400">${t.desc || ''}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button>
-                        <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
-                    </div>
-                </div>`;
-
-            let mainIndex = 0;
-            let optIndex = 0;
-
+            let mainIndex = 0; let optIndex = 0;
             window.appData.tasks.filter(t => !t.deleted).forEach(t => {
-                if(t.optional) {
-                    optList.innerHTML += generateTaskHTML(t, optIndex++);
-                } else {
-                    mainList.innerHTML += generateTaskHTML(t, mainIndex++);
-                }
+                if(t.optional) optList.innerHTML += generateTaskHTML(t, optIndex++);
+                else mainList.innerHTML += generateTaskHTML(t, mainIndex++);
             });
         }
 
@@ -1029,48 +870,24 @@
                 ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
                 ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'}))
             ];
-
-            if(allTrash.length === 0) {
-                list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>';
-                return;
-            }
-
+            if(allTrash.length === 0) { list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; return; }
             allTrash.forEach((item, index) => {
-                list.innerHTML += `
-                    <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${0.2 + (index * 0.05)}s">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400">
-                                <i class="fas ${item.icon}"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white">${item.name}</h4>
-                                <p class="text-[10px] text-slate-500 uppercase">${item.type}</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button>
-                            <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button>
-                        </div>
-                    </div>
-                `;
+                list.innerHTML += `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${0.2 + (index * 0.05)}s"> <div class="flex items-center gap-3"> <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400"> <i class="fas ${item.icon}"></i> </div> <div> <h4 class="font-bold text-white">${item.name}</h4> <p class="text-[10px] text-slate-500 uppercase">${item.type}</p> </div> </div> <div class="flex gap-2"> <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button> <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button> </div> </div>`;
             });
         }
 
-        // --- Timer State & Sound ---
+        // --- Logic ---
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         let timerInterval = null, timerSeconds = 0, timerTarget = 0, timerMode = 'stopwatch', timerRunning = false;
         
         window.setTimerMode = function(mode) {
             timerMode = mode; window.stopTimer();
-            const btnSw = document.getElementById('btn-mode-stopwatch');
-            const btnTm = document.getElementById('btn-mode-timer');
-            const input = document.getElementById('timer-input');
-            const display = document.getElementById('timer-display');
+            const btnSw = document.getElementById('btn-mode-stopwatch'); const btnTm = document.getElementById('btn-mode-timer');
+            const input = document.getElementById('timer-input'); const display = document.getElementById('timer-display');
             if(mode === 'stopwatch') {
                 btnSw.classList.replace('text-slate-400', 'text-white'); btnSw.classList.replace('hover:text-white', 'bg-white/10');
                 btnTm.classList.replace('text-white', 'text-slate-400'); btnTm.classList.replace('bg-white/10', 'hover:text-white');
-                input.classList.add('hidden'); display.classList.remove('hidden');
-                timerSeconds = 0; updateTimerDisplay();
+                input.classList.add('hidden'); display.classList.remove('hidden'); timerSeconds = 0; updateTimerDisplay();
             } else {
                 btnTm.classList.replace('text-slate-400', 'text-white'); btnTm.classList.replace('hover:text-white', 'bg-white/10');
                 btnSw.classList.replace('text-white', 'text-slate-400'); btnSw.classList.replace('bg-white/10', 'hover:text-white');
@@ -1088,18 +905,9 @@
             timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
             timerInterval = setInterval(() => {
                 if(timerMode === 'stopwatch') timerSeconds++;
-                else { 
-                    timerSeconds--; 
-                    if(timerSeconds <= 0) { 
-                        window.stopTimer(); 
-                        alarmSound.play(); 
-                        return; 
-                    } 
-                }
-                updateTimerDisplay();
-                updateWidget();
-            }, 1000);
-            updateWidget();
+                else { timerSeconds--; if(timerSeconds <= 0) { window.stopTimer(); alarmSound.play(); return; } }
+                updateTimerDisplay(); updateWidget();
+            }, 1000); updateWidget();
         };
 
         window.stopTimer = function() { timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; updateWidget(); };
@@ -1120,75 +928,49 @@
         let tallyMode = 'up'; let tallyCount = 0;
         window.switchCounterTab = function(tab) {
             if(tab === 'clock') {
-                document.getElementById('view-clock').classList.remove('hidden');
-                document.getElementById('view-tally').classList.add('hidden');
-                document.getElementById('tab-clock').classList.replace('text-slate-400', 'text-white');
-                document.getElementById('tab-clock').classList.add('bg-white/10');
-                document.getElementById('tab-tally').classList.replace('text-white', 'text-slate-400');
-                document.getElementById('tab-tally').classList.remove('bg-white/10');
+                document.getElementById('view-clock').classList.remove('hidden'); document.getElementById('view-tally').classList.add('hidden');
+                document.getElementById('tab-clock').classList.replace('text-slate-400', 'text-white'); document.getElementById('tab-clock').classList.add('bg-white/10');
+                document.getElementById('tab-tally').classList.replace('text-white', 'text-slate-400'); document.getElementById('tab-tally').classList.remove('bg-white/10');
             } else {
-                document.getElementById('view-clock').classList.add('hidden');
-                document.getElementById('view-tally').classList.remove('hidden');
-                document.getElementById('tab-tally').classList.replace('text-slate-400', 'text-white');
-                document.getElementById('tab-tally').classList.add('bg-white/10');
-                document.getElementById('tab-clock').classList.replace('text-white', 'text-slate-400');
-                document.getElementById('tab-clock').classList.remove('bg-white/10');
+                document.getElementById('view-clock').classList.add('hidden'); document.getElementById('view-tally').classList.remove('hidden');
+                document.getElementById('tab-tally').classList.replace('text-slate-400', 'text-white'); document.getElementById('tab-tally').classList.add('bg-white/10');
+                document.getElementById('tab-clock').classList.replace('text-white', 'text-slate-400'); document.getElementById('tab-clock').classList.remove('bg-white/10');
             }
         };
 
         window.setTallyMode = function(mode) {
             tallyMode = mode;
-            const btnUp = document.getElementById('btn-tally-up');
-            const btnDown = document.getElementById('btn-tally-down');
-            const inputContainer = document.getElementById('tally-input-container');
-            const label = document.getElementById('tally-label');
+            const btnUp = document.getElementById('btn-tally-up'); const btnDown = document.getElementById('btn-tally-down');
+            const inputContainer = document.getElementById('tally-input-container'); const label = document.getElementById('tally-label');
             const lang = window.appData.settings.lang;
-
             if(mode === 'up') {
                 btnUp.classList.replace('text-slate-400', 'text-white'); btnUp.classList.add('bg-white/10');
                 btnDown.classList.replace('text-white', 'text-slate-400'); btnDown.classList.remove('bg-white/10');
-                inputContainer.classList.add('hidden');
-                label.innerText = translations[lang].tasbih;
-                window.resetTally();
+                inputContainer.classList.add('hidden'); label.innerText = translations[lang].tasbih; window.resetTally();
             } else {
                 btnDown.classList.replace('text-slate-400', 'text-white'); btnDown.classList.add('bg-white/10');
                 btnUp.classList.replace('text-white', 'text-slate-400'); btnUp.classList.remove('bg-white/10');
-                inputContainer.classList.remove('hidden');
-                label.innerText = translations[lang].countdown;
-                window.resetTally();
+                inputContainer.classList.remove('hidden'); label.innerText = translations[lang].countdown; window.resetTally();
             }
         };
 
         window.clickTally = function() {
             if(tallyMode === 'up') tallyCount++; else if(tallyCount > 0) tallyCount--;
             document.getElementById('tally-display').innerText = tallyCount;
-            const btn = document.getElementById('tally-btn');
-            btn.classList.add('clicked');
-            setTimeout(() => btn.classList.remove('clicked'), 100);
+            const btn = document.getElementById('tally-btn'); btn.classList.add('clicked'); setTimeout(() => btn.classList.remove('clicked'), 100);
             if(navigator.vibrate) navigator.vibrate(20);
         };
-
-        window.resetTally = function() {
-            tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33);
-            document.getElementById('tally-display').innerText = tallyCount;
-        };
+        window.resetTally = function() { tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33); document.getElementById('tally-display').innerText = tallyCount; };
 
         const defaultApiKey = "AIzaSyBJtxfgtCzLq9yx36QkuWYwzrdpYHZ02aM"; 
-
-        // Temporary state for the modal
-        let tempAudioBase64 = null;
-        let tempDrawingData = null;
-        let tempFiles = [];
+        let tempAudioBase64 = null; let tempDrawingData = null; let tempFiles = [];
 
         // --- Init ---
         window.onload = () => {
             try {
                 const localData = localStorage.getItem('hm_data');
-                if (localData) {
-                    try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); }
-                }
+                if (localData) { try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); } }
 
-                // Migration
                 ['courses','tasks','books'].forEach(cat => {
                     if(window.appData[cat]) window.appData[cat].forEach(x => { 
                         if(typeof x.deleted === 'undefined') x.deleted = false; 
@@ -1205,55 +987,35 @@
                 applyLanguage(window.appData.settings.lang);
                 applyAccentColor(window.appData.settings.accent || '#6366f1');
 
-                if(localStorage.getItem('hm_api_key')) document.getElementById('api-label-status').innerText = "Custom API Key Active";
-
                 if(localStorage.getItem('hm_guest')) window.enterAsGuest();
-                else if (!window.authObj && !localStorage.getItem('hm_data')) {
-                    document.getElementById('login-screen').classList.remove('hidden');
-                }
+                else if (!window.authObj && !localStorage.getItem('hm_data')) { document.getElementById('login-screen').classList.remove('hidden'); }
 
                 refreshAllUI();
                 setupCanvas();
                 if(window.Sortable) initSortables(); 
             
-                // Mouse effect
                 document.addEventListener('mousemove', (e) => {
                     document.querySelectorAll('.glass-card').forEach(card => {
                         const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        card.style.setProperty('--mouse-x', `${x}px`);
-                        card.style.setProperty('--mouse-y', `${y}px`);
+                        const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                        card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
                     });
                 });
-            } catch(err) {
-                console.error("Init Error:", err);
-            }
+            } catch(err) { console.error("Init Error:", err); }
         };
 
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
-        window.saveApiKey = function(key) { localStorage.setItem('hm_api_key', key.trim()); alert("Key Saved"); };
 
         // --- Drag & Drop ---
         function initSortables() {
             ['courses-list', 'books-list'].forEach(id => {
                 const el = document.getElementById(id);
-                if(el) {
-                    new Sortable(el, {
-                        handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost',
-                        onEnd: function (evt) { const type = id === 'courses-list' ? 'courses' : 'books'; updateOrder(type, el); }
-                    });
-                }
+                if(el) { new Sortable(el, { handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: function (evt) { const type = id === 'courses-list' ? 'courses' : 'books'; updateOrder(type, el); } }); }
             });
-            const mainTasks = document.getElementById('tasks-list-main');
-            const optionalTasks = document.getElementById('tasks-list-optional');
+            const mainTasks = document.getElementById('tasks-list-main'); const optionalTasks = document.getElementById('tasks-list-optional');
             if(mainTasks && optionalTasks) {
-                const taskSortableOptions = {
-                    group: 'tasks', handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost',
-                    onEnd: function (evt) { rebuildTaskArray(); }
-                };
-                new Sortable(mainTasks, taskSortableOptions);
-                new Sortable(optionalTasks, taskSortableOptions);
+                const taskSortableOptions = { group: 'tasks', handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: function (evt) { rebuildTaskArray(); } };
+                new Sortable(mainTasks, taskSortableOptions); new Sortable(optionalTasks, taskSortableOptions);
             }
         }
 
@@ -1265,36 +1027,32 @@
         }
 
         function rebuildTaskArray() {
-            const mainContainer = document.getElementById('tasks-list-main');
-            const optContainer = document.getElementById('tasks-list-optional');
+            const mainContainer = document.getElementById('tasks-list-main'); const optContainer = document.getElementById('tasks-list-optional');
             const newTasks = [];
             Array.from(mainContainer.children).forEach(child => { const id = child.getAttribute('data-id'); const task = window.appData.tasks.find(x => x.id == id); if(task) { task.optional = false; newTasks.push(task); }});
             Array.from(optContainer.children).forEach(child => { const id = child.getAttribute('data-id'); const task = window.appData.tasks.find(x => x.id == id); if(task) { task.optional = true; newTasks.push(task); }});
             const deletedTasks = window.appData.tasks.filter(x => x.deleted);
-            window.appData.tasks = [...newTasks, ...deletedTasks];
-            commitData(); updateWidget();
+            window.appData.tasks = [...newTasks, ...deletedTasks]; commitData(); updateWidget();
         }
 
         // --- Translations ---
         const translations = {
-            en: {
-                courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", trash: "Trash", askAi: "AI Assistant",
-                timers: "Timers", add: "Add", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.",
-                trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.",
-                continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
-                clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "countup", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", language: "Language", logout: "Logout", back: "Exit"
-            },
-            ar: {
-                courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", trash: "سلة المهملات", askAi: "المساعد الذكي",
-                timers: "المؤقتات", add: "إضافة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.",
-                trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.",
-                continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
-                clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", language: "اللغة", logout: "خروج", back: "رجوع"
-            }
+            en: { courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", trash: "Trash", timers: "Timers", add: "Add", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.", continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)", clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "countup", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", language: "Language", logout: "Logout", back: "Exit" },
+            ar: { courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.", continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف", clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", language: "اللغة", logout: "خروج", back: "رجوع" }
         };
 
-        // --- Unified Modal Logic ---
-        window.openAddModal = function(type) {
+        // --- GENIE ANIMATION LOGIC ---
+        let genieOriginRect = null; // Stores where the animation comes from
+
+        window.openAddModal = function(type, event) {
+            // 1. Capture Origin (The Button Clicked)
+            if (event && event.currentTarget) {
+                genieOriginRect = event.currentTarget.getBoundingClientRect();
+            } else {
+                // Fallback to center bottom if no event passed (e.g. from AI)
+                genieOriginRect = { left: window.innerWidth / 2, top: window.innerHeight - 50, width: 0, height: 0 };
+            }
+
             resetModalInputs();
             document.getElementById('modal-type').value = type;
             document.getElementById('modal-title').innerText = type === 'course' ? 'Add Course' : type === 'task' ? 'Add Task' : 'Add Book';
@@ -1310,10 +1068,15 @@
                 if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
                 else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
             }
-            window.openModal('generic-modal');
+            
+            // 2. Trigger Genie Open
+            openGenieModal('generic-modal');
         };
 
         window.openEditModal = function(type, id) {
+            // Edit modal opens from center (no specific button origin usually, or could use card rect)
+            genieOriginRect = null; 
+            
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
             const item = list.find(x => x.id == id);
             if(!item) return;
@@ -1353,7 +1116,116 @@
                 document.getElementById('modal-audio-player').src = tempAudioBase64;
             }
             if(item.files && item.files.length > 0) { tempFiles = [...item.files]; renderFilePreview(); }
-            window.openModal('generic-modal');
+            
+            // Open with simple fade or center grow if no genie origin
+            openGenieModal('generic-modal');
+        };
+
+        window.openGenieModal = function(modalId) {
+            const overlay = document.getElementById('modal-overlay');
+            const wrapper = document.getElementById(modalId);
+            const content = wrapper.querySelector('.modal-content');
+
+            overlay.classList.remove('hidden', 'opacity-0');
+            wrapper.classList.remove('hidden');
+            
+            // GSAP Genie Effect
+            if (genieOriginRect) {
+                // Calculate distance from center to the button
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                const buttonCenterX = genieOriginRect.left + (genieOriginRect.width / 2);
+                const buttonCenterY = genieOriginRect.top + (genieOriginRect.height / 2);
+
+                const xDist = buttonCenterX - centerX;
+                const yDist = buttonCenterY - centerY;
+
+                // Animate from button position
+                gsap.fromTo(content, 
+                    {
+                        x: xDist,
+                        y: yDist,
+                        scaleX: 0.1,
+                        scaleY: 0.1,
+                        borderRadius: "50%",
+                        opacity: 0
+                    },
+                    {
+                        x: 0,
+                        y: 0,
+                        scaleX: 1,
+                        scaleY: 1,
+                        borderRadius: "24px", // Matches rounded-3xl
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "elastic.out(1, 0.75)", // The liquid bounce effect
+                        clearProps: "all" // Clean up after animation
+                    }
+                );
+            } else {
+                // Fallback for Edit (Center Pop)
+                gsap.fromTo(content, 
+                    { scale: 0.8, opacity: 0 }, 
+                    { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
+                );
+            }
+        };
+
+        window.closeAllModals = function() {
+            const overlay = document.getElementById('modal-overlay');
+            const openWrappers = document.querySelectorAll('.modal-wrapper:not(.hidden)');
+            
+            // Fade out overlay
+            overlay.classList.add('opacity-0');
+            
+            openWrappers.forEach(wrapper => {
+                const content = wrapper.querySelector('.modal-content');
+                
+                // If closing to genie origin
+                if (genieOriginRect && wrapper.id === 'generic-modal') {
+                    const centerX = window.innerWidth / 2;
+                    const centerY = window.innerHeight / 2;
+                    const buttonCenterX = genieOriginRect.left + (genieOriginRect.width / 2);
+                    const buttonCenterY = genieOriginRect.top + (genieOriginRect.height / 2);
+                    const xDist = buttonCenterX - centerX;
+                    const yDist = buttonCenterY - centerY;
+
+                    gsap.to(content, {
+                        x: xDist,
+                        y: yDist,
+                        scaleX: 0.1,
+                        scaleY: 0.1,
+                        borderRadius: "50%",
+                        opacity: 0,
+                        duration: 0.3,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            wrapper.classList.add('hidden');
+                            gsap.set(content, {clearProps: "all"}); // Reset for next time
+                        }
+                    });
+                } else {
+                    // Simple fade out for others
+                    gsap.to(content, {
+                        scale: 0.9,
+                        opacity: 0,
+                        duration: 0.2,
+                        onComplete: () => wrapper.classList.add('hidden')
+                    });
+                }
+            });
+
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+            // Reset origin
+            // genieOriginRect = null; // Don't reset immediately inside loop, maybe set timeout or check active ID
+        };
+        
+        // Wrapper for standard modal open (widget, etc)
+        window.openModal = (id) => { 
+            // Reset origin so widget doesn't use last button pos
+            genieOriginRect = null; 
+            window.openGenieModal(id); 
         };
 
         function resetModalInputs() {
@@ -1565,19 +1437,14 @@
         };
         window.clearChat = function() { document.getElementById('chat-container').innerHTML = ''; };
 
-        // Expose helpers
         window.toggleTask = (id, e) => { if(e) e.stopPropagation(); const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; if(t.completed) triggerConfetti(false); commitData(); renderTasks(); }};
         window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
-        window.closeAllModals = () => { document.getElementById('modal-overlay').classList.add('opacity-0'); document.querySelectorAll('.modal-wrapper').forEach(m => { m.classList.remove('modal-open'); setTimeout(()=>m.classList.add('hidden'),300); }); setTimeout(()=>document.getElementById('modal-overlay').classList.add('hidden'), 300); };
         window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
         window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); commitData(); };
         window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); commitData(); };
         function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
         function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
         function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
-        window.openModal = (id) => { document.getElementById('modal-overlay').classList.remove('hidden', 'opacity-0'); document.getElementById(id).classList.remove('hidden'); setTimeout(()=>document.getElementById(id).classList.add('modal-open'), 10); };
     </script>
 </body>
 </html>
-
-
