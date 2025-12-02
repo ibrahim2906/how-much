@@ -341,8 +341,8 @@
         </div>
     </div>
 
-    <!-- Main App -->
-    <div id="app-container" class="hidden flex h-screen overflow-hidden relative">
+    <!-- Main App - FIXED HEIGHT FOR MOBILE FIT -->
+    <div id="app-container" class="hidden flex h-[100dvh] overflow-hidden relative">
         
         <!-- Desktop Sidebar -->
         <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-r-0 relative z-20 overflow-hidden shrink-0">
@@ -409,8 +409,8 @@
         <!-- Main Content -->
         <main class="flex-1 flex flex-col relative h-full overflow-hidden w-full">
             
-            <!-- Mobile Header -->
-            <header class="md:hidden flex items-center justify-between p-4 glass-panel m-4 rounded-2xl z-30 shrink-0">
+            <!-- Mobile Header - IMPROVED FITTING -->
+            <header class="md:hidden flex items-center justify-between p-3 mx-2 mt-2 rounded-2xl glass-panel z-30 shrink-0">
                 <div class="flex items-center gap-3">
                     <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
                         <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
@@ -428,11 +428,11 @@
                 <i class="fas fa-bars"></i>
             </button>
 
-            <!-- Content Area - Added pb-36 for mobile -->
-            <div id="content-area" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 pb-40 md:pb-8 scroll-smooth w-full">
+            <!-- Content Area - REDUCED PADDING FOR BETTER FIT -->
+            <div id="content-area" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 pb-32 md:pb-8 scroll-smooth w-full">
                 
                 <!-- Courses Page -->
-                <section id="page-courses" class="page-section hidden max-w-5xl mx-auto pt-4 md:pt-0">
+                <section id="page-courses" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
@@ -447,7 +447,7 @@
                 </section>
 
                 <!-- Tasks Page (Modified for Sublists) -->
-                <section id="page-tasks" class="page-section hidden max-w-4xl mx-auto pt-4 md:pt-0">
+                <section id="page-tasks" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="tasks">Tasks</h2>
@@ -472,7 +472,7 @@
                 </section>
 
                 <!-- Books Page -->
-                <section id="page-books" class="page-section hidden max-w-5xl mx-auto pt-4 md:pt-0">
+                <section id="page-books" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="books">Books</h2>
@@ -486,7 +486,7 @@
                 </section>
                 
                 <!-- Trash Page -->
-                <section id="page-trash" class="page-section hidden max-w-4xl mx-auto pt-4 md:pt-0">
+                <section id="page-trash" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 text-red-400" data-i18n="trash">Trash Bin</h2>
@@ -552,7 +552,7 @@
                     </div>
                 </section>
 
-                <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-4 md:pt-0">
+                <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
                     <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
                         <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
@@ -588,7 +588,7 @@
                     </div>
                 </section>
 
-                <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-4 md:pt-0">
+                <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
                     <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
                     <div class="glass-panel rounded-3xl overflow-hidden mb-8">
                         <div class="p-6 border-b border-white/5">
@@ -671,13 +671,13 @@
                 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
 
-            <!-- Mobile Dock Nav -->
+            <!-- Mobile Dock Nav - ADDED TRASH ICON HERE -->
             <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20">
                 <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-graduation-cap text-xl"></i></button>
                 <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-check-circle text-xl"></i></button>
                 <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-stopwatch text-xl"></i></button>
                 <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-book-open text-xl"></i></button>
-                <button onclick="showPage('ai')" class="nav-link flex flex-col items-center gap-1 p-2 text-pink-400 min-h-[44px]"><i class="fas fa-wand-magic-sparkles text-xl"></i></button>
+                <button onclick="showPage('trash')" class="nav-link flex flex-col items-center gap-1 p-2 text-red-400 min-h-[44px]"><i class="fas fa-trash-alt text-xl"></i></button>
             </nav>
         </main>
     </div>
