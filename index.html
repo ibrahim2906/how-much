@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +40,44 @@
             direction: rtl;
         }
 
+        /* --- 1. TACTILE BUTTONS --- */
+        /* Global active state for a physical feel */
+        button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- 2. ANIMATIONS --- */
+        
+        /* Staggered Entrance */
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stagger-entry {
+            opacity: 0; /* Start hidden */
+            animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Swipe/Slide to Delete */
+        @keyframes slideOutRight {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+
+        .slide-out-right {
+            animation: slideOutRight 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
+            pointer-events: none; /* Prevent clicks during exit */
+        }
+
+        /* Bouncy Modal Pop */
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.8); }
+            60% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         /* Animated Nebula Background */
         .nebula-bg {
             position: fixed;
@@ -55,7 +94,7 @@
             opacity: 0.4;
             transition: background-color 0.5s ease;
             animation: floatOrb 10s infinite alternate;
-            pointer-events: none; /* Fix: click through to content */
+            pointer-events: none;
         }
 
         /* Dynamic classes for user color selection */
@@ -93,7 +132,7 @@
             cursor: grab;
             opacity: 0.5; /* More visible on mobile */
             transition: opacity 0.2s;
-            touch-action: none; /* Fix for dragging on touch */
+            touch-action: none;
         }
         .glass-card:hover .drag-handle {
             opacity: 1;
@@ -104,7 +143,7 @@
         }
 
         .delete-btn-preview {
-            opacity: 1; /* Always visible on mobile for usability */
+            opacity: 1;
             transition: opacity 0.2s;
         }
         @media (min-width: 768px) {
@@ -182,21 +221,19 @@
             -webkit-backdrop-filter: blur(20px);
         }
         
-        /* Modal Animation */
+        /* Modal Animation - REPLACED WITH POP */
         .modal-content {
-            transform: scale(0.95) translateY(10px);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.8);
         }
         .modal-open .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         
         /* Floating AI Button */
         .floating-ai-btn {
             position: fixed;
-            bottom: 90px; /* Raised above nav dock on mobile */
+            bottom: 90px;
             right: 20px;
             width: 55px;
             height: 55px;
@@ -208,7 +245,7 @@
             color: white;
             font-size: 24px;
             box-shadow: 0 10px 30px var(--accent-glow);
-            z-index: 40; /* Lower than modal, higher than content */
+            z-index: 40;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: pulse-glow 3s infinite;
         }
@@ -232,7 +269,7 @@
         /* Widget */
         .widget-pill {
             position: fixed;
-            z-index: 39; /* Just below AI button */
+            z-index: 39;
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -254,7 +291,7 @@
         @media (max-width: 767px) {
             .widget-pill {
                 bottom: 90px;
-                right: 85px; /* Left of the AI button on mobile */
+                right: 85px;
                 height: 48px;
                 padding: 0 16px;
                 border-radius: 24px;
@@ -263,7 +300,7 @@
         @media (min-width: 768px) {
             .widget-pill {
                 bottom: 30px;
-                right: 100px; /* Left of the AI button on desktop */
+                right: 100px;
                 height: 60px;
                 padding: 0 24px;
                 border-radius: 30px;
@@ -942,7 +979,8 @@
             if(sb.classList.contains('sidebar-collapsed')) sb.classList.remove('sidebar-collapsed'); else sb.classList.add('sidebar-collapsed');
         };
 
-        // --- Timer State ---
+        // --- Timer State & Sound ---
+        const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         let timerInterval = null, timerSeconds = 0, timerTarget = 0, timerMode = 'stopwatch', timerRunning = false;
         
         window.setTimerMode = function(mode) {
@@ -978,8 +1016,7 @@
                     timerSeconds--; 
                     if(timerSeconds <= 0) { 
                         window.stopTimer(); 
-                        alert("Time's Up!"); 
-                        window.resetTimer(); 
+                        alarmSound.play(); // Play sound instead of alert
                         return; 
                     } 
                 }
@@ -1433,9 +1470,29 @@
             renderFilePreview();
         };
 
-        // --- Trash Logic ---
+        // --- Trash Logic & Swipe Animation ---
         window.moveToTrash = function(type, id, e) {
             e.stopPropagation();
+            
+            // Find the element to animate
+            const btn = e.target.closest('button');
+            const card = btn ? btn.closest('.glass-card') : null;
+
+            if (card) {
+                // Animate Slide Out
+                card.classList.add('slide-out-right');
+                
+                // Wait for animation, then delete
+                setTimeout(() => {
+                    deleteItemLogic(type, id);
+                }, 400); // Duration matches CSS animation
+            } else {
+                // Fallback if no card found
+                deleteItemLogic(type, id);
+            }
+        };
+
+        function deleteItemLogic(type, id) {
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
             const item = list.find(x => x.id == id);
             if(item) {
@@ -1444,7 +1501,7 @@
                 commitData();
                 refreshAllUI();
             }
-        };
+        }
 
         window.restoreFromTrash = function(type, id) {
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
@@ -1473,13 +1530,13 @@
             refreshAllUI();
         };
 
-        // --- Rendering ---
+        // --- Rendering with Staggered Animations ---
         function renderCourses() {
             const list = document.getElementById('courses-list'); list.innerHTML = '';
-            window.appData.courses.filter(c => !c.deleted).forEach(c => {
+            window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
                 list.innerHTML += `
-                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')">
+                    <div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${index * 0.1}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')">
                          <div class="absolute top-3 right-3 flex gap-2 z-10">
                             <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button>
                             <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
@@ -1497,10 +1554,10 @@
 
         function renderBooks() {
             const list = document.getElementById('books-list'); list.innerHTML = '';
-            window.appData.books.filter(b => !b.deleted).forEach(b => {
+            window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
                 const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
                 list.innerHTML += `
-                    <div class="glass-card p-5 rounded-3xl group cursor-pointer active:scale-[0.98] transition-all" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')">
+                    <div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${index * 0.1}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')">
                         <div class="absolute top-3 right-3 flex gap-2 z-10">
                             <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button>
                             <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div>
@@ -1531,8 +1588,8 @@
             mainList.innerHTML = '';
             optList.innerHTML = '';
 
-            const generateTaskHTML = (t) => `
-                <div class="glass-card p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} active:scale-[0.99] transition-all relative group" data-id="${t.id}">
+            const generateTaskHTML = (t, index) => `
+                <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${index * 0.05}s" data-id="${t.id}">
                     <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}">
                         ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
                     </button>
@@ -1553,12 +1610,14 @@
                     </div>
                 </div>`;
 
+            let mainIndex = 0;
+            let optIndex = 0;
+
             window.appData.tasks.filter(t => !t.deleted).forEach(t => {
-                const html = generateTaskHTML(t);
                 if(t.optional) {
-                    optList.innerHTML += html;
+                    optList.innerHTML += generateTaskHTML(t, optIndex++);
                 } else {
-                    mainList.innerHTML += html;
+                    mainList.innerHTML += generateTaskHTML(t, mainIndex++);
                 }
             });
         }
@@ -1576,9 +1635,9 @@
                 return;
             }
 
-            allTrash.forEach(item => {
+            allTrash.forEach((item, index) => {
                 list.innerHTML += `
-                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                    <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${index * 0.05}s">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400">
                                 <i class="fas ${item.icon}"></i>
