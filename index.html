@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +33,8 @@
             background-color: #0f172a;
             color: #f8fafc;
             overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+            margin: 0;
+            padding: 0;
         }
 
         body.rtl {
@@ -48,7 +49,6 @@
         }
 
         /* --- 2. ANIMATIONS --- */
-        
         .page-section {
             will-change: transform, opacity, clip-path;
             transform-origin: center bottom;
@@ -139,9 +139,13 @@
         }
 
         /* Sidebar */
-        #desktop-sidebar { transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; }
+        #desktop-sidebar { 
+            transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; 
+        }
         .sidebar-collapsed { width: 80px !important; }
-        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-badge { display: none; }
+        .sidebar-collapsed .nav-text, 
+        .sidebar-collapsed .logo-text, 
+        .sidebar-collapsed #user-status-badge { display: none; }
         .sidebar-collapsed .nav-link { justify-content: center; }
 
         /* Custom Scrollbar */
@@ -151,61 +155,322 @@
         body.light-mode ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
 
         /* Nav Active */
-        .nav-link { position: relative; transition: all 0.3s ease; opacity: 0.6; }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease; 
+            opacity: 0.6; 
+        }
         .nav-link:hover { opacity: 1; }
-        .nav-link.active { opacity: 1; color: var(--accent-color); }
+        .nav-link.active { 
+            opacity: 1; 
+            color: var(--accent-color); 
+        }
         .nav-link.active::after {
-            content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
-            width: 4px; height: 4px; background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 10px var(--accent-color);
+            content: ''; 
+            position: absolute; 
+            bottom: -4px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 4px; 
+            height: 4px; 
+            background: var(--accent-color); 
+            border-radius: 50%; 
+            box-shadow: 0 0 10px var(--accent-color);
         }
 
         /* Mobile Dock */
-        .mobile-dock { padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .mobile-dock { 
+            padding-bottom: env(safe-area-inset-bottom); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.3); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+        }
         
         /* Modal & Genie Optimization */
         .modal-content {
-            /* Hardware acceleration for smooth genie effect */
             will-change: transform, width, height, opacity, border-radius; 
             transform-origin: center center;
         }
         
         /* Floating AI */
         .floating-ai-btn {
-            position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; border-radius: 50%;
+            position: fixed; 
+            bottom: 90px; 
+            right: 20px; 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-color), #ec4899);
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;
-            box-shadow: 0 10px 30px var(--accent-glow); z-index: 40;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-size: 24px;
+            box-shadow: 0 10px 30px var(--accent-glow); 
+            z-index: 40;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: pulse-glow 3s infinite;
         }
-        .floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
-        @media (min-width: 768px) { .floating-ai-btn { bottom: 30px; right: 30px; width: 60px; height: 60px; } }
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        .floating-ai-btn:hover { 
+            transform: scale(1.1) rotate(15deg); 
+        }
+        @media (min-width: 768px) { 
+            .floating-ai-btn { 
+                bottom: 30px; 
+                right: 30px; 
+                width: 60px; 
+                height: 60px; 
+            } 
+        }
+        @keyframes pulse-glow { 
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } 
+        }
 
         /* Widget */
         .widget-pill {
-            position: fixed; z-index: 39; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: fixed; 
+            z-index: 39; 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: slideInWidget 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            opacity: 0; transform: translateY(20px);
+            opacity: 0; 
+            transform: translateY(20px);
         }
-        .widget-pill:hover { transform: translateY(-2px) scale(1.02); border-color: var(--accent-glow); box-shadow: 0 4px 20px var(--accent-glow); }
-        @keyframes slideInWidget { to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 767px) { .widget-pill { bottom: 90px; right: 85px; height: 48px; padding: 0 16px; border-radius: 24px; } }
-        @media (min-width: 768px) { .widget-pill { bottom: 30px; right: 100px; height: 60px; padding: 0 24px; border-radius: 30px; } }
+        .widget-pill:hover { 
+            transform: translateY(-2px) scale(1.02); 
+            border-color: var(--accent-glow); 
+            box-shadow: 0 4px 20px var(--accent-glow); 
+        }
+        @keyframes slideInWidget { 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @media (max-width: 767px) { 
+            .widget-pill { 
+                bottom: 90px; 
+                right: 85px; 
+                height: 48px; 
+                padding: 0 16px; 
+                border-radius: 24px; 
+            } 
+        }
+        @media (min-width: 768px) { 
+            .widget-pill { 
+                bottom: 30px; 
+                right: 100px; 
+                height: 60px; 
+                padding: 0 24px; 
+                border-radius: 30px; 
+            } 
+        }
 
         /* Confetti Canvas */
-        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
+        #confetti-canvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 1000; 
+        }
 
         /* Loader */
-        .loader-ring { display: inline-block; width: 20px; height: 20px; }
-        .loader-ring:after { content: " "; display: block; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff; border-color: #fff transparent #fff transparent; animation: ring 1.2s linear infinite; }
-        @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-ring { 
+            display: inline-block; 
+            width: 20px; 
+            height: 20px; 
+        }
+        .loader-ring:after { 
+            content: " "; 
+            display: block; 
+            width: 18px; 
+            height: 18px; 
+            border-radius: 50%; 
+            border: 2px solid #fff; 
+            border-color: #fff transparent #fff transparent; 
+            animation: ring 1.2s linear infinite; 
+        }
+        @keyframes ring { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
 
         /* File Upload */
-        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.2); transition: all 0.3s; }
-        .file-drop-zone:hover, .file-drop-zone.dragover { border-color: var(--accent-color); background: rgba(255,255,255,0.05); }
+        .file-drop-zone { 
+            border: 2px dashed rgba(255,255,255,0.2); 
+            transition: all 0.3s; 
+        }
+        .file-drop-zone:hover, .file-drop-zone.dragover { 
+            border-color: var(--accent-color); 
+            background: rgba(255,255,255,0.05); 
+        }
+
+        /* --- GENIE ANIMATION STYLES --- */
+        .genie-widget {
+            position: relative;
+            transition: all 0.35s linear;
+            overflow: hidden;
+        }
+
+        .-genie {
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            background: var(--accent-color) !important;
+            transform-origin: center !important;
+            transition: all 0.35s linear !important;
+        }
+
+        /* Genie animation for all buttons */
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        button:focus:not(:active)::after {
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        /* Improved Layout & Spacing */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .card-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        /* Footer & Floating Elements Fix */
+        .fixed-footer-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .fixed-footer-container > * {
+            pointer-events: auto;
+        }
+
+        /* Sidebar Avatar Fix */
+        #user-avatar-small {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .sidebar-collapsed #user-avatar-small {
+            margin: 0;
+        }
+
+        /* RTL Specific Fixes */
+        body.rtl .floating-ai-btn {
+            right: auto;
+            left: 20px;
+        }
+
+        body.rtl .widget-pill {
+            right: auto;
+            left: 100px;
+        }
+
+        @media (max-width: 767px) {
+            body.rtl .widget-pill {
+                right: auto;
+                left: 85px;
+            }
+        }
+
+        body.rtl .modal-content {
+            text-align: right;
+        }
+
+        body.rtl .nav-link.active::after {
+            left: auto;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        /* Improved Button Spacing */
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Responsive Improvements */
+        @media (max-width: 640px) {
+            .page-section {
+                padding: 1rem;
+            }
+            
+            .card-grid {
+                gap: 1rem;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Avatar Centering Fix */
+        #settings-icon-container {
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer Elements Alignment */
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -241,12 +506,12 @@
             <h2 class="text-3xl font-bold mb-2 text-white" data-i18n="welcome">Welcome Back</h2>
             <p class="text-slate-400 mb-8 text-sm" data-i18n="loginSubtitle">Sync your life progress across dimensions.</p>
             
-            <button onclick="handleGoogleLogin()" class="w-full bg-white text-slate-900 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all active:scale-95 mb-4 group">
+            <button onclick="handleGoogleLogin()" class="w-full bg-white text-slate-900 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all active:scale-95 mb-4 group genie-btn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 group-hover:rotate-12 transition-transform">
                 <span data-i18n="continueGoogle">Continue with Google</span>
             </button>
             
-            <button onclick="enterAsGuest()" class="text-sm accent-text hover:text-white transition-colors" data-i18n="continueGuest">
+            <button onclick="enterAsGuest()" class="text-sm accent-text hover:text-white transition-colors genie-btn" data-i18n="continueGuest">
                 Continue Offline (Guest)
             </button>
         </div>
@@ -270,35 +535,35 @@
             </div>
             
             <nav class="flex-1 px-3 space-y-2 mt-4 overflow-y-auto overflow-x-hidden">
-                <button onclick="showPage('courses')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('courses')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group genie-btn">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-graduation-cap text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="courses">Courses</span>
                 </button>
 
-                <button onclick="showPage('tasks')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('tasks')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group genie-btn">
                     <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-check-circle text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="tasks">Tasks</span>
                 </button>
 
-                <button onclick="showPage('books')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('books')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group genie-btn">
                     <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-book-open text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="books">Books</span>
                 </button>
 
-                <button onclick="showPage('counters')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('counters')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group genie-btn">
                     <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-stopwatch text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="timers">Timers</span>
                 </button>
                 
-                <button onclick="showPage('trash')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('trash')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group genie-btn">
                     <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 group-hover:bg-red-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-trash-alt text-lg"></i>
                     </div>
@@ -307,12 +572,12 @@
             </nav>
 
             <div class="p-4 mt-auto">
-                <button onclick="showPage('settings')" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-slate-400 hover:text-white group">
-                    <img id="user-avatar-small" src="" class="w-8 h-8 rounded-full bg-slate-700 hidden flex-shrink-0">
-                    <div class="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center flex-shrink-0" id="settings-icon-container">
+                <button onclick="showPage('settings')" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-slate-400 hover:text-white group genie-btn">
+                    <img id="user-avatar-small" src="" class="w-8 h-8 rounded-full bg-slate-700 hidden flex-shrink-0 mx-auto">
+                    <div class="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center flex-shrink-0 mx-auto" id="settings-icon-container">
                         <i class="fas fa-cog text-lg group-hover:rotate-90 transition-transform duration-500"></i>
                     </div>
-                    <span class="nav-text whitespace-nowrap" data-i18n="settings">Settings</span>
+                    <span class="nav-text whitespace-nowrap text-center w-full" data-i18n="settings">Settings</span>
                 </button>
             </div>
         </aside>
@@ -325,255 +590,256 @@
                 <div class="flex items-center gap-3">
                     <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
                         <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
-                        <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
+                        <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L70 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
                     </svg>
                     <span class="font-bold text-lg">How Much</span>
                 </div>
-                <button onclick="showPage('settings')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <button onclick="showPage('settings')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center genie-btn">
                     <i class="fas fa-cog text-sm"></i>
                 </button>
             </header>
 
             <!-- Toggle Button Desktop -->
-            <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 left-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5">
+            <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 left-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5 genie-btn">
                 <i class="fas fa-bars"></i>
             </button>
 
             <!-- Content Area -->
             <div id="content-area" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 pb-32 md:pb-8 scroll-smooth w-full">
-                
-                <!-- Courses Page -->
-                <section id="page-courses" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
-                            <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills.</p>
+                <div class="content-wrapper">
+                    <!-- Courses Page -->
+                    <section id="page-courses" class="page-section hidden">
+                        <div class="page-header flex justify-between items-end mb-8">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
+                                <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills.</p>
+                            </div>
+                            <button onclick="openAddModal('course', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base genie-btn" style="background-color: var(--accent-color)">
+                                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
+                            </button>
                         </div>
-                        <!-- Updated onclick to pass event -->
-                        <button onclick="openAddModal('course', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
-                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
-                        </button>
-                    </div>
 
-                    <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </section>
+                        <div id="courses-list" class="card-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </section>
 
-                <!-- Tasks Page -->
-                <section id="page-tasks" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="tasks">Tasks</h2>
-                            <p class="text-slate-400 text-xs md:text-sm" data-i18n="manageTasks">Organize your chaos.</p>
+                    <!-- Tasks Page -->
+                    <section id="page-tasks" class="page-section hidden">
+                        <div class="page-header flex justify-between items-end mb-8">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="tasks">Tasks</h2>
+                                <p class="text-slate-400 text-xs md:text-sm" data-i18n="manageTasks">Organize your chaos.</p>
+                            </div>
+                            <button onclick="openAddModal('task', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base genie-btn" style="background-color: var(--accent-color)">
+                                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
+                            </button>
                         </div>
-                        <!-- Updated onclick to pass event -->
-                        <button onclick="openAddModal('task', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
-                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
-                        </button>
-                    </div>
+                        
+                        <div class="mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
+                            <i class="fas fa-star text-yellow-500"></i> Priority
+                        </div>
+                        <div id="tasks-list-main" class="space-y-3 min-h-[50px]"></div>
+
+                        <div class="mt-8 mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
+                            <i class="fas fa-coffee text-blue-400"></i> Side Quests (Optional)
+                        </div>
+                        <div id="tasks-list-optional" class="space-y-3 min-h-[50px] border-t border-white/5 pt-4"></div>
+                    </section>
+
+                    <!-- Books Page -->
+                    <section id="page-books" class="page-section hidden">
+                        <div class="page-header flex justify-between items-end mb-8">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="books">Books</h2>
+                                <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackReading">Build your knowledge base.</p>
+                            </div>
+                            <button onclick="openAddModal('book', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base genie-btn" style="background-color: var(--accent-color)">
+                                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Book</span>
+                            </button>
+                        </div>
+                        <div id="books-list" class="card-grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                    </section>
                     
-                    <div class="mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
-                        <i class="fas fa-star text-yellow-500"></i> Priority
-                    </div>
-                    <div id="tasks-list-main" class="space-y-3 min-h-[50px]"></div>
-
-                    <div class="mt-8 mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
-                        <i class="fas fa-coffee text-blue-400"></i> Side Quests (Optional)
-                    </div>
-                    <div id="tasks-list-optional" class="space-y-3 min-h-[50px] border-t border-white/5 pt-4"></div>
-                </section>
-
-                <!-- Books Page -->
-                <section id="page-books" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="books">Books</h2>
-                            <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackReading">Build your knowledge base.</p>
-                        </div>
-                        <!-- Updated onclick to pass event -->
-                        <button onclick="openAddModal('book', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
-                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Book</span>
-                        </button>
-                    </div>
-                    <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
-                </section>
-                
-                <!-- Trash Page -->
-                <section id="page-trash" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-1 text-red-400" data-i18n="trash">Trash Bin</h2>
-                            <p class="text-slate-400 text-xs md:text-sm">Recover items or delete them permanently.</p>
-                        </div>
-                        <button onclick="emptyTrash()" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition-all">
-                            <i class="fas fa-dumpster-fire mr-2"></i> Empty Trash
-                        </button>
-                    </div>
-                    <div id="trash-list" class="space-y-3"></div>
-                </section>
-
-                <!-- Counters Page -->
-                <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-10">
-                    <div class="text-center mb-6">
-                        <h2 class="text-2xl md:text-3xl font-bold accent-text mb-2" style="color: var(--accent-color)" data-i18n="timers">Time & Tally</h2>
-                        <div class="flex justify-center gap-4 bg-black/20 p-1.5 rounded-xl inline-flex mx-auto">
-                            <button onclick="switchCounterTab('clock')" id="tab-clock" class="px-6 py-2 rounded-lg text-sm font-bold bg-white/10 text-white shadow-sm transition-all" data-i18n="clock">Clock</button>
-                            <button onclick="switchCounterTab('tally')" id="tab-tally" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white transition-all" data-i18n="counter">Counter</button>
-                        </div>
-                    </div>
-                    <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
-                        <div class="flex bg-black/20 p-1 rounded-xl mb-8">
-                            <button onclick="setTimerMode('stopwatch')" id="btn-mode-stopwatch" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="stopwatch">Stopwatch</button>
-                            <button onclick="setTimerMode('timer')" id="btn-mode-timer" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="timer">Timer</button>
-                        </div>
-                        <div class="relative w-64 h-64 max-w-[70vw] max-h-[70vw] mb-8">
-                            <svg class="w-full h-full" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-                                <circle id="timer-progress" class="progress-ring__circle" cx="50" cy="50" r="45" fill="none" stroke="var(--accent-color)" stroke-width="6" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0"/>
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <div id="timer-display" class="text-5xl font-mono font-bold tracking-wider text-white">00:00</div>
-                                <input type="number" id="timer-input" class="hidden w-24 bg-transparent border-b border-white/20 text-center text-2xl font-mono text-white focus:outline-none focus:border-indigo-500 mt-2 text-base" placeholder="Min" min="1" value="25">
+                    <!-- Trash Page -->
+                    <section id="page-trash" class="page-section hidden">
+                        <div class="page-header flex justify-between items-end mb-8">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-1 text-red-400" data-i18n="trash">Trash Bin</h2>
+                                <p class="text-slate-400 text-xs md:text-sm">Recover items or delete them permanently.</p>
                             </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <button onclick="toggleTimer()" id="btn-timer-toggle" class="w-16 h-16 rounded-full accent-bg flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg accent-glow" style="background-color: var(--accent-color)">
-                                <i class="fas fa-play" id="icon-timer-toggle"></i>
-                            </button>
-                            <button onclick="resetTimer()" class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg">
-                                <i class="fas fa-undo"></i>
+                            <button onclick="emptyTrash()" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition-all genie-btn">
+                                <i class="fas fa-dumpster-fire mr-2"></i> Empty Trash
                             </button>
                         </div>
-                    </div>
-                    <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
-                        <div class="flex bg-black/20 p-1 rounded-xl mb-8">
-                            <button onclick="setTallyMode('up')" id="btn-tally-up" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="tasbih">Tasbih (Up)</button>
-                            <button onclick="setTallyMode('down')" id="btn-tally-down" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="countdown">Countdown</button>
-                        </div>
-                        <div id="tally-input-container" class="hidden mb-4">
-                            <label class="text-xs text-slate-400 block text-center mb-1" data-i18n="startValue">Start Value</label>
-                            <input type="number" id="tally-start-val" value="33" class="w-24 bg-transparent border-b border-white/20 text-center text-xl font-mono text-white focus:outline-none text-base" onchange="resetTally()">
-                        </div>
-                        <button onclick="clickTally()" id="tally-btn" class="clicker-btn w-64 h-64 max-w-[70vw] max-h-[70vw] rounded-full border-8 border-white/5 bg-gradient-to-br from-black/20 to-black/40 flex flex-col items-center justify-center mb-8 shadow-2xl active:shadow-inner transition-all relative overflow-hidden group">
-                            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
-                            <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2" id="tally-label" data-i18n="count">Count</span>
-                            <span id="tally-display" class="text-7xl font-mono font-bold text-white drop-shadow-lg select-none">0</span>
-                        </button>
-                        <button onclick="resetTally()" class="text-sm text-slate-400 hover:text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/5">
-                            <i class="fas fa-undo"></i> <span data-i18n="reset">Reset Counter</span>
-                        </button>
-                    </div>
-                </section>
+                        <div id="trash-list" class="space-y-3"></div>
+                    </section>
 
-                <!-- AI Page -->
-                <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
-                    <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
-                        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-sm" data-i18n="assistantTitle">Gemini Assistant</h3>
-                                    <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active</p>
-                                </div>
-                            </div>
-                            <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold" data-i18n="clear">Clear</button>
-                        </div>
-                        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-                            <div class="flex gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
-                                </div>
-                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
-                                    Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
-                                </div>
+                    <!-- Counters Page -->
+                    <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-10">
+                        <div class="text-center mb-6">
+                            <h2 class="text-2xl md:text-3xl font-bold accent-text mb-2" style="color: var(--accent-color)" data-i18n="timers">Time & Tally</h2>
+                            <div class="flex justify-center gap-4 bg-black/20 p-1.5 rounded-xl inline-flex mx-auto">
+                                <button onclick="switchCounterTab('clock')" id="tab-clock" class="px-6 py-2 rounded-lg text-sm font-bold bg-white/10 text-white shadow-sm transition-all genie-btn" data-i18n="clock">Clock</button>
+                                <button onclick="switchCounterTab('tally')" id="tab-tally" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white transition-all genie-btn" data-i18n="counter">Counter</button>
                             </div>
                         </div>
-                        <div class="p-4 bg-black/20 backdrop-blur-md">
-                            <div class="relative">
-                                <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
-                                <button onclick="sendAIChat()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95">
-                                    <i class="fas fa-paper-plane text-xs"></i>
+                        <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
+                            <div class="flex bg-black/20 p-1 rounded-xl mb-8">
+                                <button onclick="setTimerMode('stopwatch')" id="btn-mode-stopwatch" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow genie-btn" data-i18n="stopwatch">Stopwatch</button>
+                                <button onclick="setTimerMode('timer')" id="btn-mode-timer" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white genie-btn" data-i18n="timer">Timer</button>
+                            </div>
+                            <div class="relative w-64 h-64 max-w-[70vw] max-h-[70vw] mb-8">
+                                <svg class="w-full h-full" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+                                    <circle id="timer-progress" class="progress-ring__circle" cx="50" cy="50" r="45" fill="none" stroke="var(--accent-color)" stroke-width="6" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div id="timer-display" class="text-5xl font-mono font-bold tracking-wider text-white">00:00</div>
+                                    <input type="number" id="timer-input" class="hidden w-24 bg-transparent border-b border-white/20 text-center text-2xl font-mono text-white focus:outline-none focus:border-indigo-500 mt-2 text-base" placeholder="Min" min="1" value="25">
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <button onclick="toggleTimer()" id="btn-timer-toggle" class="w-16 h-16 rounded-full accent-bg flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg accent-glow genie-btn" style="background-color: var(--accent-color)">
+                                    <i class="fas fa-play" id="icon-timer-toggle"></i>
+                                </button>
+                                <button onclick="resetTimer()" class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg genie-btn">
+                                    <i class="fas fa-undo"></i>
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </section>
+                        <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md">
+                            <div class="flex bg-black/20 p-1 rounded-xl mb-8">
+                                <button onclick="setTallyMode('up')" id="btn-tally-up" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow genie-btn" data-i18n="tasbih">Tasbih (Up)</button>
+                                <button onclick="setTallyMode('down')" id="btn-tally-down" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white genie-btn" data-i18n="countdown">Countdown</button>
+                            </div>
+                            <div id="tally-input-container" class="hidden mb-4">
+                                <label class="text-xs text-slate-400 block text-center mb-1" data-i18n="startValue">Start Value</label>
+                                <input type="number" id="tally-start-val" value="33" class="w-24 bg-transparent border-b border-white/20 text-center text-xl font-mono text-white focus:outline-none text-base" onchange="resetTally()">
+                            </div>
+                            <button onclick="clickTally()" id="tally-btn" class="clicker-btn w-64 h-64 max-w-[70vw] max-h-[70vw] rounded-full border-8 border-white/5 bg-gradient-to-br from-black/20 to-black/40 flex flex-col items-center justify-center mb-8 shadow-2xl active:shadow-inner transition-all relative overflow-hidden group genie-btn">
+                                <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
+                                <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2" id="tally-label" data-i18n="count">Count</span>
+                                <span id="tally-display" class="text-7xl font-mono font-bold text-white drop-shadow-lg select-none">0</span>
+                            </button>
+                            <button onclick="resetTally()" class="text-sm text-slate-400 hover:text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/5 genie-btn">
+                                <i class="fas fa-undo"></i> <span data-i18n="reset">Reset Counter</span>
+                            </button>
+                        </div>
+                    </section>
 
-                <!-- Settings Page -->
-                <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
-                    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
-                        <div class="p-6 border-b border-white/5">
-                            <div class="flex justify-between items-center mb-4">
-                                <div>
-                                    <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
-                                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
+                    <!-- AI Page -->
+                    <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col">
+                        <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
+                            <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
+                                        <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-sm" data-i18n="assistantTitle">Gemini Assistant</h3>
+                                        <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active</p>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
-                                    <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync"><i class="fas fa-sync-alt text-xs"></i></button>
+                                <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold genie-btn" data-i18n="clear">Clear</button>
+                            </div>
+                            <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                                        <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
+                                    </div>
+                                    <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
+                                        Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-black/20 backdrop-blur-md">
+                                <div class="relative">
+                                    <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
+                                    <button onclick="sendAIChat()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95 genie-btn">
+                                        <i class="fas fa-paper-plane text-xs"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-palette accent-text"></i></div>
-                                <div>
-                                    <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
-                                    <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
+                    </section>
+
+                    <!-- Settings Page -->
+                    <section id="page-settings" class="page-section hidden max-w-2xl mx-auto">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
+                        <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+                            <div class="p-6 border-b border-white/5">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <h3 class="font-bold flex items-center gap-2"><i class="fas fa-cloud text-blue-400"></i> Cloud Status</h3>
+                                        <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                                        <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 genie-btn" title="Force Sync"><i class="fas fa-sync-alt text-xs"></i></button>
+                                    </div>
                                 </div>
                             </div>
-                            <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)">
-                        </div>
-                        <div class="p-6 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-language"></i></div>
-                                <div>
-                                    <h3 class="font-bold" data-i18n="language">Language</h3>
-                                    <p class="text-xs text-slate-400">English / Arabic</p>
+                            <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-palette accent-text"></i></div>
+                                    <div>
+                                        <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
+                                        <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
+                                    </div>
                                 </div>
+                                <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)">
                             </div>
-                            <button onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold"><span id="current-lang-display">English</span></button>
+                            <div class="p-6 flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3 rounded-xl bg-white/5"><i class="fas fa-language"></i></div>
+                                    <div>
+                                        <h3 class="font-bold" data-i18n="language">Language</h3>
+                                        <p class="text-xs text-slate-400">English / Arabic</p>
+                                    </div>
+                                </div>
+                                <button onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold genie-btn"><span id="current-lang-display">English</span></button>
+                            </div>
                         </div>
-                    </div>
-                    <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></button>
-                </section>
+                        <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2 genie-btn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></button>
+                    </section>
+                </div>
             </div>
 
-            <!-- New Floating Widget -->
-            <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
-                <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-r border-white/10 pr-3 mr-1 hidden">
-                    <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
-                    <span id="widget-timer-val" class="font-mono font-bold text-sm">00:00</span>
+            <!-- Footer Container for Fixed Elements -->
+            <div class="fixed-footer-container">
+                <!-- New Floating Widget -->
+                <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
+                    <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-r border-white/10 pr-3 mr-1 hidden">
+                        <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
+                        <span id="widget-timer-val" class="font-mono font-bold text-sm">00:00</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-tasks text-purple-400 text-sm"></i>
+                        <span id="widget-tasks-val" class="font-bold text-sm text-white">0</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center relative ml-1">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+                            <path id="widget-progress-ring" class="text-indigo-500 transition-all duration-500" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+                        </svg>
+                        <i class="fas fa-chevron-up text-[8px] text-white/50 group-hover:-translate-y-0.5 transition-transform"></i>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-tasks text-purple-400 text-sm"></i>
-                    <span id="widget-tasks-val" class="font-bold text-sm text-white">0</span>
-                </div>
-                <div class="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center relative ml-1">
-                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
-                        <path id="widget-progress-ring" class="text-indigo-500 transition-all duration-500" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
-                    </svg>
-                    <i class="fas fa-chevron-up text-[8px] text-white/50 group-hover:-translate-y-0.5 transition-transform"></i>
-                </div>
+
+                <!-- Floating AI Button -->
+                <button onclick="showPage('ai')" class="floating-ai-btn hover:scale-110 active:scale-95 genie-btn">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </button>
+
+                <!-- Mobile Dock Nav -->
+                <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20">
+                    <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px] genie-btn"><i class="fas fa-graduation-cap text-xl"></i></button>
+                    <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px] genie-btn"><i class="fas fa-check-circle text-xl"></i></button>
+                    <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px] genie-btn"><i class="fas fa-stopwatch text-xl"></i></button>
+                    <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px] genie-btn"><i class="fas fa-book-open text-xl"></i></button>
+                    <button onclick="showPage('trash')" class="nav-link flex flex-col items-center gap-1 p-2 text-red-400 min-h-[44px] genie-btn"><i class="fas fa-trash-alt text-xl"></i></button>
+                </nav>
             </div>
-
-            <!-- Floating AI Button -->
-            <button onclick="showPage('ai')" class="floating-ai-btn hover:scale-110 active:scale-95">
-                <i class="fas fa-wand-magic-sparkles"></i>
-            </button>
-
-            <!-- Mobile Dock Nav -->
-            <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20">
-                <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-graduation-cap text-xl"></i></button>
-                <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-check-circle text-xl"></i></button>
-                <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-stopwatch text-xl"></i></button>
-                <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-book-open text-xl"></i></button>
-                <button onclick="showPage('trash')" class="nav-link flex flex-col items-center gap-1 p-2 text-red-400 min-h-[44px]"><i class="fas fa-trash-alt text-xl"></i></button>
-            </nav>
         </main>
     </div>
 
@@ -583,7 +849,7 @@
     <!-- Widget Detail Modal -->
     <div id="widget-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-end md:items-center justify-center pointer-events-none p-4 pb-24 md:pb-4">
         <div class="modal-content glass-panel w-full max-w-sm rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
-            <button onclick="closeAllModals()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fas fa-times"></i></button>
+            <button onclick="closeAllModals()" class="absolute top-4 right-4 text-white/50 hover:text-white genie-btn"><i class="fas fa-times"></i></button>
             <h3 class="text-xl font-bold text-white mb-1">Daily Snapshot</h3>
             <p class="text-xs text-slate-400 mb-4">Here is how you are doing today.</p>
             <div class="grid grid-cols-2 gap-3 mb-4">
@@ -606,7 +872,6 @@
     </div>
 
     <!-- Generic Template for Add/Edit -->
-    <!-- Added ID for easier GSAP targeting of content -->
     <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
         <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
@@ -631,13 +896,13 @@
                 <div class="glass-panel p-3 rounded-xl bg-black/10">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
-                        <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
+                        <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1 genie-btn">
                             <i class="fas fa-microphone"></i> <span>Record</span>
                         </button>
                     </div>
                     <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
                         <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
-                        <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
+                        <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1 genie-btn"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
 
@@ -655,21 +920,21 @@
                 <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10 hidden">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
-                        <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                        <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1 genie-btn">
                             <i class="fas fa-pencil-alt"></i> <span id="btn-draw-label">Add Drawing</span>
                         </button>
                     </div>
                     <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
                         <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10">
                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white"><i class="fas fa-trash"></i></button>
+                            <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white genie-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white genie-btn"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex gap-2 justify-end pt-2">
-                    <button onclick="saveItem()" class="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors">Save</button>
+                    <button onclick="saveItem()" class="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors genie-btn">Save</button>
                 </div>
             </div>
         </div>
@@ -678,15 +943,15 @@
     <!-- Drawing Modal -->
     <div id="drawing-modal" class="fixed inset-0 bg-[#0f172a] hidden flex-col z-[70] animate-fade-in">
         <div class="h-16 bg-[#1e293b] flex items-center justify-between px-4 shrink-0 border-b border-white/10 shadow-lg relative z-10">
-            <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Exit</span></button>
+            <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white genie-btn"><i class="fas fa-arrow-left"></i> <span data-i18n="back">Exit</span></button>
             <div class="flex items-center gap-4 bg-black/20 p-1.5 rounded-lg border border-white/5">
                 <input type="color" id="brush-color" class="w-8 h-8 rounded cursor-pointer bg-transparent border-0" value="#ffffff">
                 <input type="range" id="brush-size" min="1" max="20" value="4" class="w-20 accent-indigo-500">
                 <div class="w-px h-6 bg-white/10"></div>
-                <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center"><i class="fas fa-eraser"></i></button>
-                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center"><i class="fas fa-trash-alt"></i></button>
+                <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center genie-btn"><i class="fas fa-eraser"></i></button>
+                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center genie-btn"><i class="fas fa-trash-alt"></i></button>
             </div>
-            <button onclick="saveCanvasDrawing()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20">
+            <button onclick="saveCanvasDrawing()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 genie-btn">
                 <i class="fas fa-check mr-1"></i> Save
             </button>
         </div>
@@ -745,9 +1010,13 @@
                         gsap.from('#app-container', {opacity: 0, y: 20});
                     }});
                     
-                    if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').src = user.photoURL;
-                    if(document.getElementById('settings-icon-container')) document.getElementById('settings-icon-container').classList.add('hidden');
-                    if(document.getElementById('user-avatar-small')) document.getElementById('user-avatar-small').classList.remove('hidden');
+                    if(document.getElementById('user-avatar-small')) {
+                        document.getElementById('user-avatar-small').src = user.photoURL;
+                        document.getElementById('user-avatar-small').classList.remove('hidden');
+                    }
+                    if(document.getElementById('settings-icon-container')) {
+                        document.getElementById('settings-icon-container').classList.add('hidden');
+                    }
                     
                     document.getElementById('cloud-status').innerText = "Syncing...";
                     loadData(user.uid);
@@ -766,7 +1035,11 @@
                 try {
                     await setDoc(doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"), window.appData);
                     const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) { statusEl.innerText = "Synced"; statusEl.classList.remove('text-red-400'); statusEl.classList.add('text-green-400'); }
+                    if(statusEl) { 
+                        statusEl.innerText = "Synced"; 
+                        statusEl.classList.remove('text-red-400'); 
+                        statusEl.classList.add('text-green-400'); 
+                    }
                 } catch(e) { console.error("Save Error:", e); }
             }
         }
@@ -778,7 +1051,11 @@
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
                     refreshAllUI();
                     const statusEl = document.getElementById('cloud-status');
-                    if(statusEl) { statusEl.innerText = "Synced"; statusEl.classList.remove('text-red-400'); statusEl.classList.add('text-green-400'); }
+                    if(statusEl) { 
+                        statusEl.innerText = "Synced"; 
+                        statusEl.classList.remove('text-red-400'); 
+                        statusEl.classList.add('text-green-400'); 
+                    }
                 } else {
                     if(window.appData.tasks.length > 0 || window.appData.courses.length > 0) saveData();
                 }
@@ -805,18 +1082,24 @@
 
         window.toggleSidebar = function() {
             const sb = document.getElementById('desktop-sidebar');
-            if(sb.classList.contains('sidebar-collapsed')) sb.classList.remove('sidebar-collapsed'); else sb.classList.add('sidebar-collapsed');
+            if(sb.classList.contains('sidebar-collapsed')) {
+                sb.classList.remove('sidebar-collapsed');
+            } else {
+                sb.classList.add('sidebar-collapsed');
+            }
         };
 
         window.showPage = function(pageId) {
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
+            
             document.querySelectorAll('.page-section').forEach(el => {
                 if(!el.classList.contains('hidden')) {
                    el.classList.add('hidden');
                    gsap.set(el, {clearProps: "all"}); 
                 }
             });
+            
             const target = document.getElementById(`page-${pageId}`);
             if(!target) return;
             
@@ -835,141 +1118,426 @@
 
         // --- Rendering Logic ---
         function renderCourses() {
-            const list = document.getElementById('courses-list'); list.innerHTML = '';
+            const list = document.getElementById('courses-list'); 
+            list.innerHTML = '';
+            
             window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
+                list.innerHTML += `
+                    <div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" 
+                         style="animation-delay: ${0.2 + (index * 0.05)}s" 
+                         data-id="${c.id}" 
+                         onclick="openEditModal('course', '${c.id}')">
+                        <div class="absolute top-3 right-3 flex gap-2 z-10">
+                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white genie-btn" 
+                                    onclick="moveToTrash('course', '${c.id}', event)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3>
+                        ${c.files && c.files.length > 0 ? 
+                            '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''}
+                        <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2">
+                            <div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span>
+                            <span class="font-bold text-accent">${percent}%</span>
+                        </div>
+                    </div>`;
             });
         }
 
         function renderBooks() {
-            const list = document.getElementById('books-list'); list.innerHTML = '';
+            const list = document.getElementById('books-list'); 
+            list.innerHTML = '';
+            
             window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
                 const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
-                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white mr-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
+                list.innerHTML += `
+                    <div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" 
+                         style="animation-delay: ${0.2 + (index * 0.05)}s" 
+                         data-id="${b.id}" 
+                         onclick="openEditModal('book', '${b.id}')">
+                        <div class="absolute top-3 right-3 flex gap-2 z-10">
+                            <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white genie-btn" 
+                                    onclick="moveToTrash('book', '${b.id}', event)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="text-right mt-6">
+                                <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white mr-8">${b.name}</h3>
+                        ${b.files && b.files.length > 0 ? 
+                            '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''}
+                        <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden">
+                            <div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>${b.done} / ${b.total} Pgs</span>
+                            <span>${percent}%</span>
+                        </div>
+                        <button onclick="readBookToday(${b.id}, event)" 
+                                class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20 genie-btn">
+                            Mark Read Today
+                        </button>
+                    </div>`;
             });
         }
 
         function renderTasks() {
             const mainList = document.getElementById('tasks-list-main'); 
             const optList = document.getElementById('tasks-list-optional');
-            mainList.innerHTML = ''; optList.innerHTML = '';
-            const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
+            mainList.innerHTML = ''; 
+            optList.innerHTML = '';
+            
+            const generateTaskHTML = (t, index) => `
+                <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" 
+                     style="animation-delay: ${0.2 + (index * 0.05)}s" 
+                     data-id="${t.id}">
+                    <button onclick="toggleTask(${t.id}, event)" 
+                            class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10 genie-btn" 
+                            style="${t.completed ? 'background:var(--accent-color)' : ''}">
+                        ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''}
+                    </button>
+                    <div class="flex-1" onclick="openEditModal('task', '${t.id}')">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4>
+                            <div class="flex gap-2">
+                                ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''}
+                                ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''}
+                                ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''}
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400">${t.desc || ''}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="delete-btn-preview p-2 text-red-400 hover:text-white genie-btn" 
+                                onclick="moveToTrash('task', '${t.id}', event)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab">
+                            <i class="fas fa-grip-vertical"></i>
+                        </div>
+                    </div>
+                </div>`;
 
-            let mainIndex = 0; let optIndex = 0;
+            let mainIndex = 0; 
+            let optIndex = 0;
+            
             window.appData.tasks.filter(t => !t.deleted).forEach(t => {
-                if(t.optional) optList.innerHTML += generateTaskHTML(t, optIndex++);
-                else mainList.innerHTML += generateTaskHTML(t, mainIndex++);
+                if(t.optional) {
+                    optList.innerHTML += generateTaskHTML(t, optIndex++);
+                } else {
+                    mainList.innerHTML += generateTaskHTML(t, mainIndex++);
+                }
             });
         }
 
         function renderTrash() {
-            const list = document.getElementById('trash-list'); list.innerHTML = '';
+            const list = document.getElementById('trash-list'); 
+            list.innerHTML = '';
+            
             const allTrash = [
                 ...window.appData.courses.filter(x => x.deleted).map(x => ({...x, type: 'course', icon: 'fa-graduation-cap'})),
                 ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
                 ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'}))
             ];
-            if(allTrash.length === 0) { list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; return; }
+            
+            if(allTrash.length === 0) { 
+                list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; 
+                return; 
+            }
+            
             allTrash.forEach((item, index) => {
-                list.innerHTML += `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${0.2 + (index * 0.05)}s"> <div class="flex items-center gap-3"> <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400"> <i class="fas ${item.icon}"></i> </div> <div> <h4 class="font-bold text-white">${item.name}</h4> <p class="text-[10px] text-slate-500 uppercase">${item.type}</p> </div> </div> <div class="flex gap-2"> <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button> <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button> </div> </div>`;
+                list.innerHTML += `
+                    <div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" 
+                         style="animation-delay: ${0.2 + (index * 0.05)}s">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400">
+                                <i class="fas ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">${item.name}</h4>
+                                <p class="text-[10px] text-slate-500 uppercase">${item.type}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="restoreFromTrash('${item.type}', ${item.id})" 
+                                    class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg genie-btn" 
+                                    title="Restore">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                            <button onclick="permanentDelete('${item.type}', ${item.id})" 
+                                    class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg genie-btn" 
+                                    title="Delete Forever">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>`;
             });
         }
 
-        // --- Logic ---
+        // --- Timer Logic ---
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         let timerInterval = null, timerSeconds = 0, timerTarget = 0, timerMode = 'stopwatch', timerRunning = false;
         
         window.setTimerMode = function(mode) {
-            timerMode = mode; window.stopTimer();
-            const btnSw = document.getElementById('btn-mode-stopwatch'); const btnTm = document.getElementById('btn-mode-timer');
-            const input = document.getElementById('timer-input'); const display = document.getElementById('timer-display');
+            timerMode = mode; 
+            window.stopTimer();
+            
+            const btnSw = document.getElementById('btn-mode-stopwatch'); 
+            const btnTm = document.getElementById('btn-mode-timer');
+            const input = document.getElementById('timer-input'); 
+            const display = document.getElementById('timer-display');
+            
             if(mode === 'stopwatch') {
-                btnSw.classList.replace('text-slate-400', 'text-white'); btnSw.classList.replace('hover:text-white', 'bg-white/10');
-                btnTm.classList.replace('text-white', 'text-slate-400'); btnTm.classList.replace('bg-white/10', 'hover:text-white');
-                input.classList.add('hidden'); display.classList.remove('hidden'); timerSeconds = 0; updateTimerDisplay();
+                btnSw.classList.replace('text-slate-400', 'text-white'); 
+                btnSw.classList.replace('hover:text-white', 'bg-white/10');
+                btnTm.classList.replace('text-white', 'text-slate-400'); 
+                btnTm.classList.replace('bg-white/10', 'hover:text-white');
+                input.classList.add('hidden'); 
+                display.classList.remove('hidden'); 
+                timerSeconds = 0; 
+                updateTimerDisplay();
             } else {
-                btnTm.classList.replace('text-slate-400', 'text-white'); btnTm.classList.replace('hover:text-white', 'bg-white/10');
-                btnSw.classList.replace('text-white', 'text-slate-400'); btnSw.classList.replace('bg-white/10', 'hover:text-white');
-                input.classList.remove('hidden'); display.classList.add('hidden');
+                btnTm.classList.replace('text-slate-400', 'text-white'); 
+                btnTm.classList.replace('hover:text-white', 'bg-white/10');
+                btnSw.classList.replace('text-white', 'text-slate-400'); 
+                btnSw.classList.replace('bg-white/10', 'hover:text-white');
+                input.classList.remove('hidden'); 
+                display.classList.add('hidden');
             }
         };
 
-        window.toggleTimer = function() { if(timerRunning) window.stopTimer(); else window.startTimer(); };
+        window.toggleTimer = function() { 
+            if(timerRunning) window.stopTimer(); 
+            else window.startTimer(); 
+        };
+        
         window.startTimer = function() {
             if(timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
                 const mins = parseInt(document.getElementById('timer-input').value) || 25;
-                timerTarget = mins * 60; timerSeconds = timerTarget;
-                document.getElementById('timer-input').classList.add('hidden'); document.getElementById('timer-display').classList.remove('hidden');
+                timerTarget = mins * 60; 
+                timerSeconds = timerTarget;
+                document.getElementById('timer-input').classList.add('hidden'); 
+                document.getElementById('timer-display').classList.remove('hidden');
             }
-            timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
+            
+            timerRunning = true; 
+            document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
+            
             timerInterval = setInterval(() => {
-                if(timerMode === 'stopwatch') timerSeconds++;
-                else { timerSeconds--; if(timerSeconds <= 0) { window.stopTimer(); alarmSound.play(); return; } }
-                updateTimerDisplay(); updateWidget();
-            }, 1000); updateWidget();
+                if(timerMode === 'stopwatch') {
+                    timerSeconds++;
+                } else { 
+                    timerSeconds--; 
+                    if(timerSeconds <= 0) { 
+                        window.stopTimer(); 
+                        alarmSound.play(); 
+                        return; 
+                    } 
+                }
+                updateTimerDisplay(); 
+                updateWidget();
+            }, 1000); 
+            
+            updateWidget();
         };
 
-        window.stopTimer = function() { timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; updateWidget(); };
-        window.resetTimer = function() { window.stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); };
+        window.stopTimer = function() { 
+            timerRunning = false; 
+            clearInterval(timerInterval); 
+            document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
+            updateWidget(); 
+        };
+        
+        window.resetTimer = function() { 
+            window.stopTimer(); 
+            if(timerMode !== 'stopwatch') { 
+                document.getElementById('timer-display').classList.add('hidden'); 
+                document.getElementById('timer-input').classList.remove('hidden'); 
+            } 
+            timerSeconds = 0; 
+            updateTimerDisplay(); 
+            updateWidget(); 
+        };
         
         function updateTimerDisplay() {
             const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const s = (timerSeconds % 60).toString().padStart(2, '0');
             document.getElementById('timer-display').innerText = `${m}:${s}`;
+            
             const circle = document.getElementById('timer-progress');
             const radius = circle.r.baseVal.value;
             const circumference = radius * 2 * Math.PI;
-            if(timerMode === 'timer' && timerTarget > 0) circle.style.strokeDashoffset = circumference - ((timerSeconds / timerTarget) * circumference);
-            else circle.style.strokeDashoffset = 0;
+            
+            if(timerMode === 'timer' && timerTarget > 0) {
+                circle.style.strokeDashoffset = circumference - ((timerSeconds / timerTarget) * circumference);
+            } else {
+                circle.style.strokeDashoffset = 0;
+            }
         }
 
         // --- Tally Logic ---
-        let tallyMode = 'up'; let tallyCount = 0;
+        let tallyMode = 'up'; 
+        let tallyCount = 0;
+        
         window.switchCounterTab = function(tab) {
             if(tab === 'clock') {
-                document.getElementById('view-clock').classList.remove('hidden'); document.getElementById('view-tally').classList.add('hidden');
-                document.getElementById('tab-clock').classList.replace('text-slate-400', 'text-white'); document.getElementById('tab-clock').classList.add('bg-white/10');
-                document.getElementById('tab-tally').classList.replace('text-white', 'text-slate-400'); document.getElementById('tab-tally').classList.remove('bg-white/10');
+                document.getElementById('view-clock').classList.remove('hidden'); 
+                document.getElementById('view-tally').classList.add('hidden');
+                document.getElementById('tab-clock').classList.replace('text-slate-400', 'text-white'); 
+                document.getElementById('tab-clock').classList.add('bg-white/10');
+                document.getElementById('tab-tally').classList.replace('text-white', 'text-slate-400'); 
+                document.getElementById('tab-tally').classList.remove('bg-white/10');
             } else {
-                document.getElementById('view-clock').classList.add('hidden'); document.getElementById('view-tally').classList.remove('hidden');
-                document.getElementById('tab-tally').classList.replace('text-slate-400', 'text-white'); document.getElementById('tab-tally').classList.add('bg-white/10');
-                document.getElementById('tab-clock').classList.replace('text-white', 'text-slate-400'); document.getElementById('tab-clock').classList.remove('bg-white/10');
+                document.getElementById('view-clock').classList.add('hidden'); 
+                document.getElementById('view-tally').classList.remove('hidden');
+                document.getElementById('tab-tally').classList.replace('text-slate-400', 'text-white'); 
+                document.getElementById('tab-tally').classList.add('bg-white/10');
+                document.getElementById('tab-clock').classList.replace('text-white', 'text-slate-400'); 
+                document.getElementById('tab-clock').classList.remove('bg-white/10');
             }
         };
 
         window.setTallyMode = function(mode) {
             tallyMode = mode;
-            const btnUp = document.getElementById('btn-tally-up'); const btnDown = document.getElementById('btn-tally-down');
-            const inputContainer = document.getElementById('tally-input-container'); const label = document.getElementById('tally-label');
+            const btnUp = document.getElementById('btn-tally-up'); 
+            const btnDown = document.getElementById('btn-tally-down');
+            const inputContainer = document.getElementById('tally-input-container'); 
+            const label = document.getElementById('tally-label');
             const lang = window.appData.settings.lang;
+            
             if(mode === 'up') {
-                btnUp.classList.replace('text-slate-400', 'text-white'); btnUp.classList.add('bg-white/10');
-                btnDown.classList.replace('text-white', 'text-slate-400'); btnDown.classList.remove('bg-white/10');
-                inputContainer.classList.add('hidden'); label.innerText = translations[lang].tasbih; window.resetTally();
+                btnUp.classList.replace('text-slate-400', 'text-white'); 
+                btnUp.classList.add('bg-white/10');
+                btnDown.classList.replace('text-white', 'text-slate-400'); 
+                btnDown.classList.remove('bg-white/10');
+                inputContainer.classList.add('hidden'); 
+                label.innerText = translations[lang].tasbih; 
+                window.resetTally();
             } else {
-                btnDown.classList.replace('text-slate-400', 'text-white'); btnDown.classList.add('bg-white/10');
-                btnUp.classList.replace('text-white', 'text-slate-400'); btnUp.classList.remove('bg-white/10');
-                inputContainer.classList.remove('hidden'); label.innerText = translations[lang].countdown; window.resetTally();
+                btnDown.classList.replace('text-slate-400', 'text-white'); 
+                btnDown.classList.add('bg-white/10');
+                btnUp.classList.replace('text-white', 'text-slate-400'); 
+                btnUp.classList.remove('bg-white/10');
+                inputContainer.classList.remove('hidden'); 
+                label.innerText = translations[lang].countdown; 
+                window.resetTally();
             }
         };
 
         window.clickTally = function() {
-            if(tallyMode === 'up') tallyCount++; else if(tallyCount > 0) tallyCount--;
+            if(tallyMode === 'up') {
+                tallyCount++; 
+            } else if(tallyCount > 0) {
+                tallyCount--;
+            }
+            
             document.getElementById('tally-display').innerText = tallyCount;
-            const btn = document.getElementById('tally-btn'); btn.classList.add('clicked'); setTimeout(() => btn.classList.remove('clicked'), 100);
+            const btn = document.getElementById('tally-btn'); 
+            btn.classList.add('clicked'); 
+            setTimeout(() => btn.classList.remove('clicked'), 100);
+            
             if(navigator.vibrate) navigator.vibrate(20);
         };
-        window.resetTally = function() { tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33); document.getElementById('tally-display').innerText = tallyCount; };
+        
+        window.resetTally = function() { 
+            tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33); 
+            document.getElementById('tally-display').innerText = tallyCount; 
+        };
+
+        // --- Genie Animation System ---
+        function initGenieAnimations() {
+            // Add click handlers to all buttons
+            document.querySelectorAll('button').forEach(button => {
+                // Skip if already has genie animation handler
+                if (button.classList.contains('genie-btn')) return;
+                
+                button.classList.add('genie-btn');
+                button.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.3);
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        width: ${size}px;
+                        height: ${size}px;
+                        top: ${y}px;
+                        left: ${x}px;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                    
+                    // Trigger genie effect on closest widget if exists
+                    const widget = this.closest('.glass-card, .glass-panel, .modal-content');
+                    if (widget) {
+                        widget.classList.toggle('-genie');
+                        setTimeout(() => widget.classList.toggle('-genie'), 350);
+                    }
+                });
+            });
+            
+            // Add CSS for ripple animation
+            if (!document.querySelector('#ripple-styles')) {
+                const style = document.createElement('style');
+                style.id = 'ripple-styles';
+                style.textContent = `
+                    @keyframes ripple {
+                        to {
+                            transform: scale(4);
+                            opacity: 0;
+                        }
+                    }
+                    
+                    .genie-btn {
+                        position: relative;
+                        overflow: hidden;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
 
         const defaultApiKey = "AIzaSyBJtxfgtCzLq9yx36QkuWYwzrdpYHZ02aM"; 
-        let tempAudioBase64 = null; let tempDrawingData = null; let tempFiles = [];
+        let tempAudioBase64 = null; 
+        let tempDrawingData = null; 
+        let tempFiles = [];
 
-        // --- Init ---
+        // --- Initialization ---
         window.onload = () => {
             try {
                 const localData = localStorage.getItem('hm_data');
-                if (localData) { try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); } }
+                if (localData) { 
+                    try { 
+                        window.appData = JSON.parse(localData); 
+                    } catch(e) { 
+                        console.error("Data parse error", e); 
+                    } 
+                }
 
                 ['courses','tasks','books'].forEach(cat => {
                     if(window.appData[cat]) window.appData[cat].forEach(x => { 
@@ -981,100 +1549,243 @@
 
                 gsap.timeline()
                     .from("#splash-screen svg", { scale: 0, rotation: -90, duration: 1.5, ease: "elastic.out(1, 0.5)" })
-                    .to("#splash-screen", { opacity: 0, duration: 0.8, delay: 0.5, onComplete: () => { document.getElementById("splash-screen").style.display = 'none'; }});
+                    .to("#splash-screen", { opacity: 0, duration: 0.8, delay: 0.5, onComplete: () => { 
+                        document.getElementById("splash-screen").style.display = 'none'; 
+                    }});
 
                 applyTheme(window.appData.settings.theme);
                 applyLanguage(window.appData.settings.lang);
                 applyAccentColor(window.appData.settings.accent || '#6366f1');
 
+                // Initialize Genie animations
+                initGenieAnimations();
+
                 if(localStorage.getItem('hm_guest')) window.enterAsGuest();
-                else if (!window.authObj && !localStorage.getItem('hm_data')) { document.getElementById('login-screen').classList.remove('hidden'); }
+                else if (!window.authObj && !localStorage.getItem('hm_data')) { 
+                    document.getElementById('login-screen').classList.remove('hidden'); 
+                }
 
                 refreshAllUI();
                 setupCanvas();
                 if(window.Sortable) initSortables(); 
             
+                // Mouse move effect for cards
                 document.addEventListener('mousemove', (e) => {
                     document.querySelectorAll('.glass-card').forEach(card => {
                         const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                        card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
+                        const x = e.clientX - rect.left; 
+                        const y = e.clientY - rect.top;
+                        card.style.setProperty('--mouse-x', `${x}px`); 
+                        card.style.setProperty('--mouse-y', `${y}px`);
                     });
                 });
-            } catch(err) { console.error("Init Error:", err); }
+                
+                // Adjust layout for RTL
+                if (window.appData.settings.lang === 'ar') {
+                    document.body.classList.add('rtl');
+                }
+                
+            } catch(err) { 
+                console.error("Init Error:", err); 
+            }
         };
 
-        function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
+        function getApiKey() { 
+            return localStorage.getItem('hm_api_key') || defaultApiKey; 
+        }
 
         // --- Drag & Drop ---
         function initSortables() {
             ['courses-list', 'books-list'].forEach(id => {
                 const el = document.getElementById(id);
-                if(el) { new Sortable(el, { handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: function (evt) { const type = id === 'courses-list' ? 'courses' : 'books'; updateOrder(type, el); } }); }
+                if(el) { 
+                    new Sortable(el, { 
+                        handle: '.drag-handle', 
+                        animation: 150, 
+                        ghostClass: 'sortable-ghost', 
+                        onEnd: function (evt) { 
+                            const type = id === 'courses-list' ? 'courses' : 'books'; 
+                            updateOrder(type, el); 
+                        } 
+                    }); 
+                }
             });
-            const mainTasks = document.getElementById('tasks-list-main'); const optionalTasks = document.getElementById('tasks-list-optional');
+            
+            const mainTasks = document.getElementById('tasks-list-main'); 
+            const optionalTasks = document.getElementById('tasks-list-optional');
+            
             if(mainTasks && optionalTasks) {
-                const taskSortableOptions = { group: 'tasks', handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: function (evt) { rebuildTaskArray(); } };
-                new Sortable(mainTasks, taskSortableOptions); new Sortable(optionalTasks, taskSortableOptions);
+                const taskSortableOptions = { 
+                    group: 'tasks', 
+                    handle: '.drag-handle', 
+                    animation: 150, 
+                    ghostClass: 'sortable-ghost', 
+                    onEnd: function (evt) { 
+                        rebuildTaskArray(); 
+                    } 
+                };
+                new Sortable(mainTasks, taskSortableOptions); 
+                new Sortable(optionalTasks, taskSortableOptions);
             }
         }
 
         function updateOrder(type, el) {
-             const newOrder = []; const children = Array.from(el.children);
-             children.forEach(child => { const itemId = child.getAttribute('data-id'); const item = window.appData[type].find(x => x.id == itemId); if(item) newOrder.push(item); });
-             const deletedItems = window.appData[type].filter(x => x.deleted);
-             window.appData[type] = [...newOrder, ...deletedItems]; commitData();
+            const newOrder = []; 
+            const children = Array.from(el.children);
+            children.forEach(child => { 
+                const itemId = child.getAttribute('data-id'); 
+                const item = window.appData[type].find(x => x.id == itemId); 
+                if(item) newOrder.push(item); 
+            });
+            
+            const deletedItems = window.appData[type].filter(x => x.deleted);
+            window.appData[type] = [...newOrder, ...deletedItems]; 
+            commitData();
         }
 
         function rebuildTaskArray() {
-            const mainContainer = document.getElementById('tasks-list-main'); const optContainer = document.getElementById('tasks-list-optional');
+            const mainContainer = document.getElementById('tasks-list-main'); 
+            const optContainer = document.getElementById('tasks-list-optional');
             const newTasks = [];
-            Array.from(mainContainer.children).forEach(child => { const id = child.getAttribute('data-id'); const task = window.appData.tasks.find(x => x.id == id); if(task) { task.optional = false; newTasks.push(task); }});
-            Array.from(optContainer.children).forEach(child => { const id = child.getAttribute('data-id'); const task = window.appData.tasks.find(x => x.id == id); if(task) { task.optional = true; newTasks.push(task); }});
+            
+            Array.from(mainContainer.children).forEach(child => { 
+                const id = child.getAttribute('data-id'); 
+                const task = window.appData.tasks.find(x => x.id == id); 
+                if(task) { 
+                    task.optional = false; 
+                    newTasks.push(task); 
+                }
+            });
+            
+            Array.from(optContainer.children).forEach(child => { 
+                const id = child.getAttribute('data-id'); 
+                const task = window.appData.tasks.find(x => x.id == id); 
+                if(task) { 
+                    task.optional = true; 
+                    newTasks.push(task); 
+                }
+            });
+            
             const deletedTasks = window.appData.tasks.filter(x => x.deleted);
-            window.appData.tasks = [...newTasks, ...deletedTasks]; commitData(); updateWidget();
+            window.appData.tasks = [...newTasks, ...deletedTasks]; 
+            commitData(); 
+            updateWidget();
         }
 
         // --- Translations ---
         const translations = {
-            en: { courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", trash: "Trash", timers: "Timers", add: "Add", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.", continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)", clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "countup", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", language: "Language", logout: "Logout", back: "Exit" },
-            ar: { courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.", continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف", clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", language: "اللغة", logout: "خروج", back: "رجوع" }
+            en: { 
+                courses: "Courses", 
+                tasks: "Tasks", 
+                books: "Books", 
+                settings: "Settings", 
+                trash: "Trash", 
+                timers: "Timers", 
+                add: "Add", 
+                trackLearning: "Master your skills.", 
+                manageTasks: "Organize your chaos.", 
+                trackReading: "Build your knowledge base.", 
+                welcome: "Welcome Back", 
+                loginSubtitle: "Sync your life progress across dimensions.", 
+                continueGoogle: "Continue with Google", 
+                continueGuest: "Continue Offline (Guest)", 
+                clock: "Clock", 
+                counter: "Counter", 
+                stopwatch: "Stopwatch", 
+                timer: "Timer", 
+                tasbih: "countup", 
+                countdown: "Countdown", 
+                startValue: "Start Value", 
+                count: "Count", 
+                reset: "Reset Counter", 
+                assistantTitle: "Gemini Assistant", 
+                assistantStatus: "Agent Mode Active", 
+                clear: "Clear", 
+                aiWelcome: "Hello! I can add tasks, books, or courses for you.", 
+                nebulaColor: "Nebula Color", 
+                customizeAccent: "Customize accent color", 
+                language: "Language", 
+                logout: "Logout", 
+                back: "Exit" 
+            },
+            ar: { 
+                courses: "الدورات", 
+                tasks: "المهام", 
+                books: "الكتب", 
+                settings: "الإعدادات", 
+                trash: "سلة المهملات", 
+                timers: "المؤقتات", 
+                add: "إضافة", 
+                trackLearning: "أتقن مهاراتك.", 
+                manageTasks: "نظم فوضى حياتك.", 
+                trackReading: "ابنِ قاعدتك المعرفية.", 
+                welcome: "أهلاً بك", 
+                loginSubtitle: "زامن تقدم حياتك.", 
+                continueGoogle: "المتابعة مع جوجل", 
+                continueGuest: "المتابعة كضيف", 
+                clock: "ساعة", 
+                counter: "عداد", 
+                stopwatch: "ساعة إيقاف", 
+                timer: "مؤقت", 
+                tasbih: "عداد تصاعدي", 
+                countdown: "عد تنازلي", 
+                startValue: "البداية", 
+                count: "عد", 
+                reset: "تصفير", 
+                assistantTitle: "مساعد جيمناي", 
+                assistantStatus: "نشط", 
+                clear: "مسح", 
+                aiWelcome: "أهلاً بك!", 
+                nebulaColor: "لون الخلفية", 
+                customizeAccent: "لون التمييز", 
+                language: "اللغة", 
+                logout: "خروج", 
+                back: "رجوع" 
+            }
         };
 
         // --- GENIE ANIMATION LOGIC ---
-        let genieOriginRect = null; // Stores where the animation comes from
+        let genieOriginRect = null;
 
         window.openAddModal = function(type, event) {
-            // 1. Capture Origin (The Button Clicked)
             if (event && event.currentTarget) {
                 genieOriginRect = event.currentTarget.getBoundingClientRect();
             } else {
-                // Fallback to center bottom if no event passed (e.g. from AI)
                 genieOriginRect = { left: window.innerWidth / 2, top: window.innerHeight - 50, width: 0, height: 0 };
             }
 
             resetModalInputs();
             document.getElementById('modal-type').value = type;
             document.getElementById('modal-title').innerText = type === 'course' ? 'Add Course' : type === 'task' ? 'Add Task' : 'Add Book';
+            
             const statsRow = document.getElementById('modal-stats-row');
             const optionalRow = document.getElementById('modal-optional-row');
+            
             if(type === 'task') {
-                statsRow.classList.add('hidden'); optionalRow.classList.remove('hidden');
+                statsRow.classList.add('hidden'); 
+                optionalRow.classList.remove('hidden');
                 document.getElementById('modal-drawing-section').classList.remove('hidden');
             } else {
-                statsRow.classList.remove('hidden'); optionalRow.classList.add('hidden');
+                statsRow.classList.remove('hidden'); 
+                optionalRow.classList.add('hidden');
                 document.getElementById('modal-drawing-section').classList.add('hidden');
-                const lblTotal = document.getElementById('lbl-total'); const lblDone = document.getElementById('lbl-done');
-                if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
-                else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
+                
+                const lblTotal = document.getElementById('lbl-total'); 
+                const lblDone = document.getElementById('lbl-done');
+                
+                if(type === 'book') { 
+                    lblTotal.innerText = "Total Pages"; 
+                    lblDone.innerText = "Read Pages"; 
+                } else { 
+                    lblTotal.innerText = "Total Hours"; 
+                    lblDone.innerText = "Done Hours"; 
+                }
             }
             
-            // 2. Trigger Genie Open
             openGenieModal('generic-modal');
         };
 
         window.openEditModal = function(type, id) {
-            // Edit modal opens from center (no specific button origin usually, or could use card rect)
             genieOriginRect = null; 
             
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
@@ -1093,15 +1804,25 @@
                 document.getElementById('modal-optional-row').classList.add('hidden');
                 document.getElementById('modal-total').value = item.total;
                 document.getElementById('modal-done').value = item.done;
-                const lblTotal = document.getElementById('lbl-total'); const lblDone = document.getElementById('lbl-done');
-                if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
-                else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
+                
+                const lblTotal = document.getElementById('lbl-total'); 
+                const lblDone = document.getElementById('lbl-done');
+                
+                if(type === 'book') { 
+                    lblTotal.innerText = "Total Pages"; 
+                    lblDone.innerText = "Read Pages"; 
+                } else { 
+                    lblTotal.innerText = "Total Hours"; 
+                    lblDone.innerText = "Done Hours"; 
+                }
+                
                 document.getElementById('modal-drawing-section').classList.add('hidden');
             } else {
                 document.getElementById('modal-stats-row').classList.add('hidden');
                 document.getElementById('modal-optional-row').classList.remove('hidden');
                 document.getElementById('modal-optional').checked = item.optional || false;
                 document.getElementById('modal-drawing-section').classList.remove('hidden');
+                
                 tempDrawingData = item.drawing || null;
                 if(tempDrawingData) {
                     document.getElementById('modal-drawing-preview').classList.remove('hidden');
@@ -1115,9 +1836,12 @@
                 document.getElementById('modal-audio-player-container').classList.remove('hidden');
                 document.getElementById('modal-audio-player').src = tempAudioBase64;
             }
-            if(item.files && item.files.length > 0) { tempFiles = [...item.files]; renderFilePreview(); }
             
-            // Open with simple fade or center grow if no genie origin
+            if(item.files && item.files.length > 0) { 
+                tempFiles = [...item.files]; 
+                renderFilePreview(); 
+            }
+            
             openGenieModal('generic-modal');
         };
 
@@ -1129,19 +1853,14 @@
             overlay.classList.remove('hidden', 'opacity-0');
             wrapper.classList.remove('hidden');
             
-            // GSAP Genie Effect
             if (genieOriginRect) {
-                // Calculate distance from center to the button
                 const centerX = window.innerWidth / 2;
                 const centerY = window.innerHeight / 2;
-                
                 const buttonCenterX = genieOriginRect.left + (genieOriginRect.width / 2);
                 const buttonCenterY = genieOriginRect.top + (genieOriginRect.height / 2);
-
                 const xDist = buttonCenterX - centerX;
                 const yDist = buttonCenterY - centerY;
 
-                // Animate from button position
                 gsap.fromTo(content, 
                     {
                         x: xDist,
@@ -1156,15 +1875,14 @@
                         y: 0,
                         scaleX: 1,
                         scaleY: 1,
-                        borderRadius: "24px", // Matches rounded-3xl
+                        borderRadius: "24px",
                         opacity: 1,
                         duration: 0.5,
-                        ease: "elastic.out(1, 0.75)", // The liquid bounce effect
-                        clearProps: "all" // Clean up after animation
+                        ease: "elastic.out(1, 0.75)",
+                        clearProps: "all"
                     }
                 );
             } else {
-                // Fallback for Edit (Center Pop)
                 gsap.fromTo(content, 
                     { scale: 0.8, opacity: 0 }, 
                     { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
@@ -1176,13 +1894,11 @@
             const overlay = document.getElementById('modal-overlay');
             const openWrappers = document.querySelectorAll('.modal-wrapper:not(.hidden)');
             
-            // Fade out overlay
             overlay.classList.add('opacity-0');
             
             openWrappers.forEach(wrapper => {
                 const content = wrapper.querySelector('.modal-content');
                 
-                // If closing to genie origin
                 if (genieOriginRect && wrapper.id === 'generic-modal') {
                     const centerX = window.innerWidth / 2;
                     const centerY = window.innerHeight / 2;
@@ -1202,11 +1918,10 @@
                         ease: "power2.in",
                         onComplete: () => {
                             wrapper.classList.add('hidden');
-                            gsap.set(content, {clearProps: "all"}); // Reset for next time
+                            gsap.set(content, {clearProps: "all"});
                         }
                     });
                 } else {
-                    // Simple fade out for others
                     gsap.to(content, {
                         scale: 0.9,
                         opacity: 0,
@@ -1217,121 +1932,245 @@
             });
 
             setTimeout(() => overlay.classList.add('hidden'), 300);
-            // Reset origin
-            // genieOriginRect = null; // Don't reset immediately inside loop, maybe set timeout or check active ID
         };
         
-        // Wrapper for standard modal open (widget, etc)
         window.openModal = (id) => { 
-            // Reset origin so widget doesn't use last button pos
             genieOriginRect = null; 
             window.openGenieModal(id); 
         };
 
         function resetModalInputs() {
-            document.getElementById('modal-id').value = ''; document.getElementById('modal-name').value = ''; document.getElementById('modal-desc').value = '';
-            document.getElementById('modal-total').value = ''; document.getElementById('modal-done').value = ''; document.getElementById('modal-optional').checked = false;
-            tempAudioBase64 = null; tempDrawingData = null; tempFiles = [];
-            document.getElementById('modal-audio-player-container').classList.add('hidden'); document.getElementById('modal-audio-player').src = "";
-            document.getElementById('modal-drawing-preview').classList.add('hidden'); document.getElementById('modal-drawing-img').src = "";
-            document.getElementById('btn-draw-label').innerText = "Add Drawing"; renderFilePreview();
+            document.getElementById('modal-id').value = ''; 
+            document.getElementById('modal-name').value = ''; 
+            document.getElementById('modal-desc').value = '';
+            document.getElementById('modal-total').value = ''; 
+            document.getElementById('modal-done').value = ''; 
+            document.getElementById('modal-optional').checked = false;
+            tempAudioBase64 = null; 
+            tempDrawingData = null; 
+            tempFiles = [];
+            document.getElementById('modal-audio-player-container').classList.add('hidden'); 
+            document.getElementById('modal-audio-player').src = "";
+            document.getElementById('modal-drawing-preview').classList.add('hidden'); 
+            document.getElementById('modal-drawing-img').src = "";
+            document.getElementById('btn-draw-label').innerText = "Add Drawing"; 
+            renderFilePreview();
         }
 
         window.saveItem = function() {
-            const type = document.getElementById('modal-type').value; const id = document.getElementById('modal-id').value || Date.now();
-            const name = document.getElementById('modal-name').value; const desc = document.getElementById('modal-desc').value;
-            const total = document.getElementById('modal-total').value; const done = document.getElementById('modal-done').value;
+            const type = document.getElementById('modal-type').value; 
+            const id = document.getElementById('modal-id').value || Date.now();
+            const name = document.getElementById('modal-name').value; 
+            const desc = document.getElementById('modal-desc').value;
+            const total = document.getElementById('modal-total').value; 
+            const done = document.getElementById('modal-done').value;
+            
             if(!name) return alert("Name is required");
 
-            const newItem = { id: Number(id), name: name, desc: desc, notes: desc, audioNote: tempAudioBase64, files: tempFiles, deleted: false };
+            const newItem = { 
+                id: Number(id), 
+                name: name, 
+                desc: desc, 
+                notes: desc, 
+                audioNote: tempAudioBase64, 
+                files: tempFiles, 
+                deleted: false 
+            };
 
             if(type === 'task') {
-                newItem.completed = false; newItem.drawing = tempDrawingData; newItem.optional = document.getElementById('modal-optional').checked;
+                newItem.completed = false; 
+                newItem.drawing = tempDrawingData; 
+                newItem.optional = document.getElementById('modal-optional').checked;
                 const idx = window.appData.tasks.findIndex(x => x.id == id);
                 if(idx > -1) newItem.completed = window.appData.tasks[idx].completed;
-                if(idx > -1) window.appData.tasks[idx] = newItem; else window.appData.tasks.push(newItem);
+                if(idx > -1) window.appData.tasks[idx] = newItem; 
+                else window.appData.tasks.push(newItem);
             } else if(type === 'book') {
-                newItem.total = total; newItem.done = done; newItem.streak = 0;
+                newItem.total = total; 
+                newItem.done = done; 
+                newItem.streak = 0;
                 const idx = window.appData.books.findIndex(x => x.id == id);
-                if(idx > -1) { newItem.streak = window.appData.books[idx].streak; window.appData.books[idx] = newItem; } 
-                else window.appData.books.push(newItem);
+                if(idx > -1) { 
+                    newItem.streak = window.appData.books[idx].streak; 
+                    window.appData.books[idx] = newItem; 
+                } else {
+                    window.appData.books.push(newItem);
+                }
                 if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
             } else if(type === 'course') {
-                newItem.total = total; newItem.done = done;
+                newItem.total = total; 
+                newItem.done = done;
                 const idx = window.appData.courses.findIndex(x => x.id == id);
-                if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
+                if(idx > -1) window.appData.courses[idx] = newItem; 
+                else window.appData.courses.push(newItem);
                 if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
             }
-            commitData(); window.closeAllModals(); refreshAllUI();
+            
+            commitData(); 
+            window.closeAllModals(); 
+            refreshAllUI();
         };
 
         // --- File Handling ---
         window.handleFileUpload = function(input) {
-            const files = Array.from(input.files); if(files.length === 0) return;
+            const files = Array.from(input.files); 
+            if(files.length === 0) return;
+            
             files.forEach(file => {
-                if(file.size > 300 * 1024) { alert(`File ${file.name} is too large (>300KB).`); return; }
+                if(file.size > 300 * 1024) { 
+                    alert(`File ${file.name} is too large (>300KB).`); 
+                    return; 
+                }
+                
                 const reader = new FileReader();
-                reader.onload = (e) => { tempFiles.push({ name: file.name, type: file.type, data: e.target.result }); renderFilePreview(); };
+                reader.onload = (e) => { 
+                    tempFiles.push({ name: file.name, type: file.type, data: e.target.result }); 
+                    renderFilePreview(); 
+                };
                 reader.readAsDataURL(file);
             });
             input.value = '';
         };
 
         function renderFilePreview() {
-            const container = document.getElementById('file-list-preview'); container.innerHTML = '';
+            const container = document.getElementById('file-list-preview'); 
+            container.innerHTML = '';
+            
             tempFiles.forEach((f, idx) => {
-                let icon = 'fa-file'; if(f.type.includes('image')) icon = 'fa-image'; if(f.type.includes('pdf')) icon = 'fa-file-pdf';
-                container.innerHTML += `<div class="flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs"><div class="flex items-center gap-2 overflow-hidden"><i class="fas ${icon} text-slate-400"></i><span class="truncate max-w-[150px]">${f.name}</span></div><div class="flex gap-2"><a href="${f.data}" download="${f.name}" class="text-blue-400 hover:text-white"><i class="fas fa-download"></i></a><button onclick="removeTempFile(${idx})" class="text-red-400 hover:text-white"><i class="fas fa-times"></i></button></div></div>`;
+                let icon = 'fa-file'; 
+                if(f.type.includes('image')) icon = 'fa-image'; 
+                if(f.type.includes('pdf')) icon = 'fa-file-pdf';
+                
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <i class="fas ${icon} text-slate-400"></i>
+                            <span class="truncate max-w-[150px]">${f.name}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="${f.data}" download="${f.name}" class="text-blue-400 hover:text-white">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <button onclick="removeTempFile(${idx})" class="text-red-400 hover:text-white genie-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>`;
             });
         }
-        window.removeTempFile = function(idx) { tempFiles.splice(idx, 1); renderFilePreview(); };
+        
+        window.removeTempFile = function(idx) { 
+            tempFiles.splice(idx, 1); 
+            renderFilePreview(); 
+        };
 
         // --- Trash Logic ---
         window.moveToTrash = function(type, id, e) {
             e.stopPropagation();
             const btn = e.target.closest('button');
             const card = btn ? btn.closest('.glass-card') : null;
-            if (card) { card.classList.add('slide-out-right'); setTimeout(() => { deleteItemLogic(type, id); }, 400); } 
-            else { deleteItemLogic(type, id); }
+            
+            if (card) { 
+                card.classList.add('slide-out-right'); 
+                setTimeout(() => { deleteItemLogic(type, id); }, 400); 
+            } else { 
+                deleteItemLogic(type, id); 
+            }
         };
+        
         function deleteItemLogic(type, id) {
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
             const item = list.find(x => x.id == id);
-            if(item) { item.deleted = true; item.deletedAt = Date.now(); commitData(); refreshAllUI(); }
+            if(item) { 
+                item.deleted = true; 
+                item.deletedAt = Date.now(); 
+                commitData(); 
+                refreshAllUI(); 
+            }
         }
+        
         window.restoreFromTrash = function(type, id) {
             const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
             const item = list.find(x => x.id == id);
-            if(item) { item.deleted = false; commitData(); refreshAllUI(); }
+            if(item) { 
+                item.deleted = false; 
+                commitData(); 
+                refreshAllUI(); 
+            }
         };
+        
         window.permanentDelete = function(type, id) {
-             if(type === 'course') window.appData.courses = window.appData.courses.filter(x => x.id != id);
-             if(type === 'task') window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
-             if(type === 'book') window.appData.books = window.appData.books.filter(x => x.id != id);
-             commitData(); refreshAllUI();
+            if(type === 'course') window.appData.courses = window.appData.courses.filter(x => x.id != id);
+            if(type === 'task') window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
+            if(type === 'book') window.appData.books = window.appData.books.filter(x => x.id != id);
+            commitData(); 
+            refreshAllUI();
         };
+        
         window.emptyTrash = function() {
             if(!confirm("Permanently delete all items in trash?")) return;
             window.appData.courses = window.appData.courses.filter(x => !x.deleted);
             window.appData.tasks = window.appData.tasks.filter(x => !x.deleted);
             window.appData.books = window.appData.books.filter(x => !x.deleted);
-            commitData(); refreshAllUI();
+            commitData(); 
+            refreshAllUI();
         };
 
         // --- Helpers ---
-        function commitData() { localStorage.setItem('hm_data', JSON.stringify(window.appData)); updateWidget(); if(window.triggerCloudSave) window.triggerCloudSave(); }
-        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); updateWidget(); if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); }
+        function commitData() { 
+            localStorage.setItem('hm_data', JSON.stringify(window.appData)); 
+            updateWidget(); 
+            if(window.triggerCloudSave) window.triggerCloudSave(); 
+        }
+        
+        function refreshAllUI() { 
+            renderCourses(); 
+            renderTasks(); 
+            renderBooks(); 
+            updateWidget(); 
+            if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); 
+        }
 
         function triggerConfetti(grand = false) {
-            const cvs = document.getElementById('confetti-canvas'); const ctx = cvs.getContext('2d');
-            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+            const cvs = document.getElementById('confetti-canvas'); 
+            const ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth; 
+            cvs.height = window.innerHeight;
+            
             const particles = [];
-            for(let i=0; i<(grand?150:60); i++) particles.push({ x: cvs.width/2, y: cvs.height/2, vx: (Math.random()-0.5)*(grand?25:15), vy: (Math.random()-0.5)*(grand?25:15), size: Math.random()*5+2, color: ['#6366f1','#a855f7','#ec4899'][Math.floor(Math.random()*3)], life: 100 });
+            for(let i=0; i<(grand?150:60); i++) {
+                particles.push({ 
+                    x: cvs.width/2, 
+                    y: cvs.height/2, 
+                    vx: (Math.random()-0.5)*(grand?25:15), 
+                    vy: (Math.random()-0.5)*(grand?25:15), 
+                    size: Math.random()*5+2, 
+                    color: ['#6366f1','#a855f7','#ec4899'][Math.floor(Math.random()*3)], 
+                    life: 100 
+                });
+            }
+            
             function animate() {
                 ctx.clearRect(0,0,cvs.width,cvs.height);
                 let active = false;
-                particles.forEach(p => { if(p.life > 0) { active = true; p.x+=p.vx; p.y+=p.vy; p.vy+=0.5; p.life-=2; ctx.fillStyle=p.color; ctx.globalAlpha=p.life/100; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); }});
-                if(active) requestAnimationFrame(animate); else ctx.clearRect(0,0,cvs.width,cvs.height);
+                
+                particles.forEach(p => { 
+                    if(p.life > 0) { 
+                        active = true; 
+                        p.x+=p.vx; 
+                        p.y+=p.vy; 
+                        p.vy+=0.5; 
+                        p.life-=2; 
+                        ctx.fillStyle=p.color; 
+                        ctx.globalAlpha=p.life/100; 
+                        ctx.beginPath(); 
+                        ctx.arc(p.x,p.y,p.size,0,Math.PI*2); 
+                        ctx.fill(); 
+                    }
+                });
+                
+                if(active) requestAnimationFrame(animate); 
+                else ctx.clearRect(0,0,cvs.width,cvs.height);
             }
             animate();
         }
@@ -1341,6 +2180,7 @@
             const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
             const done = totalTasks - activeTasks.length;
             const progress = totalTasks > 0 ? (done / totalTasks) * 100 : 0;
+            
             document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
             document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
         }
@@ -1350,6 +2190,7 @@
             const total = window.appData.tasks.filter(t => !t.deleted).length;
             const done = total - active;
             const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+            
             document.getElementById('detail-tasks-done').innerText = done;
             document.getElementById('detail-tasks-left').innerText = active;
             document.getElementById('detail-progress-txt').innerText = progress + "%";
@@ -1361,90 +2202,304 @@
         let mediaRecorder, audioChunks = [];
         window.toggleAudioRecording = async (btn) => {
             const label = btn.querySelector('span');
+            
             if (btn.classList.contains('recording')) {
                 mediaRecorder.stop();
                 btn.classList.remove('recording', 'bg-red-500', 'text-white', 'animate-pulse');
-                btn.classList.add('bg-red-500/20', 'text-red-400'); label.innerText = "Record";
+                btn.classList.add('bg-red-500/20', 'text-red-400'); 
+                label.innerText = "Record";
             } else {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream); audioChunks = [];
+                    mediaRecorder = new MediaRecorder(stream); 
+                    audioChunks = [];
+                    
                     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
                     mediaRecorder.onstop = () => {
-                          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                          const reader = new FileReader(); reader.readAsDataURL(audioBlob);
-                          reader.onloadend = () => { tempAudioBase64 = reader.result; document.getElementById('modal-audio-player-container').classList.remove('hidden'); document.getElementById('modal-audio-player').src = tempAudioBase64; };
-                          stream.getTracks().forEach(t => t.stop());
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader(); 
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => { 
+                            tempAudioBase64 = reader.result; 
+                            document.getElementById('modal-audio-player-container').classList.remove('hidden'); 
+                            document.getElementById('modal-audio-player').src = tempAudioBase64; 
+                        };
+                        stream.getTracks().forEach(t => t.stop());
                     };
+                    
                     mediaRecorder.start();
                     btn.classList.add('recording', 'bg-red-500', 'text-white', 'animate-pulse');
-                    btn.classList.remove('bg-red-500/20', 'text-red-400'); label.innerText = "Stop";
-                } catch(e) { alert("Mic Permission Denied"); }
+                    btn.classList.remove('bg-red-500/20', 'text-red-400'); 
+                    label.innerText = "Stop";
+                } catch(e) { 
+                    alert("Mic Permission Denied"); 
+                }
             }
         };
-        window.deleteAudioNote = () => { tempAudioBase64 = null; document.getElementById('modal-audio-player-container').classList.add('hidden'); document.getElementById('modal-audio-player').src = ""; };
+        
+        window.deleteAudioNote = () => { 
+            tempAudioBase64 = null; 
+            document.getElementById('modal-audio-player-container').classList.add('hidden'); 
+            document.getElementById('modal-audio-player').src = ""; 
+        };
 
         let canvas, ctx, isDrawing = false;
         function setupCanvas() {
-            canvas = document.getElementById('paint-canvas'); if(!canvas) return;
-            ctx = canvas.getContext('2d'); resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-            const start = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top); };
-            const move = (e) => { if(!isDrawing) return; e.preventDefault(); ctx.lineTo(e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top); ctx.stroke(); };
+            canvas = document.getElementById('paint-canvas'); 
+            if(!canvas) return;
+            
+            ctx = canvas.getContext('2d'); 
+            resizeCanvas(); 
+            window.addEventListener('resize', resizeCanvas);
+            
+            const start = (e) => { 
+                isDrawing = true; 
+                ctx.beginPath(); 
+                ctx.moveTo(
+                    e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, 
+                    e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top
+                ); 
+            };
+            
+            const move = (e) => { 
+                if(!isDrawing) return; 
+                e.preventDefault(); 
+                ctx.lineTo(
+                    e.offsetX || e.touches[0].clientX - canvas.getBoundingClientRect().left, 
+                    e.offsetY || e.touches[0].clientY - canvas.getBoundingClientRect().top
+                ); 
+                ctx.stroke(); 
+            };
+            
             const end = () => { isDrawing = false; };
-            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
-            canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', move, {passive: false}); canvas.addEventListener('touchend', end);
+            
+            canvas.addEventListener('mousedown', start); 
+            canvas.addEventListener('mousemove', move); 
+            canvas.addEventListener('mouseup', end);
+            canvas.addEventListener('touchstart', start, {passive: false}); 
+            canvas.addEventListener('touchmove', move, {passive: false}); 
+            canvas.addEventListener('touchend', end);
         }
-        function resizeCanvas() { if(!canvas) return; canvas.width = window.innerWidth; canvas.height = window.innerHeight; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if(document.getElementById('brush-color')) ctx.strokeStyle = document.getElementById('brush-color').value; if(document.getElementById('brush-size')) ctx.lineWidth = document.getElementById('brush-size').value || 4; }
         
-        window.openDrawingCanvas = () => { document.getElementById('drawing-modal').classList.remove('hidden'); document.getElementById('drawing-modal').classList.add('flex'); resizeCanvas(); if(tempDrawingData) { const img = new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src = tempDrawingData; } else window.clearCanvas(); };
-        window.closeDrawingModal = () => { document.getElementById('drawing-modal').classList.add('hidden'); document.getElementById('drawing-modal').classList.remove('flex'); };
-        window.saveCanvasDrawing = () => { tempDrawingData = canvas.toDataURL(); document.getElementById('modal-drawing-preview').classList.remove('hidden'); document.getElementById('modal-drawing-img').src = tempDrawingData; document.getElementById('btn-draw-label').innerText = "Edit Drawing"; window.closeDrawingModal(); };
-        window.clearCanvas = () => { ctx.clearRect(0,0,canvas.width,canvas.height); };
-        window.setEraser = () => { ctx.globalCompositeOperation = 'destination-out'; };
-        if(document.getElementById('brush-color')) document.getElementById('brush-color').onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
+        function resizeCanvas() { 
+            if(!canvas) return; 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+            ctx.lineCap = 'round'; 
+            ctx.lineJoin = 'round'; 
+            
+            if(document.getElementById('brush-color')) {
+                ctx.strokeStyle = document.getElementById('brush-color').value;
+            }
+            
+            if(document.getElementById('brush-size')) {
+                ctx.lineWidth = document.getElementById('brush-size').value || 4;
+            }
+        }
         
-        // --- AI ---
+        window.openDrawingCanvas = () => { 
+            document.getElementById('drawing-modal').classList.remove('hidden'); 
+            document.getElementById('drawing-modal').classList.add('flex'); 
+            resizeCanvas(); 
+            
+            if(tempDrawingData) { 
+                const img = new Image(); 
+                img.onload = () => ctx.drawImage(img,0,0); 
+                img.src = tempDrawingData; 
+            } else {
+                window.clearCanvas(); 
+            }
+        };
+        
+        window.closeDrawingModal = () => { 
+            document.getElementById('drawing-modal').classList.add('hidden'); 
+            document.getElementById('drawing-modal').classList.remove('flex'); 
+        };
+        
+        window.saveCanvasDrawing = () => { 
+            tempDrawingData = canvas.toDataURL(); 
+            document.getElementById('modal-drawing-preview').classList.remove('hidden'); 
+            document.getElementById('modal-drawing-img').src = tempDrawingData; 
+            document.getElementById('btn-draw-label').innerText = "Edit Drawing"; 
+            window.closeDrawingModal(); 
+        };
+        
+        window.clearCanvas = () => { 
+            ctx.clearRect(0,0,canvas.width,canvas.height); 
+        };
+        
+        window.setEraser = () => { 
+            ctx.globalCompositeOperation = 'destination-out'; 
+        };
+        
+        if(document.getElementById('brush-color')) {
+            document.getElementById('brush-color').onchange = (e) => { 
+                ctx.globalCompositeOperation = 'source-over'; 
+                ctx.strokeStyle = e.target.value; 
+            };
+        }
+
+        // --- AI Chat ---
         window.sendAIChat = async function() {
-            const input = document.getElementById('chat-input'); const txt = input.value.trim(); if(!txt) return;
-            input.value = ''; const container = document.getElementById('chat-container');
+            const input = document.getElementById('chat-input'); 
+            const txt = input.value.trim(); 
+            if(!txt) return;
+            
+            input.value = ''; 
+            const container = document.getElementById('chat-container');
             container.innerHTML += `<div class="flex gap-3 justify-end"><div class="glass-panel p-3 rounded-2xl rounded-tr-none bg-indigo-500/20 text-white text-sm chat-bubble max-w-[85%]">${txt}</div></div>`;
+            
             const id = 'loader-' + Date.now();
             container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
             container.scrollTop = container.scrollHeight;
 
             const apiKey = getApiKey();
-            if(!apiKey) { document.getElementById(id).innerText = "Error: Missing API Key."; return; }
+            if(!apiKey) { 
+                document.getElementById(id).innerText = "Error: Missing API Key."; 
+                return; 
+            }
 
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} if adding. Else reply normally.`;
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt + "\n\nUser: " + txt }] }] }) });
+                
+                const response = await fetch(url, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        contents: [{ 
+                            parts: [{ 
+                                text: systemPrompt + "\n\nUser: " + txt 
+                            }] 
+                        }] 
+                    }) 
+                });
+                
                 const data = await response.json();
                 const resText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating response.";
                 document.getElementById(id).remove();
+                
                 try {
-                      const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
-                      if(cleanJson.startsWith('{')) {
+                    const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    if(cleanJson.startsWith('{')) {
                         const action = JSON.parse(cleanJson);
-                        if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false, optional: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
-                        if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
-                        if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
-                      }
-                } catch(e) {}
+                        
+                        if(action.action === 'addTask') { 
+                            window.appData.tasks.push({ 
+                                id: Date.now(), 
+                                name: action.data.name, 
+                                desc: action.data.desc||"AI Added", 
+                                completed: false, 
+                                optional: false 
+                            }); 
+                            commitData(); 
+                            container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; 
+                            return; 
+                        }
+                        
+                        if(action.action === 'addBook') { 
+                            window.appData.books.push({ 
+                                id: Date.now(), 
+                                name: action.data.name, 
+                                desc: action.data.desc||"", 
+                                total: action.data.total||0, 
+                                done: 0, 
+                                streak: 0 
+                            }); 
+                            commitData(); 
+                            container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; 
+                            return; 
+                        }
+                        
+                        if(action.action === 'addCourse') { 
+                            window.appData.courses.push({ 
+                                id: Date.now(), 
+                                name: action.data.name, 
+                                notes: action.data.desc||"", 
+                                total: action.data.total||0, 
+                                done: 0 
+                            }); 
+                            commitData(); 
+                            container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; 
+                            return; 
+                        }
+                    }
+                } catch(e) {
+                    // If JSON parsing fails, show the text response
+                }
+                
                 container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${resText.replace(/\n/g, '<br>')}</div></div>`;
-            } catch (err) { document.getElementById(id).innerHTML = "Error connecting to AI."; }
+            } catch (err) { 
+                document.getElementById(id).innerHTML = "Error connecting to AI."; 
+            }
+            
             container.scrollTop = container.scrollHeight;
         };
-        window.clearChat = function() { document.getElementById('chat-container').innerHTML = ''; };
+        
+        window.clearChat = function() { 
+            document.getElementById('chat-container').innerHTML = ''; 
+        };
 
-        window.toggleTask = (id, e) => { if(e) e.stopPropagation(); const t = window.appData.tasks.find(x => x.id === id); if(t){ t.completed = !t.completed; if(t.completed) triggerConfetti(false); commitData(); renderTasks(); }};
-        window.readBookToday = (id, e) => { e.stopPropagation(); const b = window.appData.books.find(x => x.id === id); if(b) { b.streak = (b.streak || 0) + 1; triggerConfetti(false); commitData(); renderBooks(); }};
-        window.toggleLanguage = () => { const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; window.appData.settings.lang = l; applyLanguage(l); commitData(); };
-        window.toggleTheme = () => { const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; window.appData.settings.theme = t; applyTheme(t); commitData(); };
-        window.updateAccentColor = (c) => { window.appData.settings.accent = c; applyAccentColor(c); commitData(); };
-        function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
-        function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
-        function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
+        window.toggleTask = (id, e) => { 
+            if(e) e.stopPropagation(); 
+            const t = window.appData.tasks.find(x => x.id === id); 
+            if(t){ 
+                t.completed = !t.completed; 
+                if(t.completed) triggerConfetti(false); 
+                commitData(); 
+                renderTasks(); 
+            }
+        };
+        
+        window.readBookToday = (id, e) => { 
+            e.stopPropagation(); 
+            const b = window.appData.books.find(x => x.id === id); 
+            if(b) { 
+                b.streak = (b.streak || 0) + 1; 
+                triggerConfetti(false); 
+                commitData(); 
+                renderBooks(); 
+            }
+        };
+        
+        window.toggleLanguage = () => { 
+            const l = window.appData.settings.lang === 'en' ? 'ar' : 'en'; 
+            window.appData.settings.lang = l; 
+            applyLanguage(l); 
+            commitData(); 
+        };
+        
+        window.toggleTheme = () => { 
+            const t = window.appData.settings.theme === 'light' ? 'dark' : 'light'; 
+            window.appData.settings.theme = t; 
+            applyTheme(t); 
+            commitData(); 
+        };
+        
+        window.updateAccentColor = (c) => { 
+            window.appData.settings.accent = c; 
+            applyAccentColor(c); 
+            commitData(); 
+        };
+        
+        function applyTheme(t) { 
+            t==='light' ? document.body.classList.add('light-mode') : document.body.classList.remove('light-mode'); 
+        }
+        
+        function applyLanguage(l) { 
+            document.body.classList.toggle('rtl', l==='ar'); 
+            document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; 
+            document.querySelectorAll('[data-i18n]').forEach(el => { 
+                const key = el.getAttribute('data-i18n'); 
+                if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; 
+            }); 
+            refreshAllUI(); 
+        }
+        
+        function applyAccentColor(c) { 
+            document.documentElement.style.setProperty('--accent-color', c); 
+            document.documentElement.style.setProperty('--accent-glow', c + '80'); 
+        }
     </script>
 </body>
 </html>
