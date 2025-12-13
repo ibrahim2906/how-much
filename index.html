@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -179,7 +178,8 @@
             animation: pulse-glow 3s infinite;
         }
         .floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
-        @media (min-width: 768px) { .floating-ai-btn { bottom: 30px; right: 30px; width: 60px; height: 60px; } }
+        /* Fix Floating button position in RTL if needed, but standard usually keeps it right. */
+        @media (min-width: 768px) { .floating-ai-btn { bottom: 30px; right: 30px; } }
         @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
 
         /* Widget */
@@ -256,7 +256,8 @@
     <div id="app-container" class="hidden flex h-[100dvh] overflow-hidden relative">
         
         <!-- Desktop Sidebar -->
-        <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-r-0 relative z-20 overflow-hidden shrink-0">
+        <!-- Use border-e-0 (End) instead of border-r-0 so it removes the inner border in RTL properly -->
+        <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-e-0 relative z-20 overflow-hidden shrink-0">
             <div class="p-6 flex items-center gap-4 border-b border-white/5">
                 <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
                     <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
@@ -270,35 +271,43 @@
             </div>
             
             <nav class="flex-1 px-3 space-y-2 mt-4 overflow-y-auto overflow-x-hidden">
-                <button onclick="showPage('courses')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <!-- text-start for RTL alignment -->
+                <button onclick="showPage('courses')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-graduation-cap text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="courses">Courses</span>
                 </button>
 
-                <button onclick="showPage('tasks')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('tasks')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-check-circle text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="tasks">Tasks</span>
                 </button>
 
-                <button onclick="showPage('books')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('books')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-book-open text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="books">Books</span>
                 </button>
 
-                <button onclick="showPage('counters')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('notes')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
+                    <div class="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-all flex-shrink-0">
+                        <i class="fas fa-sticky-note text-lg"></i>
+                    </div>
+                    <span class="font-medium nav-text whitespace-nowrap" data-i18n="notes">Notes</span>
+                </button>
+
+                <button onclick="showPage('counters')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-stopwatch text-lg"></i>
                     </div>
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="timers">Timers</span>
                 </button>
                 
-                <button onclick="showPage('trash')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-left group">
+                <button onclick="showPage('trash')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 group-hover:bg-red-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-trash-alt text-lg"></i>
                     </div>
@@ -334,8 +343,8 @@
                 </button>
             </header>
 
-            <!-- Toggle Button Desktop -->
-            <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 left-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5">
+            <!-- Toggle Button Desktop: Use start-6 (left in LTR, right in RTL) -->
+            <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 start-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5">
                 <i class="fas fa-bars"></i>
             </button>
 
@@ -349,7 +358,6 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="courses">Courses</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackLearning">Master your skills.</p>
                         </div>
-                        <!-- Updated onclick to pass event -->
                         <button onclick="openAddModal('course', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
                         </button>
@@ -365,7 +373,6 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="tasks">Tasks</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="manageTasks">Organize your chaos.</p>
                         </div>
-                        <!-- Updated onclick to pass event -->
                         <button onclick="openAddModal('task', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
                         </button>
@@ -389,12 +396,25 @@
                             <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="books">Books</h2>
                             <p class="text-slate-400 text-xs md:text-sm" data-i18n="trackReading">Build your knowledge base.</p>
                         </div>
-                        <!-- Updated onclick to pass event -->
                         <button onclick="openAddModal('book', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Book</span>
                         </button>
                     </div>
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                </section>
+
+                <!-- NEW NOTES SECTION -->
+                <section id="page-notes" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)" data-i18n="notes">Notes</h2>
+                            <p class="text-slate-400 text-xs md:text-sm">Capture ideas, voice, and sketches.</p>
+                        </div>
+                        <button onclick="openAddModal('note', event)" class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base" style="background-color: var(--accent-color)">
+                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="addNote">Add Note</span>
+                        </button>
+                    </div>
+                    <div id="notes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </section>
                 
                 <!-- Trash Page -->
@@ -467,7 +487,7 @@
                 <!-- AI Page -->
                 <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
                     <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
+                        <div class="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
                         <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
@@ -485,15 +505,18 @@
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
                                     <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
                                 </div>
-                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
+                                <!-- Added rtl: specific rounding to flip bubble corner properly -->
+                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
                                     Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
                                 </div>
                             </div>
                         </div>
                         <div class="p-4 bg-black/20 backdrop-blur-md">
                             <div class="relative">
-                                <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
-                                <button onclick="sendAIChat()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95">
+                                <!-- Use ps-4 pe-12 for logical padding -->
+                                <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
+                                <!-- Use end-2 for positioning -->
+                                <button onclick="sendAIChat()" class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95">
                                     <i class="fas fa-paper-plane text-xs"></i>
                                 </button>
                             </div>
@@ -543,8 +566,9 @@
             </div>
 
             <!-- New Floating Widget -->
+            <!-- Use border-e, pr -> pe, ml -> ms -->
             <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
-                <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-r border-white/10 pr-3 mr-1 hidden">
+                <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-e border-white/10 pe-3 me-1 hidden">
                     <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
                     <span id="widget-timer-val" class="font-mono font-bold text-sm">00:00</span>
                 </div>
@@ -552,7 +576,7 @@
                     <i class="fas fa-tasks text-purple-400 text-sm"></i>
                     <span id="widget-tasks-val" class="font-bold text-sm text-white">0</span>
                 </div>
-                <div class="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center relative ml-1">
+                <div class="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center relative ms-1">
                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                         <path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
                         <path id="widget-progress-ring" class="text-indigo-500 transition-all duration-500" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
@@ -570,7 +594,7 @@
             <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20">
                 <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-graduation-cap text-xl"></i></button>
                 <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-check-circle text-xl"></i></button>
-                <button onclick="showPage('counters')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-stopwatch text-xl"></i></button>
+                <button onclick="showPage('notes')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-sticky-note text-xl"></i></button>
                 <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]"><i class="fas fa-book-open text-xl"></i></button>
                 <button onclick="showPage('trash')" class="nav-link flex flex-col items-center gap-1 p-2 text-red-400 min-h-[44px]"><i class="fas fa-trash-alt text-xl"></i></button>
             </nav>
@@ -606,7 +630,6 @@
     </div>
 
     <!-- Generic Template for Add/Edit -->
-    <!-- Added ID for easier GSAP targeting of content -->
     <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4">
         <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
@@ -616,6 +639,19 @@
             <div class="space-y-4">
                 <input type="text" id="modal-name" placeholder="Title/Name" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base">
                 
+                <!-- NEW: AI Suggestion Buttons -->
+                <div id="ai-suggestion-area" class="flex gap-2 mb-2 hidden">
+                    <button id="btn-ai-task" onclick="aiMagicSplit()" class="hidden text-xs bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity">
+                        <i class="fas fa-magic"></i> ✨ Magic Split
+                    </button>
+                    <button id="btn-ai-book" onclick="aiBookScout()" class="hidden text-xs bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity">
+                        <i class="fas fa-search"></i> ✨ Book Scout
+                    </button>
+                    <button id="btn-ai-course" onclick="aiCourseOutline()" class="hidden text-xs bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity">
+                        <i class="fas fa-list-ol"></i> ✨ Syllabus Gen
+                    </button>
+                </div>
+
                 <div id="modal-stats-row" class="grid grid-cols-2 gap-4 hidden">
                     <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-total">Total</label><input type="number" id="modal-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
                     <div><label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done">Done</label><input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base"></div>
@@ -626,44 +662,47 @@
                     <label for="modal-optional" class="text-sm text-slate-300 select-none cursor-pointer">Mark as Optional (Side Quest)</label>
                 </div>
 
-                <textarea id="modal-desc" rows="2" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
+                <textarea id="modal-desc" rows="3" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
 
-                <div class="glass-panel p-3 rounded-xl bg-black/10">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
-                        <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
-                            <i class="fas fa-microphone"></i> <span>Record</span>
-                        </button>
+                <!-- Media Sections (File, Audio, Drawing) - Always available but logic controls visibility if needed -->
+                <div id="media-section-group" class="space-y-4">
+                    <div class="glass-panel p-3 rounded-xl bg-black/10">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
+                            <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1">
+                                <i class="fas fa-microphone"></i> <span>Record</span>
+                            </button>
+                        </div>
+                        <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
+                            <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
+                            <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
-                    <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
-                        <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;"></audio>
-                        <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
 
-                <div class="glass-panel p-3 rounded-xl bg-black/10">
-                      <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
-                        <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
-                            <i class="fas fa-paperclip"></i> <span>Attach</span>
-                            <input type="file" multiple class="hidden" onchange="handleFileUpload(this)">
-                        </label>
+                    <div class="glass-panel p-3 rounded-xl bg-black/10">
+                          <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
+                            <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                                <i class="fas fa-paperclip"></i> <span>Attach</span>
+                                <input type="file" multiple class="hidden" onchange="handleFileUpload(this)">
+                            </label>
+                        </div>
+                        <div id="file-list-preview" class="space-y-2 mt-2"></div>
                     </div>
-                    <div id="file-list-preview" class="space-y-2 mt-2"></div>
-                </div>
 
-                <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10 hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
-                        <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
-                            <i class="fas fa-pencil-alt"></i> <span id="btn-draw-label">Add Drawing</span>
-                        </button>
-                    </div>
-                    <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
-                        <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10">
-                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white"><i class="fas fa-trash"></i></button>
+                    <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
+                            <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                                <i class="fas fa-pencil-alt"></i> <span id="btn-draw-label">Add Drawing</span>
+                            </button>
+                        </div>
+                        <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
+                            <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -775,6 +814,9 @@
             onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
                 if(s.exists()) { 
                     window.appData = { ...window.appData, ...s.data() }; 
+                    // Ensure notes array exists in older data
+                    if(!window.appData.notes) window.appData.notes = [];
+                    
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
                     refreshAllUI();
                     const statusEl = document.getElementById('cloud-status');
@@ -790,7 +832,7 @@
     <script>
         // --- Core App Logic & State ---
         window.appData = { 
-            courses: [], tasks: [], books: [], 
+            courses: [], tasks: [], books: [], notes: [], 
             settings: { theme: 'dark', lang: 'en', accent: '#6366f1' } 
         };
 
@@ -825,6 +867,7 @@
             if(pageId === 'courses') renderCourses();
             if(pageId === 'tasks') renderTasks();
             if(pageId === 'books') renderBooks();
+            if(pageId === 'notes') renderNotes();
             if(pageId === 'trash') renderTrash();
 
             gsap.fromTo(target, 
@@ -838,7 +881,8 @@
             const list = document.getElementById('courses-list'); list.innerHTML = '';
             window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 mr-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock mr-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
+                // Use me-12 for RTL support on title spacing, and end-3 for delete button
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 me-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock me-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
             });
         }
 
@@ -846,7 +890,7 @@
             const list = document.getElementById('books-list'); list.innerHTML = '';
             window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
                 const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
-                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 right-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white mr-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white me-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
             });
         }
 
@@ -854,7 +898,8 @@
             const mainList = document.getElementById('tasks-list-main'); 
             const optList = document.getElementById('tasks-list-optional');
             mainList.innerHTML = ''; optList.innerHTML = '';
-            const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
+            // Use end-3 for delete positioning
+            const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400 line-clamp-1">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
 
             let mainIndex = 0; let optIndex = 0;
             window.appData.tasks.filter(t => !t.deleted).forEach(t => {
@@ -863,12 +908,35 @@
             });
         }
 
+        // --- NEW: Render Notes ---
+        function renderNotes() {
+            const list = document.getElementById('notes-list'); list.innerHTML = '';
+            window.appData.notes.filter(n => !n.deleted).forEach((n, index) => {
+                list.innerHTML += `
+                <div class="glass-card stagger-entry p-5 rounded-3xl relative group cursor-pointer flex flex-col h-full min-h-[160px]" style="animation-delay: ${0.2 + (index * 0.05)}s" onclick="openEditModal('note', '${n.id}')">
+                    <div class="absolute top-3 end-3 flex gap-2 z-10">
+                        <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('note', '${n.id}', event)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <h3 class="font-bold text-lg text-white mb-2 line-clamp-1 pe-10">${n.name}</h3>
+                    <div class="text-sm text-slate-400 mb-4 line-clamp-3 flex-1 whitespace-pre-wrap">${n.desc}</div>
+                    
+                    <div class="flex gap-2 mt-auto border-t border-white/5 pt-3">
+                         ${n.audioNote ? '<div class="w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fas fa-microphone"></i></div>' : ''}
+                         ${n.drawing ? '<div class="w-6 h-6 rounded bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs"><i class="fas fa-palette"></i></div>' : ''}
+                         ${n.files && n.files.length > 0 ? '<div class="w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-paperclip"></i></div>' : ''}
+                    </div>
+                    ${ (!n.audioNote && !n.drawing && (!n.files || n.files.length === 0)) ? '<div class="text-[10px] text-slate-600 mt-2">Text only</div>' : ''}
+                </div>`;
+            });
+        }
+
         function renderTrash() {
             const list = document.getElementById('trash-list'); list.innerHTML = '';
             const allTrash = [
                 ...window.appData.courses.filter(x => x.deleted).map(x => ({...x, type: 'course', icon: 'fa-graduation-cap'})),
                 ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
-                ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'}))
+                ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'})),
+                ...window.appData.notes.filter(x => x.deleted).map(x => ({...x, type: 'note', icon: 'fa-sticky-note'}))
             ];
             if(allTrash.length === 0) { list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; return; }
             allTrash.forEach((item, index) => {
@@ -971,8 +1039,9 @@
                 const localData = localStorage.getItem('hm_data');
                 if (localData) { try { window.appData = JSON.parse(localData); } catch(e) { console.error("Data parse error", e); } }
 
-                ['courses','tasks','books'].forEach(cat => {
-                    if(window.appData[cat]) window.appData[cat].forEach(x => { 
+                ['courses','tasks','books', 'notes'].forEach(cat => {
+                    if(!window.appData[cat]) window.appData[cat] = [];
+                    window.appData[cat].forEach(x => { 
                         if(typeof x.deleted === 'undefined') x.deleted = false; 
                         if(!x.files) x.files = []; 
                         if(cat === 'tasks' && typeof x.optional === 'undefined') x.optional = false;
@@ -1037,8 +1106,8 @@
 
         // --- Translations ---
         const translations = {
-            en: { courses: "Courses", tasks: "Tasks", books: "Books", settings: "Settings", trash: "Trash", timers: "Timers", add: "Add", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.", continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)", clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "countup", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", language: "Language", logout: "Logout", back: "Exit" },
-            ar: { courses: "الدورات", tasks: "المهام", books: "الكتب", settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.", continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف", clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", language: "اللغة", logout: "خروج", back: "رجوع" }
+            en: { courses: "Courses", tasks: "Tasks", books: "Books", notes: "Notes", settings: "Settings", trash: "Trash", timers: "Timers", add: "Add", addNote: "Add Note", trackLearning: "Master your skills.", manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.", welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.", continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)", clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer", tasbih: "countup", countdown: "Countdown", startValue: "Start Value", count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant", assistantStatus: "Agent Mode Active", clear: "Clear", aiWelcome: "Hello! I can add tasks, books, or courses for you.", nebulaColor: "Nebula Color", customizeAccent: "Customize accent color", language: "Language", logout: "Logout", back: "Exit" },
+            ar: { courses: "الدورات", tasks: "المهام", books: "الكتب", notes: "ملاحظات", settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة", addNote: "إضافة ملاحظة", trackLearning: "أتقن مهاراتك.", manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.", welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.", continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف", clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت", tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية", count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي", assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!", nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز", language: "اللغة", logout: "خروج", back: "رجوع" }
         };
 
         // --- GENIE ANIMATION LOGIC ---
@@ -1055,18 +1124,49 @@
 
             resetModalInputs();
             document.getElementById('modal-type').value = type;
-            document.getElementById('modal-title').innerText = type === 'course' ? 'Add Course' : type === 'task' ? 'Add Task' : 'Add Book';
+            let titleText = 'Add Item';
+            if (type === 'course') titleText = 'Add Course';
+            if (type === 'task') titleText = 'Add Task';
+            if (type === 'book') titleText = 'Add Book';
+            if (type === 'note') titleText = 'Add Note';
+            document.getElementById('modal-title').innerText = titleText;
+
             const statsRow = document.getElementById('modal-stats-row');
             const optionalRow = document.getElementById('modal-optional-row');
+            const mediaSection = document.getElementById('media-section-group');
+            const aiArea = document.getElementById('ai-suggestion-area');
+            const btnTask = document.getElementById('btn-ai-task');
+            const btnBook = document.getElementById('btn-ai-book');
+            const btnCourse = document.getElementById('btn-ai-course');
+
+            // Reset visibilities
+            statsRow.classList.add('hidden');
+            optionalRow.classList.add('hidden');
+            aiArea.classList.add('hidden');
+            btnTask.classList.add('hidden');
+            btnBook.classList.add('hidden');
+            btnCourse.classList.add('hidden');
+            
             if(type === 'task') {
-                statsRow.classList.add('hidden'); optionalRow.classList.remove('hidden');
-                document.getElementById('modal-drawing-section').classList.remove('hidden');
+                optionalRow.classList.remove('hidden');
+                aiArea.classList.remove('hidden');
+                btnTask.classList.remove('hidden');
+            } else if (type === 'note') {
+                // Notes just use desc and media, so stats hidden
             } else {
-                statsRow.classList.remove('hidden'); optionalRow.classList.add('hidden');
-                document.getElementById('modal-drawing-section').classList.add('hidden');
+                // Books and Courses use Stats
+                statsRow.classList.remove('hidden');
                 const lblTotal = document.getElementById('lbl-total'); const lblDone = document.getElementById('lbl-done');
-                if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
-                else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
+                if(type === 'book') { 
+                    lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; 
+                    aiArea.classList.remove('hidden');
+                    btnBook.classList.remove('hidden');
+                }
+                else { 
+                    lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; 
+                    aiArea.classList.remove('hidden');
+                    btnCourse.classList.remove('hidden');
+                }
             }
             
             // 2. Trigger Genie Open
@@ -1077,7 +1177,12 @@
             // Edit modal opens from center (no specific button origin usually, or could use card rect)
             genieOriginRect = null; 
             
-            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            let list = [];
+            if (type === 'course') list = window.appData.courses;
+            else if (type === 'task') list = window.appData.tasks;
+            else if (type === 'book') list = window.appData.books;
+            else if (type === 'note') list = window.appData.notes;
+
             const item = list.find(x => x.id == id);
             if(!item) return;
 
@@ -1088,26 +1193,35 @@
             document.getElementById('modal-desc').value = item.desc || item.notes || '';
             document.getElementById('modal-title').innerText = 'Edit ' + (type.charAt(0).toUpperCase() + type.slice(1));
 
-            if(type !== 'task') {
-                document.getElementById('modal-stats-row').classList.remove('hidden');
-                document.getElementById('modal-optional-row').classList.add('hidden');
+            const statsRow = document.getElementById('modal-stats-row');
+            const optionalRow = document.getElementById('modal-optional-row');
+            const aiArea = document.getElementById('ai-suggestion-area');
+            
+            // Hide AI helpers on edit to keep UI clean, or could leave them if desired. Let's hide for simplicity.
+            aiArea.classList.add('hidden');
+            statsRow.classList.add('hidden');
+            optionalRow.classList.add('hidden');
+
+            if(type === 'task') {
+                optionalRow.classList.remove('hidden');
+                document.getElementById('modal-optional').checked = item.optional || false;
+            } else if (type === 'note') {
+                // Logic handled by media loading below
+            } else {
+                statsRow.classList.remove('hidden');
                 document.getElementById('modal-total').value = item.total;
                 document.getElementById('modal-done').value = item.done;
                 const lblTotal = document.getElementById('lbl-total'); const lblDone = document.getElementById('lbl-done');
                 if(type === 'book') { lblTotal.innerText = "Total Pages"; lblDone.innerText = "Read Pages"; }
                 else { lblTotal.innerText = "Total Hours"; lblDone.innerText = "Done Hours"; }
-                document.getElementById('modal-drawing-section').classList.add('hidden');
-            } else {
-                document.getElementById('modal-stats-row').classList.add('hidden');
-                document.getElementById('modal-optional-row').classList.remove('hidden');
-                document.getElementById('modal-optional').checked = item.optional || false;
-                document.getElementById('modal-drawing-section').classList.remove('hidden');
-                tempDrawingData = item.drawing || null;
-                if(tempDrawingData) {
-                    document.getElementById('modal-drawing-preview').classList.remove('hidden');
-                    document.getElementById('modal-drawing-img').src = tempDrawingData;
-                    document.getElementById('btn-draw-label').innerText = "Edit Drawing";
-                }
+            }
+            
+            // Load Media
+            tempDrawingData = item.drawing || null;
+            if(tempDrawingData) {
+                document.getElementById('modal-drawing-preview').classList.remove('hidden');
+                document.getElementById('modal-drawing-img').src = tempDrawingData;
+                document.getElementById('btn-draw-label').innerText = "Edit Drawing";
             }
 
             tempAudioBase64 = item.audioNote || null;
@@ -1217,8 +1331,6 @@
             });
 
             setTimeout(() => overlay.classList.add('hidden'), 300);
-            // Reset origin
-            // genieOriginRect = null; // Don't reset immediately inside loop, maybe set timeout or check active ID
         };
         
         // Wrapper for standard modal open (widget, etc)
@@ -1261,7 +1373,13 @@
                 const idx = window.appData.courses.findIndex(x => x.id == id);
                 if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
                 if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
+            } else if(type === 'note') {
+                // Specific fields for Notes
+                newItem.drawing = tempDrawingData;
+                const idx = window.appData.notes.findIndex(x => x.id == id);
+                if(idx > -1) window.appData.notes[idx] = newItem; else window.appData.notes.push(newItem);
             }
+
             commitData(); window.closeAllModals(); refreshAllUI();
         };
 
@@ -1269,7 +1387,7 @@
         window.handleFileUpload = function(input) {
             const files = Array.from(input.files); if(files.length === 0) return;
             files.forEach(file => {
-                if(file.size > 300 * 1024) { alert(`File ${file.name} is too large (>300KB).`); return; }
+                if(file.size > 500 * 1024) { alert(`File ${file.name} is too large (>500KB).`); return; }
                 const reader = new FileReader();
                 reader.onload = (e) => { tempFiles.push({ name: file.name, type: file.type, data: e.target.result }); renderFilePreview(); };
                 reader.readAsDataURL(file);
@@ -1295,12 +1413,22 @@
             else { deleteItemLogic(type, id); }
         };
         function deleteItemLogic(type, id) {
-            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            let list = [];
+            if(type === 'course') list = window.appData.courses;
+            else if(type === 'task') list = window.appData.tasks;
+            else if(type === 'book') list = window.appData.books;
+            else if(type === 'note') list = window.appData.notes;
+            
             const item = list.find(x => x.id == id);
             if(item) { item.deleted = true; item.deletedAt = Date.now(); commitData(); refreshAllUI(); }
         }
         window.restoreFromTrash = function(type, id) {
-            const list = type === 'course' ? window.appData.courses : type === 'task' ? window.appData.tasks : window.appData.books;
+            let list = [];
+            if(type === 'course') list = window.appData.courses;
+            else if(type === 'task') list = window.appData.tasks;
+            else if(type === 'book') list = window.appData.books;
+            else if(type === 'note') list = window.appData.notes;
+
             const item = list.find(x => x.id == id);
             if(item) { item.deleted = false; commitData(); refreshAllUI(); }
         };
@@ -1308,6 +1436,7 @@
              if(type === 'course') window.appData.courses = window.appData.courses.filter(x => x.id != id);
              if(type === 'task') window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
              if(type === 'book') window.appData.books = window.appData.books.filter(x => x.id != id);
+             if(type === 'note') window.appData.notes = window.appData.notes.filter(x => x.id != id);
              commitData(); refreshAllUI();
         };
         window.emptyTrash = function() {
@@ -1315,12 +1444,13 @@
             window.appData.courses = window.appData.courses.filter(x => !x.deleted);
             window.appData.tasks = window.appData.tasks.filter(x => !x.deleted);
             window.appData.books = window.appData.books.filter(x => !x.deleted);
+            window.appData.notes = window.appData.notes.filter(x => !x.deleted);
             commitData(); refreshAllUI();
         };
 
         // --- Helpers ---
         function commitData() { localStorage.setItem('hm_data', JSON.stringify(window.appData)); updateWidget(); if(window.triggerCloudSave) window.triggerCloudSave(); }
-        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); updateWidget(); if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); }
+        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); renderNotes(); updateWidget(); if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); }
 
         function triggerConfetti(grand = false) {
             const cvs = document.getElementById('confetti-canvas'); const ctx = cvs.getContext('2d');
@@ -1404,6 +1534,55 @@
         if(document.getElementById('brush-color')) document.getElementById('brush-color').onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
         
         // --- AI ---
+        window.callGemini = async (prompt) => {
+            const apiKey = getApiKey();
+            if(!apiKey) { alert("Missing API Key"); return null; }
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const response = await fetch(url, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) 
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text;
+            } catch(e) { console.error(e); alert("AI Error"); return null; }
+        };
+
+        window.aiMagicSplit = async () => {
+            const name = document.getElementById('modal-name').value;
+            if(!name) return alert("Enter task name first");
+            const btn = document.getElementById('btn-ai-task');
+            btn.innerText = "Thinking...";
+            const res = await callGemini(`Break down the task '${name}' into a simple 3-5 item checklist. Return only the checklist items starting with '- '.`);
+            if(res) document.getElementById('modal-desc').value = (document.getElementById('modal-desc').value + "\n\n" + res).trim();
+            btn.innerHTML = '<i class="fas fa-magic"></i> ✨ Magic Split';
+        };
+
+        window.aiBookScout = async () => {
+            const name = document.getElementById('modal-name').value;
+            if(!name) return alert("Enter book title first");
+            const btn = document.getElementById('btn-ai-book');
+            btn.innerText = "Searching...";
+            const res = await callGemini(`For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }`);
+            try {
+                const json = JSON.parse(res.replace(/```json/g, '').replace(/```/g, '').trim());
+                document.getElementById('modal-total').value = json.pages;
+                document.getElementById('modal-desc').value = `Author: ${json.author}\n\n${json.summary}`;
+            } catch(e) {}
+            btn.innerHTML = '<i class="fas fa-search"></i> ✨ Book Scout';
+        };
+
+        window.aiCourseOutline = async () => {
+            const name = document.getElementById('modal-name').value;
+            if(!name) return alert("Enter course name first");
+            const btn = document.getElementById('btn-ai-course');
+            btn.innerText = "Planning...";
+            const res = await callGemini(`Create a short 5-module syllabus for a course titled '${name}'. Plain text only.`);
+            if(res) document.getElementById('modal-desc').value = res.trim();
+            btn.innerHTML = '<i class="fas fa-list-ol"></i> ✨ Syllabus Gen';
+        };
+
         window.sendAIChat = async function() {
             const input = document.getElementById('chat-input'); const txt = input.value.trim(); if(!txt) return;
             input.value = ''; const container = document.getElementById('chat-container');
@@ -1412,18 +1591,12 @@
             container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
             container.scrollTop = container.scrollHeight;
 
-            const apiKey = getApiKey();
-            if(!apiKey) { document.getElementById(id).innerText = "Error: Missing API Key."; return; }
-
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                const systemPrompt = `You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} if adding. Else reply normally.`;
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt + "\n\nUser: " + txt }] }] }) });
-                const data = await response.json();
-                const resText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating response.";
-                document.getElementById(id).remove();
+            const res = await callGemini(`You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} if adding. Else reply normally. User: ${txt}`);
+            document.getElementById(id).remove();
+            
+            if(res) {
                 try {
-                      const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
+                      const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
                       if(cleanJson.startsWith('{')) {
                         const action = JSON.parse(cleanJson);
                         if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false, optional: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
@@ -1431,8 +1604,10 @@
                         if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
                       }
                 } catch(e) {}
-                container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${resText.replace(/\n/g, '<br>')}</div></div>`;
-            } catch (err) { document.getElementById(id).innerHTML = "Error connecting to AI."; }
+                container.innerHTML += `<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">${res.replace(/\n/g, '<br>')}</div></div>`;
+            } else {
+                container.innerHTML += `<div class="text-red-400 text-xs">AI Error</div>`;
+            }
             container.scrollTop = container.scrollHeight;
         };
         window.clearChat = function() { document.getElementById('chat-container').innerHTML = ''; };
