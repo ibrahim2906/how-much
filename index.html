@@ -304,12 +304,33 @@
 .floating-ai-btn {
     position: fixed; 
     bottom: 90px; 
-    inset-inline-end: 20px; /* هذا السطر السحري يعكس المكان تلقائياً */
+    right: 20px; /* المكان الافتراضي يمين في الانجليزي */
+    left: auto;  
     width: 55px; height: 55px; border-radius: 50%;
-    /* ... باقي الخصائص كما هي ... */
+    background: linear-gradient(135deg, var(--accent-color), #ec4899);
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;
+    box-shadow: 0 10px 30px var(--accent-glow); z-index: 40;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulse-glow 3s infinite;
 }
-/* ... */
-/* قم بتحديث الميديا كويري أيضاً */
+
+/* === هذا هو الحل: قاعدة خاصة للغة العربية === */
+body.rtl .floating-ai-btn {
+    right: auto; /* الغاء اليمين */
+    left: 20px;  /* تفعيل اليسار */
+}
+
+.floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
+
+@media (min-width: 768px) { 
+    .floating-ai-btn { bottom: 30px; right: 30px; } 
+    
+    /* تعديل الشاشات الكبيرة في العربية */
+    body.rtl .floating-ai-btn {
+        right: auto;
+        left: 30px;
+    }
+}
 @media (min-width: 768px) { .floating-ai-btn { bottom: 30px; inset-inline-end: 30px; } }@keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
 
         /* Widget */
@@ -1941,4 +1962,5 @@ function updateWidget() {
     </script>
 </body>
 </html>
+
 
