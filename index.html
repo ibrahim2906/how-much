@@ -1197,7 +1197,7 @@
         };
         window.resetTally = function() { tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33); document.getElementById('tally-display').innerText = tallyCount; };
 
-        const defaultApiKey = "AIzaSyBJtxfgtCzLq9yx36QkuWYwzrdpYHZ02aM"; 
+        const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms"; 
         let tempAudioBase64 = null; let tempDrawingData = null; let tempFiles = [];
 
         // --- Init ---
@@ -1839,19 +1839,33 @@ function updateWidget() {
         
         // --- AI ---
         window.callGemini = async (prompt) => {
-            const apiKey = getApiKey();
-            if(!apiKey) { alert("Missing API Key"); return null; }
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                const response = await fetch(url, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) 
-                });
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text;
-            } catch(e) { console.error(e); alert("AI Error"); return null; }
-        };
+    const apiKey = getApiKey();
+    if(!apiKey) { alert("Missing API Key"); return null; }
+    try {
+        // تم تصحيح الرابط هنا لاستخدام موديل مستقر
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
+        const response = await fetch(url, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) 
+        });
+        
+        // التحقق من وجود خطأ في الاستجابة
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("API Error Detail:", errorData);
+            throw new Error(`API Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text;
+    } catch(e) { 
+        console.error(e); 
+        // عرض الخطأ في الشات للمساعدة في التشخيص
+        return "Sorry, I encountered an error. Check console (F12) for details."; 
+    }
+};
 
         window.aiMagicSplit = async () => {
             const name = document.getElementById('modal-name').value;
@@ -1917,3 +1931,4 @@ function updateWidget() {
     </script>
 </body>
 </html>
+
