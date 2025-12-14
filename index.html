@@ -6,7 +6,7 @@
     <title>How Much - Life OS</title>
     
     <!-- Dynamic SVG Icon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2314b8a6'/%3E%3Cstop offset='100%25' stop-color='%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)'/%3E%3Cpath d='M30,50 C30,30 70,30 70,50 C70,70 30,70 30,50 Z' fill='none' stroke='white' stroke-width='6' transform='rotate(-45 50 50)'/%3E%3Ccircle cx='50' cy='50' r='5' fill='white'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)'/%3E%3Cpath d='M30 30 L30 70 M70 30 L70 70 M30 50 L70 50' stroke='white' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -374,16 +374,6 @@ body.rtl .floating-ai-btn {
         <div class="relative w-32 h-32 mb-6">
             <div class="absolute inset-0 accent-bg rounded-full blur-2xl opacity-40 animate-pulse" style="background: var(--accent-color)"></div>
             <svg viewBox="0 0 100 100" class="w-full h-full relative z-10 drop-shadow-2xl">
-    <defs>
-        <linearGradient id="grad_infinity_splash" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#14b8a6"/> 
-            <stop offset="100%" stop-color="#3b82f6"/> 
-        </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="45" fill="url(#grad_infinity_splash)"/>
-    <path d="M30,50 C30,30 70,30 70,50 C70,70 30,70 30,50 Z" fill="none" stroke="white" stroke-width="6" transform="rotate(-45 50 50)"/>
-    <circle cx="50" cy="50" r="5" fill="white"/>
-</svg>
                 <defs><linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" class="stop-color-1" stop-color="#6366f1"/><stop offset="100%" class="stop-color-2" stop-color="#a855f7"/></linearGradient></defs>
                 <circle cx="50" cy="50" r="45" fill="url(#splashGrad)"/>
                 <path d="M30 30 L30 70 M70 30 L70 70 M30 50 L70 50" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -418,17 +408,7 @@ body.rtl .floating-ai-btn {
         
         <!-- Desktop Sidebar -->
         <!-- Use border-e-0 (End) instead of border-r-0 so it removes the inner border in RTL properly -->
-        <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
-    <defs>
-        <linearGradient id="grad_infinity_sidebar" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#14b8a6"/> 
-            <stop offset="100%" stop-color="#3b82f6"/> 
-        </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="45" fill="url(#grad_infinity_sidebar)"/>
-    <path d="M30,50 C30,30 70,30 70,50 C70,70 30,70 30,50 Z" fill="none" stroke="white" stroke-width="6" transform="rotate(-45 50 50)"/>
-    <circle cx="50" cy="50" r="5" fill="white"/>
-</svg>
+        <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-e-0 relative z-20 overflow-hidden shrink-0">
             <div class="p-6 flex items-center gap-4 border-b border-white/5">
                 <svg viewBox="0 0 100 100" class="w-full h-full relative z-10 drop-shadow-2xl">
     <defs>
@@ -509,17 +489,7 @@ body.rtl .floating-ai-btn {
         <main class="flex-1 flex flex-col relative h-full overflow-hidden w-full">
             
             <!-- Mobile Header -->
-            <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
-    <defs>
-        <linearGradient id="grad_infinity_mobile" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#14b8a6"/> 
-            <stop offset="100%" stop-color="#3b82f6"/> 
-        </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="45" fill="url(#grad_infinity_mobile)"/>
-    <path d="M30,50 C30,30 70,30 70,50 C70,70 30,70 30,50 Z" fill="none" stroke="white" stroke-width="6" transform="rotate(-45 50 50)"/>
-    <circle cx="50" cy="50" r="5" fill="white"/>
-</svg>
+            <header class="md:hidden flex items-center justify-between p-3 mx-2 mt-2 rounded-2xl glass-panel z-30 shrink-0">
                 <div class="flex items-center gap-3">
                     <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
                         <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
@@ -2000,7 +1970,3 @@ function updateWidget() {
     </script>
 </body>
 </html>
-
-
-
-
