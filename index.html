@@ -1885,7 +1885,8 @@ function updateWidget() {
             container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
             container.scrollTop = container.scrollHeight;
 
-            const res = await callGemini(`You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} if adding. Else reply normally. User: ${txt}`);
+            // تم إضافة تعليمات addNote للذكاء الاصطناعي هنا
+            const res = await callGemini(`You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} or {"action": "addNote", "data": {"name": "Title", "desc": "Content"}} if adding. Else reply normally. User: ${txt}`);
             document.getElementById(id).remove();
             
             if(res) {
@@ -1894,6 +1895,21 @@ function updateWidget() {
                       if(cleanJson.startsWith('{')) {
                         const action = JSON.parse(cleanJson);
                         if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false, optional: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
+                        // كود إضافة الملاحظة الجديد
+                        if(action.action === 'addNote') { 
+                            window.appData.notes.push({ 
+                                id: Date.now(), 
+                                name: action.data.name || "New Note", 
+                                desc: action.data.desc || "", 
+                                audioNote: null, 
+                                drawing: null, 
+                                files: [], 
+                                deleted: false 
+                            }); 
+                            commitData(); 
+                            container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Note: ${action.data.name}</div>`; 
+                            return; 
+                        }
                         if(action.action === 'addBook') { window.appData.books.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"", total: action.data.total||0, done: 0, streak: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Book: ${action.data.name}</div>`; return; }
                         if(action.action === 'addCourse') { window.appData.courses.push({ id: Date.now(), name: action.data.name, notes: action.data.desc||"", total: action.data.total||0, done: 0 }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Course: ${action.data.name}</div>`; return; }
                       }
@@ -1917,5 +1933,3 @@ function updateWidget() {
     </script>
 </body>
 </html>
-
-
