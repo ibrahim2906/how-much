@@ -410,7 +410,15 @@ body.rtl .floating-ai-btn {
         <!-- Use border-e-0 (End) instead of border-r-0 so it removes the inner border in RTL properly -->
         <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-e-0 relative z-20 overflow-hidden shrink-0">
             <div class="p-6 flex items-center gap-4 border-b border-white/5">
-                <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
+                <svg viewBox="0 0 100 100" class="w-full h-full relative z-10 drop-shadow-2xl">
+    <defs>
+        <linearGradient id="grad_infinity" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#14b8a6"/> <stop offset="100%" stop-color="#3b82f6"/> </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="30" fill="url(#grad_infinity)"/>
+    <path d="M30,50 C30,30 70,30 70,50 C70,70 30,70 30,50 Z" fill="none" stroke="white" stroke-width="6" transform="rotate(-45 50 50)"/>
+    <circle cx="50" cy="50" r="5" fill="white"/>
+</svg>
                     <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
                     <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
                     <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
@@ -1962,5 +1970,6 @@ function updateWidget() {
     </script>
 </body>
 </html>
+
 
 
