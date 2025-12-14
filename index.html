@@ -73,6 +73,128 @@
             pointer-events: none;
         }
 
+        /* 3D Tilt Effect on Cards */
+        .glass-card {
+            transition: transform 0.1s ease, box-shadow 0.3s ease; /* Fast transform for tilt */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* Black Hole Implosion */
+        @keyframes blackHoleSuck {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
+            50% { transform: scale(0.5) rotate(180deg); opacity: 0.5; filter: blur(2px); }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; filter: blur(10px); }
+        }
+
+        .implode {
+            animation: blackHoleSuck 0.5s cubic-bezier(0.55, -0.04, 0.91, 0.94) forwards !important;
+            pointer-events: none;
+        }
+
+
+        /* A moving shine reflection */
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 2px; /* Border width */
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.4),
+                transparent 40%
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        /* --- 3. MICRO-INTERACTIONS (NEW) --- */
+        /* Core Interactive Button Structure */
+        .interactive-btn {
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        
+        /* 1. Icon Morph: Text Slide Out */
+        .btn-text-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .interactive-btn.loading .btn-text-content,
+        .interactive-btn.success .btn-text-content {
+            opacity: 0;
+            transform: translateY(10px); /* Slide down and out */
+        }
+
+        /* 2. Loading Dots / Wave Animation */
+        .btn-loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .interactive-btn.loading .btn-loader {
+            opacity: 1;
+        }
+
+        .dot-wave {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            animation: waveAnim 1s infinite ease-in-out both;
+        }
+        
+        .dot-wave:nth-child(1) { animation-delay: -0.32s; }
+        .dot-wave:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes waveAnim {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 3. Success Icon & Bounce */
+        .btn-success-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.5) rotate(-45deg);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Elastic Bounce */
+        }
+
+        .interactive-btn.success .btn-success-icon {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* --- END MICRO-INTERACTIONS --- */
+
+
         /* Animated Nebula Background */
         .nebula-bg {
             position: fixed;
@@ -708,7 +830,16 @@
                 </div>
 
                 <div class="flex gap-2 justify-end pt-2">
-                    <button onclick="saveItem()" class="flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors">Save</button>
+                    <!-- ENHANCED SAVE BUTTON WITH ANIMATION STRUCTURE -->
+                    <button onclick="saveItem(this)" id="btn-save-modal" class="interactive-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors">
+                        <span class="btn-text-content">Save</span>
+                        <span class="btn-loader">
+                            <span class="dot-wave"></span>
+                            <span class="dot-wave"></span>
+                            <span class="dot-wave"></span>
+                        </span>
+                        <span class="btn-success-icon"><i class="fas fa-check"></i></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -725,8 +856,13 @@
                 <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center"><i class="fas fa-eraser"></i></button>
                 <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center"><i class="fas fa-trash-alt"></i></button>
             </div>
-            <button onclick="saveCanvasDrawing()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20">
-                <i class="fas fa-check mr-1"></i> Save
+            <!-- ENHANCED SAVE BUTTON FOR DRAWING -->
+            <button onclick="saveCanvasDrawing(this)" class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 w-24">
+                <span class="btn-text-content"><i class="fas fa-check mr-1"></i> Save</span>
+                <span class="btn-loader">
+                     <span class="dot-wave"></span><span class="dot-wave"></span><span class="dot-wave"></span>
+                </span>
+                <span class="btn-success-icon"><i class="fas fa-check"></i></span>
             </button>
         </div>
         <div class="flex-1 relative overflow-hidden bg-[#0f172a] flex items-center justify-center touch-none" id="canvas-container" style="background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px;">
@@ -851,30 +987,61 @@
         };
 
         window.showPage = function(pageId) {
-            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
-            document.querySelectorAll('.page-section').forEach(el => {
-                if(!el.classList.contains('hidden')) {
-                   el.classList.add('hidden');
-                   gsap.set(el, {clearProps: "all"}); 
-                }
-            });
-            const target = document.getElementById(`page-${pageId}`);
-            if(!target) return;
-            
-            target.classList.remove('hidden');
+    // 1. Update Nav State
+    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
 
-            if(pageId === 'courses') renderCourses();
-            if(pageId === 'tasks') renderTasks();
-            if(pageId === 'books') renderBooks();
-            if(pageId === 'notes') renderNotes();
-            if(pageId === 'trash') renderTrash();
+    // 2. Identify Current and Next Page
+    const activePage = document.querySelector('.page-section:not(.hidden)');
+    const nextPage = document.getElementById(`page-${pageId}`);
+    
+    if (activePage === nextPage) return;
 
-            gsap.fromTo(target, 
-                { clipPath: "inset(40% 40% 40% 40% round 80px)", opacity: 0, y: 60, scale: 0.9, filter: "blur(8px)" },
-                { clipPath: "inset(0% 0% 0% 0% round 0px)", opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out", clearProps: "filter, clipPath, transform" }
+    // 3. Render Data
+    if(pageId === 'courses') renderCourses();
+    if(pageId === 'tasks') renderTasks();
+    if(pageId === 'books') renderBooks();
+    if(pageId === 'notes') renderNotes();
+    if(pageId === 'trash') renderTrash();
+
+    // 4. The Hyperspace Animation Sequence
+    const tl = gsap.timeline();
+
+    if (activePage) {
+        // Exit Animation: Zoom in and blur (Warp out)
+        tl.to(activePage, { 
+            scale: 1.1, 
+            opacity: 0, 
+            filter: "blur(10px)", 
+            duration: 0.3, 
+            ease: "power2.in",
+            onComplete: () => {
+                activePage.classList.add('hidden');
+                gsap.set(activePage, { clearProps: "all" }); // Reset for next time
+            }
+        });
+    }
+
+    if (nextPage) {
+        nextPage.classList.remove('hidden');
+        // Entry Animation: Zoom out from huge, deblur (Warp in)
+        tl.fromTo(nextPage, 
+            { scale: 0.9, opacity: 0, filter: "blur(20px)", y: 50 },
+            { scale: 1, opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "back.out(1.2)" }, 
+            "-=0.1" // Overlap slightly
+        );
+        
+        // Stagger children elements specifically
+        const children = nextPage.querySelectorAll('.stagger-entry');
+        if(children.length > 0) {
+            tl.fromTo(children, 
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power2.out" },
+                "-=0.3"
             );
-        };
+        }
+    }
+};
 
         // --- Rendering Logic ---
         function renderCourses() {
@@ -1066,12 +1233,53 @@
                 document.addEventListener('mousemove', (e) => {
                     document.querySelectorAll('.glass-card').forEach(card => {
                         const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                        card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // 1. Set CSS Variable for Shine
+                        card.style.setProperty('--mouse-x', `${x}px`);
+                        card.style.setProperty('--mouse-y', `${y}px`);
+
+                        // 2. 3D Tilt Logic
+                        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                            const centerX = rect.width / 2;
+                            const centerY = rect.height / 2;
+                            const rotateX = ((y - centerY) / centerY) * -5; 
+                            const rotateY = ((x - centerX) / centerX) * 5;
+
+                            gsap.to(card, { rotationX: rotateX, rotationY: rotateY, scale: 1.02, duration: 0.2, ease: "power1.out" });
+                        } else {
+                            gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" });
+                        }
                     });
                 });
             } catch(err) { console.error("Init Error:", err); }
         };
+
+        // Add inside window.onload or at the bottom of the script
+const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
+
+magneticBtns.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - (rect.left + rect.width / 2);
+        const y = e.clientY - (rect.top + rect.height / 2);
+        
+        // Move the button partially towards the mouse (magnetic pull)
+        gsap.to(btn, {
+            x: x * 0.9, // Strength of magnet
+            y: y * 0.9,
+            duration: 0.3,
+            ease: "power2.out"
+        });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+        // Snap back to center
+        gsap.to(btn, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.3)" });
+    });
+});
+        
 
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
 
@@ -1347,14 +1555,30 @@
             document.getElementById('modal-audio-player-container').classList.add('hidden'); document.getElementById('modal-audio-player').src = "";
             document.getElementById('modal-drawing-preview').classList.add('hidden'); document.getElementById('modal-drawing-img').src = "";
             document.getElementById('btn-draw-label').innerText = "Add Drawing"; renderFilePreview();
+            
+            // Reset Button State
+            const btns = document.querySelectorAll('.interactive-btn');
+            btns.forEach(btn => {
+                btn.classList.remove('loading', 'success');
+            });
         }
 
-        window.saveItem = function() {
-            const type = document.getElementById('modal-type').value; const id = document.getElementById('modal-id').value || Date.now();
-            const name = document.getElementById('modal-name').value; const desc = document.getElementById('modal-desc').value;
-            const total = document.getElementById('modal-total').value; const done = document.getElementById('modal-done').value;
+        window.saveItem = async function(btnElement) {
+            // 1. Validation Logic First
+            const name = document.getElementById('modal-name').value;
             if(!name) return alert("Name is required");
 
+            // 2. Start Animation: Add Loading State
+            if (btnElement) btnElement.classList.add('loading');
+
+            // 3. Simulate Async Process (Network/Saving delay)
+            await new Promise(resolve => setTimeout(resolve, 800)); // 800ms delay for realism
+
+            // 4. Capture Data
+            const type = document.getElementById('modal-type').value; const id = document.getElementById('modal-id').value || Date.now();
+            const desc = document.getElementById('modal-desc').value;
+            const total = document.getElementById('modal-total').value; const done = document.getElementById('modal-done').value;
+            
             const newItem = { id: Number(id), name: name, desc: desc, notes: desc, audioNote: tempAudioBase64, files: tempFiles, deleted: false };
 
             if(type === 'task') {
@@ -1380,7 +1604,41 @@
                 if(idx > -1) window.appData.notes[idx] = newItem; else window.appData.notes.push(newItem);
             }
 
-            commitData(); window.closeAllModals(); refreshAllUI();
+            // 5. Commit Data (Behind scenes)
+            commitData(); 
+            refreshAllUI();
+
+            // 6. Show Success Animation
+            if (btnElement) {
+                btnElement.classList.remove('loading');
+                btnElement.classList.add('success');
+            }
+
+            // 7. Wait briefly to show off the success tick, then close
+            await new Promise(resolve => setTimeout(resolve, 800)); // Show success for 0.8s
+
+            window.closeAllModals();
+        };
+
+        window.saveCanvasDrawing = async function(btnElement) {
+            // Drawing Save Logic with Animation
+            if (btnElement) btnElement.classList.add('loading');
+            await new Promise(resolve => setTimeout(resolve, 600));
+
+            tempDrawingData = canvas.toDataURL(); 
+            document.getElementById('modal-drawing-preview').classList.remove('hidden'); 
+            document.getElementById('modal-drawing-img').src = tempDrawingData; 
+            document.getElementById('btn-draw-label').innerText = "Edit Drawing"; 
+
+            if (btnElement) {
+                btnElement.classList.remove('loading');
+                btnElement.classList.add('success');
+            }
+            await new Promise(resolve => setTimeout(resolve, 600));
+            
+            window.closeDrawingModal();
+            // Reset button state manually since modal stays in DOM
+            if (btnElement) btnElement.classList.remove('success');
         };
 
         // --- File Handling ---
@@ -1406,12 +1664,18 @@
 
         // --- Trash Logic ---
         window.moveToTrash = function(type, id, e) {
-            e.stopPropagation();
-            const btn = e.target.closest('button');
-            const card = btn ? btn.closest('.glass-card') : null;
-            if (card) { card.classList.add('slide-out-right'); setTimeout(() => { deleteItemLogic(type, id); }, 400); } 
-            else { deleteItemLogic(type, id); }
-        };
+    e.stopPropagation();
+    const btn = e.target.closest('button');
+    const card = btn ? btn.closest('.glass-card') : null;
+    
+    if (card) { 
+        // CHANGED: 'slide-out-right' -> 'implode'
+        card.classList.add('implode'); 
+        setTimeout(() => { deleteItemLogic(type, id); }, 500); // Wait 0.5s
+    } else { 
+        deleteItemLogic(type, id); 
+    }
+};
         function deleteItemLogic(type, id) {
             let list = [];
             if(type === 'course') list = window.appData.courses;
@@ -1466,14 +1730,55 @@
             animate();
         }
 
-        function updateWidget() {
-            const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
-            const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
-            const done = totalTasks - activeTasks.length;
-            const progress = totalTasks > 0 ? (done / totalTasks) * 100 : 0;
-            document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
-            document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
+        /* Find your existing function updateWidget() and REPLACE it with this: */
+
+function updateWidget() {
+    // 1. Existing Widget Logic
+    const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
+    const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
+    const doneTasks = totalTasks - activeTasks.length;
+    const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+    
+    if(document.getElementById('widget-tasks-val')) {
+        document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
+        document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
+    }
+
+    // 2. NEW: Gamification Logic (XP System)
+    const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0 && !b.deleted).length;
+    const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0 && !c.deleted).length;
+    
+    // XP Formula: 10xp per task, 100xp per book, 50xp per course
+    const xp = (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
+    
+    // Level Formula: Level up every 200 XP
+    const level = Math.floor(xp / 200) + 1;
+    const xpForNextLevel = 200;
+    const currentLevelXP = xp % 200;
+    const levelProgress = (currentLevelXP / xpForNextLevel) * 100;
+
+    // 3. Inject into Sidebar (Online Status area)
+    const badge = document.getElementById('user-status-badge');
+    if(badge) {
+        // Change "Online" to "Lvl X"
+        badge.innerHTML = `<i class="fas fa-crown text-yellow-400 mr-1"></i> Lvl ${level}`;
+        badge.className = "text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block border border-indigo-500/30 cursor-help relative group";
+        
+        // Add a tooltip for XP progress
+        if(!badge.querySelector('.xp-tooltip')) {
+            const tooltip = document.createElement('div');
+            tooltip.className = "xp-tooltip absolute top-full left-0 mt-2 w-32 bg-slate-900 p-2 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl";
+            tooltip.innerHTML = `
+                <div class="text-[8px] uppercase text-slate-400 mb-1">XP Progress</div>
+                <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-400" style="width: ${levelProgress}%"></div>
+                </div>
+                <div class="text-[8px] text-right text-white mt-1">${currentLevelXP} / 200 XP</div>
+            `;
+            badge.appendChild(tooltip);
         }
+    }
+}
 
         window.openWidgetDetail = () => {
             const active = window.appData.tasks.filter(t => !t.completed && !t.deleted).length;
@@ -1528,7 +1833,6 @@
         
         window.openDrawingCanvas = () => { document.getElementById('drawing-modal').classList.remove('hidden'); document.getElementById('drawing-modal').classList.add('flex'); resizeCanvas(); if(tempDrawingData) { const img = new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src = tempDrawingData; } else window.clearCanvas(); };
         window.closeDrawingModal = () => { document.getElementById('drawing-modal').classList.add('hidden'); document.getElementById('drawing-modal').classList.remove('flex'); };
-        window.saveCanvasDrawing = () => { tempDrawingData = canvas.toDataURL(); document.getElementById('modal-drawing-preview').classList.remove('hidden'); document.getElementById('modal-drawing-img').src = tempDrawingData; document.getElementById('btn-draw-label').innerText = "Edit Drawing"; window.closeDrawingModal(); };
         window.clearCanvas = () => { ctx.clearRect(0,0,canvas.width,canvas.height); };
         window.setEraser = () => { ctx.globalCompositeOperation = 'destination-out'; };
         if(document.getElementById('brush-color')) document.getElementById('brush-color').onchange = (e) => { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = e.target.value; };
@@ -1554,16 +1858,6 @@
             if(!name) return alert("Enter task name first");
             const btn = document.getElementById('btn-ai-task');
             btn.innerText = "Thinking...";
-            const res = await callGemini(`Break down the task '${name}' into a simple 3-5 item checklist. Return only the checklist items starting with '- '.`);
-            if(res) document.getElementById('modal-desc').value = (document.getElementById('modal-desc').value + "\n\n" + res).trim();
-            btn.innerHTML = '<i class="fas fa-magic"></i> ✨ Magic Split';
-        };
-
-        window.aiBookScout = async () => {
-            const name = document.getElementById('modal-name').value;
-            if(!name) return alert("Enter book title first");
-            const btn = document.getElementById('btn-ai-book');
-            btn.innerText = "Searching...";
             const res = await callGemini(`For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }`);
             try {
                 const json = JSON.parse(res.replace(/```json/g, '').replace(/```/g, '').trim());
