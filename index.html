@@ -263,7 +263,8 @@
         #desktop-sidebar { transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; }
         .sidebar-collapsed { width: 80px !important; }
         .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-badge { display: none; }
-        .sidebar-collapsed .nav-link { justify-content: center; }
+        .sidebar-collapsed .nav-link,
+        .sidebar-collapsed .mt-auto button { justify-content: center; padding-left: 0; padding-right: 0; }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
@@ -299,10 +300,17 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: pulse-glow 3s infinite;
         }
-        .floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
-        /* Fix Floating button position in RTL if needed, but standard usually keeps it right. */
-        @media (min-width: 768px) { .floating-ai-btn { bottom: 30px; right: 30px; } }
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        /* Floating AI */
+.floating-ai-btn {
+    position: fixed; 
+    bottom: 90px; 
+    inset-inline-end: 20px; /* هذا السطر السحري يعكس المكان تلقائياً */
+    width: 55px; height: 55px; border-radius: 50%;
+    /* ... باقي الخصائص كما هي ... */
+}
+/* ... */
+/* قم بتحديث الميديا كويري أيضاً */
+@media (min-width: 768px) { .floating-ai-btn { bottom: 30px; inset-inline-end: 30px; } }@keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
 
         /* Widget */
         .widget-pill {
@@ -439,7 +447,7 @@
 
             <div class="p-4 mt-auto">
                 <button onclick="showPage('settings')" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-slate-400 hover:text-white group">
-                    <img id="user-avatar-small" src="" class="w-8 h-8 rounded-full bg-slate-700 hidden flex-shrink-0">
+                    <img id="user-avatar-small" src="" class="w-8 h-8 min-w-[2rem] object-cover rounded-full bg-slate-700 hidden flex-shrink-0">
                     <div class="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center flex-shrink-0" id="settings-icon-container">
                         <i class="fas fa-cog text-lg group-hover:rotate-90 transition-transform duration-500"></i>
                     </div>
@@ -1933,3 +1941,4 @@ function updateWidget() {
     </script>
 </body>
 </html>
+
