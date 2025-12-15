@@ -2057,5 +2057,74 @@ function updateWidget() {
 
     })();
 </script>
+    <style>
+    /* The Crash Animation Keyframes */
+    @keyframes crashDown {
+        0% { 
+            transform: translate(0, 0) rotate(0deg); 
+            filter: brightness(1);
+        }
+        /* Phase 1: The Impact/Shake */
+        15% { transform: translate(-5px, 0) rotate(-5deg); }
+        30% { transform: translate(5px, 0) rotate(5deg); }
+        45% { transform: translate(-5px, 0) rotate(-5deg); }
+        
+        /* Phase 2: The Break & Fall */
+        60% { 
+            transform: translate(0, 10px) rotate(10deg) scale(0.9); 
+            opacity: 1;
+            filter: brightness(0.5) grayscale(1); /* Turns dark/dead */
+        }
+        100% { 
+            transform: translate(0, 150px) rotate(45deg) scale(0.5); 
+            opacity: 0; 
+        }
+    }
+
+    /* Class applied via JS */
+    .crash-out {
+        animation: crashDown 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
+        pointer-events: none; /* Prevent clicks while crashing */
+        z-index: 0;
+    }
+</style>
+
+<script>
+    // Overwrite the existing moveToTrash function
+    window.moveToTrash = function(type, id, event) {
+        // Stop the click from opening the edit modal
+        event.stopPropagation();
+        
+        // Find the button and the card container
+        const btn = event.target.closest('button');
+        const card = btn ? btn.closest('.glass-card') : null;
+        
+        if (card) {
+            // 1. Remove entrance animations so they don't conflict
+            card.classList.remove('stagger-entry');
+            
+            // 2. Add the red flash (Visual damage)
+            card.style.transition = 'background 0.1s, border 0.1s';
+            card.style.background = 'rgba(239, 68, 68, 0.2)'; // Red tint
+            card.style.borderColor = '#ef4444'; // Red border
+            
+            // 3. Trigger the Crash Animation
+            // Small delay to let the red flash register visually
+            setTimeout(() => {
+                card.classList.add('crash-out');
+            }, 50);
+
+            // 4. Wait for animation to finish (0.6s) then actually delete
+            setTimeout(() => { 
+                deleteItemLogic(type, id); 
+            }, 650);
+            
+        } else {
+            // Fallback if UI structure changes
+            deleteItemLogic(type, id);
+        }
+    };
+</script>
+    
     </body>
 </html>
