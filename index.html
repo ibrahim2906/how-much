@@ -1960,6 +1960,102 @@ function updateWidget() {
         function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
         function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
     </script>
-</body>
-</html>
+    <div id="shard-cursor">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3L10.5 21L12.5 13L20.5 11L3 3Z" fill="#FF8C00" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+</div>
 
+<style>
+    /* 1. Hide System Cursor */
+    @media (pointer: fine) {
+        body, a, button, input, textarea, select, label, .glass-card, .nav-link, * {
+            cursor: none !important;
+        }
+    }
+
+    /* 2. Cursor Container */
+    #shard-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        pointer-events: none;
+        z-index: 10002;
+        /* Using translate3d for hardware acceleration */
+        transform: translate3d(-5px, -5px, 0); 
+        will-change: transform;
+        filter: drop-shadow(0 0 8px rgba(255, 140, 0, 0.6));
+        transition: filter 0.2s ease, transform 0.1s linear; /* Smooth visual changes, instant move */
+    }
+
+    /* 3. The SVG Icon Styling */
+    #shard-cursor svg {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* 4. Hover State (Tilt & Glow) */
+    body.shard-hover #shard-cursor {
+        filter: drop-shadow(0 0 15px rgba(255, 140, 0, 1));
+    }
+    
+    body.shard-hover #shard-cursor svg {
+        transform: scale(1.2) rotate(-15deg); /* Slight tilt to show action */
+    }
+
+    /* 5. Click State (Snap) */
+    body.shard-click #shard-cursor svg {
+        transform: scale(0.8) translate(2px, 2px);
+    }
+
+    /* 6. Hide on Mobile */
+    @media (hover: none) and (pointer: coarse) {
+        #shard-cursor { display: none !important; }
+        body, a, button, * { cursor: auto !important; }
+    }
+</style>
+
+<script>
+    (function() {
+        const cursor = document.getElementById('shard-cursor');
+        
+        // Mobile check
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
+        // 1. Movement Logic (Direct updates for zero lag)
+        document.addEventListener('mousemove', (e) => {
+            // translate3d is more performant than top/left
+            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        });
+
+        // 2. Hover Logic
+        // Elements that trigger the active state
+        const hoverTargets = `
+            a, button, input, textarea, select, label,
+            [role="button"], .nav-link, .glass-card, 
+            .widget-pill, .floating-ai-btn, .drag-handle
+        `;
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(hoverTargets)) {
+                document.body.classList.add('shard-hover');
+            } else {
+                document.body.classList.remove('shard-hover');
+            }
+        });
+
+        // 3. Click Logic
+        document.addEventListener('mousedown', () => document.body.classList.add('shard-click'));
+        document.addEventListener('mouseup', () => document.body.classList.remove('shard-click'));
+
+        // 4. Window Enter/Leave
+        document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+        document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+
+    })();
+</script>
+    </body>
+</html>
