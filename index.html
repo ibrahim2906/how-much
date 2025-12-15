@@ -1967,43 +1967,51 @@ function updateWidget() {
 </div>
 
 <style>
-    /* 1. Hide System Cursor */
+    /* 1. Hide System Cursor Globally */
     @media (pointer: fine) {
         body, a, button, input, textarea, select, label, .glass-card, .nav-link, * {
             cursor: none !important;
         }
     }
 
-    /* 2. Cursor Container */
+    /* 2. Custom Cursor Container */
     #shard-cursor {
         position: fixed;
         top: 0;
         left: 0;
         width: 24px;
         height: 24px;
-        pointer-events: none;
+        
+        /* IMPORTANT: Start invisible so it never flashes at top-left */
+        opacity: 0; 
+        
+        pointer-events: none; /* Let clicks pass through */
         z-index: 10002;
-        /* Using translate3d for hardware acceleration */
-        transform: translate3d(-5px, -5px, 0); 
+        
+        /* Initialize off-screen just in case */
+        transform: translate3d(-100px, -100px, 0);
         will-change: transform;
-        filter: drop-shadow(0 0 8px rgba(255, 140, 0, 0.6));
-        transition: filter 0.2s ease, transform 0.1s linear; /* Smooth visual changes, instant move */
+        
+        /* Glow Effect */
+        filter: drop-shadow(0 0 5px rgba(255, 140, 0, 0.5));
+        
+        /* Only animate opacity/filter. NEVER animate 'transform' for movement or it lags. */
+        transition: opacity 0.2s ease, filter 0.2s ease, transform 0s; 
     }
 
     /* 3. The SVG Icon Styling */
     #shard-cursor svg {
         width: 100%;
         height: 100%;
-        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* 4. Hover State (Tilt & Glow) */
+    /* 4. Hover State (Tilt & Brighter) */
     body.shard-hover #shard-cursor {
         filter: drop-shadow(0 0 15px rgba(255, 140, 0, 1));
     }
-    
     body.shard-hover #shard-cursor svg {
-        transform: scale(1.2) rotate(-15deg); /* Slight tilt to show action */
+        transform: scale(1.3) rotate(-15deg);
     }
 
     /* 5. Click State (Snap) */
@@ -2021,22 +2029,28 @@ function updateWidget() {
 <script>
     (function() {
         const cursor = document.getElementById('shard-cursor');
-        
+        let isVisible = false;
+
         // Mobile check
         if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
 
-        // 1. Movement Logic (Direct updates for zero lag)
+        // 1. Movement Logic - Runs instantly
         document.addEventListener('mousemove', (e) => {
-            // translate3d is more performant than top/left
+            // Instant movement using translate3d
             cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+
+            // Reveal cursor ONLY after the first movement is recorded
+            if (!isVisible) {
+                cursor.style.opacity = '1';
+                isVisible = true;
+            }
         });
 
         // 2. Hover Logic
-        // Elements that trigger the active state
         const hoverTargets = `
             a, button, input, textarea, select, label,
             [role="button"], .nav-link, .glass-card, 
-            .widget-pill, .floating-ai-btn, .drag-handle
+            .widget-pill, .floating-ai-btn, .drag-handle, .folder-card
         `;
 
         document.addEventListener('mouseover', (e) => {
@@ -2051,11 +2065,16 @@ function updateWidget() {
         document.addEventListener('mousedown', () => document.body.classList.add('shard-click'));
         document.addEventListener('mouseup', () => document.body.classList.remove('shard-click'));
 
-        // 4. Window Enter/Leave
-        document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-        document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+        // 4. Window Leave Logic
+        document.addEventListener('mouseout', (e) => {
+            if (!e.relatedTarget && !e.toElement) {
+                cursor.style.opacity = '0';
+                isVisible = false; // Reset to ensure smooth fade in next time
+            }
+        });
 
     })();
+</script>
 </script>
     <style>
     /* The Crash Animation Keyframes */
