@@ -27,6 +27,8 @@
             --accent-glow: rgba(99, 102, 241, 0.5);
         }
 
+        
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow: hidden; /* Prevent body scroll, handle in app-container */
@@ -154,6 +156,123 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
+
+        /* LEVEL MODAL STYLES */
+.level-card {
+    background: #1e1e24; /* Match your dark theme */
+    padding: 25px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+.level-info-center {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.current-level-icon {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold Gradient */
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.5rem;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    margin-bottom: 10px;
+}
+
+.xp-text {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* PROGRESS BAR */
+.progress-container {
+    margin-bottom: 25px;
+}
+
+.progress-bar-bg {
+    background: rgba(255, 255, 255, 0.1);
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6c5ce7, #a29bfe); /* Purple Gradient */
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* XP HISTORY LIST */
+.xp-history h4 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+
+.xp-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.xp-icon {
+    background: rgba(108, 92, 231, 0.2);
+    color: #a29bfe;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.xp-details {
+    flex: 1;
+}
+
+.xp-details span {
+    display: block;
+    color: #ddd;
+    font-size: 0.9rem;
+}
+
+.xp-details small {
+    color: #666;
+    font-size: 0.75rem;
+}
+
+.xp-amount {
+    color: #00b894; /* Green for +XP */
+    font-weight: bold;
+    font-size: 0.9rem;
+}
 
         .interactive-btn.loading .btn-loader {
             opacity: 1;
@@ -417,7 +536,7 @@ body.rtl .floating-ai-btn {
                 </svg>
                 <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
                     <h1 class="text-xl font-bold tracking-tight">How Much</h1>
-                    <div id="user-status-badge" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full inline-block">Online</div>
+                    <div id="user-status-badge" onclick="openLevelModal()" style="cursor: pointer;" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full inline-block">Online</div>
                 </div>
             </div>
             
@@ -2109,41 +2228,120 @@ function updateWidget() {
 </style>
 
 <script>
-    // Overwrite the existing moveToTrash function
+    // 1. Overwrite the existing moveToTrash function (Crash Animation)
     window.moveToTrash = function(type, id, event) {
-        // Stop the click from opening the edit modal
         event.stopPropagation();
-        
-        // Find the button and the card container
         const btn = event.target.closest('button');
         const card = btn ? btn.closest('.glass-card') : null;
         
         if (card) {
-            // 1. Remove entrance animations so they don't conflict
             card.classList.remove('stagger-entry');
-            
-            // 2. Add the red flash (Visual damage)
             card.style.transition = 'background 0.1s, border 0.1s';
-            card.style.background = 'rgba(239, 68, 68, 0.2)'; // Red tint
-            card.style.borderColor = '#ef4444'; // Red border
+            card.style.background = 'rgba(239, 68, 68, 0.2)'; 
+            card.style.borderColor = '#ef4444'; 
             
-            // 3. Trigger the Crash Animation
-            // Small delay to let the red flash register visually
-            setTimeout(() => {
-                card.classList.add('crash-out');
-            }, 50);
-
-            // 4. Wait for animation to finish (0.6s) then actually delete
-            setTimeout(() => { 
-                deleteItemLogic(type, id); 
-            }, 650);
-            
+            setTimeout(() => { card.classList.add('crash-out'); }, 50);
+            setTimeout(() => { deleteItemLogic(type, id); }, 650);
         } else {
-            // Fallback if UI structure changes
             deleteItemLogic(type, id);
         }
     };
+
+    // 2. LEVEL SYSTEM LOGIC (Synced with Real App Data)
+    function calculateRealXP() {
+        // Calculate XP based on actual app data
+        const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
+        const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
+        const doneTasks = totalTasks - activeTasks.length;
+        
+        const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0 && !b.deleted).length;
+        const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0 && !c.deleted).length;
+        
+        // Same formula used in updateWidget
+        return (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
+    }
+
+    function openLevelModal() {
+        const modal = document.getElementById('levelModal');
+        modal.style.display = 'flex';
+        
+        // Get Real Data
+        let realXP = calculateRealXP();
+        let level = Math.floor(realXP / 200) + 1;
+        let nextLevelXP = level * 200; 
+        let prevLevelXP = (level - 1) * 200;
+        
+        // Update HTML elements
+        document.getElementById('displayCurrentLevel').textContent = level;
+        document.getElementById('currentXP').textContent = realXP;
+        document.getElementById('nextLevelXP').textContent = nextLevelXP;
+        
+        // Update Progress Bar
+        const levelRange = nextLevelXP - prevLevelXP;
+        const progressIntoLevel = realXP - prevLevelXP;
+        const percentage = Math.min(100, Math.max(0, (progressIntoLevel / levelRange) * 100));
+        
+        document.getElementById('levelProgressBar').style.width = percentage + "%";
+        
+        // Update Labels
+        const labels = document.querySelectorAll('.progress-labels span');
+        if(labels.length > 1) {
+            labels[0].innerText = "Lvl " + level;
+            labels[1].innerText = "Lvl " + (level + 1);
+        }
+    }
+
+    function closeLevelModal() {
+        document.getElementById('levelModal').style.display = 'none';
+    }
+
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('levelModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
-    
-    </body>
+
+<div id="levelModal" class="modal-overlay" style="display: none;">
+    <div class="level-card">
+        <div class="modal-header">
+            <h3>User Progression</h3>
+            <button onclick="closeLevelModal()" class="close-btn" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        
+        <div class="level-info-center">
+            <div class="current-level-icon">
+                <i class="fa-solid fa-crown"></i>
+                <span>Lvl <span id="displayCurrentLevel">2</span></span>
+            </div>
+            <p class="xp-text"><span id="currentXP">150</span> / <span id="nextLevelXP">300</span> XP</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar-bg">
+                <div id="levelProgressBar" class="progress-bar-fill" style="width: 50%;"></div>
+            </div>
+            <div class="progress-labels">
+                <span>Current</span>
+                <span>Next Level</span>
+            </div>
+        </div>
+
+        <div class="xp-history">
+            <h4>Recent Gains</h4>
+            <div class="xp-item">
+                <div class="xp-icon"><i class="fa-solid fa-check-circle"></i></div>
+                <div class="xp-details">
+                    <span>Completed Task</span>
+                    <small>Today</small>
+                </div>
+                <span class="xp-amount">+10 XP</span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
+
