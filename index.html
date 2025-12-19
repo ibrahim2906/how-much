@@ -1073,78 +1073,72 @@ body.rtl .floating-ai-btn {
 };
 
         // --- Rendering Logic ---
-        function renderCourses(animate = true) {
-    const list = document.getElementById('courses-list'); list.innerHTML = '';
-    const animClass = animate ? 'stagger-entry' : ''; // تشغيل أو إيقاف الكلاس
-    window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
-        const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-        // تم استبدال stagger-entry بـ ${animClass}
-        list.innerHTML += `<div class="glass-card ${animClass} p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 me-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock me-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
-    });
-}}
+        function renderCourses() {
+            const list = document.getElementById('courses-list'); list.innerHTML = '';
+            window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
+                const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
+                // Use me-12 for RTL support on title spacing, and end-3 for delete button
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 me-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock me-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
+            });
+        }
 
-        function renderBooks(animate = true) {
-    const list = document.getElementById('books-list'); list.innerHTML = '';
-    const animClass = animate ? 'stagger-entry' : '';
-    window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
-        const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
-        list.innerHTML += `<div class="glass-card ${animClass} p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white me-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
-    });
-}
+        function renderBooks() {
+            const list = document.getElementById('books-list'); list.innerHTML = '';
+            window.appData.books.filter(b => !b.deleted).forEach((b, index) => {
+                const percent = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
+                list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${b.id}" onclick="openEditModal('book', '${b.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('book', '${b.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <div class="flex justify-between items-start mb-2"> <div class="w-10 h-14 bg-slate-800 rounded flex items-center justify-center text-white/30"><i class="fas fa-book"></i></div> <div class="text-right mt-6"> <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak||0}🔥</div> </div> </div> <h3 class="font-bold text-white me-8">${b.name}</h3> ${b.files && b.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+b.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400 mt-1"> <span>${b.done} / ${b.total} Pgs</span> <span>${percent}%</span> </div> <button onclick="readBookToday(${b.id}, event)" class="w-full mt-3 py-1.5 rounded-lg bg-white/5 text-xs text-white hover:bg-white/10 active:bg-white/20">Mark Read Today</button> </div>`;
+            });
+        }
 
-        function renderTasks(animate = true) {
-    const mainList = document.getElementById('tasks-list-main'); 
-    const optList = document.getElementById('tasks-list-optional');
-    mainList.innerHTML = ''; optList.innerHTML = '';
-    const animClass = animate ? 'stagger-entry' : '';
-    
-    // نمرر animClass داخل دالة التوليد
-    const generateTaskHTML = (t, index) => `<div class="glass-card ${animClass} p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400 line-clamp-1">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
+        function renderTasks() {
+            const mainList = document.getElementById('tasks-list-main'); 
+            const optList = document.getElementById('tasks-list-optional');
+            mainList.innerHTML = ''; optList.innerHTML = '';
+            // Use end-3 for delete positioning
+            const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400 line-clamp-1">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
 
-    let mainIndex = 0; let optIndex = 0;
-    window.appData.tasks.filter(t => !t.deleted).forEach(t => {
-        if(t.optional) optList.innerHTML += generateTaskHTML(t, optIndex++);
-        else mainList.innerHTML += generateTaskHTML(t, mainIndex++);
-    });
-}
+            let mainIndex = 0; let optIndex = 0;
+            window.appData.tasks.filter(t => !t.deleted).forEach(t => {
+                if(t.optional) optList.innerHTML += generateTaskHTML(t, optIndex++);
+                else mainList.innerHTML += generateTaskHTML(t, mainIndex++);
+            });
+        }
 
         // --- NEW: Render Notes ---
-        function renderNotes(animate = true) {
-    const list = document.getElementById('notes-list'); list.innerHTML = '';
-    const animClass = animate ? 'stagger-entry' : '';
-    window.appData.notes.filter(n => !n.deleted).forEach((n, index) => {
-        list.innerHTML += `
-        <div class="glass-card ${animClass} p-5 rounded-3xl relative group cursor-pointer flex flex-col h-full min-h-[160px]" style="animation-delay: ${0.2 + (index * 0.05)}s" onclick="openEditModal('note', '${n.id}')">
-            <div class="absolute top-3 end-3 flex gap-2 z-10">
-                <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('note', '${n.id}', event)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-            <h3 class="font-bold text-lg text-white mb-2 line-clamp-1 pe-10">${n.name}</h3>
-            <div class="text-sm text-slate-400 mb-4 line-clamp-3 flex-1 whitespace-pre-wrap">${n.desc}</div>
-            
-            <div class="flex gap-2 mt-auto border-t border-white/5 pt-3">
-                 ${n.audioNote ? '<div class="w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fas fa-microphone"></i></div>' : ''}
-                 ${n.drawing ? '<div class="w-6 h-6 rounded bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs"><i class="fas fa-palette"></i></div>' : ''}
-                 ${n.files && n.files.length > 0 ? '<div class="w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-paperclip"></i></div>' : ''}
-            </div>
-            ${ (!n.audioNote && !n.drawing && (!n.files || n.files.length === 0)) ? '<div class="text-[10px] text-slate-600 mt-2">Text only</div>' : ''}
-        </div>`;
-    });
-}
+        function renderNotes() {
+            const list = document.getElementById('notes-list'); list.innerHTML = '';
+            window.appData.notes.filter(n => !n.deleted).forEach((n, index) => {
+                list.innerHTML += `
+                <div class="glass-card stagger-entry p-5 rounded-3xl relative group cursor-pointer flex flex-col h-full min-h-[160px]" style="animation-delay: ${0.2 + (index * 0.05)}s" onclick="openEditModal('note', '${n.id}')">
+                    <div class="absolute top-3 end-3 flex gap-2 z-10">
+                        <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('note', '${n.id}', event)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <h3 class="font-bold text-lg text-white mb-2 line-clamp-1 pe-10">${n.name}</h3>
+                    <div class="text-sm text-slate-400 mb-4 line-clamp-3 flex-1 whitespace-pre-wrap">${n.desc}</div>
+                    
+                    <div class="flex gap-2 mt-auto border-t border-white/5 pt-3">
+                         ${n.audioNote ? '<div class="w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fas fa-microphone"></i></div>' : ''}
+                         ${n.drawing ? '<div class="w-6 h-6 rounded bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs"><i class="fas fa-palette"></i></div>' : ''}
+                         ${n.files && n.files.length > 0 ? '<div class="w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-paperclip"></i></div>' : ''}
+                    </div>
+                    ${ (!n.audioNote && !n.drawing && (!n.files || n.files.length === 0)) ? '<div class="text-[10px] text-slate-600 mt-2">Text only</div>' : ''}
+                </div>`;
+            });
+        }
 
-        function renderTrash(animate = true) {
-    const list = document.getElementById('trash-list'); list.innerHTML = '';
-    const animClass = animate ? 'stagger-entry' : '';
-    const allTrash = [
-        ...window.appData.courses.filter(x => x.deleted).map(x => ({...x, type: 'course', icon: 'fa-graduation-cap'})),
-        ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
-        ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'})),
-        ...window.appData.notes.filter(x => x.deleted).map(x => ({...x, type: 'note', icon: 'fa-sticky-note'}))
-    ];
-    if(allTrash.length === 0) { list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; return; }
-    allTrash.forEach((item, index) => {
-        list.innerHTML += `<div class="glass-card ${animClass} p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${0.2 + (index * 0.05)}s"> <div class="flex items-center gap-3"> <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400"> <i class="fas ${item.icon}"></i> </div> <div> <h4 class="font-bold text-white">${item.name}</h4> <p class="text-[10px] text-slate-500 uppercase">${item.type}</p> </div> </div> <div class="flex gap-2"> <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button> <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button> </div> </div>`;
-    });
-}
+        function renderTrash() {
+            const list = document.getElementById('trash-list'); list.innerHTML = '';
+            const allTrash = [
+                ...window.appData.courses.filter(x => x.deleted).map(x => ({...x, type: 'course', icon: 'fa-graduation-cap'})),
+                ...window.appData.books.filter(x => x.deleted).map(x => ({...x, type: 'book', icon: 'fa-book'})),
+                ...window.appData.tasks.filter(x => x.deleted).map(x => ({...x, type: 'task', icon: 'fa-check-circle'})),
+                ...window.appData.notes.filter(x => x.deleted).map(x => ({...x, type: 'note', icon: 'fa-sticky-note'}))
+            ];
+            if(allTrash.length === 0) { list.innerHTML = '<div class="text-center text-slate-500 py-10">Trash is empty</div>'; return; }
+            allTrash.forEach((item, index) => {
+                list.innerHTML += `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center justify-between" style="animation-delay: ${0.2 + (index * 0.05)}s"> <div class="flex items-center gap-3"> <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400"> <i class="fas ${item.icon}"></i> </div> <div> <h4 class="font-bold text-white">${item.name}</h4> <p class="text-[10px] text-slate-500 uppercase">${item.type}</p> </div> </div> <div class="flex gap-2"> <button onclick="restoreFromTrash('${item.type}', ${item.id})" class="p-2 text-green-400 hover:bg-green-500/10 rounded-lg" title="Restore"><i class="fas fa-undo"></i></button> <button onclick="permanentDelete('${item.type}', ${item.id})" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete Forever"><i class="fas fa-times"></i></button> </div> </div>`;
+            });
+        }
 
         // --- Logic ---
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
@@ -1232,7 +1226,7 @@ body.rtl .floating-ai-btn {
         };
         window.resetTally = function() { tallyCount = tallyMode === 'up' ? 0 : (parseInt(document.getElementById('tally-start-val').value) || 33); document.getElementById('tally-display').innerText = tallyCount; };
 
-        const defaultApiKey = "AIzaSyAcEoQfoiot-YfHrDvHLlYOMc2SK0jjBqc"; 
+        const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms"; 
         let tempAudioBase64 = null; let tempDrawingData = null; let tempFiles = [];
 
         // --- Init ---
@@ -1700,7 +1694,6 @@ magneticBtns.forEach(btn => {
         // --- Trash Logic ---
         window.moveToTrash = function(type, id, e) {
     e.stopPropagation();
-    e.preventDefault()
     const btn = e.target.closest('button');
     const card = btn ? btn.closest('.glass-card') : null;
     
@@ -1750,15 +1743,8 @@ magneticBtns.forEach(btn => {
 
         // --- Helpers ---
         function commitData() { localStorage.setItem('hm_data', JSON.stringify(window.appData)); updateWidget(); if(window.triggerCloudSave) window.triggerCloudSave(); }
-function refreshAllUI() { 
-    // نرسل false لنخبر الدوال بعدم تشغيل الأنيميشن
-    renderCourses(false); 
-    renderTasks(false); 
-    renderBooks(false); 
-    renderNotes(false); 
-    updateWidget(); 
-    if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(false); 
-}
+        function refreshAllUI() { renderCourses(); renderTasks(); renderBooks(); renderNotes(); updateWidget(); if(!document.getElementById('page-trash').classList.contains('hidden')) renderTrash(); }
+
         function triggerConfetti(grand = false) {
             const cvs = document.getElementById('confetti-canvas'); const ctx = cvs.getContext('2d');
             cvs.width = window.innerWidth; cvs.height = window.innerHeight;
@@ -2161,4 +2147,3 @@ function updateWidget() {
     
     </body>
 </html>
-
