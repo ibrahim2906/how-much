@@ -27,8 +27,6 @@
             --accent-glow: rgba(99, 102, 241, 0.5);
         }
 
-        
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow: hidden; /* Prevent body scroll, handle in app-container */
@@ -49,7 +47,6 @@
         }
 
         /* --- 2. ANIMATIONS --- */
-        
         .page-section {
             will-change: transform, opacity, clip-path;
             transform-origin: center bottom;
@@ -63,16 +60,6 @@
         .stagger-entry {
             opacity: 0;
             animation: slideInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-
-        @keyframes slideOutRight {
-            0% { transform: translateX(0); opacity: 1; }
-            100% { transform: translateX(100%); opacity: 0; }
-        }
-
-        .slide-out-right {
-            animation: slideOutRight 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
-            pointer-events: none;
         }
 
         /* 3D Tilt Effect on Cards */
@@ -93,7 +80,6 @@
             animation: blackHoleSuck 0.5s cubic-bezier(0.55, -0.04, 0.91, 0.94) forwards !important;
             pointer-events: none;
         }
-
 
         /* A moving shine reflection */
         .glass-card::before {
@@ -120,15 +106,13 @@
             opacity: 1;
         }
 
-        /* --- 3. MICRO-INTERACTIONS (NEW) --- */
-        /* Core Interactive Button Structure */
+        /* --- 3. MICRO-INTERACTIONS --- */
         .interactive-btn {
             position: relative;
             overflow: hidden;
             transition: background-color 0.3s ease, transform 0.1s ease;
         }
         
-        /* 1. Icon Morph: Text Slide Out */
         .btn-text-content {
             display: flex;
             align-items: center;
@@ -141,10 +125,9 @@
         .interactive-btn.loading .btn-text-content,
         .interactive-btn.success .btn-text-content {
             opacity: 0;
-            transform: translateY(10px); /* Slide down and out */
+            transform: translateY(10px);
         }
 
-        /* 2. Loading Dots / Wave Animation */
         .btn-loader {
             position: absolute;
             inset: 0;
@@ -156,123 +139,6 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-
-        /* LEVEL MODAL STYLES */
-.level-card {
-    background: #1e1e24; /* Match your dark theme */
-    padding: 25px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    position: relative;
-    animation: slideUp 0.3s ease-out;
-}
-
-.level-info-center {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.current-level-icon {
-    display: inline-block;
-    background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold Gradient */
-    padding: 10px 20px;
-    border-radius: 50px;
-    color: #000;
-    font-weight: bold;
-    font-size: 1.5rem;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-    margin-bottom: 10px;
-}
-
-.xp-text {
-    color: #aaa;
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-/* PROGRESS BAR */
-.progress-container {
-    margin-bottom: 25px;
-}
-
-.progress-bar-bg {
-    background: rgba(255, 255, 255, 0.1);
-    height: 12px;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #6c5ce7, #a29bfe); /* Purple Gradient */
-    border-radius: 10px;
-    transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
-}
-
-.progress-labels {
-    display: flex;
-    justify-content: space-between;
-    color: #666;
-    font-size: 0.8rem;
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-/* XP HISTORY LIST */
-.xp-history h4 {
-    color: #fff;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 10px;
-}
-
-.xp-item {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-}
-
-.xp-icon {
-    background: rgba(108, 92, 231, 0.2);
-    color: #a29bfe;
-    width: 35px;
-    height: 35px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 12px;
-}
-
-.xp-details {
-    flex: 1;
-}
-
-.xp-details span {
-    display: block;
-    color: #ddd;
-    font-size: 0.9rem;
-}
-
-.xp-details small {
-    color: #666;
-    font-size: 0.75rem;
-}
-
-.xp-amount {
-    color: #00b894; /* Green for +XP */
-    font-weight: bold;
-    font-size: 0.9rem;
-}
 
         .interactive-btn.loading .btn-loader {
             opacity: 1;
@@ -294,7 +160,6 @@
             40% { transform: scale(1); opacity: 1; }
         }
 
-        /* 3. Success Icon & Bounce */
         .btn-success-icon {
             position: absolute;
             inset: 0;
@@ -303,7 +168,7 @@
             justify-content: center;
             opacity: 0;
             transform: scale(0.5) rotate(-45deg);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Elastic Bounce */
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .interactive-btn.success .btn-success-icon {
@@ -311,10 +176,7 @@
             transform: scale(1) rotate(0deg);
         }
 
-        /* --- END MICRO-INTERACTIONS --- */
-
-
-        /* Animated Nebula Background */
+        /* --- ANIMATED NEBULA BACKGROUND --- */
         .nebula-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -336,7 +198,6 @@
         .accent-text { color: var(--accent-color); }
         .accent-bg { background-color: var(--accent-color); }
         .accent-border { border-color: var(--accent-color); }
-        .hover-accent:hover { color: var(--accent-color); }
         .accent-glow { box-shadow: 0 0 20px var(--accent-glow); }
 
         @keyframes floatOrb {
@@ -344,7 +205,7 @@
             to { transform: translate(30px, -30px); }
         }
 
-        /* Glassmorphism */
+        /* Glassmorphism Panels */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -378,20 +239,19 @@
             .drag-handle { opacity: 0; }
         }
 
-        /* Sidebar */
+        /* Sidebar Transitions */
         #desktop-sidebar { transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; }
         .sidebar-collapsed { width: 80px !important; }
-        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-badge { display: none; }
+        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-container { display: none; }
         .sidebar-collapsed .nav-link,
         .sidebar-collapsed .mt-auto button { justify-content: center; padding-left: 0; padding-right: 0; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         body.light-mode ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
 
-        /* Nav Active */
+        /* Navigation Links */
         .nav-link { position: relative; transition: all 0.3s ease; opacity: 0.6; }
         .nav-link:hover { opacity: 1; }
         .nav-link.active { opacity: 1; color: var(--accent-color); }
@@ -403,54 +263,33 @@
         /* Mobile Dock */
         .mobile-dock { padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
-        /* Modal & Genie Optimization */
         .modal-content {
-            /* Hardware acceleration for smooth genie effect */
             will-change: transform, width, height, opacity, border-radius; 
             transform-origin: center center;
         }
         
         /* Floating AI */
         .floating-ai-btn {
-            position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; border-radius: 50%;
+            position: fixed; 
+            bottom: 90px; 
+            right: 20px; 
+            left: auto;  
+            width: 55px; height: 55px; border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-color), #ec4899);
             display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;
             box-shadow: 0 10px 30px var(--accent-glow); z-index: 40;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: pulse-glow 3s infinite;
         }
-        /* Floating AI */
-.floating-ai-btn {
-    position: fixed; 
-    bottom: 90px; 
-    right: 20px; /* المكان الافتراضي يمين في الانجليزي */
-    left: auto;  
-    width: 55px; height: 55px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-color), #ec4899);
-    display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;
-    box-shadow: 0 10px 30px var(--accent-glow); z-index: 40;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: pulse-glow 3s infinite;
-}
 
-/* === هذا هو الحل: قاعدة خاصة للغة العربية === */
-body.rtl .floating-ai-btn {
-    right: auto; /* الغاء اليمين */
-    left: 20px;  /* تفعيل اليسار */
-}
+        body.rtl .floating-ai-btn { right: auto; left: 20px; }
+        .floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
 
-.floating-ai-btn:hover { transform: scale(1.1) rotate(15deg); }
-
-@media (min-width: 768px) { 
-    .floating-ai-btn { bottom: 30px; right: 30px; } 
-    
-    /* تعديل الشاشات الكبيرة في العربية */
-    body.rtl .floating-ai-btn {
-        right: auto;
-        left: 30px;
-    }
-}
-@media (min-width: 768px) { .floating-ai-btn { bottom: 30px; inset-inline-end: 30px; } }@keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        @media (min-width: 768px) { 
+            .floating-ai-btn { bottom: 30px; right: 30px; } 
+            body.rtl .floating-ai-btn { right: auto; left: 30px; }
+        }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
 
         /* Widget */
         .widget-pill {
@@ -465,10 +304,8 @@ body.rtl .floating-ai-btn {
         @media (max-width: 767px) { .widget-pill { bottom: 90px; right: 85px; height: 48px; padding: 0 16px; border-radius: 24px; } }
         @media (min-width: 768px) { .widget-pill { bottom: 30px; right: 100px; height: 60px; padding: 0 24px; border-radius: 30px; } }
 
-        /* Confetti Canvas */
+        /* Confetti */
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
-
-        /* Loader */
         .loader-ring { display: inline-block; width: 20px; height: 20px; }
         .loader-ring:after { content: " "; display: block; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff; border-color: #fff transparent #fff transparent; animation: ring 1.2s linear infinite; }
         @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -476,12 +313,207 @@ body.rtl .floating-ai-btn {
         /* File Upload */
         .file-drop-zone { border: 2px dashed rgba(255,255,255,0.2); transition: all 0.3s; }
         .file-drop-zone:hover, .file-drop-zone.dragover { border-color: var(--accent-color); background: rgba(255,255,255,0.05); }
+
+        /* ================= LEVEL MODAL STYLES ================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .level-card {
+            background: #1e1e24; /* Fallback */
+            background: rgba(30, 30, 36, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            animation: slideUpModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUpModal {
+            from { transform: translateY(50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .level-info-center {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .current-level-icon {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold Gradient */
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: #000;
+            font-weight: 800;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            margin-bottom: 15px;
+            transform: scale(1);
+            transition: transform 0.3s;
+        }
+        .current-level-icon:hover { transform: scale(1.1); }
+
+        .xp-text {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container { margin-bottom: 25px; }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 10px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            width: 0%;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* XP HISTORY LIST */
+        .xp-history h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+        }
+
+        .xp-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+        }
+        .xp-item:hover { background: rgba(255, 255, 255, 0.07); }
+
+        .xp-icon {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .xp-details { flex: 1; }
+
+        .xp-details span {
+            display: block;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .xp-details small {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        .xp-amount {
+            color: #4ade80; /* Green for +XP */
+            font-weight: bold;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .modal-header h3 { font-size: 1.25rem; font-weight: 700; color: white; }
+
+        /* Crash Animation for Delete */
+        @keyframes crashDown {
+            0% { transform: translate(0, 0) rotate(0deg); filter: brightness(1); }
+            15% { transform: translate(-5px, 0) rotate(-5deg); }
+            30% { transform: translate(5px, 0) rotate(5deg); }
+            45% { transform: translate(-5px, 0) rotate(-5deg); }
+            60% { transform: translate(0, 10px) rotate(10deg) scale(0.9); opacity: 1; filter: brightness(0.5) grayscale(1); }
+            100% { transform: translate(0, 150px) rotate(45deg) scale(0.5); opacity: 0; }
+        }
+        .crash-out {
+            animation: crashDown 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Custom Cursor */
+        #shard-cursor {
+            position: fixed; top: 0; left: 0; width: 24px; height: 24px;
+            opacity: 0; pointer-events: none; z-index: 10002;
+            transform: translate3d(-100px, -100px, 0);
+            will-change: transform;
+            filter: drop-shadow(0 0 5px rgba(255, 140, 0, 0.5));
+            transition: opacity 0.2s ease, filter 0.2s ease, transform 0s; 
+        }
+        #shard-cursor svg { width: 100%; height: 100%; transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        body.shard-hover #shard-cursor { filter: drop-shadow(0 0 15px rgba(255, 140, 0, 1)); }
+        body.shard-hover #shard-cursor svg { transform: scale(1.3) rotate(-15deg); }
+        body.shard-click #shard-cursor svg { transform: scale(0.8) translate(2px, 2px); }
+        @media (pointer: fine) { body, a, button, input, textarea, select, label, .glass-card, .nav-link, * { cursor: none !important; } }
+        @media (hover: none) and (pointer: coarse) { #shard-cursor { display: none !important; } body, a, button, * { cursor: auto !important; } }
     </style>
 </head>
 <body>
 
     <!-- Confetti Canvas -->
     <canvas id="confetti-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div id="shard-cursor">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3L10.5 21L12.5 13L20.5 11L3 3Z" fill="#FF8C00" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+    </div>
 
     <!-- Dynamic Background -->
     <div class="nebula-bg"></div>
@@ -526,22 +558,28 @@ body.rtl .floating-ai-btn {
     <div id="app-container" class="hidden flex h-[100dvh] overflow-hidden relative">
         
         <!-- Desktop Sidebar -->
-        <!-- Use border-e-0 (End) instead of border-r-0 so it removes the inner border in RTL properly -->
         <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-e-0 relative z-20 overflow-hidden shrink-0">
-            <div class="p-6 flex items-center gap-4 border-b border-white/5">
-                <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
-                    <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
-                    <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
-                    <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
-                </svg>
-                <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
-                    <h1 class="text-xl font-bold tracking-tight">How Much</h1>
-                    <div id="user-status-badge" onclick="openLevelModal()" style="cursor: pointer;" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full inline-block">Online</div>
+            <div class="p-6 border-b border-white/5">
+                <div class="flex items-center gap-4 mb-3">
+                    <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
+                        <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+                        <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
+                        <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
+                        <h1 class="text-xl font-bold tracking-tight">How Much</h1>
+                        <!-- ENHANCED: OnClick Open Level Modal -->
+                        <div id="user-status-badge" onclick="openLevelModal()" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block cursor-pointer hover:scale-105 transition-transform">Online</div>
+                    </div>
                 </div>
+                <!-- FIXED: Visible Progress Bar in Sidebar -->
+                <div id="sidebar-progress-container" class="w-full bg-black/30 h-1.5 rounded-full overflow-hidden nav-text" onclick="openLevelModal()" style="cursor: pointer;">
+                    <div id="sidebar-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-1000" style="width: 0%"></div>
+                </div>
+                <div class="text-[10px] text-slate-500 mt-1 text-right nav-text cursor-pointer hover:text-white transition-colors" onclick="openLevelModal()">Level Progress</div>
             </div>
             
             <nav class="flex-1 px-3 space-y-2 mt-4 overflow-y-auto overflow-x-hidden">
-                <!-- text-start for RTL alignment -->
                 <button onclick="showPage('courses')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all flex-shrink-0">
                         <i class="fas fa-graduation-cap text-lg"></i>
@@ -602,18 +640,17 @@ body.rtl .floating-ai-btn {
             <!-- Mobile Header -->
             <header class="md:hidden flex items-center justify-between p-3 mx-2 mt-2 rounded-2xl glass-panel z-30 shrink-0">
                 <div class="flex items-center gap-3">
-                    <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
+                    <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm" onclick="openLevelModal()">
                         <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
                         <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
                     </svg>
-                    <span class="font-bold text-lg">How Much</span>
+                    <span class="font-bold text-lg" onclick="openLevelModal()">How Much</span>
                 </div>
                 <button onclick="showPage('settings')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                     <i class="fas fa-cog text-sm"></i>
                 </button>
             </header>
 
-            <!-- Toggle Button Desktop: Use start-6 (left in LTR, right in RTL) -->
             <button onclick="toggleSidebar()" class="hidden md:flex absolute top-6 start-6 z-30 text-slate-400 hover:text-white transition-colors bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/5">
                 <i class="fas fa-bars"></i>
             </button>
@@ -632,7 +669,6 @@ body.rtl .floating-ai-btn {
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Course</span>
                         </button>
                     </div>
-
                     <div id="courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </section>
 
@@ -647,7 +683,6 @@ body.rtl .floating-ai-btn {
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> <span data-i18n="add">Add Task</span>
                         </button>
                     </div>
-                    
                     <div class="mb-2 flex items-center gap-2 text-slate-400 uppercase tracking-widest text-xs font-bold pl-2">
                         <i class="fas fa-star text-yellow-500"></i> Priority
                     </div>
@@ -673,7 +708,7 @@ body.rtl .floating-ai-btn {
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 </section>
 
-                <!-- NEW NOTES SECTION -->
+                <!-- Notes Page -->
                 <section id="page-notes" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
                         <div>
@@ -775,7 +810,6 @@ body.rtl .floating-ai-btn {
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
                                     <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
                                 </div>
-                                <!-- Added rtl: specific rounding to flip bubble corner properly -->
                                 <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
                                     Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
                                 </div>
@@ -783,9 +817,7 @@ body.rtl .floating-ai-btn {
                         </div>
                         <div class="p-4 bg-black/20 backdrop-blur-md">
                             <div class="relative">
-                                <!-- Use ps-4 pe-12 for logical padding -->
                                 <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()">
-                                <!-- Use end-2 for positioning -->
                                 <button onclick="sendAIChat()" class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95">
                                     <i class="fas fa-paper-plane text-xs"></i>
                                 </button>
@@ -836,7 +868,6 @@ body.rtl .floating-ai-btn {
             </div>
 
             <!-- New Floating Widget -->
-            <!-- Use border-e, pr -> pe, ml -> ms -->
             <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
                 <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-e border-white/10 pe-3 me-1 hidden">
                     <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
@@ -873,6 +904,46 @@ body.rtl .floating-ai-btn {
 
     <!-- Modals -->
     <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeAllModals()"></div>
+
+    <!-- NEW LEVEL MODAL -->
+    <div id="levelModal" class="modal-overlay" style="display: none;" onclick="if(event.target === this) closeLevelModal()">
+        <div class="level-card">
+            <div class="modal-header">
+                <h3>User Progression</h3>
+                <button onclick="closeLevelModal()" class="close-btn" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div class="level-info-center">
+                <div class="current-level-icon">
+                    <i class="fa-solid fa-crown mr-2"></i>
+                    <span>Lvl <span id="displayCurrentLevel">1</span></span>
+                </div>
+                <p class="xp-text"><span id="currentXP">0</span> / <span id="nextLevelXP">200</span> XP</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="levelProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-labels">
+                    <span id="currentLvlLabel">Lvl 1</span>
+                    <span id="nextLvlLabel">Lvl 2</span>
+                </div>
+            </div>
+
+            <div class="xp-history">
+                <h4>Recent Gains</h4>
+                <div class="xp-item">
+                    <div class="xp-icon"><i class="fa-solid fa-check-circle"></i></div>
+                    <div class="xp-details">
+                        <span>Active Session</span>
+                        <small>Now</small>
+                    </div>
+                    <span class="xp-amount" style="color:#6366f1">Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Widget Detail Modal -->
     <div id="widget-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-end md:items-center justify-center pointer-events-none p-4 pb-24 md:pb-4">
@@ -934,7 +1005,6 @@ body.rtl .floating-ai-btn {
 
                 <textarea id="modal-desc" rows="3" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base"></textarea>
 
-                <!-- Media Sections (File, Audio, Drawing) - Always available but logic controls visibility if needed -->
                 <div id="media-section-group" class="space-y-4">
                     <div class="glass-panel p-3 rounded-xl bg-black/10">
                         <div class="flex justify-between items-center mb-2">
@@ -978,7 +1048,6 @@ body.rtl .floating-ai-btn {
                 </div>
 
                 <div class="flex gap-2 justify-end pt-2">
-                    <!-- ENHANCED SAVE BUTTON WITH ANIMATION STRUCTURE -->
                     <button onclick="saveItem(this)" id="btn-save-modal" class="interactive-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors">
                         <span class="btn-text-content">Save</span>
                         <span class="btn-loader">
@@ -1004,11 +1073,10 @@ body.rtl .floating-ai-btn {
                 <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center"><i class="fas fa-eraser"></i></button>
                 <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center"><i class="fas fa-trash-alt"></i></button>
             </div>
-            <!-- ENHANCED SAVE BUTTON FOR DRAWING -->
             <button onclick="saveCanvasDrawing(this)" class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 w-24">
                 <span class="btn-text-content"><i class="fas fa-check mr-1"></i> Save</span>
                 <span class="btn-loader">
-                     <span class="dot-wave"></span><span class="dot-wave"></span><span class="dot-wave"></span>
+                      <span class="dot-wave"></span><span class="dot-wave"></span><span class="dot-wave"></span>
                 </span>
                 <span class="btn-success-icon"><i class="fas fa-check"></i></span>
             </button>
@@ -1098,7 +1166,6 @@ body.rtl .floating-ai-btn {
             onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => { 
                 if(s.exists()) { 
                     window.appData = { ...window.appData, ...s.data() }; 
-                    // Ensure notes array exists in older data
                     if(!window.appData.notes) window.appData.notes = [];
                     
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
@@ -1135,68 +1202,52 @@ body.rtl .floating-ai-btn {
         };
 
         window.showPage = function(pageId) {
-    // 1. Update Nav State
-    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
 
-    // 2. Identify Current and Next Page
-    const activePage = document.querySelector('.page-section:not(.hidden)');
-    const nextPage = document.getElementById(`page-${pageId}`);
-    
-    if (activePage === nextPage) return;
+            const activePage = document.querySelector('.page-section:not(.hidden)');
+            const nextPage = document.getElementById(`page-${pageId}`);
+            
+            if (activePage === nextPage) return;
 
-    // 3. Render Data
-    if(pageId === 'courses') renderCourses();
-    if(pageId === 'tasks') renderTasks();
-    if(pageId === 'books') renderBooks();
-    if(pageId === 'notes') renderNotes();
-    if(pageId === 'trash') renderTrash();
+            if(pageId === 'courses') renderCourses();
+            if(pageId === 'tasks') renderTasks();
+            if(pageId === 'books') renderBooks();
+            if(pageId === 'notes') renderNotes();
+            if(pageId === 'trash') renderTrash();
 
-    // 4. The Hyperspace Animation Sequence
-    const tl = gsap.timeline();
-
-    if (activePage) {
-        // Exit Animation: Zoom in and blur (Warp out)
-        tl.to(activePage, { 
-            scale: 1.1, 
-            opacity: 0, 
-            filter: "blur(10px)", 
-            duration: 0.3, 
-            ease: "power2.in",
-            onComplete: () => {
-                activePage.classList.add('hidden');
-                gsap.set(activePage, { clearProps: "all" }); // Reset for next time
+            const tl = gsap.timeline();
+            if (activePage) {
+                tl.to(activePage, { 
+                    scale: 1.1, opacity: 0, filter: "blur(10px)", duration: 0.3, ease: "power2.in",
+                    onComplete: () => { activePage.classList.add('hidden'); gsap.set(activePage, { clearProps: "all" }); }
+                });
             }
-        });
-    }
 
-    if (nextPage) {
-        nextPage.classList.remove('hidden');
-        // Entry Animation: Zoom out from huge, deblur (Warp in)
-        tl.fromTo(nextPage, 
-            { scale: 0.9, opacity: 0, filter: "blur(20px)", y: 50 },
-            { scale: 1, opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "back.out(1.2)" }, 
-            "-=0.1" // Overlap slightly
-        );
-        
-        // Stagger children elements specifically
-        const children = nextPage.querySelectorAll('.stagger-entry');
-        if(children.length > 0) {
-            tl.fromTo(children, 
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power2.out" },
-                "-=0.3"
-            );
-        }
-    }
-};
+            if (nextPage) {
+                nextPage.classList.remove('hidden');
+                tl.fromTo(nextPage, 
+                    { scale: 0.9, opacity: 0, filter: "blur(20px)", y: 50 },
+                    { scale: 1, opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "back.out(1.2)" }, 
+                    "-=0.1"
+                );
+                
+                const children = nextPage.querySelectorAll('.stagger-entry');
+                if(children.length > 0) {
+                    tl.fromTo(children, 
+                        { y: 30, opacity: 0 },
+                        { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power2.out" },
+                        "-=0.3"
+                    );
+                }
+            }
+        };
 
         // --- Rendering Logic ---
         function renderCourses() {
             const list = document.getElementById('courses-list'); list.innerHTML = '';
             window.appData.courses.filter(c => !c.deleted).forEach((c, index) => {
                 const percent = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-                // Use me-12 for RTL support on title spacing, and end-3 for delete button
                 list.innerHTML += `<div class="glass-card stagger-entry p-5 rounded-3xl relative overflow-hidden group cursor-pointer transition-all" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${c.id}" onclick="openEditModal('course', '${c.id}')"> <div class="absolute top-3 end-3 flex gap-2 z-10"> <button class="delete-btn-preview p-2 rounded-full bg-black/40 text-red-400 hover:bg-red-500 hover:text-white" onclick="moveToTrash('course', '${c.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 rounded-full bg-black/40 text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> <h3 class="font-bold text-lg text-white mb-1 me-12">${c.name}</h3> ${c.files && c.files.length > 0 ? '<div class="text-[10px] text-blue-400 mb-1 flex items-center gap-1"><i class="fas fa-paperclip"></i> '+c.files.length+' Files</div>' : ''} <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden mb-2"><div class="h-full accent-bg transition-all duration-1000" style="width:${percent}%; background:var(--accent-color)"></div></div> <div class="flex justify-between text-xs text-slate-400"> <span><i class="fas fa-clock me-1"></i> ${c.done} / ${c.total} Hrs</span> <span class="font-bold text-accent">${percent}%</span> </div> </div>`;
             });
         }
@@ -1213,7 +1264,6 @@ body.rtl .floating-ai-btn {
             const mainList = document.getElementById('tasks-list-main'); 
             const optList = document.getElementById('tasks-list-optional');
             mainList.innerHTML = ''; optList.innerHTML = '';
-            // Use end-3 for delete positioning
             const generateTaskHTML = (t, index) => `<div class="glass-card stagger-entry p-4 rounded-2xl flex items-center gap-4 ${t.completed ? 'opacity-50 grayscale' : ''} transition-all relative group" style="animation-delay: ${0.2 + (index * 0.05)}s" data-id="${t.id}"> <button onclick="toggleTask(${t.id}, event)" class="w-6 h-6 rounded-full border-2 border-slate-500 flex items-center justify-center ${t.completed ? 'accent-bg border-transparent' : ''} z-10" style="${t.completed ? 'background:var(--accent-color)' : ''}"> ${t.completed ? '<i class="fas fa-check text-white text-[10px]"></i>' : ''} </button> <div class="flex-1" onclick="openEditModal('task', '${t.id}')"> <div class="flex justify-between items-start"> <h4 class="font-bold text-white ${t.completed ? 'line-through' : ''}">${t.name}</h4> <div class="flex gap-2"> ${t.files && t.files.length > 0 ? '<i class="fas fa-paperclip text-blue-400 text-xs"></i>' : ''} ${t.drawing ? '<i class="fas fa-palette text-pink-400 text-xs"></i>' : ''} ${t.audioNote ? '<i class="fas fa-microphone text-red-400 text-xs"></i>' : ''} </div> </div> <p class="text-xs text-slate-400 line-clamp-1">${t.desc || ''}</p> </div> <div class="flex items-center gap-2"> <button class="delete-btn-preview p-2 text-red-400 hover:text-white" onclick="moveToTrash('task', '${t.id}', event)"><i class="fas fa-trash-alt"></i></button> <div class="drag-handle p-2 text-slate-500 hover:text-white cursor-grab"><i class="fas fa-grip-vertical"></i></div> </div> </div>`;
 
             let mainIndex = 0; let optIndex = 0;
@@ -1223,7 +1273,6 @@ body.rtl .floating-ai-btn {
             });
         }
 
-        // --- NEW: Render Notes ---
         function renderNotes() {
             const list = document.getElementById('notes-list'); list.innerHTML = '';
             window.appData.notes.filter(n => !n.deleted).forEach((n, index) => {
@@ -1286,6 +1335,9 @@ body.rtl .floating-ai-btn {
                 document.getElementById('timer-input').classList.add('hidden'); document.getElementById('timer-display').classList.remove('hidden');
             }
             timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
+            // Show widget timer immediately
+            document.getElementById('widget-timer-container').classList.remove('hidden');
+            
             timerInterval = setInterval(() => {
                 if(timerMode === 'stopwatch') timerSeconds++;
                 else { timerSeconds--; if(timerSeconds <= 0) { window.stopTimer(); alarmSound.play(); return; } }
@@ -1293,13 +1345,19 @@ body.rtl .floating-ai-btn {
             }, 1000); updateWidget();
         };
 
-        window.stopTimer = function() { timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; updateWidget(); };
+        window.stopTimer = function() { 
+            timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
+            document.getElementById('widget-timer-container').classList.add('hidden');
+            updateWidget(); 
+        };
         window.resetTimer = function() { window.stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); };
         
         function updateTimerDisplay() {
             const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const s = (timerSeconds % 60).toString().padStart(2, '0');
             document.getElementById('timer-display').innerText = `${m}:${s}`;
+            document.getElementById('widget-timer-val').innerText = `${m}:${s}`;
+            
             const circle = document.getElementById('timer-progress');
             const radius = circle.r.baseVal.value;
             const circumference = radius * 2 * Math.PI;
@@ -1384,11 +1442,9 @@ body.rtl .floating-ai-btn {
                         const x = e.clientX - rect.left;
                         const y = e.clientY - rect.top;
                         
-                        // 1. Set CSS Variable for Shine
                         card.style.setProperty('--mouse-x', `${x}px`);
                         card.style.setProperty('--mouse-y', `${y}px`);
 
-                        // 2. 3D Tilt Logic
                         if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
                             const centerX = rect.width / 2;
                             const centerY = rect.height / 2;
@@ -1404,30 +1460,26 @@ body.rtl .floating-ai-btn {
             } catch(err) { console.error("Init Error:", err); }
         };
 
-        // Add inside window.onload or at the bottom of the script
-const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
+        const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
 
-magneticBtns.forEach(btn => {
-    btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - (rect.left + rect.width / 2);
-        const y = e.clientY - (rect.top + rect.height / 2);
-        
-        // Move the button partially towards the mouse (magnetic pull)
-        gsap.to(btn, {
-            x: x * 0.9, // Strength of magnet
-            y: y * 0.9,
-            duration: 0.3,
-            ease: "power2.out"
+        magneticBtns.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - (rect.left + rect.width / 2);
+                const y = e.clientY - (rect.top + rect.height / 2);
+                
+                gsap.to(btn, {
+                    x: x * 0.9, 
+                    y: y * 0.9,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.3)" });
+            });
         });
-    });
-
-    btn.addEventListener('mouseleave', () => {
-        // Snap back to center
-        gsap.to(btn, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.3)" });
-    });
-});
-        
 
         function getApiKey() { return localStorage.getItem('hm_api_key') || defaultApiKey; }
 
@@ -1467,14 +1519,12 @@ magneticBtns.forEach(btn => {
         };
 
         // --- GENIE ANIMATION LOGIC ---
-        let genieOriginRect = null; // Stores where the animation comes from
+        let genieOriginRect = null; 
 
         window.openAddModal = function(type, event) {
-            // 1. Capture Origin (The Button Clicked)
             if (event && event.currentTarget) {
                 genieOriginRect = event.currentTarget.getBoundingClientRect();
             } else {
-                // Fallback to center bottom if no event passed (e.g. from AI)
                 genieOriginRect = { left: window.innerWidth / 2, top: window.innerHeight - 50, width: 0, height: 0 };
             }
 
@@ -1495,7 +1545,6 @@ magneticBtns.forEach(btn => {
             const btnBook = document.getElementById('btn-ai-book');
             const btnCourse = document.getElementById('btn-ai-course');
 
-            // Reset visibilities
             statsRow.classList.add('hidden');
             optionalRow.classList.add('hidden');
             aiArea.classList.add('hidden');
@@ -1508,9 +1557,7 @@ magneticBtns.forEach(btn => {
                 aiArea.classList.remove('hidden');
                 btnTask.classList.remove('hidden');
             } else if (type === 'note') {
-                // Notes just use desc and media, so stats hidden
             } else {
-                // Books and Courses use Stats
                 statsRow.classList.remove('hidden');
                 const lblTotal = document.getElementById('lbl-total'); const lblDone = document.getElementById('lbl-done');
                 if(type === 'book') { 
@@ -1525,12 +1572,10 @@ magneticBtns.forEach(btn => {
                 }
             }
             
-            // 2. Trigger Genie Open
             openGenieModal('generic-modal');
         };
 
         window.openEditModal = function(type, id) {
-            // Edit modal opens from center (no specific button origin usually, or could use card rect)
             genieOriginRect = null; 
             
             let list = [];
@@ -1553,7 +1598,6 @@ magneticBtns.forEach(btn => {
             const optionalRow = document.getElementById('modal-optional-row');
             const aiArea = document.getElementById('ai-suggestion-area');
             
-            // Hide AI helpers on edit to keep UI clean, or could leave them if desired. Let's hide for simplicity.
             aiArea.classList.add('hidden');
             statsRow.classList.add('hidden');
             optionalRow.classList.add('hidden');
@@ -1562,7 +1606,6 @@ magneticBtns.forEach(btn => {
                 optionalRow.classList.remove('hidden');
                 document.getElementById('modal-optional').checked = item.optional || false;
             } else if (type === 'note') {
-                // Logic handled by media loading below
             } else {
                 statsRow.classList.remove('hidden');
                 document.getElementById('modal-total').value = item.total;
@@ -1587,7 +1630,6 @@ magneticBtns.forEach(btn => {
             }
             if(item.files && item.files.length > 0) { tempFiles = [...item.files]; renderFilePreview(); }
             
-            // Open with simple fade or center grow if no genie origin
             openGenieModal('generic-modal');
         };
 
@@ -1599,9 +1641,7 @@ magneticBtns.forEach(btn => {
             overlay.classList.remove('hidden', 'opacity-0');
             wrapper.classList.remove('hidden');
             
-            // GSAP Genie Effect
             if (genieOriginRect) {
-                // Calculate distance from center to the button
                 const centerX = window.innerWidth / 2;
                 const centerY = window.innerHeight / 2;
                 
@@ -1611,30 +1651,15 @@ magneticBtns.forEach(btn => {
                 const xDist = buttonCenterX - centerX;
                 const yDist = buttonCenterY - centerY;
 
-                // Animate from button position
                 gsap.fromTo(content, 
                     {
-                        x: xDist,
-                        y: yDist,
-                        scaleX: 0.1,
-                        scaleY: 0.1,
-                        borderRadius: "50%",
-                        opacity: 0
+                        x: xDist, y: yDist, scaleX: 0.1, scaleY: 0.1, borderRadius: "50%", opacity: 0
                     },
                     {
-                        x: 0,
-                        y: 0,
-                        scaleX: 1,
-                        scaleY: 1,
-                        borderRadius: "24px", // Matches rounded-3xl
-                        opacity: 1,
-                        duration: 0.5,
-                        ease: "elastic.out(1, 0.75)", // The liquid bounce effect
-                        clearProps: "all" // Clean up after animation
+                        x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: "24px", opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.75)", clearProps: "all"
                     }
                 );
             } else {
-                // Fallback for Edit (Center Pop)
                 gsap.fromTo(content, 
                     { scale: 0.8, opacity: 0 }, 
                     { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
@@ -1645,14 +1670,11 @@ magneticBtns.forEach(btn => {
         window.closeAllModals = function() {
             const overlay = document.getElementById('modal-overlay');
             const openWrappers = document.querySelectorAll('.modal-wrapper:not(.hidden)');
-            
-            // Fade out overlay
             overlay.classList.add('opacity-0');
             
             openWrappers.forEach(wrapper => {
                 const content = wrapper.querySelector('.modal-content');
                 
-                // If closing to genie origin
                 if (genieOriginRect && wrapper.id === 'generic-modal') {
                     const centerX = window.innerWidth / 2;
                     const centerY = window.innerHeight / 2;
@@ -1662,25 +1684,15 @@ magneticBtns.forEach(btn => {
                     const yDist = buttonCenterY - centerY;
 
                     gsap.to(content, {
-                        x: xDist,
-                        y: yDist,
-                        scaleX: 0.1,
-                        scaleY: 0.1,
-                        borderRadius: "50%",
-                        opacity: 0,
-                        duration: 0.3,
-                        ease: "power2.in",
+                        x: xDist, y: yDist, scaleX: 0.1, scaleY: 0.1, borderRadius: "50%", opacity: 0, duration: 0.3, ease: "power2.in",
                         onComplete: () => {
                             wrapper.classList.add('hidden');
-                            gsap.set(content, {clearProps: "all"}); // Reset for next time
+                            gsap.set(content, {clearProps: "all"}); 
                         }
                     });
                 } else {
-                    // Simple fade out for others
                     gsap.to(content, {
-                        scale: 0.9,
-                        opacity: 0,
-                        duration: 0.2,
+                        scale: 0.9, opacity: 0, duration: 0.2,
                         onComplete: () => wrapper.classList.add('hidden')
                     });
                 }
@@ -1689,9 +1701,7 @@ magneticBtns.forEach(btn => {
             setTimeout(() => overlay.classList.add('hidden'), 300);
         };
         
-        // Wrapper for standard modal open (widget, etc)
         window.openModal = (id) => { 
-            // Reset origin so widget doesn't use last button pos
             genieOriginRect = null; 
             window.openGenieModal(id); 
         };
@@ -1704,7 +1714,6 @@ magneticBtns.forEach(btn => {
             document.getElementById('modal-drawing-preview').classList.add('hidden'); document.getElementById('modal-drawing-img').src = "";
             document.getElementById('btn-draw-label').innerText = "Add Drawing"; renderFilePreview();
             
-            // Reset Button State
             const btns = document.querySelectorAll('.interactive-btn');
             btns.forEach(btn => {
                 btn.classList.remove('loading', 'success');
@@ -1712,17 +1721,12 @@ magneticBtns.forEach(btn => {
         }
 
         window.saveItem = async function(btnElement) {
-            // 1. Validation Logic First
             const name = document.getElementById('modal-name').value;
             if(!name) return alert("Name is required");
 
-            // 2. Start Animation: Add Loading State
             if (btnElement) btnElement.classList.add('loading');
+            await new Promise(resolve => setTimeout(resolve, 800)); 
 
-            // 3. Simulate Async Process (Network/Saving delay)
-            await new Promise(resolve => setTimeout(resolve, 800)); // 800ms delay for realism
-
-            // 4. Capture Data
             const type = document.getElementById('modal-type').value; const id = document.getElementById('modal-id').value || Date.now();
             const desc = document.getElementById('modal-desc').value;
             const total = document.getElementById('modal-total').value; const done = document.getElementById('modal-done').value;
@@ -1746,30 +1750,24 @@ magneticBtns.forEach(btn => {
                 if(idx > -1) window.appData.courses[idx] = newItem; else window.appData.courses.push(newItem);
                 if(Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
             } else if(type === 'note') {
-                // Specific fields for Notes
                 newItem.drawing = tempDrawingData;
                 const idx = window.appData.notes.findIndex(x => x.id == id);
                 if(idx > -1) window.appData.notes[idx] = newItem; else window.appData.notes.push(newItem);
             }
 
-            // 5. Commit Data (Behind scenes)
             commitData(); 
             refreshAllUI();
 
-            // 6. Show Success Animation
             if (btnElement) {
                 btnElement.classList.remove('loading');
                 btnElement.classList.add('success');
             }
 
-            // 7. Wait briefly to show off the success tick, then close
-            await new Promise(resolve => setTimeout(resolve, 800)); // Show success for 0.8s
-
+            await new Promise(resolve => setTimeout(resolve, 800)); 
             window.closeAllModals();
         };
 
         window.saveCanvasDrawing = async function(btnElement) {
-            // Drawing Save Logic with Animation
             if (btnElement) btnElement.classList.add('loading');
             await new Promise(resolve => setTimeout(resolve, 600));
 
@@ -1785,7 +1783,6 @@ magneticBtns.forEach(btn => {
             await new Promise(resolve => setTimeout(resolve, 600));
             
             window.closeDrawingModal();
-            // Reset button state manually since modal stays in DOM
             if (btnElement) btnElement.classList.remove('success');
         };
 
@@ -1810,20 +1807,25 @@ magneticBtns.forEach(btn => {
         }
         window.removeTempFile = function(idx) { tempFiles.splice(idx, 1); renderFilePreview(); };
 
-        // --- Trash Logic ---
-        window.moveToTrash = function(type, id, e) {
-    e.stopPropagation();
-    const btn = e.target.closest('button');
-    const card = btn ? btn.closest('.glass-card') : null;
-    
-    if (card) { 
-        // CHANGED: 'slide-out-right' -> 'implode'
-        card.classList.add('implode'); 
-        setTimeout(() => { deleteItemLogic(type, id); }, 500); // Wait 0.5s
-    } else { 
-        deleteItemLogic(type, id); 
-    }
-};
+        // --- Crash Animation on Delete ---
+        window.moveToTrash = function(type, id, event) {
+            event.stopPropagation();
+            const btn = event.target.closest('button');
+            const card = btn ? btn.closest('.glass-card') : null;
+            
+            if (card) {
+                card.classList.remove('stagger-entry');
+                card.style.transition = 'background 0.1s, border 0.1s';
+                card.style.background = 'rgba(239, 68, 68, 0.2)'; 
+                card.style.borderColor = '#ef4444'; 
+                
+                setTimeout(() => { card.classList.add('crash-out'); }, 50);
+                setTimeout(() => { deleteItemLogic(type, id); }, 650);
+            } else {
+                deleteItemLogic(type, id);
+            }
+        };
+
         function deleteItemLogic(type, id) {
             let list = [];
             if(type === 'course') list = window.appData.courses;
@@ -1878,55 +1880,89 @@ magneticBtns.forEach(btn => {
             animate();
         }
 
-        /* Find your existing function updateWidget() and REPLACE it with this: */
-
-function updateWidget() {
-    // 1. Existing Widget Logic
-    const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
-    const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
-    const doneTasks = totalTasks - activeTasks.length;
-    const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
-    
-    if(document.getElementById('widget-tasks-val')) {
-        document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
-        document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
-    }
-
-    // 2. NEW: Gamification Logic (XP System)
-    const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0 && !b.deleted).length;
-    const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0 && !c.deleted).length;
-    
-    // XP Formula: 10xp per task, 100xp per book, 50xp per course
-    const xp = (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
-    
-    // Level Formula: Level up every 200 XP
-    const level = Math.floor(xp / 200) + 1;
-    const xpForNextLevel = 200;
-    const currentLevelXP = xp % 200;
-    const levelProgress = (currentLevelXP / xpForNextLevel) * 100;
-
-    // 3. Inject into Sidebar (Online Status area)
-    const badge = document.getElementById('user-status-badge');
-    if(badge) {
-        // Change "Online" to "Lvl X"
-        badge.innerHTML = `<i class="fas fa-crown text-yellow-400 mr-1"></i> Lvl ${level}`;
-        badge.className = "text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block border border-indigo-500/30 cursor-help relative group";
-        
-        // Add a tooltip for XP progress
-        if(!badge.querySelector('.xp-tooltip')) {
-            const tooltip = document.createElement('div');
-            tooltip.className = "xp-tooltip absolute top-full left-0 mt-2 w-32 bg-slate-900 p-2 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl";
-            tooltip.innerHTML = `
-                <div class="text-[8px] uppercase text-slate-400 mb-1">XP Progress</div>
-                <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                    <div class="h-full bg-yellow-400" style="width: ${levelProgress}%"></div>
-                </div>
-                <div class="text-[8px] text-right text-white mt-1">${currentLevelXP} / 200 XP</div>
-            `;
-            badge.appendChild(tooltip);
+        // ================= NEW: ENHANCED LEVEL LOGIC =================
+        function calculateRealXP() {
+            // FIX: Count XP from ALL COMPLETED tasks, even if they are in Trash
+            // This prevents XP/Level from resetting when you delete a task.
+            const doneTasks = window.appData.tasks.filter(t => t.completed).length;
+            
+            const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0).length;
+            const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0).length;
+            
+            // Formula: Tasks=10, Books=100, Courses=50
+            return (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
         }
-    }
-}
+
+        function updateWidget() {
+            // 1. Existing Widget Logic
+            const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
+            const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
+            const doneTasks = totalTasks - activeTasks.length;
+            const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+            
+            if(document.getElementById('widget-tasks-val')) {
+                document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
+                document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
+            }
+            
+            // Show Timer if running
+            const timerContainer = document.getElementById('widget-timer-container');
+            if(timerRunning) timerContainer.classList.remove('hidden');
+            else timerContainer.classList.add('hidden');
+
+            // 2. NEW: Gamification Logic (XP System)
+            const realXP = calculateRealXP();
+            const level = Math.floor(realXP / 200) + 1;
+            
+            // 3. Update Sidebar Badge
+            const badge = document.getElementById('user-status-badge');
+            if(badge) {
+                badge.innerHTML = `<i class="fas fa-crown text-yellow-400 mr-1"></i> Lvl ${level}`;
+            }
+
+            // 4. Update Sidebar Progress Bar
+            const nextLevelXP = level * 200; 
+            const prevLevelXP = (level - 1) * 200;
+            const levelRange = nextLevelXP - prevLevelXP;
+            const progressIntoLevel = realXP - prevLevelXP;
+            const levelPercentage = Math.min(100, Math.max(0, (progressIntoLevel / levelRange) * 100));
+
+            const sbProgress = document.getElementById('sidebar-progress-bar');
+            if(sbProgress) {
+                sbProgress.style.width = levelPercentage + "%";
+            }
+        }
+
+        window.openLevelModal = function() {
+            const modal = document.getElementById('levelModal');
+            if(!modal) return;
+            
+            modal.style.display = 'flex';
+            
+            // Get Real Data
+            let realXP = calculateRealXP();
+            let level = Math.floor(realXP / 200) + 1;
+            let nextLevelXP = level * 200; 
+            let prevLevelXP = (level - 1) * 200;
+            
+            // Update HTML elements
+            document.getElementById('displayCurrentLevel').textContent = level;
+            document.getElementById('currentXP').textContent = realXP;
+            document.getElementById('nextLevelXP').textContent = nextLevelXP;
+            document.getElementById('currentLvlLabel').textContent = "Lvl " + level;
+            document.getElementById('nextLvlLabel').textContent = "Lvl " + (level + 1);
+            
+            // Update Progress Bar
+            const levelRange = nextLevelXP - prevLevelXP;
+            const progressIntoLevel = realXP - prevLevelXP;
+            const percentage = Math.min(100, Math.max(0, (progressIntoLevel / levelRange) * 100));
+            
+            document.getElementById('levelProgressBar').style.width = percentage + "%";
+        };
+
+        window.closeLevelModal = function() {
+            document.getElementById('levelModal').style.display = 'none';
+        };
 
         window.openWidgetDetail = () => {
             const active = window.appData.tasks.filter(t => !t.completed && !t.deleted).length;
@@ -2033,7 +2069,6 @@ function updateWidget() {
             container.innerHTML += `<div id="${id}" class="flex gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center"><i class="fas fa-wand-magic-sparkles text-white text-xs"></i></div><div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble"><div class="loader-ring"></div></div></div>`;
             container.scrollTop = container.scrollHeight;
 
-            // تم إضافة تعليمات addNote للذكاء الاصطناعي هنا
             const res = await callGemini(`You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} or {"action": "addNote", "data": {"name": "Title", "desc": "Content"}} if adding. Else reply normally. User: ${txt}`);
             document.getElementById(id).remove();
             
@@ -2043,7 +2078,6 @@ function updateWidget() {
                       if(cleanJson.startsWith('{')) {
                         const action = JSON.parse(cleanJson);
                         if(action.action === 'addTask') { window.appData.tasks.push({ id: Date.now(), name: action.data.name, desc: action.data.desc||"AI Added", completed: false, optional: false }); commitData(); container.innerHTML += `<div class="glass-panel p-3 rounded-2xl text-sm text-green-300">✓ Added Task: ${action.data.name}</div>`; return; }
-                        // كود إضافة الملاحظة الجديد
                         if(action.action === 'addNote') { 
                             window.appData.notes.push({ 
                                 id: Date.now(), 
@@ -2078,270 +2112,26 @@ function updateWidget() {
         function applyTheme(t) { t==='light'?document.body.classList.add('light-mode'):document.body.classList.remove('light-mode'); }
         function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
         function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
+        
+         // Custom Cursor Logic
+        (function() {
+            const cursor = document.getElementById('shard-cursor');
+            let isVisible = false;
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+                if (!isVisible) { cursor.style.opacity = '1'; isVisible = true; }
+            });
+            const hoverTargets = `a, button, input, textarea, select, label, [role="button"], .nav-link, .glass-card, .widget-pill, .floating-ai-btn, .drag-handle, .folder-card`;
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(hoverTargets)) { document.body.classList.add('shard-hover'); } else { document.body.classList.remove('shard-hover'); }
+            });
+            document.addEventListener('mousedown', () => document.body.classList.add('shard-click'));
+            document.addEventListener('mouseup', () => document.body.classList.remove('shard-click'));
+            document.addEventListener('mouseout', (e) => {
+                if (!e.relatedTarget && !e.toElement) { cursor.style.opacity = '0'; isVisible = false; }
+            });
+        })();
     </script>
-    <div id="shard-cursor">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 3L10.5 21L12.5 13L20.5 11L3 3Z" fill="#FF8C00" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-    </svg>
-</div>
-
-<style>
-    /* 1. Hide System Cursor Globally */
-    @media (pointer: fine) {
-        body, a, button, input, textarea, select, label, .glass-card, .nav-link, * {
-            cursor: none !important;
-        }
-    }
-
-    /* 2. Custom Cursor Container */
-    #shard-cursor {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 24px;
-        height: 24px;
-        
-        /* IMPORTANT: Start invisible so it never flashes at top-left */
-        opacity: 0; 
-        
-        pointer-events: none; /* Let clicks pass through */
-        z-index: 10002;
-        
-        /* Initialize off-screen just in case */
-        transform: translate3d(-100px, -100px, 0);
-        will-change: transform;
-        
-        /* Glow Effect */
-        filter: drop-shadow(0 0 5px rgba(255, 140, 0, 0.5));
-        
-        /* Only animate opacity/filter. NEVER animate 'transform' for movement or it lags. */
-        transition: opacity 0.2s ease, filter 0.2s ease, transform 0s; 
-    }
-
-    /* 3. The SVG Icon Styling */
-    #shard-cursor svg {
-        width: 100%;
-        height: 100%;
-        transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    /* 4. Hover State (Tilt & Brighter) */
-    body.shard-hover #shard-cursor {
-        filter: drop-shadow(0 0 15px rgba(255, 140, 0, 1));
-    }
-    body.shard-hover #shard-cursor svg {
-        transform: scale(1.3) rotate(-15deg);
-    }
-
-    /* 5. Click State (Snap) */
-    body.shard-click #shard-cursor svg {
-        transform: scale(0.8) translate(2px, 2px);
-    }
-
-    /* 6. Hide on Mobile */
-    @media (hover: none) and (pointer: coarse) {
-        #shard-cursor { display: none !important; }
-        body, a, button, * { cursor: auto !important; }
-    }
-</style>
-
-<script>
-    (function() {
-        const cursor = document.getElementById('shard-cursor');
-        let isVisible = false;
-
-        // Mobile check
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
-
-        // 1. Movement Logic - Runs instantly
-        document.addEventListener('mousemove', (e) => {
-            // Instant movement using translate3d
-            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-
-            // Reveal cursor ONLY after the first movement is recorded
-            if (!isVisible) {
-                cursor.style.opacity = '1';
-                isVisible = true;
-            }
-        });
-
-        // 2. Hover Logic
-        const hoverTargets = `
-            a, button, input, textarea, select, label,
-            [role="button"], .nav-link, .glass-card, 
-            .widget-pill, .floating-ai-btn, .drag-handle, .folder-card
-        `;
-
-        document.addEventListener('mouseover', (e) => {
-            if (e.target.closest(hoverTargets)) {
-                document.body.classList.add('shard-hover');
-            } else {
-                document.body.classList.remove('shard-hover');
-            }
-        });
-
-        // 3. Click Logic
-        document.addEventListener('mousedown', () => document.body.classList.add('shard-click'));
-        document.addEventListener('mouseup', () => document.body.classList.remove('shard-click'));
-
-        // 4. Window Leave Logic
-        document.addEventListener('mouseout', (e) => {
-            if (!e.relatedTarget && !e.toElement) {
-                cursor.style.opacity = '0';
-                isVisible = false; // Reset to ensure smooth fade in next time
-            }
-        });
-
-    })();
-</script>
-</script>
-    <style>
-    /* The Crash Animation Keyframes */
-    @keyframes crashDown {
-        0% { 
-            transform: translate(0, 0) rotate(0deg); 
-            filter: brightness(1);
-        }
-        /* Phase 1: The Impact/Shake */
-        15% { transform: translate(-5px, 0) rotate(-5deg); }
-        30% { transform: translate(5px, 0) rotate(5deg); }
-        45% { transform: translate(-5px, 0) rotate(-5deg); }
-        
-        /* Phase 2: The Break & Fall */
-        60% { 
-            transform: translate(0, 10px) rotate(10deg) scale(0.9); 
-            opacity: 1;
-            filter: brightness(0.5) grayscale(1); /* Turns dark/dead */
-        }
-        100% { 
-            transform: translate(0, 150px) rotate(45deg) scale(0.5); 
-            opacity: 0; 
-        }
-    }
-
-    /* Class applied via JS */
-    .crash-out {
-        animation: crashDown 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
-        pointer-events: none; /* Prevent clicks while crashing */
-        z-index: 0;
-    }
-</style>
-
-<script>
-    // 1. Overwrite the existing moveToTrash function (Crash Animation)
-    window.moveToTrash = function(type, id, event) {
-        event.stopPropagation();
-        const btn = event.target.closest('button');
-        const card = btn ? btn.closest('.glass-card') : null;
-        
-        if (card) {
-            card.classList.remove('stagger-entry');
-            card.style.transition = 'background 0.1s, border 0.1s';
-            card.style.background = 'rgba(239, 68, 68, 0.2)'; 
-            card.style.borderColor = '#ef4444'; 
-            
-            setTimeout(() => { card.classList.add('crash-out'); }, 50);
-            setTimeout(() => { deleteItemLogic(type, id); }, 650);
-        } else {
-            deleteItemLogic(type, id);
-        }
-    };
-
-    // 2. LEVEL SYSTEM LOGIC (Synced with Real App Data)
-    function calculateRealXP() {
-        // Calculate XP based on actual app data
-        const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
-        const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
-        const doneTasks = totalTasks - activeTasks.length;
-        
-        const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0 && !b.deleted).length;
-        const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0 && !c.deleted).length;
-        
-        // Same formula used in updateWidget
-        return (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
-    }
-
-    function openLevelModal() {
-        const modal = document.getElementById('levelModal');
-        modal.style.display = 'flex';
-        
-        // Get Real Data
-        let realXP = calculateRealXP();
-        let level = Math.floor(realXP / 200) + 1;
-        let nextLevelXP = level * 200; 
-        let prevLevelXP = (level - 1) * 200;
-        
-        // Update HTML elements
-        document.getElementById('displayCurrentLevel').textContent = level;
-        document.getElementById('currentXP').textContent = realXP;
-        document.getElementById('nextLevelXP').textContent = nextLevelXP;
-        
-        // Update Progress Bar
-        const levelRange = nextLevelXP - prevLevelXP;
-        const progressIntoLevel = realXP - prevLevelXP;
-        const percentage = Math.min(100, Math.max(0, (progressIntoLevel / levelRange) * 100));
-        
-        document.getElementById('levelProgressBar').style.width = percentage + "%";
-        
-        // Update Labels
-        const labels = document.querySelectorAll('.progress-labels span');
-        if(labels.length > 1) {
-            labels[0].innerText = "Lvl " + level;
-            labels[1].innerText = "Lvl " + (level + 1);
-        }
-    }
-
-    function closeLevelModal() {
-        document.getElementById('levelModal').style.display = 'none';
-    }
-
-    // Close modal if clicking outside
-    window.onclick = function(event) {
-        const modal = document.getElementById('levelModal');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-</script>
-
-<div id="levelModal" class="modal-overlay" style="display: none;">
-    <div class="level-card">
-        <div class="modal-header">
-            <h3>User Progression</h3>
-            <button onclick="closeLevelModal()" class="close-btn" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        
-        <div class="level-info-center">
-            <div class="current-level-icon">
-                <i class="fa-solid fa-crown"></i>
-                <span>Lvl <span id="displayCurrentLevel">2</span></span>
-            </div>
-            <p class="xp-text"><span id="currentXP">150</span> / <span id="nextLevelXP">300</span> XP</p>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-bar-bg">
-                <div id="levelProgressBar" class="progress-bar-fill" style="width: 50%;"></div>
-            </div>
-            <div class="progress-labels">
-                <span>Current</span>
-                <span>Next Level</span>
-            </div>
-        </div>
-
-        <div class="xp-history">
-            <h4>Recent Gains</h4>
-            <div class="xp-item">
-                <div class="xp-icon"><i class="fa-solid fa-check-circle"></i></div>
-                <div class="xp-details">
-                    <span>Completed Task</span>
-                    <small>Today</small>
-                </div>
-                <span class="xp-amount">+10 XP</span>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
-
