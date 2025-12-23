@@ -242,7 +242,7 @@
         /* Sidebar Transitions */
         #desktop-sidebar { transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; }
         .sidebar-collapsed { width: 80px !important; }
-        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-container { display: none; }
+        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed #user-status-badge { display: none; }
         .sidebar-collapsed .nav-link,
         .sidebar-collapsed .mt-auto button { justify-content: center; padding-left: 0; padding-right: 0; }
 
@@ -559,24 +559,17 @@
         
         <!-- Desktop Sidebar -->
         <aside id="desktop-sidebar" class="hidden md:flex w-72 flex-col glass-panel m-4 rounded-3xl border-e-0 relative z-20 overflow-hidden shrink-0">
-            <div class="p-6 border-b border-white/5">
-                <div class="flex items-center gap-4 mb-3">
-                    <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
-                        <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
-                        <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
-                        <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
-                    </svg>
-                    <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
-                        <h1 class="text-xl font-bold tracking-tight">How Much</h1>
-                        <!-- ENHANCED: OnClick Open Level Modal -->
-                        <div id="user-status-badge" onclick="openLevelModal()" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block cursor-pointer hover:scale-105 transition-transform">Online</div>
-                    </div>
+            <div class="p-6 flex items-center gap-4 border-b border-white/5">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 rounded-xl shadow-lg flex-shrink-0 cursor-pointer hover:scale-110 transition-transform" onclick="toggleSidebar()">
+                    <defs><linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+                    <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
+                    <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
+                </svg>
+                <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
+                    <h1 class="text-xl font-bold tracking-tight">How Much</h1>
+                    <!-- ENHANCED: OnClick Open Level Modal -->
+                    <div id="user-status-badge" onclick="openLevelModal()" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full inline-block cursor-pointer hover:scale-105 transition-transform">Online</div>
                 </div>
-                <!-- FIXED: Visible Progress Bar in Sidebar -->
-                <div id="sidebar-progress-container" class="w-full bg-black/30 h-1.5 rounded-full overflow-hidden nav-text" onclick="openLevelModal()" style="cursor: pointer;">
-                    <div id="sidebar-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-1000" style="width: 0%"></div>
-                </div>
-                <div class="text-[10px] text-slate-500 mt-1 text-right nav-text cursor-pointer hover:text-white transition-colors" onclick="openLevelModal()">Level Progress</div>
             </div>
             
             <nav class="flex-1 px-3 space-y-2 mt-4 overflow-y-auto overflow-x-hidden">
@@ -640,11 +633,11 @@
             <!-- Mobile Header -->
             <header class="md:hidden flex items-center justify-between p-3 mx-2 mt-2 rounded-2xl glass-panel z-30 shrink-0">
                 <div class="flex items-center gap-3">
-                    <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm" onclick="openLevelModal()">
+                    <svg viewBox="0 0 100 100" class="w-8 h-8 rounded-lg shadow-sm">
                         <rect width="100" height="100" rx="20" fill="url(#sidebarGrad)"/>
                         <path d="M25 25 L25 75 M75 25 L75 75 M25 50 L75 50" stroke="white" stroke-width="12" stroke-linecap="round"/>
                     </svg>
-                    <span class="font-bold text-lg" onclick="openLevelModal()">How Much</span>
+                    <span class="font-bold text-lg">How Much</span>
                 </div>
                 <button onclick="showPage('settings')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                     <i class="fas fa-cog text-sm"></i>
@@ -869,6 +862,7 @@
 
             <!-- New Floating Widget -->
             <div id="mini-widget" onclick="openWidgetDetail()" class="widget-pill flex items-center gap-3 cursor-pointer group">
+                <!-- TIMER FIX: Ensure this is visible when running -->
                 <div id="widget-timer-container" class="flex items-center gap-2 text-yellow-400 border-e border-white/10 pe-3 me-1 hidden">
                     <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
                     <span id="widget-timer-val" class="font-mono font-bold text-sm">00:00</span>
@@ -1076,7 +1070,7 @@
             <button onclick="saveCanvasDrawing(this)" class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 w-24">
                 <span class="btn-text-content"><i class="fas fa-check mr-1"></i> Save</span>
                 <span class="btn-loader">
-                      <span class="dot-wave"></span><span class="dot-wave"></span><span class="dot-wave"></span>
+                     <span class="dot-wave"></span><span class="dot-wave"></span><span class="dot-wave"></span>
                 </span>
                 <span class="btn-success-icon"><i class="fas fa-check"></i></span>
             </button>
@@ -1167,6 +1161,8 @@
                 if(s.exists()) { 
                     window.appData = { ...window.appData, ...s.data() }; 
                     if(!window.appData.notes) window.appData.notes = [];
+                    // Ensure stats object exists for legacy XP
+                    if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
                     
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
                     refreshAllUI();
@@ -1184,7 +1180,8 @@
         // --- Core App Logic & State ---
         window.appData = { 
             courses: [], tasks: [], books: [], notes: [], 
-            settings: { theme: 'dark', lang: 'en', accent: '#6366f1' } 
+            settings: { theme: 'dark', lang: 'en', accent: '#6366f1' },
+            stats: { historicXP: 0 } // Fix for level reset
         };
 
         // --- Core UI Functions ---
@@ -1334,10 +1331,11 @@
                 timerTarget = mins * 60; timerSeconds = timerTarget;
                 document.getElementById('timer-input').classList.add('hidden'); document.getElementById('timer-display').classList.remove('hidden');
             }
-            timerRunning = true; document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
-            // Show widget timer immediately
+            timerRunning = true; 
+            document.getElementById('icon-timer-toggle').className = 'fas fa-pause';
+            // TIMER FIX: Show widget when running
             document.getElementById('widget-timer-container').classList.remove('hidden');
-            
+
             timerInterval = setInterval(() => {
                 if(timerMode === 'stopwatch') timerSeconds++;
                 else { timerSeconds--; if(timerSeconds <= 0) { window.stopTimer(); alarmSound.play(); return; } }
@@ -1346,18 +1344,28 @@
         };
 
         window.stopTimer = function() { 
-            timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; 
+            timerRunning = false; clearInterval(timerInterval); document.getElementById('icon-timer-toggle').className = 'fas fa-play'; updateWidget(); 
+        };
+        
+        window.resetTimer = function() { 
+            window.stopTimer(); 
+            if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } 
+            timerSeconds = 0; 
+            // TIMER FIX: Hide widget on reset
             document.getElementById('widget-timer-container').classList.add('hidden');
+            updateTimerDisplay(); 
             updateWidget(); 
         };
-        window.resetTimer = function() { window.stopTimer(); if(timerMode !== 'stopwatch') { document.getElementById('timer-display').classList.add('hidden'); document.getElementById('timer-input').classList.remove('hidden'); } timerSeconds = 0; updateTimerDisplay(); updateWidget(); };
         
         function updateTimerDisplay() {
             const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
             const s = (timerSeconds % 60).toString().padStart(2, '0');
             document.getElementById('timer-display').innerText = `${m}:${s}`;
-            document.getElementById('widget-timer-val').innerText = `${m}:${s}`;
             
+            // Also update widget value
+            const widgetTimer = document.getElementById('widget-timer-val');
+            if(widgetTimer) widgetTimer.innerText = `${m}:${s}`;
+
             const circle = document.getElementById('timer-progress');
             const radius = circle.r.baseVal.value;
             const circumference = radius * 2 * Math.PI;
@@ -1420,6 +1428,8 @@
                         if(cat === 'tasks' && typeof x.optional === 'undefined') x.optional = false;
                     });
                 });
+                // Ensure stats object is initialized
+                if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
 
                 gsap.timeline()
                     .from("#splash-screen svg", { scale: 0, rotation: -90, duration: 1.5, ease: "elastic.out(1, 0.5)" })
@@ -1847,14 +1857,40 @@
             if(item) { item.deleted = false; commitData(); refreshAllUI(); }
         };
         window.permanentDelete = function(type, id) {
+            // XP FIX: Calculate XP before permanent deletion
+            if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
+            
+            let item;
+            if(type === 'course') item = window.appData.courses.find(x => x.id == id);
+            else if(type === 'task') item = window.appData.tasks.find(x => x.id == id);
+            else if(type === 'book') item = window.appData.books.find(x => x.id == id);
+
+            if(item) {
+                if(type === 'task' && item.completed) window.appData.stats.historicXP += 10;
+                if(type === 'book' && item.done >= item.total && item.total > 0) window.appData.stats.historicXP += 100;
+                if(type === 'course' && item.done >= item.total && item.total > 0) window.appData.stats.historicXP += 50;
+            }
+
              if(type === 'course') window.appData.courses = window.appData.courses.filter(x => x.id != id);
              if(type === 'task') window.appData.tasks = window.appData.tasks.filter(x => x.id != id);
              if(type === 'book') window.appData.books = window.appData.books.filter(x => x.id != id);
              if(type === 'note') window.appData.notes = window.appData.notes.filter(x => x.id != id);
              commitData(); refreshAllUI();
         };
+        
         window.emptyTrash = function() {
             if(!confirm("Permanently delete all items in trash?")) return;
+            
+            // XP FIX: Calculate XP from trash items before deleting them forever
+            if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
+            
+            const trashTasks = window.appData.tasks.filter(x => x.deleted && x.completed);
+            const trashBooks = window.appData.books.filter(x => x.deleted && x.done >= x.total && x.total > 0);
+            const trashCourses = window.appData.courses.filter(x => x.deleted && x.done >= x.total && x.total > 0);
+            
+            let gainedXP = (trashTasks.length * 10) + (trashBooks.length * 100) + (trashCourses.length * 50);
+            window.appData.stats.historicXP = (window.appData.stats.historicXP || 0) + gainedXP;
+
             window.appData.courses = window.appData.courses.filter(x => !x.deleted);
             window.appData.tasks = window.appData.tasks.filter(x => !x.deleted);
             window.appData.books = window.appData.books.filter(x => !x.deleted);
@@ -1882,15 +1918,18 @@
 
         // ================= NEW: ENHANCED LEVEL LOGIC =================
         function calculateRealXP() {
-            // FIX: Count XP from ALL COMPLETED tasks, even if they are in Trash
-            // This prevents XP/Level from resetting when you delete a task.
-            const doneTasks = window.appData.tasks.filter(t => t.completed).length;
+            // FIX: Count tasks even if they are in trash (deleted=true) but completed
+            const completedTasks = window.appData.tasks.filter(t => t.completed).length; 
             
+            // FIX: Count books/courses regardless of delete status
             const booksRead = window.appData.books.filter(b => b.done >= b.total && b.total > 0).length;
             const coursesDone = window.appData.courses.filter(c => c.done >= c.total && c.total > 0).length;
             
+            // Add legacy XP from permanently deleted items
+            const legacy = window.appData.stats ? (window.appData.stats.historicXP || 0) : 0;
+
             // Formula: Tasks=10, Books=100, Courses=50
-            return (doneTasks * 10) + (booksRead * 100) + (coursesDone * 50);
+            return legacy + (completedTasks * 10) + (booksRead * 100) + (coursesDone * 50);
         }
 
         function updateWidget() {
@@ -1904,32 +1943,17 @@
                 document.getElementById('widget-tasks-val').innerText = activeTasks.length + " Left";
                 document.getElementById('widget-progress-ring').setAttribute('stroke-dasharray', `${progress}, 100`);
             }
-            
-            // Show Timer if running
-            const timerContainer = document.getElementById('widget-timer-container');
-            if(timerRunning) timerContainer.classList.remove('hidden');
-            else timerContainer.classList.add('hidden');
 
             // 2. NEW: Gamification Logic (XP System)
             const realXP = calculateRealXP();
             const level = Math.floor(realXP / 200) + 1;
             
-            // 3. Update Sidebar Badge
+            // 3. Inject into Sidebar Badge
             const badge = document.getElementById('user-status-badge');
             if(badge) {
+                // Change "Online" to "Lvl X" with icon
                 badge.innerHTML = `<i class="fas fa-crown text-yellow-400 mr-1"></i> Lvl ${level}`;
-            }
-
-            // 4. Update Sidebar Progress Bar
-            const nextLevelXP = level * 200; 
-            const prevLevelXP = (level - 1) * 200;
-            const levelRange = nextLevelXP - prevLevelXP;
-            const progressIntoLevel = realXP - prevLevelXP;
-            const levelPercentage = Math.min(100, Math.max(0, (progressIntoLevel / levelRange) * 100));
-
-            const sbProgress = document.getElementById('sidebar-progress-bar');
-            if(sbProgress) {
-                sbProgress.style.width = levelPercentage + "%";
+                badge.className = "text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block border border-indigo-500/30 cursor-pointer hover:scale-110 transition-transform relative group shadow-sm";
             }
         }
 
@@ -2113,7 +2137,7 @@
         function applyLanguage(l) { document.body.classList.toggle('rtl', l==='ar'); document.getElementById('current-lang-display').innerText = l==='ar'?'العربية':'English'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[l] && translations[l][key]) el.innerText = translations[l][key]; }); refreshAllUI(); }
         function applyAccentColor(c) { document.documentElement.style.setProperty('--accent-color', c); document.documentElement.style.setProperty('--accent-glow', c + '80'); }
         
-         // Custom Cursor Logic
+                // Custom Cursor Logic
         (function() {
             const cursor = document.getElementById('shard-cursor');
             let isVisible = false;
