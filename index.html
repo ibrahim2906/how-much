@@ -17,6 +17,7 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -502,52 +503,91 @@
         @media (pointer: fine) { body, a, button, input, textarea, select, label, .glass-card, .nav-link, * { cursor: none !important; } }
         @media (hover: none) and (pointer: coarse) { #shard-cursor { display: none !important; } body, a, button, * { cursor: auto !important; } }
 
-        /* --- 4. AZKAR PAGE STYLES --- */
+        /* --- 4. AZKAR PAGE STYLES (Islamic Theme) --- */
         #page-azkar {
-            --azkar-gold: #fbbf24;
-            --azkar-teal: #14b8a6;
-            --azkar-bg-card: rgba(15, 23, 42, 0.6);
-            --azkar-border: rgba(251, 191, 36, 0.2);
+            /* لوحة ألوان إسلامية خاصة بهذه الصفحة فقط */
+            --azkar-gold: #D4AF37;       /* ذهبي معدني */
+            --azkar-deep-green: #064E3B; /* أخضر داكن روحاني */
+            --azkar-light-green: #10B981;
+            --azkar-text-cream: #FEF3C7; /* لون كريمي مريح للعين */
+            --azkar-glow: rgba(212, 175, 55, 0.3);
         }
-
-        .azkar-theme-btn {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border: 1px solid var(--azkar-border);
-            color: #e2e8f0;
-            transition: all 0.3s ease;
+        
+        /* تنسيق الخط العثماني */
+        #page-azkar .uthmani-font {
+            font-family: 'Amiri', serif; /* الخط الجديد */
+            line-height: 2.2;            /* زيادة المسافة بين السطور لتوضيح التشكيل */
+            font-size: 1.4rem;           /* حجم أكبر قليلاً للقراءة */
+            color: var(--azkar-text-cream);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
-        .azkar-theme-btn.active {
-            background: linear-gradient(135deg, var(--azkar-gold), #d97706);
-            color: #000;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+        
+        /* أزرار التبديل (صباح/مساء) */
+        #page-azkar .azkar-theme-btn {
+            background: rgba(6, 78, 59, 0.4);
+            border: 1px solid var(--azkar-gold);
+            color: var(--azkar-gold);
+            font-family: 'Amiri', serif;
             font-weight: bold;
+            font-size: 1.1rem;
         }
-
-        .zikr-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(20, 184, 166, 0.05) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-right: 3px solid var(--azkar-gold);
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s, box-shadow 0.2s;
+        
+        #page-azkar .azkar-theme-btn.active {
+            background: linear-gradient(135deg, var(--azkar-gold), #B45309);
+            color: #0f172a;
+            box-shadow: 0 0 20px var(--azkar-glow);
+            border-color: transparent;
+        }
+        
+        /* بطاقة الذكر */
+        #page-azkar .zikr-card {
+            /* خلفية متدرجة خضراء داكنة */
+            background: linear-gradient(160deg, rgba(6, 78, 59, 0.8) 0%, rgba(2, 44, 34, 0.9) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2); /* حدود ذهبية خفيفة */
+            border-right: 4px solid var(--azkar-gold);  /* زخرفة جانبية */
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .zikr-card:active { transform: scale(0.98); }
-        .zikr-card.completed { border-color: #10b981; border-right-color: #10b981; opacity: 0.6; }
-        
-        .zikr-counter-ring {
-            transition: stroke-dashoffset 0.3s ease;
-        }
-        
-        /* الزخرفة الإسلامية الخلفية */
-        .islamic-bg-pattern {
-            position: absolute; top:0; left:0; width:100%; height:100%;
+        /* زخرفة إسلامية خفيفة داخل البطاقة */
+        #page-azkar .zikr-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(var(--azkar-gold) 1px, transparent 1px);
-            background-size: 30px 30px;
-            opacity: 0.03;
+            background-size: 20px 20px;
+            opacity: 0.05;
             pointer-events: none;
-            z-index: 0;
+        }
+        
+        #page-azkar .zikr-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: var(--azkar-gold);
+        }
+        
+        #page-azkar .zikr-card:active {
+            transform: scale(0.98);
+        }
+        
+        /* حالة الانتهاء من الذكر */
+        #page-azkar .zikr-card.completed {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: #333;
+            border-right-color: var(--azkar-light-green);
+            opacity: 0.7;
+        }
+        
+        #page-azkar .zikr-card.completed .uthmani-font {
+            color: #94a3b8; /* لون باهت عند الانتهاء */
+            text-shadow: none;
+        }
+        
+        /* دائرة العداد */
+        #page-azkar .zikr-counter-ring {
+            transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
         }
     </style>
 </head>
@@ -915,7 +955,7 @@
                 <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20" dir="rtl">
                     <div class="text-center mb-6 relative">
                         <div class="islamic-bg-pattern"></div>
-                        <h2 class="text-3xl md:text-4xl font-bold mb-2 text-[#fbbf24] drop-shadow-lg" style="font-family: 'Cairo', sans-serif;">ألا بذكر الله تطمئن القلوب</h2>
+                        <h2 class="text-3xl md:text-5xl font-bold mb-2 drop-shadow-lg uthmani-font" style="color: var(--azkar-gold);">ألا بذكر الله تطمئن القلوب</h2>
                         <p class="text-slate-400 text-sm">حصن المسلم اليومي</p>
                     </div>
 
@@ -2259,13 +2299,13 @@ const azkarDB = {
     { id: 22, count: 1, text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا.", note: "بعد الفجر" }
   ],
   evening: [
-    { id: 23, count: 1, text: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ", note: "أجير من الجن حتى يصبح" },
+    { id: 23, count: 1, text: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ.", note: "أجير من الجن حتى يصبح" },
     { id: 24, count: 3, text: "قُلْ هُوَ ٱللَّهُ أَحَدٌ... (والمعوذتين)", note: "تكفيك من كل شيء" },
     { id: 25, count: 1, text: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ." },
     { id: 26, count: 1, text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ." },
     { id: 27, count: 1, text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ (سيد الاستغفار)", note: "من مات من ليلته دخل الجنة" },
-    { id: 28, count: 1, text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي" },
-    { id: 29, count: 1, text: "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ" },
+    { id: 28, count: 1, text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي." },
+    { id: 29, count: 1, text: ".اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ" },
     { id: 30, count: 3, text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ" },
     { id: 31, count: 3, text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.", note: "لم تضره حمة تلك الليلة" },
     { id: 32, count: 3, text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا."},
@@ -2292,7 +2332,7 @@ const azkarDB = {
     { id: 52, count: 100, text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ." },
     { id: 53, count: 100, text: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ." },
     { id: 54, count: 10, text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ." },
-    { id: 55, count: 3, text: "أَسْتَغْفِرُ اللهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومَ وَأَتُوبُ إِلَيْهِ.", note: "يُغفر له وإن فر من الزحف" },
+    { id: 55, count: 3, text: "أَسْتَغْفِرُ اللهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ.", note: "يُغفر له وإن فر من الزحف" },
     { id: 56, count: 1, text: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ." },
     { id: 57, count: 1, text: "اللَّهُمَّ آتِ نَفْسِي تَقْوَاهَا، وَزَكِّهَا أَنْتَ خَيْرُ مَنْ زَكَّاهَا، أَنْتَ وَلِيُّهَا وَمَوْلَاهَا." },
     { id: 58, count: 1, text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى، وَالتُّقَى، وَالْعَفَافَ، وَالْغِنَى." },
@@ -2333,34 +2373,32 @@ const azkarDB = {
             renderAzkarList();
         }
 
-        function renderAzkarList() {
+function renderAzkarList() {
             const list = document.getElementById('azkar-list');
             list.innerHTML = '';
             
             const items = azkarDB[currentAzkarMode];
             
             items.forEach((zikr, index) => {
-                // Check if already counting, else start from max
                 const currentCount = azkarProgress[zikr.id] !== undefined ? azkarProgress[zikr.id] : zikr.count;
                 const isDone = currentCount === 0;
                 const percent = ((zikr.count - currentCount) / zikr.count) * 100;
 
                 list.innerHTML += `
-                <div class="zikr-card stagger-entry p-5 rounded-2xl flex flex-col gap-4 cursor-pointer select-none ${isDone ? 'completed' : ''}" 
+                <div class="zikr-card stagger-entry p-5 flex flex-col gap-4 cursor-pointer select-none ${isDone ? 'completed' : ''}" 
                      style="animation-delay: ${index * 0.05}s"
                      onclick="handleZikrClick(${zikr.id}, ${zikr.count})">
                     
-                    <div class="flex justify-between items-start">
-                        <div class="text-white text-right text-lg md:text-xl font-medium leading-relaxed font-['Cairo'] flex-1 ml-4">
+                    <div class="flex justify-between items-start z-10 relative"> <div class="uthmani-font text-right flex-1 ml-4">
                             ${zikr.text}
-                            ${zikr.note ? `<span class="text-xs text-[#fbbf24] block mt-1">${zikr.note}</span>` : ''}
+                            ${zikr.note ? `<span class="text-sm block mt-2 opacity-80" style="font-family: 'Cairo', sans-serif; color: var(--azkar-gold);">${zikr.note}</span>` : ''}
                         </div>
                         
-                        <div class="relative w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                        <div class="relative w-16 h-16 flex-shrink-0 flex items-center justify-center mt-1">
                             <svg class="w-full h-full transform -rotate-90">
-                                <circle cx="28" cy="28" r="24" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="none"></circle>
-                                <circle cx="28" cy="28" r="24" stroke="${isDone ? '#10b981' : '#fbbf24'}" stroke-width="4" fill="none" 
-                                        stroke-dasharray="151" stroke-dashoffset="${151 - (151 * percent / 100)}" 
+                                <circle cx="32" cy="32" r="26" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="none"></circle>
+                                <circle cx="32" cy="32" r="26" stroke="${isDone ? '#10b981' : 'var(--azkar-gold)'}" stroke-width="4" fill="none" 
+                                        stroke-dasharray="163" stroke-dashoffset="${163 - (163 * percent / 100)}" 
                                         class="zikr-counter-ring"></circle>
                             </svg>
                             ${isDone 
@@ -2370,11 +2408,10 @@ const azkarDB = {
                         </div>
                     </div>
 
-                    ${!isDone ? `<div class="text-xs text-slate-400 text-center mt-[-10px]">اضغط للعد</div>` : ''}
+                    ${!isDone ? `<div class="text-xs text-slate-400 text-center mt-[-5px] opacity-50 font-['Cairo']">اضغط للعد</div>` : ''}
                 </div>`;
             });
         }
-
         function handleZikrClick(id, max) {
             if (azkarProgress[id] === undefined) azkarProgress[id] = max;
             
