@@ -609,53 +609,35 @@
     <div class="nebula-orb accent-bg bottom-20 right-20 w-80 h-80" style="background: var(--accent-color); filter: blur(100px) hue-rotate(30deg);"></div>
 
     <!-- Splash Screen -->
-<div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0f172a] text-white overflow-hidden" style="perspective: 1000px;">
+<div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0f172a] text-white overflow-hidden">
     
-    <div class="relative w-40 h-40 mb-8" style="transform-style: preserve-3d;">
-        
-        <div id="origami-logo" class="absolute inset-0 flex items-center justify-center z-0 scale-50 opacity-0">
-             <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-2xl">
-                <defs>
-                    <linearGradient id="origamiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#6366f1"/>
-                        <stop offset="100%" stop-color="#a855f7"/>
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="45" fill="url(#origamiGrad)"/>
-                <path d="M30 30 L30 70 M70 30 L70 70 M30 50 L70 50" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
+    <div class="relative w-32 h-32 mb-6">
+        <svg id="final-svg" viewBox="0 0 100 100" class="w-full h-full absolute inset-0 z-20 opacity-0 drop-shadow-2xl">
+            <defs>
+                <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" class="stop-color-1" stop-color="#6366f1"/>
+                    <stop offset="100%" class="stop-color-2" stop-color="#a855f7"/>
+                </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="url(#splashGrad)"/>
+            <path d="M30 30 L30 70 M70 30 L70 70 M30 50 L70 50" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
 
-        <div class="origami-flap absolute top-0 left-0 w-full h-1/2 origin-bottom z-20" 
-             style="background: linear-gradient(to top, #4f46e5, #4338ca); clip-path: polygon(0 0, 50% 100%, 100% 0);">
-        </div>
-        
-        <div class="origami-flap absolute bottom-0 left-0 w-full h-1/2 origin-top z-20" 
-             style="background: linear-gradient(to bottom, #4338ca, #3730a3); clip-path: polygon(0 100%, 50% 0, 100% 100%);">
-        </div>
-
-        <div class="origami-flap absolute top-0 left-0 w-1/2 h-full origin-right z-30" 
-             style="background: linear-gradient(to left, #6366f1, #4f46e5); clip-path: polygon(0 0, 100% 50%, 0 100%);">
-        </div>
-
-        <div class="origami-flap absolute top-0 right-0 w-1/2 h-full origin-left z-30" 
-             style="background: linear-gradient(to right, #6366f1, #4f46e5); clip-path: polygon(100% 0, 0 50%, 100% 100%);">
-        </div>
-        
-        <div id="center-crease" class="absolute inset-0 pointer-events-none z-40 opacity-0 bg-white mix-blend-overlay"></div>
-
+        <svg id="sketch-svg" viewBox="0 0 100 100" class="w-full h-full absolute inset-0 z-10">
+            <circle class="sketch-path" cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round" />
+            <path class="sketch-path" d="M30 30 L30 70 M70 30 L70 70 M30 50 L70 50" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
     </div>
 
-    <div class="text-center z-10 overflow-hidden perspective-500">
-        <h1 id="splash-title" class="text-5xl font-bold tracking-tight text-white font-sans opacity-0" style="transform-origin: top center;">
+    <div class="text-center overflow-hidden">
+        <h1 id="splash-title" class="text-5xl font-bold tracking-tight text-white font-sans translate-y-10 opacity-0">
             How Much
         </h1>
-        <div id="splash-subtitle" class="mt-3 opacity-0 text-slate-400 font-light tracking-[0.3em] text-sm uppercase">
-            Unfold Your Potential
-        </div>
+        <p id="splash-subtitle" class="text-slate-400 mt-3 font-light tracking-[0.3em] text-sm uppercase translate-y-10 opacity-0">
+            Life Operating System
+        </p>
     </div>
 </div>
-
     <!-- Login Screen -->
     <div id="login-screen" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
         <div class="glass-panel w-full max-w-md p-8 rounded-3xl text-center border-t border-white/10">
@@ -1577,87 +1559,73 @@
                 });
                 // Ensure stats object is initialized
                 if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
-
-                                // هذا هو الكود القديم الذي يجب حذفه
-                // --- ORIGAMI UNFOLD ANIMATION LOGIC ---
+// --- SKETCH TO LIFE ANIMATION LOGIC ---
                 const splashTl = gsap.timeline({
+                    delay: 0.3, // تأخير بسيط قبل البدء
                     onComplete: () => {
                         document.getElementById("splash-screen").style.display = 'none';
                     }
                 });
 
-                // 1. التهيئة الأولية: تدوير وتصغير الحاوية لتعطي شعور الورقة المطوية
-                gsap.set("#splash-screen .relative", { rotation: 45, scale: 0.8 });
-
-                // 2. حركة فتح الطيات (Unfolding)
-                // نفتح الجوانب أولاً (Left/Right)
-                splashTl.to(".origami-flap:nth-of-type(3)", { // Left
-                    rotateY: -180,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power2.inOut"
+                // 1. إعداد خطوط الرسم (Sketch Setup)
+                // نقوم بحساب طول كل خط وإخفائه باستخدام strokeDasharray و strokeDashoffset
+                const sketchPaths = document.querySelectorAll('.sketch-path');
+                sketchPaths.forEach(path => {
+                    const length = path.getTotalLength();
+                    gsap.set(path, {
+                        strokeDasharray: length,
+                        strokeDashoffset: length
+                    });
                 });
-                splashTl.to(".origami-flap:nth-of-type(4)", { // Right
-                    rotateY: 180,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power2.inOut"
-                }, "<"); // يبدأ في نفس الوقت
 
-                // ثم نفتح الأعلى والأسفل (Top/Bottom)
-                splashTl.to(".origami-flap:nth-of-type(1)", { // Top
-                    rotateX: 180,
+                // 2. مرحلة الرسم (The Sketch Phase)
+                // رسم الخطوط البيضاء كأنها تُرسَم بقلم
+                splashTl.to(sketchPaths, {
+                    strokeDashoffset: 0,
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    stagger: 0.3 // الدائرة تُرسم أولاً ثم حرف H
+                });
+
+                // 3. مرحلة التحول للحياة (The Transformation Phase)
+                // نخفي السكتش ونظهر الشعار الملون في نفس اللحظة بتأثير "نبضة"
+                splashTl.to("#sketch-svg", {
                     opacity: 0,
-                    duration: 0.8,
-                    ease: "power2.inOut"
-                }, "-=0.4"); // تداخل زمني
+                    duration: 0.5,
+                    ease: "power2.in"
+                }, "+=0.1"); // انتظار قصير بعد اكتمال الرسم
+
+                splashTl.fromTo("#final-svg", 
+                    { opacity: 0, scale: 0.9 },
+                    { opacity: 1, scale: 1.05, duration: 0.6, ease: "back.out(2)" }, // تأثير الـ Pop القوي
+                    "<" // يبدأ في نفس وقت إخفاء السكتش تماماً
+                );
                 
-                splashTl.to(".origami-flap:nth-of-type(2)", { // Bottom
-                    rotateX: -180,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power2.inOut"
-                }, "<");
+                splashTl.to("#final-svg", {
+                     scale: 1,
+                     duration: 0.3,
+                     ease: "power2.inOut"
+                }, ">-0.2"); // عودة للحجم الطبيعي بهدوء
 
-                // 3. تعديل وضع الحاوية (تدويرها للوضع الطبيعي 0)
-                splashTl.to("#splash-screen .relative", {
-                    rotation: 0,
-                    scale: 1,
-                    duration: 1.2,
-                    ease: "elastic.out(1, 0.75)"
-                }, "-=1.0");
-
-                // 4. ظهور الشعار من الداخل
-                splashTl.to("#origami-logo", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.6,
-                    ease: "back.out(1.5)"
-                }, "-=0.8");
-
-                // 5. ظهور النصوص (تأثير سقوط ثلاثي الأبعاد)
-                splashTl.fromTo("#splash-title", 
-                    { rotationX: -90, y: -20, opacity: 0 },
-                    { rotationX: 0, y: 0, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }
-                , "-=0.4");
-
-                splashTl.to("#splash-subtitle", {
-                    opacity: 1,
+                // 4. ظهور النصوص (Text Reveal)
+                splashTl.to("#splash-title, #splash-subtitle", {
                     y: 0,
-                    duration: 0.6
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    ease: "power3.out"
                 }, "-=0.4");
 
-                // 6. الخروج النهائي (Fade Out & Scale Up)
+                // 5. الخروج النهائي (Exit)
+                // تلاشي هادئ للشاشة
                 splashTl.to("#splash-screen", {
                     opacity: 0,
-                    scale: 1.1,
-                    pointerEvents: "none",
-                    duration: 0.7,
+                    duration: 0.8,
                     ease: "power2.inOut",
-                    delay: 0.5
+                    delay: 0.8 // إطالة مدة بقاء الشعار النهائي والنص ليقرأه المستخدم
                 });
                 
-                // --- END ANIMATION ---
+                // --- END ANIMATION ---                
                 applyTheme(window.appData.settings.theme);
                 applyLanguage(window.appData.settings.lang);
                 applyAccentColor(window.appData.settings.accent || '#6366f1');
@@ -2550,5 +2518,4 @@ function renderAzkarList() {
     </script>
 </body> 
 </html>
-
 
