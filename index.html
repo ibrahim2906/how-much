@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -30,8 +31,21 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* تعريف الخط المركب */
+        @font-face {
+            font-family: 'GlobalFont';
+            src: local('Plus Jakarta Sans');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        @font-face {
+            font-family: 'GlobalFont';
+            src: local('Cairo');
+            unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* الترتيب هنا يضمن استخدام Cairo للحروف العربية حتى لو كانت لغة الموقع إنجليزية */
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
             overflow: hidden;
             background-color: #0f172a;
             color: #f8fafc;
@@ -1522,42 +1536,55 @@
         </div>
     </div>
 
-    <div id="drawing-modal" class="fixed inset-0 bg-[#0f172a] hidden flex-col z-[70] animate-fade-in" role="dialog" aria-modal="true" aria-label="Drawing canvas">
+    <div id="drawing-modal" class="fixed inset-0 bg-[#0f172a] hidden flex-col z-[70]" role="dialog" aria-modal="true" aria-label="Drawing canvas">
         <div class="h-16 bg-[#1e293b] flex items-center justify-between px-4 shrink-0 border-b border-white/10 shadow-lg relative z-10">
-            <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white" aria-label="Exit drawing">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i> 
-                <span data-i18n="back">Exit</span>
+            <button onclick="closeDrawingModal()" class="text-slate-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> <span data-i18n="back">Exit</span>
             </button>
 
-            <div class="flex items-center gap-4 bg-black/20 p-1.5 rounded-lg border border-white/5">
-                <input type="color" id="brush-color" class="w-8 h-8 rounded cursor-pointer bg-transparent border-0" value="#ffffff" aria-label="Brush color">
-                <input type="range" id="brush-size" min="1" max="20" value="4" class="w-20 accent-indigo-500" aria-label="Brush size">
-                <div class="w-px h-6 bg-white/10" aria-hidden="true"></div>
-                <button onclick="setEraser()" class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center" aria-label="Eraser">
-                    <i class="fas fa-eraser" aria-hidden="true"></i>
+            <div class="flex items-center gap-3 bg-black/20 p-1.5 rounded-lg border border-white/5 overflow-x-auto">
+                <button onclick="addTextToCanvas()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="إضافة نص"><i class="fas fa-font"></i></button>
+                
+                <label class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center cursor-pointer" title="إضافة صورة">
+                    <i class="fas fa-image"></i>
+                    <input type="file" class="hidden" accept="image/*" onchange="addImageToCanvas(this)">
+                </label>
+                
+                <div class="w-px h-6 bg-white/10"></div>
+                
+                <button onclick="toggleDrawMode(true)" id="btn-draw-mode" class="w-8 h-8 rounded hover:bg-white/10 text-indigo-400" title="رسم حر"><i class="fas fa-pencil-alt"></i></button>
+                <button onclick="toggleDrawMode(false)" id="btn-select-mode" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="تحديد وتحريك"><i class="fas fa-mouse-pointer"></i></button>
+                
+                <div class="w-px h-6 bg-white/10"></div>
+                
+                <input type="color" id="brush-color" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0" value="#ffffff" onchange="updateBrush()">
+                <input type="range" id="brush-size" min="1" max="50" value="4" class="w-20 accent-indigo-500" oninput="updateBrush()">
+                
+                <div class="w-px h-6 bg-white/10"></div>
+
+                <button onclick="deleteSelectedObject()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="حذف العنصر المحدد">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
-                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400 flex items-center justify-center" aria-label="Clear canvas">
-                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                
+                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="مسح اللوحة بالكامل">
+                    <i class="fas fa-bomb"></i>
+                </button>
+
+                <div class="w-px h-6 bg-white/10"></div>
+
+                <button onclick="downloadCanvasAsPNG()" class="w-8 h-8 rounded hover:bg-green-500/20 text-green-400" title="تنزيل كصورة">
+                    <i class="fas fa-download"></i>
                 </button>
             </div>
 
-            <button onclick="saveCanvasDrawing(this)" class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 w-24" aria-label="Save drawing">
-                <span class="btn-text-content">
-                    <i class="fas fa-check mr-1" aria-hidden="true"></i> Save
-                </span>
-                <span class="btn-loader" aria-hidden="true">
-                    <span class="dot-wave"></span>
-                    <span class="dot-wave"></span>
-                    <span class="dot-wave"></span>
-                </span>
-                <span class="btn-success-icon" aria-hidden="true">
-                    <i class="fas fa-check"></i>
-                </span>
+            <button onclick="saveCanvasDrawing(this)" class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold w-24">
+                <span class="btn-text-content">Save</span>
+                <span class="btn-loader">...</span>
             </button>
         </div>
 
-        <div class="flex-1 relative overflow-hidden bg-[#0f172a] flex items-center justify-center touch-none" id="canvas-container" style="background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px;">
-            <canvas id="paint-canvas" class="shadow-2xl bg-transparent" aria-label="Drawing canvas"></canvas>
+        <div class="flex-1 relative overflow-hidden bg-[#0f172a] flex items-center justify-center" id="canvas-container-wrapper">
+            <canvas id="fabric-canvas"></canvas>
         </div>
     </div>
 
@@ -2397,8 +2424,7 @@
                 }
 
                 refreshAllUI();
-                setupCanvas();
-                
+
                 if(window.Sortable) initSortables();
             
                 document.addEventListener('mousemove', (e) => {
@@ -3330,120 +3356,228 @@
         document.getElementById('modal-drawing-img').src = "";
         document.getElementById('btn-draw-label').innerText = "Add Drawing";
     };
+   // ==========================================
+    //  FABRIC.JS LOGIC (كود الرسم المصحح)
+    // ==========================================
+    let fCanvas = null;
 
-    let canvas, ctx, isDrawing = false;
-    
-    function setupCanvas() {
-        canvas = document.getElementById('paint-canvas');
-        if(!canvas) return;
-        
-        ctx = canvas.getContext('2d');
-        resizeCanvas();
-        
-        window.addEventListener('resize', resizeCanvas);
-        
-        const start = (e) => {
-            isDrawing = true;
-            ctx.beginPath();
-            
-            const rect = canvas.getBoundingClientRect();
-            const x = e.offsetX !== undefined ? e.offsetX : e.touches[0].clientX - rect.left;
-            const y = e.offsetY !== undefined ? e.offsetY : e.touches[0].clientY - rect.top;
-            
-            ctx.moveTo(x, y);
-        };
-        
-        const move = (e) => {
-            if(!isDrawing) return;
-            e.preventDefault();
-            
-            const rect = canvas.getBoundingClientRect();
-            const x = e.offsetX !== undefined ? e.offsetX : e.touches[0].clientX - rect.left;
-            const y = e.offsetY !== undefined ? e.offsetY : e.touches[0].clientY - rect.top;
-            
-            ctx.lineTo(x, y);
-            ctx.stroke();
-        };
-        
-        const end = () => {
-            isDrawing = false;
-        };
-        
-        canvas.addEventListener('mousedown', start);
-        canvas.addEventListener('mousemove', move);
-        canvas.addEventListener('mouseup', end);
-        canvas.addEventListener('touchstart', start, {passive: false});
-        canvas.addEventListener('touchmove', move, {passive: false});
-        canvas.addEventListener('touchend', end);
+    // 1. تهيئة اللوحة
+    function initFabric() {
+        const canvasEl = document.getElementById('fabric-canvas');
+        if (!canvasEl) return;
+
+        // إذا كانت اللوحة موجودة بالفعل، لا نعد تهيئتها
+        if (fCanvas) {
+            fCanvas.clear(); 
+            return;
+        }
+
+        // إنشاء لوحة Fabric جديدة
+        fCanvas = new fabric.Canvas('fabric-canvas', {
+            isDrawingMode: true,
+            selection: true,
+            backgroundColor: 'transparent' // خلفية شفافة
+        });
+
+        // إعدادات الفرشاة الافتراضية
+        fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
+        fCanvas.freeDrawingBrush.width = 4;
+        fCanvas.freeDrawingBrush.color = "#ffffff";
     }
 
-    function resizeCanvas() {
-        if(!canvas) return;
+    // 2. ضبط الحجم (مهم جداً لظهور الرسم)
+    function resizeFabric() {
+        if (!fCanvas) return;
         
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        const brushColorEl = document.getElementById('brush-color');
-        if(brushColorEl) {
-            ctx.strokeStyle = brushColorEl.value;
-        }
-        
-        const brushSizeEl = document.getElementById('brush-size');
-        if(brushSizeEl) {
-            ctx.lineWidth = brushSizeEl.value || 4;
+        const wrapper = document.getElementById('canvas-container-wrapper');
+        if (wrapper) {
+            // نأخذ أبعاد الحاوية الحقيقية
+            const width = wrapper.clientWidth || window.innerWidth;
+            const height = wrapper.clientHeight || (window.innerHeight - 64); // طرح ارتفاع الشريط العلوي
+
+            fCanvas.setDimensions({
+                width: width,
+                height: height
+            });
+            fCanvas.calcOffset(); // إعادة حساب الإحداثيات (ضروري جداً)
+            fCanvas.renderAll();
         }
     }
-    
-    window.openDrawingCanvas = () => {
+
+    // 3. فتح المودال وتشغيل الرسم
+    window.openDrawingCanvas = function() {
         const modal = document.getElementById('drawing-modal');
-        if(modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // ننتظر قليلاً (100ms) حتى يظهر المودال وتكتمل أبعاده
+        setTimeout(() => {
+            initFabric();    // تهيئة اللوحة
+            resizeFabric();  // ضبط الحجم
+            
+            // إعادة ضبط الوضع الافتراضي (رسم)
+            window.toggleDrawMode(true);
+            
+            // إذا كان هناك رسم محفوظ مسبقاً، قم بتحميله
+            if (window.tempDrawingData) {
+                fCanvas.loadFromJSON(window.tempDrawingData, function() {
+                    fCanvas.renderAll();
+                });
+            }
+        }, 150); 
+    };
+
+    // 4. إغلاق المودال
+    window.closeDrawingModal = function() {
+        const modal = document.getElementById('drawing-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
+
+    // 5. أدوات التحكم
+    window.toggleDrawMode = function(isDraw) {
+        if (!fCanvas) return;
+        fCanvas.isDrawingMode = isDraw;
+        
+        const btnDraw = document.getElementById('btn-draw-mode');
+        const btnSelect = document.getElementById('btn-select-mode');
+        
+        if(btnDraw && btnSelect) {
+            btnDraw.className = isDraw ? "w-8 h-8 rounded hover:bg-white/10 text-indigo-400" : "w-8 h-8 rounded hover:bg-white/10 text-white";
+            btnSelect.className = !isDraw ? "w-8 h-8 rounded hover:bg-white/10 text-indigo-400" : "w-8 h-8 rounded hover:bg-white/10 text-white";
         }
-        
-        resizeCanvas();
-        
-        if(tempDrawingData) {
-            const img = new Image();
-            img.onload = () => ctx.drawImage(img, 0, 0);
-            img.src = tempDrawingData;
+    };
+
+    window.addTextToCanvas = function() {
+        if (!fCanvas) return;
+        const color = document.getElementById('brush-color').value;
+        const text = new fabric.IText('اكتب هنا', {
+            left: fCanvas.width / 2,
+            top: fCanvas.height / 2,
+            fontFamily: 'Cairo',
+            fill: color,
+            fontSize: 40,
+            originX: 'center',
+            originY: 'center',
+            direction: 'rtl'
+        });
+        fCanvas.add(text);
+        fCanvas.setActiveObject(text);
+        window.toggleDrawMode(false); // تحويل لوضع التحريك لتعديل النص
+    };
+
+    window.addImageToCanvas = function(input) {
+        if (!fCanvas || !input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            fabric.Image.fromURL(e.target.result, function(img) {
+                // تصغير الصورة إذا كانت كبيرة
+                if (img.width > 300) img.scaleToWidth(300);
+                
+                img.set({
+                    left: fCanvas.width / 2,
+                    top: fCanvas.height / 2,
+                    originX: 'center',
+                    originY: 'center'
+                });
+                fCanvas.add(img);
+                fCanvas.setActiveObject(img);
+                window.toggleDrawMode(false);
+            });
+        };
+        reader.readAsDataURL(input.files[0]);
+        input.value = '';
+    };
+
+    window.updateBrush = function() {
+        if (!fCanvas) return;
+        const color = document.getElementById('brush-color').value;
+        const size = parseInt(document.getElementById('brush-size').value, 10);
+
+        fCanvas.freeDrawingBrush.color = color;
+        fCanvas.freeDrawingBrush.width = size;
+
+        const activeObj = fCanvas.getActiveObject();
+        if (activeObj) {
+            if (activeObj.type === 'i-text' || activeObj.type === 'text') {
+                activeObj.set('fill', color);
+            } else if (activeObj.type === 'path') {
+                activeObj.set('stroke', color);
+            }
+            fCanvas.requestRenderAll();
+        }
+    };
+
+    window.deleteSelectedObject = function() {
+        if (!fCanvas) return;
+        const activeObjects = fCanvas.getActiveObjects();
+        if (activeObjects.length) {
+            fCanvas.discardActiveObject();
+            activeObjects.forEach(function(obj) {
+                fCanvas.remove(obj);
+            });
         } else {
-            window.clearCanvas();
+            alert("يرجى تحديد العنصر أولاً (باستخدام أداة السهم) لحذفه");
         }
     };
 
-    window.closeDrawingModal = () => {
-        const modal = document.getElementById('drawing-modal');
-        if(modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+    window.clearCanvas = function() {
+        if (fCanvas && confirm("مسح اللوحة بالكامل؟")) {
+            fCanvas.clear();
+            fCanvas.setBackgroundColor('transparent', fCanvas.renderAll.bind(fCanvas));
         }
     };
 
-    window.clearCanvas = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    window.saveCanvasDrawing = async function(btnElement) {
+        if (!fCanvas) return;
+        if (btnElement) btnElement.classList.add('loading');
+
+        // حفظ الحالة كـ JSON في متغير عالمي (window) للوصول إليه لاحقاً
+        window.tempDrawingData = JSON.stringify(fCanvas.toJSON());
+
+        // إنشاء صورة للمعاينة
+        const dataURL = fCanvas.toDataURL({
+            format: 'png',
+            quality: 1,
+            multiplier: 2
+        });
+
+        // تحديث واجهة المودال الرئيسي بالصورة
+        const previewContainer = document.getElementById('modal-drawing-preview');
+        const previewImg = document.getElementById('modal-drawing-img');
+        const btnLabel = document.getElementById('btn-draw-label');
+
+        if (previewContainer && previewImg) {
+            previewContainer.classList.remove('hidden');
+            previewImg.src = dataURL;
+            if(btnLabel) btnLabel.innerText = "تعديل الرسم";
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (btnElement) {
+            btnElement.classList.remove('loading');
+            btnElement.classList.add('success');
+        }
+
+        setTimeout(() => {
+            window.closeDrawingModal();
+            if (btnElement) btnElement.classList.remove('success');
+        }, 500);
     };
-
-    window.setEraser = () => {
-        ctx.globalCompositeOperation = 'destination-out';
+    
+    window.deleteDrawing = function() {
+        window.tempDrawingData = null;
+        if(fCanvas) fCanvas.clear();
+        document.getElementById('modal-drawing-preview').classList.add('hidden');
+        document.getElementById('modal-drawing-img').src = "";
+        document.getElementById('btn-draw-label').innerText = "Add Drawing";
     };
-
-    const brushColorEl = document.getElementById('brush-color');
-    if(brushColorEl) {
-        brushColorEl.onchange = (e) => {
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.strokeStyle = e.target.value;
-        };
-    }
-
-    const brushSizeEl = document.getElementById('brush-size');
-    if(brushSizeEl) {
-        brushSizeEl.oninput = (e) => {
-            ctx.lineWidth = e.target.value;
-        };
-    }
+    
+    // إضافة مستمع لحدث تغيير حجم النافذة
+    window.addEventListener('resize', () => {
+        if(fCanvas) resizeFabric();
+    });
 
     window.callGemini = async (prompt) => {
         const apiKey = getApiKey();
@@ -4212,9 +4346,31 @@ const azkarDB = {
     window.switchAzkarTab = switchAzkarTab;
     window.handleZikrClick = handleZikrClick;
     window.resetZikr = resetZikr;
+    // ==========================================
+    //  دالة تنزيل الرسم كصورة (PNG Download)
+    // ==========================================
+    window.downloadCanvasAsPNG = function() {
+        if (!fCanvas) return;
+        
+        // 1. إلغاء تحديد أي عنصر لكي لا يظهر مربع التحديد في الصورة
+        fCanvas.discardActiveObject();
+        fCanvas.renderAll();
+
+        // 2. تحويل الرسم لرابط صورة
+        const dataURL = fCanvas.toDataURL({
+            format: 'png',
+            quality: 1,
+            multiplier: 2 // دقة عالية
+        });
+
+        // 3. إنشاء رابط وهمي والضغط عليه
+        const link = document.createElement('a');
+        link.download = 'how-much-drawing-' + Date.now() + '.png';
+        link.href = dataURL;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 </script>
 </body>
 </html>
-
-
-
