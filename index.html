@@ -1543,17 +1543,17 @@
             </button>
 
             <div class="flex items-center gap-3 bg-black/20 p-1.5 rounded-lg border border-white/5 overflow-x-auto">
-                <button onclick="addTextToCanvas()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="إضافة نص"><i class="fas fa-font"></i></button>
+                <button onclick="addTextToCanvas()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="Add text"><i class="fas fa-font"></i></button>
                 
-                <label class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center cursor-pointer" title="إضافة صورة">
+                <label class="w-8 h-8 rounded hover:bg-white/10 text-white flex items-center justify-center cursor-pointer" title="Add image">
                     <i class="fas fa-image"></i>
                     <input type="file" class="hidden" accept="image/*" onchange="addImageToCanvas(this)">
                 </label>
                 
                 <div class="w-px h-6 bg-white/10"></div>
                 
-                <button onclick="toggleDrawMode(true)" id="btn-draw-mode" class="w-8 h-8 rounded hover:bg-white/10 text-indigo-400" title="رسم حر"><i class="fas fa-pencil-alt"></i></button>
-                <button onclick="toggleDrawMode(false)" id="btn-select-mode" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="تحديد وتحريك"><i class="fas fa-mouse-pointer"></i></button>
+                <button onclick="toggleDrawMode(true)" id="btn-draw-mode" class="w-8 h-8 rounded hover:bg-white/10 text-indigo-400" title="freehand sketch"><i class="fas fa-pencil-alt"></i></button>
+                <button onclick="toggleDrawMode(false)" id="btn-select-mode" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="Select and move"><i class="fas fa-mouse-pointer"></i></button>
                 
                 <div class="w-px h-6 bg-white/10"></div>
                 
@@ -1562,17 +1562,17 @@
                 
                 <div class="w-px h-6 bg-white/10"></div>
 
-                <button onclick="deleteSelectedObject()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="حذف العنصر المحدد">
+                <button onclick="deleteSelectedObject()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="Delete selected item">
                     <i class="fas fa-trash-alt"></i>
                 </button>
                 
-                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="مسح اللوحة بالكامل">
+                <button onclick="clearCanvas()" class="w-8 h-8 rounded hover:bg-red-500/20 text-red-400" title="delete the entire panel">
                     <i class="fas fa-bomb"></i>
                 </button>
 
                 <div class="w-px h-6 bg-white/10"></div>
 
-                <button onclick="downloadCanvasAsPNG()" class="w-8 h-8 rounded hover:bg-green-500/20 text-green-400" title="تنزيل كصورة">
+                <button onclick="downloadCanvasAsPNG()" class="w-8 h-8 rounded hover:bg-green-500/20 text-green-400" title="download image">
                     <i class="fas fa-download"></i>
                 </button>
             </div>
@@ -3448,22 +3448,32 @@
         }
     };
 
+    // 6. إضافة نص (Text) - معدل لدعم اللغتين
     window.addTextToCanvas = function() {
         if (!fCanvas) return;
         const color = document.getElementById('brush-color').value;
-        const text = new fabric.IText('اكتب هنا', {
+
+        // فحص اللغة الحالية من إعدادات التطبيق
+        const isArabic = window.appData && window.appData.settings.lang === 'ar';
+        
+        // تغيير النص والاتجاه بناءً على اللغة
+        const textString = isArabic ? 'اكتب هنا' : 'Write Here';
+        const textDirection = isArabic ? 'rtl' : 'ltr';
+
+        const text = new fabric.IText(textString, {
             left: fCanvas.width / 2,
             top: fCanvas.height / 2,
-            fontFamily: 'Cairo',
+            fontFamily: 'Cairo', // خط كايرو يدعم اللغتين بشكل جيد
             fill: color,
             fontSize: 40,
             originX: 'center',
             originY: 'center',
-            direction: 'rtl'
+            direction: textDirection // مهم جداً عند تعديل النص لاحقاً
         });
+
         fCanvas.add(text);
         fCanvas.setActiveObject(text);
-        window.toggleDrawMode(false); // تحويل لوضع التحريك لتعديل النص
+        window.toggleDrawMode(false); // التحويل لوضع التحريك لتعديل النص
     };
 
     window.addImageToCanvas = function(input) {
