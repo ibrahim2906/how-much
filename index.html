@@ -1305,6 +1305,11 @@
             </button>
         </div>
     </div>
+    <!-- زر سياسة الخصوصية -->
+<button onclick="showPage('privacy')" class="w-full py-4 rounded-2xl border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 font-medium flex items-center justify-center gap-2 transition-all mb-4">
+    <i class="fas fa-shield-alt"></i>
+    <span data-i18n="privacyPolicy">سياسة الخصوصية</span>
+</button>
 
     <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2" aria-label="Logout">
         <i class="fas fa-sign-out-alt" aria-hidden="true"></i> 
@@ -1320,7 +1325,214 @@
             <span class="bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded border border-orange-500/20">Groq</span>
         </div>
     </div>
+    
     </section>
+    <!-- =====================================================
+     صفحة سياسة الخصوصية - Privacy Policy Page
+     ===================================================== -->
+<section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white">🔒 Privacy Policy</h2>
+    
+    <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
+        
+        <div class="text-center pb-6 border-b border-white/10">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-3xl text-indigo-400"></i>
+            </div>
+            <p class="text-lg text-slate-300 leading-relaxed">
+                We respect your privacy and are committed to protecting your data. This is an ethical and moral promise.
+            </p>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-database"></i>
+                Data We Collect
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 space-y-3 text-slate-300">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <strong>Email Address:</strong> Only when signing in with Google.
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <strong>Personal Data:</strong> Tasks, books, courses, and notes you add.
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <strong>Files:</strong> Images or PDFs you upload (Stored securely).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-hand-holding-heart"></i>
+                Our Commitments
+            </h3>
+            <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 space-y-3">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-ban text-green-300 mt-1 flex-shrink-0"></i>
+                    <p class="text-slate-200">
+                        <strong class="text-green-300">We never sell your data</strong> - This is a strict ethical boundary.
+                    </p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-user-shield text-green-300 mt-1 flex-shrink-0"></i>
+                    <p class="text-slate-200">
+                        <strong class="text-green-300">No unauthorized sharing</strong> with advertisers or commercial third parties.
+                    </p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-lock text-green-300 mt-1 flex-shrink-0"></i>
+                    <p class="text-slate-200">
+                        <strong class="text-green-300">Secure Storage</strong> on Firebase (Google Cloud) infrastructure.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-cogs"></i>
+                How We Use Your Data
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 space-y-2 text-sm">
+                <p>• <strong>Sync:</strong> To access your data across different devices.</p>
+                <p>• <strong>Functionality:</strong> To enable features like timers and tracking.</p>
+                <p>• <strong>Backup:</strong> To prevent data loss.</p>
+                <p class="text-xs text-slate-500 mt-3 pt-3 border-t border-white/10">
+                    <strong>Note:</strong> We do NOT use your data for advertising or marketing purposes.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-robot"></i>
+                Artificial Intelligence (Groq API)
+            </h3>
+            <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-slate-300 space-y-2 text-sm">
+                <p>• We use Groq AI (Llama 3 models) to help organize your tasks.</p>
+                <p>• Data is sent only when you actively use the Assistant features.</p>
+                <p class="text-xs text-slate-500 mt-2 pt-2 border-t border-white/10">
+                    See Groq Policy: <a href="https://groq.com/privacy-policy/" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:underline">groq.com/privacy-policy</a>
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-mosque"></i>
+                Religious Content & Accuracy
+            </h3>
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Azkar content is sourced from trusted references. However, 
+                    <strong class="text-yellow-300">please verify</strong> 
+                    with scholars or trusted books. We strive for accuracy, but errors can occur.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-cookie-bite"></i>
+                Local Storage
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
+                <p>We use your browser's Local Storage to save:</p>
+                <ul class="mt-2 ml-4 space-y-1 list-disc list-inside">
+                    <li>Preferences (Language, Theme/Colors).</li>
+                    <li>All data when using "Guest Mode" (Offline).</li>
+                </ul>
+                <p class="mt-2 text-xs text-slate-500">
+                    You can clear this data anytime via your browser settings.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-red-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-exclamation-triangle"></i>
+                Disclaimer
+            </h3>
+            <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
+                <p>• This tool is a personal organizer; we do our best to secure it.</p>
+                <p>• <strong>Do not upload highly sensitive files</strong> (e.g., Passports, Passwords).</p>
+                <p>• We are not responsible for any data loss or misuse.</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-balance-scale"></i>
+                Your Rights
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm space-y-2">
+                <p><strong>You have the right to:</strong></p>
+                <ul class="ml-4 space-y-1 list-disc list-inside">
+                    <li><strong>Access</strong> your data at any time.</li>
+                    <li><strong>Edit or Delete</strong> any stored information.</li>
+                    <li><strong>Opt-out</strong> by deleting your account.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4">
+            <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                <i class="fab fa-whatsapp"></i>
+                Contact Us
+            </h4>
+
+            <p class="text-sm text-slate-300">
+                For privacy questions, data requests, or account deletion:
+            </p>
+
+            <div class="mt-2 flex flex-col gap-2">
+                <a 
+                    href="https://wa.me/201025376549"
+                    target="_blank"
+                    class="text-green-400 hover:underline text-sm flex items-center gap-2"
+                >
+                    <i class="fab fa-whatsapp"></i>
+                    Chat via WhatsApp
+                </a>
+
+                <p class="text-xs text-slate-500">
+                    (We will respond as soon as possible)
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white/5 rounded-xl p-4 text-sm text-slate-400">
+            <p><strong>Policy Updates:</strong></p>
+            <p class="mt-1">
+                We may update this policy from time to time to reflect changes in our practices.
+            </p>
+        </div>
+
+        <div class="text-center text-xs text-slate-500 pt-4 border-t border-white/10">
+            <i class="fas fa-calendar-alt mr-1"></i>
+            Last Updated: January 6, 2026
+        </div>
+
+    </div>
+
+    <div class="mt-6 text-center">
+        <button onclick="showPage('settings')" class="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex items-center gap-2 mx-auto">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Settings</span>
+        </button>
+    </div>
+</section>
+</section>
 
                 <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20" dir="rtl">
                     <div class="text-center mb-6 relative">
@@ -3774,26 +3986,62 @@ window.callGroq = async (messagesArray) => {
     window.chatHistory = [];
 
     const SYSTEM_PROMPT = {
-        role: "system",
-        content: `You are the AI for 'How Much', a life tracker app.
-        IMPORTANT: The user might ask to do MULTIPLE things at once.
-        
-        You MUST return valid JSON ONLY. Structure: {"operations":Array}.
-        Format:
-        {
-          "operations": [
-             { "action": "addTask", "data": { "name": "Task Name", "desc": "Desc" } },
-             { "action": "addBook", "data": { "name": "Book Name", "total": 0, "desc": "Desc" } },
-             { "action": "addCourse", "data": { "name": "Course Name", "total": 0, "desc": "Desc" } },
-             { "action": "addNote", "data": { "name": "Note Title", "desc": "Content" } },
-             { "action": "reply", "data": { "text": "Your answer here" } }
-          ]
-        }
-        Rules:
-        1. Reply to questions using "reply" action.
-        2. Maintain context from previous messages.
-        3. Speak Arabic and English based on user language.`
-    };
+    role: "system",
+    content: `You are the AI assistant for 'How Much', a life tracker app.
+
+LANGUAGE RULES (VERY IMPORTANT):
+- Detect the user's language from their message
+- If they write in Arabic → respond in Arabic ONLY
+- If they write in English → respond in English ONLY  
+- If they write in Arabizi/Franco (3araby, kayfa, etc.) → respond in Arabic
+- NEVER mix languages in one response
+- Be natural and conversational
+
+RESPONSE FORMAT:
+You MUST return valid JSON ONLY. Structure: {"operations":Array}.
+
+{
+  "operations": [
+     { "action": "addTask", "data": { "name": "Task Name", "desc": "Desc" } },
+     { "action": "addBook", "data": { "name": "Book Name", "total": 0, "desc": "Desc" } },
+     { "action": "addCourse", "data": { "name": "Course Name", "total": 0, "desc": "Desc" } },
+     { "action": "addNote", "data": { "name": "Note Title", "desc": "Content" } },
+     { "action": "reply", "data": { "text": "Your answer here in the user's language" } }
+  ]
+}
+
+CAPABILITIES:
+1. Add tasks, books, courses, and notes
+2. Answer questions about the app
+3. Maintain context from previous messages
+4. Handle multiple requests in one message
+
+EXAMPLES:
+
+User: "add a task to read a book"
+→ {"operations": [
+    {"action": "addTask", "data": {"name": "Read a book", "desc": ""}},
+    {"action": "reply", "data": {"text": "Task added successfully!"}}
+]}
+
+User: "أضف مهمة قراءة كتاب"
+→ {"operations": [
+    {"action": "addTask", "data": {"name": "قراءة كتاب", "desc": ""}},
+    {"action": "reply", "data": {"text": "تم إضافة المهمة بنجاح!"}}
+]}
+
+User: "hi"
+→ {"operations": [
+    {"action": "reply", "data": {"text": "Hello! I can add tasks, books, or courses for you. What would you like to do?"}}
+]}
+
+User: "مرحبا"
+→ {"operations": [
+    {"action": "reply", "data": {"text": "مرحباً! أنا هنا لمساعدتك في إضافة المهام والكتب والدورات. ماذا تريد أن تفعل؟"}}
+]}
+
+Remember: ALWAYS match the user's language!`
+};
 
     // 2. دالة الاتصال بـ Groq (تدعم الذاكرة)
     window.callGroq = async (messagesArray) => {
@@ -4150,7 +4398,7 @@ const azkarDB = {
     id: 2,
     count: 3,
     text: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ: قُلْ هُوَ ٱللَّهُ أَحَدٌ، ٱللَّهُ ٱلصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ.",
-    note: "تكفيك من كل شيء"
+    note: "تعدل ثلث القرآن - من قرأها حين يصبح ومساء كفته من كل شيء"
   },
   {
     id: 3,
@@ -4197,7 +4445,7 @@ const azkarDB = {
     id: 11, 
     count: 3, 
     text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا.", 
-    note: "وجبت له الجنة" 
+    note: "حق على الله أن يرضيه يوم القيامة" 
   },
   { 
     id: 12, 
@@ -4256,7 +4504,7 @@ const azkarDB = {
     id: 22, 
     count: 10, 
     text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ.", 
-    note: "أدركته شفاعتي" 
+    note: "من صلى علي عشراً صلى الله عليه بها عشراً" 
   },
   { 
     id: 23, 
@@ -4421,7 +4669,7 @@ const azkarDB = {
     { id: 8, count: 100, text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ." },
     { id: 9, count: 100, text: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ." },
     { id: 10, count: 10, text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ." },
-    { id: 11, count: 3, text: "أَسْتَغْفِرُ اللهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ.", note: "يُغفر له وإن فر من الزحف" },
+    { id: 11, count: 3, text: "أَسْتَغْفِرُ اللهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ.", note: "من قالها غُفر له" },
     { id: 12, count: 1, text: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ." },
     { id: 13, count: 1, text: "اللَّهُمَّ آتِ نَفْسِي تَقْوَاهَا، وَزَكِّهَا أَنْتَ خَيْرُ مَنْ زَكَّاهَا، أَنْتَ وَلِيُّهَا وَمَوْلَاهَا." },
     { id: 14, count: 1, text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى، وَالتُّقَى، وَالْعَفَافَ، وَالْغِنَى." },
