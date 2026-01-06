@@ -1205,98 +1205,122 @@
                 </section>
 
                 <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
-                    <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
-                        <div class="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" aria-hidden="true"></div>
-                        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-sm" data-i18n="assistantTitle">Gemini Assistant</h3>
-                                    <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active</p>
-                                </div>
-                            </div>
-                            <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold" data-i18n="clear" aria-label="Clear chat">Clear</button>
-                        </div>
+    <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
+        <div class="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" aria-hidden="true"></div>
+        
+        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
+                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm" data-i18n="assistantTitle">Assistant</h3>
+                    <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active</p>
+                </div>
+            </div>
+            <button onclick="clearChat()" class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold" data-i18n="clear" aria-label="Clear chat">Clear</button>
+        </div>
 
-                        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4" role="log" aria-live="polite" aria-atomic="false">
-                            <div class="flex gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                                </div>
-                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
-                                    Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
-                                </div>
-                            </div>
-                        </div>
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4" role="log" aria-live="polite" aria-atomic="false">
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
+                </div>
+                <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]" data-i18n="aiWelcome">
+                    Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named Atomic Habits".
+                </div>
+            </div>
+        </div>
 
-                        <div class="p-4 bg-black/20 backdrop-blur-md">
-                            <div class="relative">
-                                <input type="text" id="chat-input" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" placeholder="Tell AI to do something..." onkeydown="if(event.key === 'Enter') sendAIChat()" aria-label="Chat message input">
-                                <button onclick="sendAIChat()" class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95" aria-label="Send message">
-                                    <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <div class="p-4 bg-black/20 backdrop-blur-md">
+            <div class="relative">
+                <input type="text" id="chat-input" 
+                       class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base" 
+                       placeholder="Tell AI to do something..." 
+                       data-i18n-placeholder="aiPlaceholder"
+                       onkeydown="if(event.key === 'Enter') sendAIChat()" 
+                       aria-label="Chat message input">
+                
+                <button onclick="sendAIChat()" class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95" aria-label="Send message">
+                    <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="text-[10px] text-slate-600 text-center mt-2 flex justify-center items-center gap-1" dir="ltr">
+                <span data-i18n="poweredBy">Powered by</span> 
+                <span class="text-indigo-400 font-bold">Llama 3</span> 
+                <span>&</span> 
+                <span class="text-orange-400 font-bold">Groq</span>
+            </div>
+            </div>
+    </div>
+</section>
 
                 <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
+    <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
 
-                    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
-                        <div class="p-6 border-b border-white/5">
-                            <div class="flex justify-between items-center mb-4">
-                                <div>
-                                    <h3 class="font-bold flex items-center gap-2">
-                                        <i class="fas fa-cloud text-blue-400" aria-hidden="true"></i> Cloud Status
-                                    </h3>
-                                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
-                                    <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync" aria-label="Force cloud sync">
-                                        <i class="fas fa-sync-alt text-xs" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 rounded-xl bg-white/5">
-                                    <i class="fas fa-palette accent-text" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
-                                    <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
-                                </div>
-                            </div>
-                            <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)" aria-label="Select accent color">
-                        </div>
-
-                        <div class="p-6 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 rounded-xl bg-white/5">
-                                    <i class="fas fa-language" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold" data-i18n="language">Language</h3>
-                                    <p class="text-xs text-slate-400">English / Arabic</p>
-                                </div>
-                            </div>
-                            <button onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold" aria-label="Toggle language">
-                                <span id="current-lang-display">English</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2" aria-label="Logout">
-                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> 
-                        <span data-i18n="logout">Logout</span>
+    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+        <div class="p-6 border-b border-white/5">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h3 class="font-bold flex items-center gap-2">
+                        <i class="fas fa-cloud text-blue-400" aria-hidden="true"></i> Cloud Status
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1" id="user-email-display">Checking...</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="cloud-status" class="text-xs px-2 py-1 rounded bg-white/5 text-slate-400">Not Synced</span>
+                    <button onclick="triggerCloudSave()" class="p-2 bg-white/10 rounded-lg hover:bg-white/20" title="Force Sync" aria-label="Force cloud sync">
+                        <i class="fas fa-sync-alt text-xs" aria-hidden="true"></i>
                     </button>
-                </section>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-b border-white/5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-3 rounded-xl bg-white/5">
+                    <i class="fas fa-palette accent-text" aria-hidden="true"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold" data-i18n="nebulaColor">Nebula Color</h3>
+                    <p class="text-xs text-slate-400" data-i18n="customizeAccent">Customize accent color</p>
+                </div>
+            </div>
+            <input type="color" id="accent-color-picker" class="w-10 h-10 rounded-full bg-transparent border-0 cursor-pointer" onchange="updateAccentColor(this.value)" aria-label="Select accent color">
+        </div>
+
+        <div class="p-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-3 rounded-xl bg-white/5">
+                    <i class="fas fa-language" aria-hidden="true"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold" data-i18n="language">Language</h3>
+                    <p class="text-xs text-slate-400">English / Arabic</p>
+                </div>
+            </div>
+            <button onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold" aria-label="Toggle language">
+                <span id="current-lang-display">English</span>
+            </button>
+        </div>
+    </div>
+
+    <button onclick="handleLogout()" class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2" aria-label="Logout">
+        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> 
+        <span data-i18n="logout">Logout</span>
+    </button>
+
+    <div class="mt-8 text-center border-t border-white/5 pt-4 pb-4">
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Technology</p>
+        <div class="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium">
+            <span>Powered by</span>
+            <span class="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20">Llama 3</span>
+            <span>on</span>
+            <span class="bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded border border-orange-500/20">Groq</span>
+        </div>
+    </div>
+    </section>
 
                 <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20" dir="rtl">
                     <div class="text-center mb-6 relative">
@@ -1432,92 +1456,109 @@
     </div>
 
     <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
-            <input type="hidden" id="modal-type">
-            <input type="hidden" id="modal-id">
+    <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
+        <input type="hidden" id="modal-type">
+        <input type="hidden" id="modal-id">
+        
+        <div class="space-y-4">
+            <input type="text" id="modal-name" placeholder="Title/Name" data-i18n-placeholder="titlePlaceholder" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base" aria-label="Item title">
             
-            <div class="space-y-4">
-                <input type="text" id="modal-name" placeholder="Title/Name" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base" aria-label="Item title">
-                
-                <div id="ai-suggestion-area" class="flex gap-2 mb-2 hidden">
-                    <button id="btn-ai-task" onclick="aiMagicSplit()" class="hidden text-xs bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Magic split task">
-                        <i class="fas fa-magic" aria-hidden="true"></i> ✨ Magic Split
-                    </button>
-                    <button id="btn-ai-book" onclick="aiBookScout()" class="hidden text-xs bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Book scout">
-                        <i class="fas fa-search" aria-hidden="true"></i> ✨ Book Scout
-                    </button>
-                    <button id="btn-ai-course" onclick="aiCourseOutline()" class="hidden text-xs bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Generate syllabus">
-                        <i class="fas fa-list-ol" aria-hidden="true"></i> ✨ Syllabus Gen
-                    </button>
-                </div>
+            <div id="ai-suggestion-area" class="flex gap-2 mb-2 hidden">
+                <button id="btn-ai-task" onclick="aiMagicSplit()" class="hidden text-xs bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Magic split task">
+                    <i class="fas fa-magic" aria-hidden="true"></i> <span data-i18n="magicSplit">✨ Magic Split</span>
+                </button>
+                <button id="btn-ai-book" onclick="aiBookScout()" class="hidden text-xs bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Book scout">
+                    <i class="fas fa-search" aria-hidden="true"></i> <span data-i18n="bookScout">✨ Book Scout</span>
+                </button>
+                <button id="btn-ai-course" onclick="aiCourseOutline()" class="hidden text-xs bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity" aria-label="Generate syllabus">
+                    <i class="fas fa-list-ol" aria-hidden="true"></i> <span data-i18n="syllabusGen">✨ Syllabus Gen</span>
+                </button>
+            </div>
 
-                <div id="modal-stats-row" class="grid grid-cols-2 gap-4 hidden">
-                    <div>
-                        <label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-total" for="modal-total">Total</label>
-                        <input type="number" id="modal-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base" aria-label="Total amount">
+            <div id="modal-stats-row" class="grid grid-cols-2 gap-4 hidden">
+                <div>
+                    <label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-total" for="modal-total" data-i18n="totalPages">Total</label>
+                    <input type="number" id="modal-total" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base" aria-label="Total amount">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done" for="modal-done" data-i18n="readPages">Done</label>
+                    <input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base" aria-label="Completed amount">
+                </div>
+            </div>
+
+            <div id="modal-optional-row" class="hidden flex items-center gap-3 bg-black/10 p-3 rounded-xl border border-white/5">
+                <input type="checkbox" id="modal-optional" class="w-5 h-5 rounded border-white/10 bg-black/20 accent-indigo-500">
+                <label for="modal-optional" class="text-sm text-slate-300 select-none cursor-pointer" data-i18n="markOptional">Mark as Optional (Side Quest)</label>
+            </div>
+
+            <textarea id="modal-desc" rows="3" placeholder="Description/Notes..." data-i18n-placeholder="descPlaceholder" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base" aria-label="Item description"></textarea>
+
+            <div id="media-section-group" class="space-y-4">
+                <div class="glass-panel p-3 rounded-xl bg-black/10">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-400" data-i18n="voiceNote">VOICE NOTE</span>
+                        <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1" aria-label="Record voice note">
+                            <i class="fas fa-microphone" aria-hidden="true"></i> <span data-i18n="record">Record</span>
+                        </button>
                     </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 uppercase font-bold" id="lbl-done" for="modal-done">Done</label>
-                        <input type="number" id="modal-done" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-center text-base" aria-label="Completed amount">
+                    <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
+                        <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;" aria-label="Voice note"></audio>
+                        <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1" aria-label="Delete voice note">
+                            <i class="fas fa-trash" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div id="modal-optional-row" class="hidden flex items-center gap-3 bg-black/10 p-3 rounded-xl border border-white/5">
-                    <input type="checkbox" id="modal-optional" class="w-5 h-5 rounded border-white/10 bg-black/20 accent-indigo-500">
-                    <label for="modal-optional" class="text-sm text-slate-300 select-none cursor-pointer">Mark as Optional (Side Quest)</label>
+                <div class="glass-panel p-3 rounded-xl bg-black/10">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-400" data-i18n="files">FILES (PDF, Video, Img)</span>
+                        <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
+                            <i class="fas fa-paperclip" aria-hidden="true"></i> <span data-i18n="attach">Attach</span>
+                            <input type="file" multiple class="hidden" onchange="handleFileUpload(this)" aria-label="Attach files">
+                        </label>
+                    </div>
+                    <div id="file-list-preview" class="space-y-2 mt-2"></div>
                 </div>
 
-                <textarea id="modal-desc" rows="3" placeholder="Description/Notes..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-sm text-base" aria-label="Item description"></textarea>
-
-                <div id="media-section-group" class="space-y-4">
-                    <div class="glass-panel p-3 rounded-xl bg-black/10">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-slate-400">VOICE NOTE</span>
-                            <button onclick="toggleAudioRecording(this)" class="text-xs p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1" aria-label="Record voice note">
-                                <i class="fas fa-microphone" aria-hidden="true"></i> <span>Record</span>
+                <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-400" data-i18n="drawing">DRAWING / SKETCH</span>
+                        <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1" aria-label="Add drawing">
+                            <i class="fas fa-pencil-alt" aria-hidden="true"></i> 
+                            <span id="btn-draw-label" data-i18n="addDrawing">Add Drawing</span>
+                        </button>
+                    </div>
+                    <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
+                        <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10" alt="Drawing preview">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white" aria-label="Edit drawing">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
                             </button>
-                        </div>
-                        <div id="modal-audio-player-container" class="hidden mt-2 bg-black/30 rounded-lg p-2 flex items-center gap-2">
-                            <audio id="modal-audio-player" controls class="w-full h-8 bg-transparent" style="height:30px;" aria-label="Voice note"></audio>
-                            <button onclick="deleteAudioNote()" class="text-red-400 hover:text-white p-1" aria-label="Delete voice note">
+                            <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white" aria-label="Delete drawing">
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
-
-                    <div class="glass-panel p-3 rounded-xl bg-black/10">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-slate-400">FILES (PDF, Video, Img)</span>
-                            <label class="cursor-pointer text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1">
-                                <i class="fas fa-paperclip" aria-hidden="true"></i> <span>Attach</span>
-                                <input type="file" multiple class="hidden" onchange="handleFileUpload(this)" aria-label="Attach files">
-                            </label>
-                        </div>
-                        <div id="file-list-preview" class="space-y-2 mt-2"></div>
-                    </div>
-
-                    <div id="modal-drawing-section" class="glass-panel p-3 rounded-xl bg-black/10">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-slate-400">DRAWING / SKETCH</span>
-                            <button onclick="openDrawingCanvas()" class="text-xs p-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors flex items-center gap-1" aria-label="Add drawing">
-                                <i class="fas fa-pencil-alt" aria-hidden="true"></i> 
-                                <span id="btn-draw-label">Add Drawing</span>
-                            </button>
-                        </div>
-                        <div id="modal-drawing-preview" class="hidden mt-2 bg-white/5 rounded-lg p-2 flex items-center justify-center relative group">
-                            <img id="modal-drawing-img" src="" class="max-h-32 rounded border border-white/10" alt="Drawing preview">
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                <button onclick="openDrawingCanvas()" class="p-2 bg-blue-500 rounded-full text-white" aria-label="Edit drawing">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </button>
-                                <button onclick="deleteDrawing()" class="p-2 bg-red-500 rounded-full text-white" aria-label="Delete drawing">
-                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+            </div>
+
+            <div class="flex gap-2 justify-end pt-2">
+                <button onclick="saveItem(this)" id="btn-save-modal" class="interactive-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors" aria-label="Save item">
+                    <span class="btn-text-content" data-i18n="save">Save</span>
+                    <span class="btn-loader" aria-hidden="true">
+                        <span class="dot-wave"></span>
+                        <span class="dot-wave"></span>
+                        <span class="dot-wave"></span>
+                    </span>
+                    <span class="btn-success-icon" aria-hidden="true">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <div class="flex gap-2 justify-end pt-2">
                     <button onclick="saveItem(this)" id="btn-save-modal" class="interactive-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors" aria-label="Save item">
@@ -2574,37 +2615,83 @@
         }
 
         const translations = {
-            en: {
-                courses: "Courses", tasks: "Tasks", books: "Books", notes: "Notes",
-                settings: "Settings", trash: "Trash", timers: "Timers", add: "Add",
-                addNote: "Add Note", trackLearning: "Master your skills.",
-                manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.",
-                welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.",
-                continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
-                clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer",
-                tasbih: "countup", countdown: "Countdown", startValue: "Start Value",
-                count: "Count", reset: "Reset Counter", assistantTitle: "Gemini Assistant",
-                assistantStatus: "Agent Mode Active", clear: "Clear",
-                aiWelcome: "Hello! I can add tasks, books, or courses for you.",
-                nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
-                language: "Language", logout: "Logout", back: "Exit"
-            },
-            ar: {
-                courses: "الدورات", tasks: "المهام", books: "الكتب", notes: "ملاحظات",
-                settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة",
-                addNote: "إضافة ملاحظة", trackLearning: "أتقن مهاراتك.",
-                manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.",
-                welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.",
-                continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
-                clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت",
-                tasbih: "عداد تصاعدي", countdown: "عد تنازلي", startValue: "البداية",
-                count: "عد", reset: "تصفير", assistantTitle: "مساعد جيمناي",
-                assistantStatus: "نشط", clear: "مسح", aiWelcome: "أهلاً بك!",
-                nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
-                language: "اللغة", logout: "خروج", back: "رجوع"
-            }
-        };
+    en: {
+        // ... (القديم)
+        courses: "Courses", tasks: "Tasks", books: "Books", notes: "Notes",
+        settings: "Settings", trash: "Trash", timers: "Timers", add: "Add",
+        addNote: "Add Note", trackLearning: "Master your skills.",
+        manageTasks: "Organize your chaos.", trackReading: "Build your knowledge base.",
+        welcome: "Welcome Back", loginSubtitle: "Sync your life progress across dimensions.",
+        continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
+        clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer",
+        tasbih: "Tasbih", countdown: "Countdown", startValue: "Start Value",
+        count: "Count", reset: "Reset Counter", assistantTitle: "Assistant",
+        assistantStatus: "Agent Mode Active", clear: "Clear",
+        aiWelcome: "Hello! I can add tasks, books, or courses for you.",
+        nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
+        language: "Language", logout: "Logout", back: "Exit",
+        
+        // --- (الجديد: الإضافات) ---
+        addCourse: "Add Course", addBook: "Add Book", addTask: "Add Task",
+        magicSplit: "Magic Split", bookScout: "Book Scout", syllabusGen: "Syllabus Gen",
+        markOptional: "Mark as Optional (Side Quest)",
+        totalPages: "Total Pages", readPages: "Read Pages",
+        totalHours: "Total Hours", doneHours: "Done Hours",
+        voiceNote: "VOICE NOTE", record: "Record", stop: "Stop",
+        files: "FILES (PDF, Video, Img)", attach: "Attach",
+        drawing: "DRAWING / SKETCH", addDrawing: "Add Drawing", editDrawing: "Edit Drawing",
+        save: "Save",
+        titlePlaceholder: "Title/Name",
+        descPlaceholder: "Description/Notes...",
+        aiPlaceholder: "Tell AI to do something...",
+        userProgression: "User Progression",
+        recentGains: "Recent Gains",
+        activeSession: "Active Session",
+        dailySnapshot: "Daily Snapshot",
+        tasksDone: "Tasks Done",
+        remaining: "Remaining",
+        dailyProgress: "Daily Progress",
+        poweredBy: "Powered By"
+    },
+    ar: {
+        // ... (القديم)
+        courses: "الدورات", tasks: "المهام", books: "الكتب", notes: "ملاحظات",
+        settings: "الإعدادات", trash: "سلة المهملات", timers: "المؤقتات", add: "إضافة",
+        addNote: "إضافة ملاحظة", trackLearning: "أتقن مهاراتك.",
+        manageTasks: "نظم فوضى حياتك.", trackReading: "ابنِ قاعدتك المعرفية.",
+        welcome: "أهلاً بك", loginSubtitle: "زامن تقدم حياتك.",
+        continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
+        clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت",
+        tasbih: "تسابيح", countdown: "عد تنازلي", startValue: "البداية",
+        count: "عد", reset: "تصفير", assistantTitle: "المساعد الذكي",
+        assistantStatus: "الوضع النشط", clear: "مسح", 
+        aiWelcome: "أهلاً! يمكنني إضافة مهام، كتب، أو دورات لك.",
+        nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
+        language: "اللغة", logout: "خروج", back: "رجوع",
 
+        // --- (الجديد: الإضافات) ---
+        addCourse: "إضافة دورة", addBook: "إضافة كتاب", addTask: "إضافة مهمة",
+        magicSplit: "تقسيم ذكي", bookScout: "مستكشف الكتب", syllabusGen: "مخطط المنهج",
+        markOptional: "مهمة جانبية (اختياري)",
+        totalPages: "إجمالي الصفحات", readPages: "الصفحات المقروءة",
+        totalHours: "إجمالي الساعات", doneHours: "الساعات المنجزة",
+        voiceNote: "ملاحظة صوتية", record: "تسجيل", stop: "إيقاف",
+        files: "ملفات (صور، PDF)", attach: "إرفاق",
+        drawing: "رسم / سكتش", addDrawing: "إضافة رسم", editDrawing: "تعديل الرسم",
+        save: "حفظ",
+        titlePlaceholder: "العنوان / الاسم",
+        descPlaceholder: "الوصف / الملاحظات...",
+        aiPlaceholder: "اطلب من الذكاء الاصطناعي شيئاً...",
+        userProgression: "تقدم المستوى",
+        recentGains: "المكتسبات الأخيرة",
+        activeSession: "جلسة نشطة",
+        dailySnapshot: "ملخص اليوم",
+        tasksDone: "المهام المنجزة",
+        remaining: "المتبقي",
+        dailyProgress: "التقدم اليومي",
+        poweredBy: "مشغل بواسطة"
+    }
+};
         let genieOriginRect = null;
 
         window.openAddModal = function(type, event) {
@@ -3589,33 +3676,44 @@
         if(fCanvas) resizeFabric();
     });
 
-    window.callGemini = async (prompt) => {
-        const apiKey = getApiKey();
-        if(!apiKey) {
-            alert("Missing API Key");
-            return null;
-        }
+    // الكود الجديد الآمن ✅
+
+window.callGroq = async (messagesArray) => {
+    
+    // ⚠️ ضع رابط الـ Worker اللي نسخته
+    const WORKER_URL = 'https://my-groq-proxy.YOUR-NAME.workers.dev';
+    
+    try {
+        console.log('بنكلم الحارس...');
         
-        try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: prompt }]
-                    }]
-                })
-            });
-            
-            const data = await response.json();
-            return data.candidates?.[0]?.content?.parts?.[0]?.text;
-        } catch(e) {
-            console.error(e);
-            alert("AI Error");
-            return null;
+        // إرسال الطلب للحارس (Worker)
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                messages: messagesArray
+            })
+        });
+
+        // لو في مشكلة
+        if (!response.ok) {
+            throw new Error('الحارس رفض الطلب: ' + response.status);
         }
-    };
+
+        // اقرأ الرد
+        const data = await response.json();
+        console.log('الحارس رجع الرد! ✅');
+        
+        return data.choices[0]?.message?.content;
+        
+    } catch (error) {
+        console.error('خطأ:', error);
+        alert('❌ مفيش رد من الذكاء الاصطناعي:\n' + error.message);
+        return null;
+    }
+};
 
     window.aiMagicSplit = async () => {
         const name = document.getElementById('modal-name').value;
@@ -3624,7 +3722,7 @@
         const btn = document.getElementById('btn-ai-task');
         if(btn) btn.innerText = "Thinking...";
         
-        const res = await callGemini(`For the task '${name}', break it into 3-5 actionable subtasks. Return as simple numbered list.`);
+        const res = await callGroq(`For the task '${name}', break it into 3-5 actionable subtasks. Return as simple numbered list.`);
         
         if(res && btn) {
             document.getElementById('modal-desc').value = res.trim();
@@ -3639,7 +3737,7 @@
         const btn = document.getElementById('btn-ai-book');
         if(btn) btn.innerText = "Scouting...";
         
-        const res = await callGemini(`For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }`);
+        const res = await callGroq(`For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }`);
         
         try {
             const json = JSON.parse(res.replace(/```json/g, '').replace(/```/g, '').trim());
@@ -3659,7 +3757,7 @@
         const btn = document.getElementById('btn-ai-course');
         if(btn) btn.innerText = "Planning...";
         
-        const res = await callGemini(`Create a short 5-module syllabus for a course titled '${name}'. Plain text only.`);
+        const res = await callGroq(`Create a short 5-module syllabus for a course titled '${name}'. Plain text only.`);
         
         if(res) {
             document.getElementById('modal-desc').value = res.trim();
@@ -3668,6 +3766,71 @@
         if(btn) btn.innerHTML = '<i class="fas fa-list-ol" aria-hidden="true"></i> ✨ Syllabus Gen';
     };
 
+    // ==========================================
+    //  بداية كود الذكاء الاصطناعي الجديد (المعدل)
+    // ==========================================
+
+    // 1. تعريف الذاكرة وأمر النظام
+    window.chatHistory = [];
+
+    const SYSTEM_PROMPT = {
+        role: "system",
+        content: `You are the AI for 'How Much', a life tracker app.
+        IMPORTANT: The user might ask to do MULTIPLE things at once.
+        
+        You MUST return valid JSON ONLY. Structure: {"operations":Array}.
+        Format:
+        {
+          "operations": [
+             { "action": "addTask", "data": { "name": "Task Name", "desc": "Desc" } },
+             { "action": "addBook", "data": { "name": "Book Name", "total": 0, "desc": "Desc" } },
+             { "action": "addCourse", "data": { "name": "Course Name", "total": 0, "desc": "Desc" } },
+             { "action": "addNote", "data": { "name": "Note Title", "desc": "Content" } },
+             { "action": "reply", "data": { "text": "Your answer here" } }
+          ]
+        }
+        Rules:
+        1. Reply to questions using "reply" action.
+        2. Maintain context from previous messages.
+        3. Speak Arabic and English based on user language.`
+    };
+
+    // 2. دالة الاتصال بـ Groq (تدعم الذاكرة)
+    window.callGroq = async (messagesArray) => {
+        // ⚠️ ضع مفتاحك هنا
+        const apiKey = "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"; 
+
+        if (!apiKey) {
+            alert("Please set your Groq API Key in the code.");
+            return null;
+        }
+
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    messages: messagesArray,
+                    model: "llama-3.3-70b-versatile",
+                    temperature: 0.5,
+                    max_tokens: 1024,
+                    response_format: { type: "json_object" }
+                })
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! ${response.status}`);
+            const data = await response.json();
+            return data.choices[0]?.message?.content;
+        } catch (e) {
+            console.error("Groq API Error:", e);
+            return null;
+        }
+    };
+
+    // 3. دالة الإرسال الرئيسية (تعالج الردود المتعددة وتحفظ الذاكرة)
     window.sendAIChat = async function() {
         const input = document.getElementById('chat-input');
         const txt = input.value.trim();
@@ -3676,6 +3839,7 @@
         input.value = '';
         const container = document.getElementById('chat-container');
         
+        // عرض رسالة المستخدم
         const userMsg = document.createElement('div');
         userMsg.className = 'flex gap-3 justify-end';
         userMsg.innerHTML = `
@@ -3685,6 +3849,10 @@
         `;
         container.appendChild(userMsg);
         
+        // حفظ في الذاكرة
+        window.chatHistory.push({ role: "user", content: txt });
+
+        // عرض اللودر
         const id = 'loader-' + Date.now();
         const loaderMsg = document.createElement('div');
         loaderMsg.id = id;
@@ -3694,125 +3862,149 @@
                 <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
             </div>
             <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble">
-                <div class="loader-ring" aria-label="Loading"></div>
+                <div class="loader-ring"></div>
             </div>
         `;
         container.appendChild(loaderMsg);
         container.scrollTop = container.scrollHeight;
 
-        const res = await callGemini(`You are the AI for 'How Much', a life tracker. Output JSON ONLY: {"action": "addTask", "data": {"name": "Name", "desc": "Desc"}} or {"action": "addBook", "data": {"name": "Name", "desc": "Author", "total": 100}} or {"action": "addCourse", "data": {"name": "Name", "desc": "Desc", "total": 10}} or {"action": "addNote", "data": {"name": "Title", "desc": "Content"}} if adding. Else reply normally. User: ${txt}`);
+        // إرسال المحادثة كاملة
+        const fullConversation = [SYSTEM_PROMPT, ...window.chatHistory];
+        const res = await callGroq(fullConversation);
         
         const loaderEl = document.getElementById(id);
         if(loaderEl) loaderEl.remove();
         
         if(res) {
+            // حفظ رد الـ AI في الذاكرة
+            window.chatHistory.push({ role: "assistant", content: res });
+
+            let replyText = ""; 
+
             try {
                 const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
-                
                 if(cleanJson.startsWith('{')) {
-                    const action = JSON.parse(cleanJson);
+                    const parsed = JSON.parse(cleanJson);
                     
-                    if(action.action === 'addTask') {
-                        window.appData.tasks.push({
-                            id: Date.now(),
-                            name: action.data.name,
-                            desc: action.data.desc || "AI Added",
-                            completed: false,
-                            optional: false,
-                            files: [],
-                            deleted: false
+                    if(parsed.operations && Array.isArray(parsed.operations)) {
+                        parsed.operations.forEach(op => {
+                            if(op.action === 'addTask') {
+                                window.appData.tasks.push({
+                                    id: Date.now() + Math.random(),
+                                    name: op.data.name,
+                                    desc: op.data.desc || "AI Added",
+                                    completed: false,
+                                    optional: false,
+                                    files: [],
+                                    deleted: false
+                                });
+                                showSuccessMsg(container, `✓ Added Task: ${op.data.name}`);
+                            }
+                            else if(op.action === 'addBook') {
+                                window.appData.books.push({
+                                    id: Date.now() + Math.random(),
+                                    name: op.data.name,
+                                    desc: op.data.desc || "",
+                                    total: op.data.total || 0,
+                                    done: 0,
+                                    streak: 0,
+                                    files: [],
+                                    deleted: false
+                                });
+                                showSuccessMsg(container, `✓ Added Book: ${op.data.name}`);
+                            }
+                            else if(op.action === 'addCourse') {
+                                window.appData.courses.push({
+                                    id: Date.now() + Math.random(),
+                                    name: op.data.name,
+                                    notes: op.data.desc || "",
+                                    total: op.data.total || 0,
+                                    done: 0,
+                                    files: [],
+                                    deleted: false
+                                });
+                                showSuccessMsg(container, `✓ Added Course: ${op.data.name}`);
+                            }
+                            else if(op.action === 'addNote') {
+                                window.appData.notes.push({
+                                    id: Date.now() + Math.random(),
+                                    name: op.data.name || "New Note",
+                                    desc: op.data.desc || "",
+                                    audioNote: null,
+                                    drawing: null,
+                                    files: [],
+                                    deleted: false
+                                });
+                                showSuccessMsg(container, `✓ Added Note: ${op.data.name}`);
+                            }
+                            else if(op.action === 'reply') {
+                                replyText += op.data.text + "\n";
+                            }
                         });
                         commitData();
-                        
-                        const successMsg = document.createElement('div');
-                        successMsg.className = 'glass-panel p-3 rounded-2xl text-sm text-green-300';
-                        successMsg.textContent = `✓ Added Task: ${action.data.name}`;
-                        container.appendChild(successMsg);
-                        return;
+                        refreshAllUI();
                     }
-                    
-                    if(action.action === 'addNote') {
-                        window.appData.notes.push({
-                            id: Date.now(),
-                            name: action.data.name || "New Note",
-                            desc: action.data.desc || "",
-                            audioNote: null,
-                            drawing: null,
-                            files: [],
-                            deleted: false
-                        });
-                        commitData();
-                        
-                        const successMsg = document.createElement('div');
-                        successMsg.className = 'glass-panel p-3 rounded-2xl text-sm text-green-300';
-                        successMsg.textContent = `✓ Added Note: ${action.data.name}`;
-                        container.appendChild(successMsg);
-                        return;
-                    }
-                    
-                    if(action.action === 'addBook') {
-                        window.appData.books.push({
-                            id: Date.now(),
-                            name: action.data.name,
-                            desc: action.data.desc || "",
-                            total: action.data.total || 0,
-                            done: 0,
-                            streak: 0,
-                            files: [],
-                            deleted: false
-                        });
-                        commitData();
-                        
-                        const successMsg = document.createElement('div');
-                        successMsg.className = 'glass-panel p-3 rounded-2xl text-sm text-green-300';
-                        successMsg.textContent = `✓ Added Book: ${action.data.name}`;
-                        container.appendChild(successMsg);
-                        return;
-                    }
-                    
-                    if(action.action === 'addCourse') {
-                        window.appData.courses.push({
-                            id: Date.now(),
-                            name: action.data.name,
-                            notes: action.data.desc || "",
-                            total: action.data.total || 0,
-                            done: 0,
-                            files: [],
-                            deleted: false
-                        });
-                        commitData();
-                        
-                        const successMsg = document.createElement('div');
-                        successMsg.className = 'glass-panel p-3 rounded-2xl text-sm text-green-300';
-                        successMsg.textContent = `✓ Added Course: ${action.data.name}`;
-                        container.appendChild(successMsg);
-                        return;
-                    }
+                } else {
+                    replyText = res;
                 }
             } catch(e) {
-                console.error("AI action parse error", e);
+                console.error("AI Parsing Error:", e);
+                replyText = "Error processing AI response.";
             }
-            
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'flex gap-3';
-            aiMsg.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                </div>
-                <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">
-                    ${escapeHtml(res).replace(/\n/g, '<br>')}
-                </div>
-            `;
-            container.appendChild(aiMsg);
+
+            if(replyText.trim()) {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'flex gap-3';
+                aiMsg.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                        <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
+                    </div>
+                    <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">
+                        ${escapeHtml(replyText).replace(/\n/g, '<br>')}
+                    </div>
+                `;
+                container.appendChild(aiMsg);
+            }
         } else {
             const errorMsg = document.createElement('div');
             errorMsg.className = 'text-red-400 text-xs';
-            errorMsg.textContent = 'AI Error';
+            errorMsg.textContent = 'AI Connection Error';
             container.appendChild(errorMsg);
         }
         
         container.scrollTop = container.scrollHeight;
     };
+
+    // 4. دالة مسح الشات (تفرغ الذاكرة أيضاً)
+    window.clearChat = function() {
+        const container = document.getElementById('chat-container');
+        if(container) container.innerHTML = '';
+        
+        window.chatHistory = []; // تصفير الذاكرة
+        
+        const welcome = document.createElement('div');
+        welcome.className = "flex gap-3";
+        welcome.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
+            </div>
+            <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]">
+                Hello! How can I help you organize your life today?
+            </div>`;
+        container.appendChild(welcome);
+    };
+
+    // دالة مساعدة
+    function showSuccessMsg(container, msg) {
+        const successMsg = document.createElement('div');
+        successMsg.className = 'glass-panel p-2 px-4 rounded-xl text-xs text-green-300 mb-1 w-fit ml-auto border border-green-500/20 bg-green-500/10';
+        successMsg.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${escapeHtml(msg)}`;
+        container.appendChild(successMsg);
+    }
+
+    // ==========================================
+    //  نهاية كود الذكاء الاصطناعي الجديد
+    // ==========================================
 
     window.clearChat = function() {
         const container = document.getElementById('chat-container');
