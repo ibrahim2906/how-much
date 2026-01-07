@@ -1144,65 +1144,100 @@
                     <div id="trash-list" class="space-y-3" role="list"></div>
                 </section>
 
-                <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-10">
-                    <div class="text-center mb-6">
-                        <h2 class="text-2xl md:text-3xl font-bold accent-text mb-2" style="color: var(--accent-color)" data-i18n="timers">Time & Tally</h2>
-                        <div class="flex justify-center gap-4 bg-black/20 p-1.5 rounded-xl inline-flex mx-auto" role="tablist">
-                            <button onclick="switchCounterTab('clock')" id="tab-clock" class="px-6 py-2 rounded-lg text-sm font-bold bg-white/10 text-white shadow-sm transition-all" data-i18n="clock" role="tab" aria-selected="true" aria-controls="view-clock">Clock</button>
-                            <button onclick="switchCounterTab('tally')" id="tab-tally" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white transition-all" data-i18n="counter" role="tab" aria-selected="false" aria-controls="view-tally">Counter</button>
-                        </div>
+                <section id="page-counters" class="page-section hidden max-w-3xl mx-auto min-h-full flex flex-col items-center py-6 md:py-10">
+    
+    <div class="glass-panel p-1.5 rounded-2xl flex gap-2 mb-8 relative z-10">
+        <button onclick="switchCounterTab('clock')" id="tab-clock" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transition-all duration-300" aria-selected="true">
+            <i class="fas fa-stopwatch mr-2"></i> Clock
+        </button>
+        <button onclick="switchCounterTab('tally')" id="tab-tally" class="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300" aria-selected="false">
+            <i class="fas fa-fingerprint mr-2"></i> Counter
+        </button>
+    </div>
+
+    <div id="view-clock" class="w-full flex flex-col items-center transition-all duration-500">
+        
+        <div class="relative w-72 h-72 mb-8 group">
+            <div class="absolute inset-0 bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-all duration-700"></div>
+            
+            <svg class="w-full h-full transform -rotate-90 drop-shadow-2xl" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle id="timer-progress" cx="50" cy="50" r="45" fill="none" stroke="url(#gradientTimer)" stroke-width="4" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear"/>
+                
+                <defs>
+                    <linearGradient id="gradientTimer" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="100%" stop-color="#ec4899" />
+                    </linearGradient>
+                </defs>
+            </svg>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+                <div id="timer-digits" dir="ltr" class="text-6xl md:text-7xl font-mono font-bold text-white tracking-wider drop-shadow-lg flex items-center gap-1">
+    <span id="digit-m1">0</span><span id="digit-m2">0</span><span class="text-white/50 pb-2">:</span><span id="digit-s1">0</span><span id="digit-s2">0</span>
+</div>
+                
+                <div id="timer-input-wrapper" class="hidden absolute inset-0 flex items-center justify-center bg-[#0f172a]/90 rounded-full backdrop-blur-sm z-20">
+                    <div class="flex flex-col items-center">
+                        <label class="text-xs text-indigo-300 font-bold uppercase tracking-widest mb-2">Set Minutes</label>
+                        <input type="number" id="timer-input" class="w-24 bg-transparent border-b-2 border-indigo-500 text-center text-4xl font-mono text-white focus:outline-none mb-4" placeholder="25" value="25" min="1">
+                        <button onclick="startTimer()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-indigo-500/30">START</button>
                     </div>
+                </div>
 
-                    <div id="view-clock" class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md" role="tabpanel" aria-labelledby="tab-clock">
-                        <div class="flex bg-black/20 p-1 rounded-xl mb-8" role="group" aria-label="Timer mode">
-                            <button onclick="setTimerMode('stopwatch')" id="btn-mode-stopwatch" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="stopwatch" aria-pressed="true">Stopwatch</button>
-                            <button onclick="setTimerMode('timer')" id="btn-mode-timer" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="timer" aria-pressed="false">Timer</button>
-                        </div>
+                <div class="text-xs text-slate-400 font-bold tracking-[0.3em] uppercase mt-2" id="timer-mode-label">STOPWATCH</div>
+            </div>
+        </div>
 
-                        <div class="relative w-64 h-64 max-w-[70vw] max-h-[70vw] mb-8">
-                            <svg class="w-full h-full" viewBox="0 0 100 100" aria-label="Timer progress">
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-                                <circle id="timer-progress" class="progress-ring__circle" cx="50" cy="50" r="45" fill="none" stroke="var(--accent-color)" stroke-width="6" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0"/>
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <div id="timer-display" class="text-5xl font-mono font-bold tracking-wider text-white" aria-live="polite">00:00</div>
-                                <input type="number" id="timer-input" class="hidden w-24 bg-transparent border-b border-white/20 text-center text-2xl font-mono text-white focus:outline-none focus:border-indigo-500 mt-2 text-base" placeholder="Min" min="1" value="25" aria-label="Timer duration in minutes">
-                            </div>
-                        </div>
+        <div class="flex items-center gap-6">
+            <button onclick="resetTimer()" class="w-14 h-14 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all active:scale-95 border border-white/5">
+                <i class="fas fa-undo"></i>
+            </button>
 
-                        <div class="flex gap-4">
-                            <button onclick="toggleTimer()" id="btn-timer-toggle" class="w-16 h-16 rounded-full accent-bg flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg accent-glow" style="background-color: var(--accent-color)" aria-label="Start or pause timer">
-                                <i class="fas fa-play" id="icon-timer-toggle" aria-hidden="true"></i>
-                            </button>
-                            <button onclick="resetTimer()" class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg" aria-label="Reset timer">
-                                <i class="fas fa-undo" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
+            <button onclick="toggleTimer()" id="btn-timer-toggle" class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl shadow-xl shadow-indigo-500/30 flex items-center justify-center transition-all hover:scale-105 active:scale-95 border-4 border-[#0f172a]">
+                <i class="fas fa-play pl-1" id="icon-timer-toggle"></i>
+            </button>
 
-                    <div id="view-tally" class="hidden glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-500 w-full max-w-md" role="tabpanel" aria-labelledby="tab-tally">
-                        <div class="flex bg-black/20 p-1 rounded-xl mb-8" role="group" aria-label="Tally mode">
-                            <button onclick="setTallyMode('up')" id="btn-tally-up" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white/10 text-white shadow" data-i18n="tasbih" aria-pressed="true">Tasbih (Up)</button>
-                            <button onclick="setTallyMode('down')" id="btn-tally-down" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white" data-i18n="countdown" aria-pressed="false">Countdown</button>
-                        </div>
+            <button onclick="switchTimerMode()" class="w-14 h-14 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all active:scale-95 border border-white/5" title="Switch Mode">
+                <i class="fas fa-exchange-alt"></i>
+            </button>
+        </div>
+    </div>
 
-                        <div id="tally-input-container" class="hidden mb-4">
-                            <label class="text-xs text-slate-400 block text-center mb-1" data-i18n="startValue" for="tally-start-val">Start Value</label>
-                            <input type="number" id="tally-start-val" value="33" class="w-24 bg-transparent border-b border-white/20 text-center text-xl font-mono text-white focus:outline-none text-base" onchange="resetTally()" aria-label="Starting value for countdown">
-                        </div>
+    <div id="view-tally" class="hidden w-full flex flex-col items-center justify-center transition-all duration-500 h-full">
+        
+        <button onclick="clickTally()" id="tally-btn" class="relative w-72 h-72 md:w-80 md:h-80 rounded-[3rem] bg-[#1e1b4b] shadow-2xl flex flex-col items-center justify-center group active:scale-95 transition-all duration-100 border border-white/5 overflow-hidden">
+            
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 group-hover:opacity-100 transition-opacity"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none"></div>
+            
+            <div id="ripple-container" class="absolute inset-0 pointer-events-none overflow-hidden rounded-[3rem]"></div>
 
-                        <button onclick="clickTally()" id="tally-btn" class="clicker-btn w-64 h-64 max-w-[70vw] max-h-[70vw] rounded-full border-8 border-white/5 bg-gradient-to-br from-black/20 to-black/40 flex flex-col items-center justify-center mb-8 shadow-2xl active:shadow-inner transition-all relative overflow-hidden group" aria-label="Tally counter button">
-                            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
-                            <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2" id="tally-label" data-i18n="count">Count</span>
-                            <span id="tally-display" class="text-7xl font-mono font-bold text-white drop-shadow-lg select-none" aria-live="polite">0</span>
-                        </button>
+            <span class="text-xs text-indigo-300 font-bold uppercase tracking-[0.3em] mb-4 z-10">Count</span>
+            
+            <div class="h-32 overflow-hidden relative z-10">
+                <span id="tally-display" class="block text-8xl md:text-9xl font-bold text-white drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">0</span>
+            </div>
 
-                        <button onclick="resetTally()" class="text-sm text-slate-400 hover:text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/5" aria-label="Reset counter">
-                            <i class="fas fa-undo" aria-hidden="true"></i> 
-                            <span data-i18n="reset">Reset Counter</span>
-                        </button>
-                    </div>
-                </section>
+            <div class="absolute bottom-8 text-[10px] text-slate-500">Tap to increment</div>
+        </button>
+
+        <div class="flex items-center gap-4 mt-10 bg-black/20 p-2 rounded-2xl border border-white/5">
+            <button onclick="resetTally()" class="px-4 py-2 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-sm">
+                <i class="fas fa-undo mr-2"></i> Reset
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button onclick="setTallyMode('up')" id="btn-tally-dir" class="px-4 py-2 rounded-xl hover:bg-white/10 text-indigo-400 transition-colors text-sm font-bold">
+                <i class="fas fa-arrow-up mr-2"></i> Up
+            </button>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-2 text-sm text-slate-500">
+            <span>Start from:</span>
+            <input type="number" id="tally-start-val" value="0" class="w-16 bg-transparent border-b border-slate-600 text-center text-white focus:border-indigo-500 outline-none" onchange="resetTally()">
+        </div>
+    </div>
+</section>
 
                 <section id="page-ai" class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
     <div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
@@ -1572,26 +1607,44 @@
                 <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
             </button>
 
-            <nav class="md:hidden fixed bottom-6 left-4 right-4 h-16 glass-panel rounded-2xl flex justify-around items-center z-40 mobile-dock border border-white/20" role="navigation" aria-label="Mobile navigation">
-                <button onclick="showPage('courses')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]" aria-label="Courses">
-                    <i class="fas fa-graduation-cap text-xl" aria-hidden="true"></i>
-                </button>
-                <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]" aria-label="Tasks">
-                    <i class="fas fa-check-circle text-xl" aria-hidden="true"></i>
-                </button>
-                <button onclick="showPage('notes')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]" aria-label="Notes">
-                    <i class="fas fa-sticky-note text-xl" aria-hidden="true"></i>
-                </button>
-                <button onclick="showPage('azkar')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px] text-teal-400" aria-label="Azkar">
-                    <i class="fas fa-mosque text-xl" aria-hidden="true"></i>
-                </button>
-                <button onclick="showPage('books')" class="nav-link flex flex-col items-center gap-1 p-2 min-h-[44px]" aria-label="Books">
-                    <i class="fas fa-book-open text-xl" aria-hidden="true"></i>
-                </button>
-                <button onclick="showPage('trash')" class="nav-link flex flex-col items-center gap-1 p-2 text-red-400 min-h-[44px]" aria-label="Trash">
-                    <i class="fas fa-trash-alt text-xl" aria-hidden="true"></i>
-                </button>
-            </nav>
+            <nav class="md:hidden fixed bottom-4 left-2 right-2 h-16 glass-panel rounded-2xl grid grid-cols-7 gap-0 items-center z-40 mobile-dock border border-white/20 px-1" role="navigation" aria-label="Mobile navigation">
+    
+    <button onclick="showPage('courses')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Courses">
+        <i class="fas fa-graduation-cap text-lg mb-1 group-[.active]:text-indigo-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Edu</span>
+    </button>
+
+    <button onclick="showPage('tasks')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Tasks">
+        <i class="fas fa-check-circle text-lg mb-1 group-[.active]:text-purple-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Task</span>
+    </button>
+
+    <button onclick="showPage('notes')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Notes">
+        <i class="fas fa-sticky-note text-lg mb-1 group-[.active]:text-yellow-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Note</span>
+    </button>
+
+    <button onclick="showPage('azkar')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Azkar">
+        <i class="fas fa-mosque text-xl mb-1 text-orange-400 group-[.active]:scale-110 transition-transform"></i>
+        <span class="text-[8px] uppercase font-bold text-orange-400/80">Zikr</span>
+    </button>
+    
+    <button onclick="showPage('counters')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Timers">
+        <i class="fas fa-stopwatch text-lg mb-1 group-[.active]:text-yellow-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Time</span>
+    </button>
+    
+    <button onclick="showPage('books')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Books">
+        <i class="fas fa-book-open text-lg mb-1 group-[.active]:text-emerald-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Book</span>
+    </button>
+
+    <button onclick="showPage('trash')" class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group" aria-label="Trash">
+        <i class="fas fa-trash-alt text-lg mb-1 group-[.active]:text-red-400 text-slate-400"></i>
+        <span class="text-[8px] uppercase font-bold opacity-60">Bin</span>
+    </button>
+
+</nav>
         </main>
     </div>
     
@@ -1666,7 +1719,26 @@
             </div>
         </div>
     </div>
+    <div id="confirm-modal" class="modal-wrapper hidden fixed inset-0 z-[70] flex items-center justify-center pointer-events-none p-4" role="dialog" aria-modal="true">
+    <div class="modal-content glass-panel w-full max-w-sm rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl text-center">
+        
+        <div class="w-16 h-16 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
 
+        <h3 class="text-xl font-bold text-white mb-2" data-i18n="areYouSure">Are you sure?</h3>
+        <p id="confirm-modal-msg" class="text-slate-300 text-sm mb-6">This action cannot be undone.</p>
+
+        <div class="flex gap-3">
+            <button onclick="closeAllModals()" class="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 transition-colors font-bold">
+                Cancel
+            </button>
+            <button onclick="executeConfirmAction()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white transition-colors font-bold shadow-lg shadow-red-900/20">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
     <div id="generic-modal" class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div id="generic-modal-content" class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
         <h3 class="text-2xl font-bold mb-6 text-white" id="modal-title">Manage Item</h3>
@@ -2350,237 +2422,236 @@
         }
 
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-        let timerInterval = null;
-        let timerSeconds = 0;
-        let timerTarget = 0;
-        let timerMode = 'stopwatch';
-        let timerRunning = false;
-        
-        window.setTimerMode = function(mode) {
-            timerMode = mode;
-            window.stopTimer();
-            
-            const btnSw = document.getElementById('btn-mode-stopwatch');
-            const btnTm = document.getElementById('btn-mode-timer');
-            const input = document.getElementById('timer-input');
-            const display = document.getElementById('timer-display');
-            
-            if(mode === 'stopwatch') {
-                btnSw.classList.remove('text-slate-400', 'hover:text-white');
-                btnSw.classList.add('text-white', 'bg-white/10');
-                btnSw.setAttribute('aria-pressed', 'true');
-                
-                btnTm.classList.remove('text-white', 'bg-white/10');
-                btnTm.classList.add('text-slate-400', 'hover:text-white');
-                btnTm.setAttribute('aria-pressed', 'false');
-                
-                input.classList.add('hidden');
-                display.classList.remove('hidden');
-                timerSeconds = 0;
-                updateTimerDisplay();
-            } else {
-                btnTm.classList.remove('text-slate-400', 'hover:text-white');
-                btnTm.classList.add('text-white', 'bg-white/10');
-                btnTm.setAttribute('aria-pressed', 'true');
-                
-                btnSw.classList.remove('text-white', 'bg-white/10');
-                btnSw.classList.add('text-slate-400', 'hover:text-white');
-                btnSw.setAttribute('aria-pressed', 'false');
-                
-                input.classList.remove('hidden');
-                display.classList.add('hidden');
-            }
-        };
+        /* ==========================================
+   TIMER & COUNTER LOGIC (UPDATED)
+   ========================================== */
 
-        window.toggleTimer = function() {
-            if(timerRunning) {
+let timerInterval = null;
+let timerSeconds = 0;
+let timerTarget = 0;
+let timerMode = 'stopwatch'; // 'stopwatch' or 'timer'
+let timerRunning = false;
+
+// دالة التبديل بين التابات
+window.switchCounterTab = function(tab) {
+    const clockView = document.getElementById('view-clock');
+    const tallyView = document.getElementById('view-tally');
+    const clockTab = document.getElementById('tab-clock');
+    const tallyTab = document.getElementById('tab-tally');
+    
+    if(tab === 'clock') {
+        clockView.classList.remove('hidden');
+        tallyView.classList.add('hidden');
+        
+        // Style Active Tab
+        clockTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transition-all duration-300";
+        tallyTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300";
+    } else {
+        clockView.classList.add('hidden');
+        tallyView.classList.remove('hidden');
+        
+        // Style Active Tab
+        tallyTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg transition-all duration-300";
+        clockTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300";
+    }
+};
+
+// دالة التبديل بين ساعة الإيقاف والمؤقت
+window.switchTimerMode = function() {
+    window.stopTimer();
+    timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
+    
+    const label = document.getElementById('timer-mode-label');
+    const inputWrapper = document.getElementById('timer-input-wrapper');
+    const progress = document.getElementById('timer-progress');
+    
+    if(timerMode === 'timer') {
+        label.innerText = "TIMER (COUNTDOWN)";
+        inputWrapper.classList.remove('hidden');
+        progress.style.stroke = "url(#gradientTimer)"; // Restore color
+    } else {
+        label.innerText = "STOPWATCH";
+        inputWrapper.classList.add('hidden');
+        progress.style.strokeDashoffset = 0;
+    }
+    
+    timerSeconds = 0;
+    updateDigitDisplay(0);
+};
+
+window.toggleTimer = function() {
+    if(timerRunning) {
+        window.stopTimer();
+    } else {
+        window.startTimer();
+    }
+};
+
+window.startTimer = function() {
+    const inputWrapper = document.getElementById('timer-input-wrapper');
+    
+    if(timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
+        const mins = parseInt(document.getElementById('timer-input').value) || 25;
+        timerTarget = mins * 60;
+        timerSeconds = timerTarget;
+        inputWrapper.classList.add('hidden');
+    }
+    
+    timerRunning = true;
+    const iconEl = document.getElementById('icon-timer-toggle');
+    iconEl.className = 'fas fa-pause';
+    
+    // Add pulsing effect to container
+    document.getElementById('timer-digits').classList.add('animate-pulse');
+
+    timerInterval = setInterval(() => {
+        if(timerMode === 'stopwatch') {
+            timerSeconds++;
+        } else {
+            timerSeconds--;
+            if(timerSeconds <= 0) {
                 window.stopTimer();
-            } else {
-                window.startTimer();
-            }
-        };
-
-        window.startTimer = function() {
-            if(timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
-                const mins = parseInt(document.getElementById('timer-input').value) || 25;
-                timerTarget = mins * 60;
-                timerSeconds = timerTarget;
-                document.getElementById('timer-input').classList.add('hidden');
-                document.getElementById('timer-display').classList.remove('hidden');
-            }
-            
-            timerRunning = true;
-            const iconEl = document.getElementById('icon-timer-toggle');
-            if(iconEl) iconEl.className = 'fas fa-pause';
-            
-            document.getElementById('widget-timer-container').classList.remove('hidden');
-
-            timerInterval = setInterval(() => {
-                if(timerMode === 'stopwatch') {
-                    timerSeconds++;
-                } else {
-                    timerSeconds--;
-                    if(timerSeconds <= 0) {
-                        window.stopTimer();
-                        alarmSound.play();
-                        return;
-                    }
-                }
-                updateTimerDisplay();
-                updateWidget();
-            }, 1000);
-            
-            updateWidget();
-        };
-
-        window.stopTimer = function() {
-            timerRunning = false;
-            clearInterval(timerInterval);
-            
-            const iconEl = document.getElementById('icon-timer-toggle');
-            if(iconEl) iconEl.className = 'fas fa-play';
-            
-            updateWidget();
-        };
-        
-        window.resetTimer = function() {
-            window.stopTimer();
-            
-            if(timerMode !== 'stopwatch') {
-                document.getElementById('timer-display').classList.add('hidden');
-                document.getElementById('timer-input').classList.remove('hidden');
-            }
-            
-            timerSeconds = 0;
-            document.getElementById('widget-timer-container').classList.add('hidden');
-            updateTimerDisplay();
-            updateWidget();
-        };
-        
-        function updateTimerDisplay() {
-            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-            const s = (timerSeconds % 60).toString().padStart(2, '0');
-            const timeStr = `${m}:${s}`;
-            
-            const displayEl = document.getElementById('timer-display');
-            if(displayEl) displayEl.innerText = timeStr;
-            
-            const widgetTimer = document.getElementById('widget-timer-val');
-            if(widgetTimer) widgetTimer.innerText = timeStr;
-
-            const circle = document.getElementById('timer-progress');
-            if(circle) {
-                const radius = circle.r.baseVal.value;
-                const circumference = radius * 2 * Math.PI;
-                
-                if(timerMode === 'timer' && timerTarget > 0) {
-                    circle.style.strokeDashoffset = circumference - ((timerSeconds / timerTarget) * circumference);
-                } else {
-                    circle.style.strokeDashoffset = 0;
-                }
+                // Play Sound
+                const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+                audio.play();
+                return;
             }
         }
+        updateDigitDisplay(timerSeconds);
+        updateTimerRing();
+    }, 1000);
+    
+    updateTimerRing();
+};
 
-        let tallyMode = 'up';
-        let tallyCount = 0;
-        
-        window.switchCounterTab = function(tab) {
-            const clockView = document.getElementById('view-clock');
-            const tallyView = document.getElementById('view-tally');
-            const clockTab = document.getElementById('tab-clock');
-            const tallyTab = document.getElementById('tab-tally');
-            
-            if(tab === 'clock') {
-                clockView.classList.remove('hidden');
-                tallyView.classList.add('hidden');
-                
-                clockTab.classList.remove('text-slate-400');
-                clockTab.classList.add('text-white', 'bg-white/10');
-                clockTab.setAttribute('aria-selected', 'true');
-                
-                tallyTab.classList.remove('text-white', 'bg-white/10');
-                tallyTab.classList.add('text-slate-400');
-                tallyTab.setAttribute('aria-selected', 'false');
-            } else {
-                clockView.classList.add('hidden');
-                tallyView.classList.remove('hidden');
-                
-                tallyTab.classList.remove('text-slate-400');
-                tallyTab.classList.add('text-white', 'bg-white/10');
-                tallyTab.setAttribute('aria-selected', 'true');
-                
-                clockTab.classList.remove('text-white', 'bg-white/10');
-                clockTab.classList.add('text-slate-400');
-                clockTab.setAttribute('aria-selected', 'false');
-            }
-        };
+window.stopTimer = function() {
+    timerRunning = false;
+    clearInterval(timerInterval);
+    const iconEl = document.getElementById('icon-timer-toggle');
+    iconEl.className = 'fas fa-play pl-1';
+    document.getElementById('timer-digits').classList.remove('animate-pulse');
+};
 
-        window.setTallyMode = function(mode) {
-            tallyMode = mode;
-            
-            const btnUp = document.getElementById('btn-tally-up');
-            const btnDown = document.getElementById('btn-tally-down');
-            const inputContainer = document.getElementById('tally-input-container');
-            const label = document.getElementById('tally-label');
-            const lang = window.appData.settings.lang;
-            
-            if(mode === 'up') {
-                btnUp.classList.remove('text-slate-400');
-                btnUp.classList.add('text-white', 'bg-white/10');
-                btnUp.setAttribute('aria-pressed', 'true');
-                
-                btnDown.classList.remove('text-white', 'bg-white/10');
-                btnDown.classList.add('text-slate-400');
-                btnDown.setAttribute('aria-pressed', 'false');
-                
-                inputContainer.classList.add('hidden');
-                label.innerText = translations[lang].tasbih;
-                window.resetTally();
-            } else {
-                btnDown.classList.remove('text-slate-400');
-                btnDown.classList.add('text-white', 'bg-white/10');
-                btnDown.setAttribute('aria-pressed', 'true');
-                
-                btnUp.classList.remove('text-white', 'bg-white/10');
-                btnUp.classList.add('text-slate-400');
-                btnUp.setAttribute('aria-pressed', 'false');
-                
-                inputContainer.classList.remove('hidden');
-                label.innerText = translations[lang].countdown;
-                window.resetTally();
-            }
-        };
+window.resetTimer = function() {
+    window.stopTimer();
+    timerSeconds = 0;
+    if(timerMode === 'timer') {
+        document.getElementById('timer-input-wrapper').classList.remove('hidden');
+    }
+    updateDigitDisplay(0);
+    updateTimerRing();
+};
 
-        window.clickTally = function() {
-            if(tallyMode === 'up') {
-                tallyCount++;
-            } else if(tallyCount > 0) {
-                tallyCount--;
-            }
-            
-            const displayEl = document.getElementById('tally-display');
-            if(displayEl) displayEl.innerText = tallyCount;
-            
-            const btn = document.getElementById('tally-btn');
-            if(btn) {
-                btn.classList.add('clicked');
-                setTimeout(() => btn.classList.remove('clicked'), 100);
-            }
-            
-            if(navigator.vibrate) navigator.vibrate(20);
-        };
+// دالة لتحديث الأرقام بشكل منفصل (بدون إعادة رسم كل شيء)
+function updateDigitDisplay(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    
+    const mStr = m.toString().padStart(2, '0');
+    const sStr = s.toString().padStart(2, '0');
+    
+    // Helper to update text with animation only if changed
+    updateSingleDigit('digit-m1', mStr[0]);
+    updateSingleDigit('digit-m2', mStr[1]);
+    updateSingleDigit('digit-s1', sStr[0]);
+    updateSingleDigit('digit-s2', sStr[1]);
+    
+    // Update Mini Widget
+    const widgetTimer = document.getElementById('widget-timer-val');
+    if(widgetTimer) widgetTimer.innerText = `${mStr}:${sStr}`;
+}
 
-        window.resetTally = function() {
-            if(tallyMode === 'up') {
-                tallyCount = 0;
-            } else {
-                const inputEl = document.getElementById('tally-start-val');
-                tallyCount = parseInt(inputEl.value) || 33;
+function updateSingleDigit(id, newVal) {
+    const el = document.getElementById(id);
+    if(el.innerText !== newVal) {
+        // Simple Flip Animation using GSAP
+        gsap.to(el, {
+            scaleY: 0,
+            duration: 0.15,
+            onComplete: () => {
+                el.innerText = newVal;
+                gsap.to(el, { scaleY: 1, duration: 0.15, ease: "back.out(1.7)" });
             }
-            
-            const displayEl = document.getElementById('tally-display');
-            if(displayEl) displayEl.innerText = tallyCount;
-        };
+        });
+    }
+}
+
+function updateTimerRing() {
+    const circle = document.getElementById('timer-progress');
+    const radius = circle.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
+    
+    if(timerMode === 'timer' && timerTarget > 0) {
+        const offset = circumference - ((timerSeconds / timerTarget) * circumference);
+        circle.style.strokeDashoffset = offset;
+    } else {
+        circle.style.strokeDashoffset = 0;
+    }
+}
+
+/* --- TALLY COUNTER LOGIC --- */
+let tallyCount = 0;
+let tallyDir = 1; // 1 for Up, -1 for Down
+
+window.clickTally = function() {
+    tallyCount += tallyDir;
+    if(tallyCount < 0) tallyCount = 0;
+    
+    const display = document.getElementById('tally-display');
+    
+    // 1. Text Animation (Rolling Number)
+    gsap.to(display, {
+        scale: 1.5,
+        duration: 0.1,
+        y: -10,
+        onComplete: () => {
+            display.innerText = tallyCount;
+            gsap.to(display, { scale: 1, y: 0, duration: 0.3, ease: "bounce.out" });
+        }
+    });
+
+    // 2. Ripple Effect Logic
+    const btn = document.getElementById('tally-btn');
+    const circle = document.createElement('div');
+    const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+    
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = '50%';
+    circle.style.top = '50%';
+    circle.style.transform = 'translate(-50%, -50%) scale(0)';
+    circle.classList.add('absolute', 'rounded-full', 'bg-white/10', 'pointer-events-none');
+    
+    document.getElementById('ripple-container').appendChild(circle);
+    
+    gsap.to(circle, {
+        scale: 2,
+        opacity: 0,
+        duration: 0.6,
+        onComplete: () => circle.remove()
+    });
+
+    // 3. Vibrate
+    if(navigator.vibrate) navigator.vibrate(30);
+};
+
+window.resetTally = function() {
+    const startVal = parseInt(document.getElementById('tally-start-val').value) || 0;
+    tallyCount = startVal;
+    document.getElementById('tally-display').innerText = tallyCount;
+};
+
+window.setTallyMode = function(mode) {
+    const btn = document.getElementById('btn-tally-dir');
+    if(tallyDir === 1) {
+        tallyDir = -1;
+        btn.innerHTML = '<i class="fas fa-arrow-down mr-2"></i> Down';
+        btn.classList.replace('text-indigo-400', 'text-pink-400');
+    } else {
+        tallyDir = 1;
+        btn.innerHTML = '<i class="fas fa-arrow-up mr-2"></i> Up';
+        btn.classList.replace('text-pink-400', 'text-indigo-400');
+    }
+};
 
         const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms";
         let tempAudioBase64 = null;
@@ -2717,7 +2788,29 @@
                 console.error("Init Error:", err);
             }
         };
+        // متغير لتخزين الوظيفة التي سيتم تنفيذها عند الموافقة
+        let pendingConfirmAction = null;
 
+        // دالة لفتح مودال التأكيد
+        window.openConfirmModal = function(message, actionCallback) {
+            const msgEl = document.getElementById('confirm-modal-msg');
+            if(msgEl) msgEl.innerText = message;
+            
+            // تخزين الوظيفة لاستدعائها لاحقاً
+            pendingConfirmAction = actionCallback;
+            
+            // فتح المودال باستخدام الأنيميشن الموجود لديك مسبقاً
+            window.openGenieModal('confirm-modal');
+        };
+
+        // دالة تنفيذ الإجراء عند الضغط على زر Confirm
+        window.executeConfirmAction = async function() {
+            if (pendingConfirmAction) {
+                await pendingConfirmAction(); // تنفيذ الوظيفة
+            }
+            window.closeAllModals(); // إغلاق المودال
+            pendingConfirmAction = null; // تصفير المتغير
+        };
         const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
         magneticBtns.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -3418,7 +3511,9 @@
     };
     
     window.emptyTrash = function() {
-        if(!confirm("Permanently delete all items in trash?")) return;
+    // بدلاً من confirm، نستخدم المودال الجديد
+    openConfirmModal("Permanently delete all items in trash?", function() {
+        // هذا الكود يتم تنفيذه فقط عند الضغط على زر Confirm في المودال
         
         if(!window.appData.stats) window.appData.stats = { historicXP: 0 };
         
@@ -3436,7 +3531,11 @@
         
         commitData();
         refreshAllUI();
-    };
+        
+        // تشغيل صوت أو تأثير بسيط للتأكيد (اختياري)
+        if(navigator.vibrate) navigator.vibrate(50);
+    });
+};
 
     function commitData() {
         localStorage.setItem('hm_data', JSON.stringify(window.appData));
