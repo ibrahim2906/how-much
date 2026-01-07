@@ -3633,15 +3633,17 @@
             window.openGenieModal(id);
         };
 
-        function resetModalInputs() {
+        window.resetModalInputs = function () {
             document.getElementById('modal-id').value = '';
             document.getElementById('modal-name').value = '';
             document.getElementById('modal-desc').value = '';
             document.getElementById('modal-total').value = '';
             document.getElementById('modal-done').value = '';
             document.getElementById('modal-optional').checked = false;
+
             tempAudioBase64 = null;
-            tempDrawingData = null;
+            window.tempDrawingData = null;
+            window.tempDrawingJSON = null; // Fix: Clear JSON
             tempFiles = [];
 
             document.getElementById('modal-audio-player-container').classList.add('hidden');
@@ -3655,7 +3657,7 @@
             btns.forEach(btn => {
                 btn.classList.remove('loading', 'success');
             });
-        }
+        };
 
         window.saveItem = async function (btnElement) {
             const name = document.getElementById('modal-name').value;
@@ -3682,7 +3684,8 @@
 
             if (type === 'task') {
                 newItem.completed = false;
-                newItem.drawing = tempDrawingData;
+                newItem.drawing = window.tempDrawingData;
+                newItem.drawingJSON = window.tempDrawingJSON; // Fix: Save JSON
                 newItem.optional = document.getElementById('modal-optional').checked;
 
                 const idx = window.appData.tasks.findIndex(x => x.id == id);
@@ -3724,7 +3727,8 @@
                     triggerConfetti(true);
                 }
             } else if (type === 'note') {
-                newItem.drawing = tempDrawingData;
+                newItem.drawing = window.tempDrawingData;
+                newItem.drawingJSON = window.tempDrawingJSON; // Fix: Save JSON
 
                 const idx = window.appData.notes.findIndex(x => x.id == id);
                 if (idx > -1) {
