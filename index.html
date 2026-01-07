@@ -3513,10 +3513,13 @@
                 }
             }
 
-            tempDrawingData = item.drawing || null;
-            if (tempDrawingData) {
+            // DUAL STORAGE RESTORE
+            window.tempDrawingData = item.drawing || null;
+            window.tempDrawingJSON = item.drawingJSON || null;
+
+            if (window.tempDrawingData) {
                 document.getElementById('modal-drawing-preview').classList.remove('hidden');
-                document.getElementById('modal-drawing-img').src = tempDrawingData;
+                document.getElementById('modal-drawing-img').src = window.tempDrawingData;
                 document.getElementById('btn-draw-label').innerText = "Edit Drawing";
             }
 
