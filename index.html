@@ -2381,6 +2381,21 @@
         async function saveData() {
             if (currentUser && db) {
                 try {
+                    const payload = JSON.stringify(window.appData);
+                    const sizeInBytes = new Blob([payload]).size;
+                    console.log("Payload size:", sizeInBytes, "bytes");
+
+                    if (sizeInBytes > 900000) {
+                        alert("⚠️ Data too large to sync! \n\nPlease remove some images or audio notes. \nTotal Size: " + (sizeInBytes / 1024 / 1024).toFixed(2) + "MB (Limit: 1MB)");
+                        const statusEl = document.getElementById('cloud-status');
+                        if (statusEl) {
+                            statusEl.innerText = "Sync Failed (Too Large)";
+                            statusEl.classList.add('text-red-400');
+                            statusEl.classList.remove('text-green-400');
+                        }
+                        return;
+                    }
+
                     await setDoc(
                         doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"),
                         window.appData
@@ -2394,6 +2409,7 @@
                     }
                 } catch (e) {
                     console.error("Save Error:", e);
+                    alert("❌ Cloud Save Failed: " + e.message);
                 }
             }
         }
