@@ -2529,12 +2529,24 @@ window.startTimer = function() {
         } else {
             timerSeconds--;
             if(timerSeconds <= 0) {
-                window.stopTimer();
-                // Play Sound
-                const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-                audio.play();
-                return;
-            }
+    window.stopTimer();
+    
+    // ✅ تكرار صوت beep مرتين متتاليتين 
+    const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+    beep1.play();
+    
+    setTimeout(() => {
+        const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+        beep2.play();
+    }, 1200); // تأخير 300ms بين الصوتين
+    
+    // اهتزاز إضافي للتنبيه
+    if(navigator.vibrate) {
+        navigator.vibrate([200, 100, 200, 100, 200]);
+    }
+    
+    return;
+}
         }
         updateDigitDisplay(timerSeconds);
         updateTimerRing();
