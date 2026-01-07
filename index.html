@@ -5412,19 +5412,9 @@ Be helpful, safe, and focused on productivity!`
         // ==========================================
         window.downloadCanvasAsPNG = function () {
             if (!fCanvas) return;
-
-            // 1. إلغاء تحديد أي عنصر لكي لا يظهر مربع التحديد في الصورة
             fCanvas.discardActiveObject();
             fCanvas.renderAll();
-
-            // 2. تحويل الرسم لرابط صورة
-            const dataURL = fCanvas.toDataURL({
-                format: 'png',
-                quality: 1,
-                multiplier: 2 // دقة عالية
-            });
-
-            // 3. إنشاء رابط وهمي والضغط عليه
+            const dataURL = fCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 2 });
             const link = document.createElement('a');
             link.download = 'how-much-drawing-' + Date.now() + '.png';
             link.href = dataURL;
@@ -5432,6 +5422,89 @@ Be helpful, safe, and focused on productivity!`
             link.click();
             document.body.removeChild(link);
         };
+
+        // ==========================================
+        // DUAL STORAGE DRAWING LOGIC (Fixed)
+        // ==========================================
+
+        window.openDrawingCanvas = function () {
+            const modal = document.getElementById('drawing-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                initFabric();
+                resizeFabric();
+
+                window.toggleDrawMode(true);
+
+                // Priority: Try loading JSON (Editable). Fallback: Load Image (Background).
+                if (window.tempDrawingJSON) {
+                    fCanvas.clear();
+                    fCanvas.loadFromJSON(window.tempDrawingJSON, function () {
+                        fCanvas.renderAll();
+                    });
+                } else if (window.tempDrawingData) {
+                    fCanvas.clear();
+                    fabric.Image.fromURL(window.tempDrawingData, function (img) {
+                        fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas), {
+                            scaleX: fCanvas.width / img.width,
+                            scaleY: fCanvas.height / img.height
+                        });
+                    });
+                } else {
+                    fCanvas.clear();
+                }
+            }, 150);
+        };
+
+        window.saveCanvasDrawing = async function (btnElement) {
+            if (!fCanvas) return;
+            if (btnElement) btnElement.classList.add('loading');
+
+            // 1. Save JSON (The editable strokes)
+            window.tempDrawingJSON = JSON.stringify(fCanvas.toJSON());
+
+            // 2. Save Image (The visible preview)
+            window.tempDrawingData = fCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 2 });
+
+            const previewContainer = document.getElementById('modal-drawing-preview');
+            const previewImg = document.getElementById('modal-drawing-img');
+            const btnLabel = document.getElementById('btn-draw-label');
+
+            if (previewContainer && previewImg) {
+                previewContainer.classList.remove('hidden');
+                previewImg.src = window.tempDrawingData;
+                if (btnLabel) btnLabel.innerText = "Edit Drawing";
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            if (btnElement) {
+                btnElement.classList.remove('loading');
+                btnElement.classList.add('success');
+            }
+
+            setTimeout(() => {
+                window.closeDrawingModal();
+                if (btnElement) btnElement.classList.remove('success');
+            }, 500);
+        };
+
+        // FIX: Load data from LocalStorage on startup (Ensuring it runs)
+        (function () {
+            try {
+                const localData = localStorage.getItem('hm_data');
+                if (localData) {
+                    const parsed = JSON.parse(localData);
+                    if (parsed) {
+                        window.appData = parsed;
+                        if (!window.appData.notes) window.appData.notes = [];
+                        if (window.refreshAllUI) window.refreshAllUI();
+                    }
+                }
+            } catch (e) { console.error(e); }
+        })();
     </script>
 </body>
 
