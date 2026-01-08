@@ -3073,7 +3073,7 @@ function updateTimerDisplay() {
             navigator.vibrate([200, 100, 200, 100, 200]);
         }
         
-        showToast("⏰ انتهى الوقت!", 'success');
+        showToast("⏰ time ended!", 'success');
     }
 }
 
@@ -4070,7 +4070,7 @@ window.showToast = function(msg, type = 'neutral') {
     
     if (!window.currentUser) {
         console.error("❌ لم يتم تسجيل الدخول");
-        showToast("⚠️ يجب تسجيل الدخول لرفع الملفات", 'error');
+        showToast("⚠️ you should sign in", 'error');
         input.value = '';
         return;
     }
@@ -4085,7 +4085,7 @@ window.showToast = function(msg, type = 'neutral') {
     
     if (!window.CLOUDINARY_CONFIG.cloudName || !window.CLOUDINARY_CONFIG.uploadPreset) {
         console.error("❌ إعدادات Cloudinary مفقودة!");
-        showToast("❌ خطأ في إعدادات الرفع", 'error');
+        showToast("❌ Upload settings error", 'error');
         return;
     }
 
@@ -4105,26 +4105,26 @@ window.showToast = function(msg, type = 'neutral') {
         
         console.error("❌ تجاوز الحد الأقصى للمساحة");
         showToast(
-            `⚠️ مساحة التخزين غير كافية!\n\n` +
-            `المتبقي: ${remainingMB} MB\n` +
-            `المطلوب: ${neededMB} MB\n\n` +
-            `احذف بعض الملفات القديمة أولاً.`,
+            `⚠️ Insufficient storage space!\n\n` +
+            `remaining: ${remainingMB} MB\n` +
+            `needed: ${neededMB} MB\n\n` +
+            `Delete some old files first.`,
             'error'
         );
         input.value = '';
         return;
     }
 
-    showToast(`⏳ جاري رفع ${files.length} ملف...`, 'neutral');
+    showToast(`⏳ uploading file${files.length} file...`, 'neutral');
 
     let successCount = 0;
     let failCount = 0;
 
     for (const file of files) {
         // 🆕 إضافة 8: معلومات الملف الحالي
-        console.log(`\n📤 رفع الملف: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+        console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
         
-        if (file.size > MAX_FILE_SIZE) {
+ if (file.size > MAX_FILE_SIZE) {
     const sizeMB = (file.size / 1024 / 1024).toFixed(2);
 
     const message = `❌ "${file.name}" is too large (${sizeMB} MB). Maximum allowed size is 50 MB.`;
@@ -4135,6 +4135,7 @@ window.showToast = function(msg, type = 'neutral') {
     failCount++;
     continue;
 }
+      
 
         try {
             // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
@@ -4196,8 +4197,8 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
             window.userStorageInfo.fileCount++;
 
             // 🆕 إضافة 16: رسالة نجاح مفصلة
-            console.log(`✅ تم رفع: ${file.name}`);
-            console.log(`   الرابط: ${data.secure_url}`);
+            console.log(`✅ Uploaded: ${file.name}`);
+            console.log(`  URL: ${data.secure_url}`);
             successCount++;
 
         } catch (error) {
@@ -4205,6 +4206,7 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
             console.error("❌ خطأ في الرفع:", error);
             console.error("   الملف:", file.name);
             console.error("   التفاصيل:", error.message);
+            showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
             failCount++;
         }
     }
@@ -4215,13 +4217,13 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
     console.log(`   فاشل: ${failCount}`);
 
     if (successCount > 0) {
-        showToast(`✅ تم رفع ${successCount} ملف بنجاح!`, 'success');
+        showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
         renderFilePreview();
         updateStorageUI();
     }
 
     if (failCount > 0) {
-        showToast(`⚠️ فشل رفع ${failCount} ملف`, 'error');
+        showToast(`⚠️ failed to upload${failCount} file`, 'error');
     }
 
     input.value = '';
@@ -4256,21 +4258,14 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
                 <!-- ✅ زر التحميل المباشر -->
                 <button onclick="downloadFileDirect('${f.url}', '${escapeHtml(f.name)}')" 
                         class="text-green-400 hover:text-white" 
-                        title="تحميل مباشر">
+                        title="download">
                     <i class="fas fa-download"></i>
                 </button>
-                
-                <!-- زر الفتح في صفحة جديدة -->
-                <a href="${f.url}" target="_blank" 
-                   class="text-blue-400 hover:text-white" 
-                   title="عرض">
-                    <i class="fas fa-external-link-alt"></i>
-                </a>
                 
                 <!-- زر الحذف -->
                 <button onclick="removeTempFile(${idx})" 
                         class="text-red-400 hover:text-white" 
-                        title="حذف">
+                        title="delete">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -4300,7 +4295,7 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
     tempFiles.splice(idx, 1);
     renderFilePreview();
     updateStorageUI();
-    showToast("✅ تم حذف الملف", 'success');
+    showToast("✅ file deleted", 'success');
 };
 
         window.moveToTrash = function (type, id, event) {
@@ -6020,5 +6015,3 @@ window.downloadFileDirect = async function(url, filename) {
     </script>
 </body>
 </html>
-
-
