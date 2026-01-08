@@ -4123,18 +4123,7 @@ window.showToast = function(msg, type = 'neutral') {
     for (const file of files) {
         // 🆕 إضافة 8: معلومات الملف الحالي
         console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-        
- if (file.size > MAX_FILE_SIZE) {
-    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
 
-    const message = `❌ "${file.name}" is too large (${sizeMB} MB). Maximum allowed size is 50 MB.`;
-
-    console.error(message);
-    showToast(message, 'error');
-
-    failCount++;
-    continue;
-}
       
 
         try {
