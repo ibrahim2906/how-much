@@ -993,6 +993,42 @@
                 left: 100px !important;
             }
         }
+        /* تصميم الإشعارات الجديد */
+.custom-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(30, 41, 59, 0.95); /* لون داكن عصري */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 16px;
+    z-index: 10000; /* للتأكد من ظهوره فوق كل شيء */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+
+.custom-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.custom-toast.error { 
+    border-left: 4px solid #ef4444; 
+}
+
+.custom-toast.success { 
+    border-left: 4px solid #22c55e; 
+}
     </style>
 </head>
 
@@ -2275,8 +2311,7 @@
                 </button>
             </div>
 
-            <button onclick="saveCanvasDrawing(this)"
-                class="interactive-btn bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold w-24">
+            <button onclick="saveCanvasDrawing()" class="text-slate-400 hover:text-white flex items-center gap-2">
                 <span class="btn-text-content">Save</span>
                 <span class="btn-loader">...</span>
             </button>
@@ -2291,7 +2326,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
@@ -2323,7 +2358,7 @@
                     if (error.code === 'auth/unauthorized-domain') {
                         alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)'.");
                     } else {
-                        alert("Login Failed: " + error.message);
+                        showToast("Login Failed: " + error.message);
                     }
                 }
             }
@@ -2379,67 +2414,74 @@
         }
 
         async function saveData() {
-            if (currentUser && db) {
-                try {
-                    const payload = JSON.stringify(window.appData);
-                    const sizeInBytes = new Blob([payload]).size;
-                    console.log("Payload size:", sizeInBytes, "bytes");
+    if (currentUser && db) {
+        try {
+            const userDocRef = doc(db, "artifacts", appId, "users", currentUser.uid);
+            
+            // 1. تجهيز البيانات المقسمة
+            const profileData = { settings: window.appData.settings, stats: window.appData.stats };
+            const tasksData = { tasks: window.appData.tasks };
+            const notesData = { notes: window.appData.notes };
+            const eduData = { courses: window.appData.courses, books: window.appData.books };
 
-                    if (sizeInBytes > 900000) {
-                        alert("⚠️ Data too large to sync! \n\nPlease remove some images or audio notes. \nTotal Size: " + (sizeInBytes / 1024 / 1024).toFixed(2) + "MB (Limit: 1MB)");
-                        const statusEl = document.getElementById('cloud-status');
-                        if (statusEl) {
-                            statusEl.innerText = "Sync Failed (Too Large)";
-                            statusEl.classList.add('text-red-400');
-                            statusEl.classList.remove('text-green-400');
-                        }
-                        return;
-                    }
+            // 2. إرسال البيانات بشكل متوازي (Parallel) لـ 4 مستندات مختلفة
+            await Promise.all([
+                setDoc(doc(userDocRef, "data", "profile"), profileData),
+                setDoc(doc(userDocRef, "data", "tasks"), tasksData),
+                setDoc(doc(userDocRef, "data", "notes"), notesData),
+                setDoc(doc(userDocRef, "data", "edu"), eduData)
+            ]);
 
-                    await setDoc(
-                        doc(db, "artifacts", appId, "users", currentUser.uid, "data", "profile"),
-                        window.appData
-                    );
-
-                    const statusEl = document.getElementById('cloud-status');
-                    if (statusEl) {
-                        statusEl.innerText = "Synced";
-                        statusEl.classList.remove('text-red-400');
-                        statusEl.classList.add('text-green-400');
-                    }
-                } catch (e) {
-                    console.error("Save Error:", e);
-                    alert("❌ Cloud Save Failed: " + e.message);
-                }
+            const statusEl = document.getElementById('cloud-status');
+            if (statusEl) {
+                statusEl.innerText = "Synced";
+                statusEl.classList.remove('text-red-400');
+                statusEl.classList.add('text-green-400');
             }
+        } catch (e) {
+            console.error("Save Error:", e);
+            showToast("❌ Cloud Save Failed: " + e.message);
         }
+    }
+}
 
         async function loadData(uid) {
-            if (!db) return;
+    if (!db) return;
 
-            onSnapshot(doc(db, "artifacts", appId, "users", uid, "data", "profile"), (s) => {
-                if (s.exists()) {
-                    window.appData = { ...window.appData, ...s.data() };
+    // الاستماع للمجموعة الفرعية "data" بالكامل لجلب الملفات الأربعة
+    const dataCollectionRef = collection(db, "artifacts", appId, "users", uid, "data");
 
-                    if (!window.appData.notes) window.appData.notes = [];
-                    if (!window.appData.stats) window.appData.stats = { historicXP: 0 };
-
-                    localStorage.setItem('hm_data', JSON.stringify(window.appData));
-                    refreshAllUI();
-
-                    const statusEl = document.getElementById('cloud-status');
-                    if (statusEl) {
-                        statusEl.innerText = "Synced";
-                        statusEl.classList.remove('text-red-400');
-                        statusEl.classList.add('text-green-400');
-                    }
-                } else {
-                    if (window.appData.tasks.length > 0 || window.appData.courses.length > 0) {
-                        saveData();
-                    }
-                }
+    onSnapshot(dataCollectionRef, (snapshot) => {
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                // دمج البيانات القادمة مع البيانات الحالية
+                window.appData = { ...window.appData, ...data };
             });
+
+            // التأكد من وجود المصفوفات الأساسية بعد الدمج
+            if (!window.appData.notes) window.appData.notes = [];
+            if (!window.appData.tasks) window.appData.tasks = [];
+            if (!window.appData.courses) window.appData.courses = [];
+            if (!window.appData.books) window.appData.books = [];
+            if (!window.appData.stats) window.appData.stats = { historicXP: 0 };
+
+            // حفظ نسخة محلية وتحديث الواجهة
+            localStorage.setItem('hm_data', JSON.stringify(window.appData));
+            refreshAllUI();
+
+            const statusEl = document.getElementById('cloud-status');
+            if (statusEl) {
+                statusEl.innerText = "Synced";
+                statusEl.classList.remove('text-red-400');
+                statusEl.classList.add('text-green-400');
+            }
+        } else {
+            // مستخدم جديد: قم بإنشاء الهيكل الأولي
+            saveData();
         }
+    });
+}
 
         window.triggerCloudSave = saveData;
     </script>
@@ -3062,6 +3104,31 @@
         let tempDrawingData = null;
         let tempFiles = [];
 
+        // دالة الإشعار الجديدة
+window.showToast = function(msg, type = 'neutral') {
+    const div = document.createElement('div');
+    div.className = `custom-toast ${type}`;
+    
+    let icon = '<i class="fas fa-info-circle text-blue-400"></i>';
+    if (type === 'error') icon = '<i class="fas fa-exclamation-circle text-red-400"></i>';
+    if (type === 'success') icon = '<i class="fas fa-check-circle text-green-400"></i>';
+
+    // دعم النص متعدد الأسطر
+    const formattedMsg = msg.replace(/\n/g, '<br>');
+    
+    div.innerHTML = `${icon} <span style="line-height: 1.5;">${formattedMsg}</span>`;
+    document.body.appendChild(div);
+
+    requestAnimationFrame(() => {
+        div.classList.add('show');
+    });
+
+    setTimeout(() => {
+        div.classList.remove('show');
+        setTimeout(() => div.remove(), 400);
+    }, 4000); // زودت الوقت من 3 لـ 4 ثواني للرسائل الطويلة
+};
+
         window.onload = () => {
             try {
                 const localData = localStorage.getItem('hm_data');
@@ -3661,10 +3728,13 @@
 
         window.saveItem = async function (btnElement) {
             const name = document.getElementById('modal-name').value;
-            if (!name) return alert("Name is required");
+            if (!name) {
+    showToast("Enter the name of the task", 'error');
+    return;
+}
 
             if (btnElement) btnElement.classList.add('loading');
-            await new Promise(resolve => setTimeout(resolve, 800));
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             const type = document.getElementById('modal-type').value;
             const id = document.getElementById('modal-id').value || Date.now();
@@ -3672,26 +3742,29 @@
             const total = document.getElementById('modal-total').value;
             const done = document.getElementById('modal-done').value;
 
+            // === التغيير الجوهري هنا ===
+            // نضع الرسم والملفات في الكائن الأساسي ليكون متاحاً لكل الأنواع
             const newItem = {
                 id: Number(id),
                 name: name,
                 desc: desc,
-                notes: desc,
+                notes: desc, // للدورات والكتب
                 audioNote: tempAudioBase64,
                 files: tempFiles,
+                // حفظ الرسم هنا مباشرة لضمان عدم ضياعه
+                drawing: window.tempDrawingData || null,
+                drawingJSON: window.tempDrawingJSON || null,
                 deleted: false
             };
+            // ===========================
 
             if (type === 'task') {
                 newItem.completed = false;
-                newItem.drawing = window.tempDrawingData;
-                newItem.drawingJSON = window.tempDrawingJSON; // Fix: Save JSON
                 newItem.optional = document.getElementById('modal-optional').checked;
 
                 const idx = window.appData.tasks.findIndex(x => x.id == id);
-                if (idx > -1) newItem.completed = window.appData.tasks[idx].completed;
-
                 if (idx > -1) {
+                    newItem.completed = window.appData.tasks[idx].completed;
                     window.appData.tasks[idx] = newItem;
                 } else {
                     window.appData.tasks.push(newItem);
@@ -3708,10 +3781,8 @@
                 } else {
                     window.appData.books.push(newItem);
                 }
+                if (Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
 
-                if (Number(done) >= Number(total) && Number(total) > 0) {
-                    triggerConfetti(true);
-                }
             } else if (type === 'course') {
                 newItem.total = total;
                 newItem.done = done;
@@ -3722,14 +3793,9 @@
                 } else {
                     window.appData.courses.push(newItem);
                 }
+                if (Number(done) >= Number(total) && Number(total) > 0) triggerConfetti(true);
 
-                if (Number(done) >= Number(total) && Number(total) > 0) {
-                    triggerConfetti(true);
-                }
             } else if (type === 'note') {
-                newItem.drawing = window.tempDrawingData;
-                newItem.drawingJSON = window.tempDrawingJSON; // Fix: Save JSON
-
                 const idx = window.appData.notes.findIndex(x => x.id == id);
                 if (idx > -1) {
                     window.appData.notes[idx] = newItem;
@@ -3748,26 +3814,54 @@
 
             await new Promise(resolve => setTimeout(resolve, 800));
             window.closeAllModals();
+            
+            // تنظيف بعد الحفظ
+            if (btnElement) btnElement.classList.remove('success');
         };
 
         window.saveCanvasDrawing = async function (btnElement) {
+            if (!fCanvas) {
+                window.closeDrawingModal();
+                return;
+            }
+            
+            // تشغيل اللودر إذا تم الضغط على زر الحفظ اليدوي
             if (btnElement) btnElement.classList.add('loading');
-            await new Promise(resolve => setTimeout(resolve, 600));
 
-            tempDrawingData = canvas.toDataURL();
-            document.getElementById('modal-drawing-preview').classList.remove('hidden');
-            document.getElementById('modal-drawing-img').src = tempDrawingData;
-            document.getElementById('btn-draw-label').innerText = "Edit Drawing";
+            // 1. حفظ الخطوات (للتعديل لاحقاً)
+            window.tempDrawingJSON = JSON.stringify(fCanvas.toJSON());
+
+            // 2. حفظ الصورة (للعرض)
+            window.tempDrawingData = fCanvas.toDataURL({
+                format: 'png',
+                quality: 0.8, // تقليل الجودة قليلاً لتوفير المساحة
+                multiplier: 1
+            });
+
+            // تحديث واجهة المودال الرئيسي فوراً
+            const previewContainer = document.getElementById('modal-drawing-preview');
+            const previewImg = document.getElementById('modal-drawing-img');
+            const btnLabel = document.getElementById('btn-draw-label');
+
+            if (previewContainer && previewImg) {
+                previewContainer.classList.remove('hidden');
+                previewImg.src = window.tempDrawingData;
+                if (btnLabel) btnLabel.innerText = "تعديل الرسم";
+            }
+
+            // انتظار قصير لجمالية الأنيميشن
+            await new Promise(resolve => setTimeout(resolve, 300));
 
             if (btnElement) {
                 btnElement.classList.remove('loading');
                 btnElement.classList.add('success');
             }
 
-            await new Promise(resolve => setTimeout(resolve, 600));
-            window.closeDrawingModal();
-
-            if (btnElement) btnElement.classList.remove('success');
+            // إغلاق النافذة
+            setTimeout(() => {
+                window.closeDrawingModal();
+                if (btnElement) btnElement.classList.remove('success');
+            }, 300);
         };
 
         window.handleFileUpload = function (input) {
@@ -3775,10 +3869,11 @@
             if (files.length === 0) return;
 
             files.forEach(file => {
-                if (file.size > 500 * 1024) {
-                    alert(`File ${file.name} is too large (>500KB).`);
-                    return;
-                }
+                // تعديل الحد المسموح به إلى 950 كيلوبايت (الحد الأقصى الآمن لـ Firestore)
+               if (file.size > 950 * 1024) {
+    showToast(`Sorry, the file ${file.name} is too large. The maximum is 950KB to ensure synchronization works.`, 'error');
+    return;
+}
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -3953,7 +4048,7 @@
                 localStorage.setItem('hm_data', JSON.stringify(window.appData));
             } catch (e) {
                 console.error("Storage Error:", e);
-                alert("Storage Full! Your data may not be saved locally. Please delete some items.");
+            showToast("Storage Full! Your data may not be saved locally. Please delete some items.", 'error');      
             }
             updateWidget();
             if (window.triggerCloudSave) window.triggerCloudSave();
@@ -4353,41 +4448,49 @@
         };
 
         window.saveCanvasDrawing = async function (btnElement) {
-            if (!fCanvas) return;
-            if (btnElement) btnElement.classList.add('loading');
+            // 1. التأكد من وجود اللوحة
+            if (!fCanvas) {
+                window.closeDrawingModal();
+                return;
+            }
+            
+            // 2. تفعيل تأثير التحميل للزر فقط إذا تم الضغط عليه
+            if (btnElement && btnElement.classList) {
+                btnElement.classList.add('loading');
+            }
 
-            // حفظ الحالة كـ JSON في متغير عالمي (window) للوصول إليه لاحقاً
-            window.tempDrawingData = JSON.stringify(fCanvas.toJSON());
-
-            // إنشاء صورة للمعاينة
-            const dataURL = fCanvas.toDataURL({
+            // 3. حفظ البيانات في المتغيرات العامة (Global Variables)
+            // هذا هو أهم جزء لنقل البيانات للمودال الرئيسي
+            window.tempDrawingJSON = JSON.stringify(fCanvas.toJSON());
+            window.tempDrawingData = fCanvas.toDataURL({
                 format: 'png',
-                quality: 1,
-                multiplier: 2
+                quality: 0.8,
+                multiplier: 1
             });
 
-            // تحديث واجهة المودال الرئيسي بالصورة
+            console.log("Drawing Captured:", window.tempDrawingData ? "Yes" : "No");
+
+            // 4. تحديث صورة المعاينة في المودال الرئيسي فوراً
             const previewContainer = document.getElementById('modal-drawing-preview');
             const previewImg = document.getElementById('modal-drawing-img');
             const btnLabel = document.getElementById('btn-draw-label');
 
             if (previewContainer && previewImg) {
-                previewContainer.classList.remove('hidden');
-                previewImg.src = dataURL;
+                previewContainer.classList.remove('hidden'); // إظهار المعاينة
+                previewImg.src = window.tempDrawingData;     // وضع الصورة
                 if (btnLabel) btnLabel.innerText = "تعديل الرسم";
             }
 
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // انتظار قصير (جمالي)
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-            if (btnElement) {
+            // 5. إغلاق النافذة
+            window.closeDrawingModal();
+
+            // إزالة تأثير التحميل
+            if (btnElement && btnElement.classList) {
                 btnElement.classList.remove('loading');
-                btnElement.classList.add('success');
             }
-
-            setTimeout(() => {
-                window.closeDrawingModal();
-                if (btnElement) btnElement.classList.remove('success');
-            }, 500);
         };
 
         window.deleteDrawing = function () {
@@ -4437,7 +4540,7 @@
 
             } catch (error) {
                 console.error('خطأ:', error);
-                alert('❌ مفيش رد من الذكاء الاصطناعي:\n' + error.message);
+                showToast('❌ no response:\n' + error.message);
                 return null;
             }
         };
@@ -4459,7 +4562,7 @@
 
         window.aiBookScout = async () => {
             const name = document.getElementById('modal-name').value;
-            if (!name) return alert("Enter book name first");
+            if (!name) return showToast("Enter book name first");
 
             const btn = document.getElementById('btn-ai-book');
             if (btn) btn.innerText = "Scouting...";
@@ -4479,7 +4582,7 @@
 
         window.aiCourseOutline = async () => {
             const name = document.getElementById('modal-name').value;
-            if (!name) return alert("Enter course name first");
+            if (!name) return showToast("Enter course name first");
 
             const btn = document.getElementById('btn-ai-course');
             if (btn) btn.innerText = "Planning...";
@@ -4657,7 +4760,7 @@ Be helpful, safe, and focused on productivity!`
             const apiKey = "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";
 
             if (!apiKey) {
-                alert("Please set your Groq API Key in the code.");
+                showToast("Please set your Groq API Key in the code.");
                 return null;
             }
 
@@ -4694,7 +4797,7 @@ Be helpful, safe, and focused on productivity!`
 
             const sensitivePattern = /\b(?:\d[ -]*?){13,16}\b/; // نمط يشبه أرقام الفيزا
             if (sensitivePattern.test(txt)) {
-                alert("⚠️ حفاظاً على أمانك، لا تشارك أرقام مالية أو حساسة.");
+                showToast("⚠️ For your safety, do not share financial or sensitive numbers.");
                 input.value = '';
                 return;
             }
@@ -5511,5 +5614,4 @@ Be helpful, safe, and focused on productivity!`
         })();
     </script>
 </body>
-
 </html>
