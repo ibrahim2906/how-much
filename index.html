@@ -1630,7 +1630,6 @@
     </div> 
 </div>
 
-
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="p-3 rounded-xl bg-white/5">
@@ -2377,7 +2376,7 @@
 // ==========================================
 
 const CLOUDINARY_CONFIG = {
-    cloudName: '82af88ee98a0ef0b36cdd52c6b9e65',  // ⚠️ ضع Cloud Name هنا
+    cloudName: 'dnpnpmdcf',  // ⚠️ ضع Cloud Name هنا
     uploadPreset: 'how_much_app',
     folder: 'user-files'
 };
@@ -3025,183 +3024,195 @@ setTimeout(() => {
 
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         /* ==========================================
-   TIMER & COUNTER LOGIC (UPDATED)
+   TIMER & COUNTER LOGIC (BACKGROUND SAFE)
    ========================================== */
 
-        let timerInterval = null;
-        let timerSeconds = 0;
-        let timerTarget = 0;
-        let timerMode = 'stopwatch'; // 'stopwatch' or 'timer'
-        let timerRunning = false;
+let timerInterval = null;
+let timerStartTime = null; // الوقت الحقيقي لبداية العد
+let timerElapsedSeconds = 0; // الثواني المنقضية
+let timerTarget = 0;
+let timerMode = 'stopwatch';
+let timerRunning = false;
+let timerPausedAt = 0; // متى تم الإيقاف
 
-        // دالة التبديل بين التابات
-        window.switchCounterTab = function (tab) {
-            const clockView = document.getElementById('view-clock');
-            const tallyView = document.getElementById('view-tally');
-            const clockTab = document.getElementById('tab-clock');
-            const tallyTab = document.getElementById('tab-tally');
+// دالة حساب الوقت الحقيقي (لا تتأثر بالخلفية)
+function getRealElapsedTime() {
+    if (!timerRunning || !timerStartTime) return timerElapsedSeconds;
+    
+    const now = Date.now();
+    const elapsed = Math.floor((now - timerStartTime) / 1000);
+    
+    if (timerMode === 'timer') {
+        return Math.max(0, timerTarget - elapsed);
+    } else {
+        return timerElapsedSeconds + elapsed;
+    }
+}
 
-            if (tab === 'clock') {
-                clockView.classList.remove('hidden');
-                tallyView.classList.add('hidden');
-
-                // Style Active Tab
-                clockTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transition-all duration-300";
-                tallyTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300";
-            } else {
-                clockView.classList.add('hidden');
-                tallyView.classList.remove('hidden');
-
-                // Style Active Tab
-                tallyTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg transition-all duration-300";
-                clockTab.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300";
-            }
-        };
-
-        // دالة التبديل بين ساعة الإيقاف والمؤقت
-        window.switchTimerMode = function () {
-            window.stopTimer();
-            timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
-
-            const label = document.getElementById('timer-mode-label');
-            const inputWrapper = document.getElementById('timer-input-wrapper');
-            const progress = document.getElementById('timer-progress');
-
-            if (timerMode === 'timer') {
-                label.innerText = "TIMER (COUNTDOWN)";
-                inputWrapper.classList.remove('hidden');
-                progress.style.stroke = "url(#gradientTimer)"; // Restore color
-            } else {
-                label.innerText = "STOPWATCH";
-                inputWrapper.classList.add('hidden');
-                progress.style.strokeDashoffset = 0;
-            }
-
-            timerSeconds = 0;
-            updateDigitDisplay(0);
-        };
-
-        window.toggleTimer = function () {
-            if (timerRunning) {
-                window.stopTimer();
-            } else {
-                window.startTimer();
-            }
-        };
-
-        window.startTimer = function () {
-            const inputWrapper = document.getElementById('timer-input-wrapper');
-
-            if (timerMode === 'timer' && !timerRunning && timerSeconds === 0) {
-                const mins = parseInt(document.getElementById('timer-input').value) || 25;
-                timerTarget = mins * 60;
-                timerSeconds = timerTarget;
-                inputWrapper.classList.add('hidden');
-            }
-
-            timerRunning = true;
-            const iconEl = document.getElementById('icon-timer-toggle');
-            iconEl.className = 'fas fa-pause';
-
-            // Add pulsing effect to container
-            document.getElementById('timer-digits').classList.add('animate-pulse');
-
-            timerInterval = setInterval(() => {
-                if (timerMode === 'stopwatch') {
-                    timerSeconds++;
-                } else {
-                    timerSeconds--;
-                    if (timerSeconds <= 0) {
-                        window.stopTimer();
-
-                        // ✅ تكرار صوت beep مرتين متتاليتين 
-                        const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-                        beep1.play();
-
-                        setTimeout(() => {
-                            const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-                            beep2.play();
-                        }, 1200); // تأخير 300ms بين الصوتين
-
-                        // اهتزاز إضافي للتنبيه
-                        if (navigator.vibrate) {
-                            navigator.vibrate([200, 100, 200, 100, 200]);
-                        }
-
-                        return;
-                    }
-                }
-                updateDigitDisplay(timerSeconds);
-                updateTimerRing();
-            }, 1000);
-
-            updateTimerRing();
-        };
-
-        window.stopTimer = function () {
-            timerRunning = false;
-            clearInterval(timerInterval);
-            const iconEl = document.getElementById('icon-timer-toggle');
-            iconEl.className = 'fas fa-play pl-1';
-            document.getElementById('timer-digits').classList.remove('animate-pulse');
-        };
-
-        window.resetTimer = function () {
-            window.stopTimer();
-            timerSeconds = 0;
-            if (timerMode === 'timer') {
-                document.getElementById('timer-input-wrapper').classList.remove('hidden');
-            }
-            updateDigitDisplay(0);
-            updateTimerRing();
-        };
-
-        // دالة لتحديث الأرقام بشكل منفصل (بدون إعادة رسم كل شيء)
-        function updateDigitDisplay(totalSeconds) {
-            const m = Math.floor(totalSeconds / 60);
-            const s = totalSeconds % 60;
-
-            const mStr = m.toString().padStart(2, '0');
-            const sStr = s.toString().padStart(2, '0');
-
-            // Helper to update text with animation only if changed
-            updateSingleDigit('digit-m1', mStr[0]);
-            updateSingleDigit('digit-m2', mStr[1]);
-            updateSingleDigit('digit-s1', sStr[0]);
-            updateSingleDigit('digit-s2', sStr[1]);
-
-            // Update Mini Widget
-            const widgetTimer = document.getElementById('widget-timer-val');
-            if (widgetTimer) widgetTimer.innerText = `${mStr}:${sStr}`;
+// دالة التحديث (تعمل كل 100ms بدلاً من 1000ms)
+function updateTimerDisplay() {
+    if (!timerRunning) return;
+    
+    const currentSeconds = getRealElapsedTime();
+    updateDigitDisplay(currentSeconds);
+    updateTimerRing();
+    
+    // فحص انتهاء المؤقت
+    if (timerMode === 'timer' && currentSeconds <= 0) {
+        window.stopTimer();
+        
+        // تشغيل الصوت مرتين
+        const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+        beep1.play();
+        setTimeout(() => {
+            const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+            beep2.play();
+        }, 300);
+        
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200, 100, 200]);
         }
+        
+        showToast("⏰ انتهى الوقت!", 'success');
+    }
+}
 
-        function updateSingleDigit(id, newVal) {
-            const el = document.getElementById(id);
-            if (el.innerText !== newVal) {
-                // Simple Flip Animation using GSAP
-                gsap.to(el, {
-                    scaleY: 0,
-                    duration: 0.15,
-                    onComplete: () => {
-                        el.innerText = newVal;
-                        gsap.to(el, { scaleY: 1, duration: 0.15, ease: "back.out(1.7)" });
-                    }
-                });
+window.startTimer = function () {
+    const inputWrapper = document.getElementById('timer-input-wrapper');
+
+    if (timerMode === 'timer' && !timerRunning && timerElapsedSeconds === 0) {
+        const mins = parseInt(document.getElementById('timer-input').value) || 25;
+        timerTarget = mins * 60;
+        timerElapsedSeconds = 0;
+        inputWrapper.classList.add('hidden');
+    }
+
+    // حفظ وقت البدء الحقيقي
+    timerStartTime = Date.now();
+    timerRunning = true;
+    
+    const iconEl = document.getElementById('icon-timer-toggle');
+    iconEl.className = 'fas fa-pause';
+    document.getElementById('timer-digits').classList.add('animate-pulse');
+
+    // تحديث كل 100ms بدلاً من 1000ms (أكثر دقة)
+    timerInterval = setInterval(updateTimerDisplay, 100);
+    
+    updateTimerDisplay(); // تحديث فوري
+};
+
+window.stopTimer = function () {
+    if (!timerRunning) return;
+    
+    // حفظ الوقت المنقضي قبل الإيقاف
+    timerElapsedSeconds = getRealElapsedTime();
+    timerStartTime = null;
+    timerRunning = false;
+    
+    clearInterval(timerInterval);
+    
+    const iconEl = document.getElementById('icon-timer-toggle');
+    iconEl.className = 'fas fa-play pl-1';
+    document.getElementById('timer-digits').classList.remove('animate-pulse');
+};
+
+window.resetTimer = function () {
+    window.stopTimer();
+    timerElapsedSeconds = 0;
+    timerStartTime = null;
+    
+    if (timerMode === 'timer') {
+        document.getElementById('timer-input-wrapper').classList.remove('hidden');
+    }
+    
+    updateDigitDisplay(0);
+    updateTimerRing();
+};
+
+window.toggleTimer = function () {
+    if (timerRunning) {
+        window.stopTimer();
+    } else {
+        window.startTimer();
+    }
+};
+
+window.switchTimerMode = function () {
+    window.stopTimer();
+    timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
+    timerElapsedSeconds = 0;
+
+    const label = document.getElementById('timer-mode-label');
+    const inputWrapper = document.getElementById('timer-input-wrapper');
+    const progress = document.getElementById('timer-progress');
+
+    if (timerMode === 'timer') {
+        label.innerText = "TIMER (COUNTDOWN)";
+        inputWrapper.classList.remove('hidden');
+        progress.style.stroke = "url(#gradientTimer)";
+    } else {
+        label.innerText = "STOPWATCH";
+        inputWrapper.classList.add('hidden');
+        progress.style.strokeDashoffset = 0;
+    }
+
+    updateDigitDisplay(0);
+};
+
+// استمع لتغيير حالة الصفحة (عند العودة من الخلفية)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && timerRunning) {
+        // الصفحة عادت للواجهة، قم بالتحديث الفوري
+        updateTimerDisplay();
+    }
+});
+
+// دالة تحديث الأرقام (بدون تغيير)
+function updateDigitDisplay(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+
+    const mStr = m.toString().padStart(2, '0');
+    const sStr = s.toString().padStart(2, '0');
+
+    updateSingleDigit('digit-m1', mStr[0]);
+    updateSingleDigit('digit-m2', mStr[1]);
+    updateSingleDigit('digit-s1', sStr[0]);
+    updateSingleDigit('digit-s2', sStr[1]);
+
+    const widgetTimer = document.getElementById('widget-timer-val');
+    if (widgetTimer) widgetTimer.innerText = `${mStr}:${sStr}`;
+}
+
+function updateSingleDigit(id, newVal) {
+    const el = document.getElementById(id);
+    if (el && el.innerText !== newVal) {
+        gsap.to(el, {
+            scaleY: 0,
+            duration: 0.15,
+            onComplete: () => {
+                el.innerText = newVal;
+                gsap.to(el, { scaleY: 1, duration: 0.15, ease: "back.out(1.7)" });
             }
-        }
+        });
+    }
+}
 
-        function updateTimerRing() {
-            const circle = document.getElementById('timer-progress');
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
+function updateTimerRing() {
+    const circle = document.getElementById('timer-progress');
+    if (!circle) return;
+    
+    const radius = circle.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
 
-            if (timerMode === 'timer' && timerTarget > 0) {
-                const offset = circumference - ((timerSeconds / timerTarget) * circumference);
-                circle.style.strokeDashoffset = offset;
-            } else {
-                circle.style.strokeDashoffset = 0;
-            }
-        }
+    if (timerMode === 'timer' && timerTarget > 0) {
+        const currentSeconds = getRealElapsedTime();
+        const offset = circumference - ((currentSeconds / timerTarget) * circumference);
+        circle.style.strokeDashoffset = offset;
+    } else {
+        circle.style.strokeDashoffset = 0;
+    }
+}
 
         /* --- TALLY COUNTER LOGIC --- */
         let tallyCount = 0;
