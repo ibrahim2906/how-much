@@ -4159,33 +4159,42 @@ window.showToast = function(msg, type = 'neutral') {
 };
 
         function renderFilePreview() {
-            const container = document.getElementById('file-list-preview');
-            container.innerHTML = '';
+    const container = document.getElementById('file-list-preview');
+    container.innerHTML = '';
 
-            tempFiles.forEach((f, idx) => {
-                let icon = 'fa-file';
-                if (f.type.includes('image')) icon = 'fa-image';
-                if (f.type.includes('pdf')) icon = 'fa-file-pdf';
+    console.log("📂 Rendering files:", tempFiles); // للتتبع
 
-                const fileEl = document.createElement('div');
-                fileEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs';
-                fileEl.innerHTML = `
-                <div class="flex items-center gap-2 overflow-hidden">
-                    <i class="fas ${icon} text-slate-400" aria-hidden="true"></i>
+    tempFiles.forEach((f, idx) => {
+        let icon = 'fa-file';
+        if (f.type && f.type.includes('image')) icon = 'fa-image';
+        if (f.type && f.type.includes('pdf')) icon = 'fa-file-pdf';
+        if (f.type && f.type.includes('video')) icon = 'fa-video';
+
+        // حساب حجم الملف
+        const sizeKB = f.size ? (f.size / 1024).toFixed(1) : '?';
+
+        const fileEl = document.createElement('div');
+        fileEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs';
+        fileEl.innerHTML = `
+            <div class="flex items-center gap-2 overflow-hidden flex-1">
+                <i class="fas ${icon} text-slate-400" aria-hidden="true"></i>
+                <div class="flex flex-col overflow-hidden">
                     <span class="truncate max-w-[150px]">${escapeHtml(f.name)}</span>
+                    <span class="text-[10px] text-slate-500">${sizeKB} KB</span>
                 </div>
-                <div class="flex gap-2">
-                    <a href="${f.data}" download="${f.name}" class="text-blue-400 hover:text-white" aria-label="Download ${f.name}">
-                        <i class="fas fa-download" aria-hidden="true"></i>
-                    </a>
-                    <button onclick="removeTempFile(${idx})" class="text-red-400 hover:text-white" aria-label="Remove ${f.name}">
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
-                </div>
-            `;
-                container.appendChild(fileEl);
-            });
-        }
+            </div>
+            <div class="flex gap-2">
+                <a href="${f.url}" target="_blank" class="text-blue-400 hover:text-white" aria-label="View ${f.name}">
+                    <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                </a>
+                <button onclick="removeTempFile(${idx})" class="text-red-400 hover:text-white" aria-label="Remove ${f.name}">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(fileEl);
+    });
+}
 
         window.removeTempFile = async function (idx) {
     const file = tempFiles[idx];
@@ -5903,4 +5912,3 @@ Be helpful, safe, and focused on productivity!`
     </script>
 </body>
 </html>
-
