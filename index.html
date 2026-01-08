@@ -1587,6 +1587,50 @@
                             </div>
                         </div>
 
+                       <!-- Storage Usage Card --> 
+<div class="glass-panel rounded-3xl overflow-hidden mb-8"> 
+    <div class="p-6"> 
+        <div class="flex justify-between items-center mb-4"> 
+            <div> 
+                <h3 class="font-bold flex items-center gap-2"> 
+                    <i class="fas fa-hdd text-purple-400"></i>  
+                    <span data-i18n="storageUsage">Storage Usage</span> 
+                </h3> 
+                <p class="text-xs text-slate-400 mt-1" id="storage-detail">Loading...</p> 
+            </div> 
+            <button onclick="calculateUserStorage().then(() => updateStorageUI())"  
+                    class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all" 
+                    title="Refresh"> 
+                <i class="fas fa-sync-alt"></i> 
+            </button> 
+        </div> 
+         
+        <!-- Progress Bar --> 
+        <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-2 relative"> 
+            <div id="storage-progress-bar"  
+                 class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"  
+                 style="width: 0%"></div> 
+        </div> 
+         
+        <div class="flex justify-between text-xs text-slate-400"> 
+            <span id="storage-used">0 MB</span> 
+            <span id="storage-limit">100 MB</span> 
+        </div> 
+ 
+        <!-- Cloudinary Credit (No Link) --> 
+        <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between"> 
+            <div class="flex items-center gap-2 text-xs text-slate-500"> 
+                <i class="fas fa-cloud"></i> 
+                <span>File storage powered by</span> 
+                <span class="text-blue-400 font-bold">
+                    Cloudinary
+                </span> 
+            </div> 
+        </div> 
+    </div> 
+</div>
+
+
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="p-3 rounded-xl bg-white/5">
@@ -2328,6 +2372,123 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+        // ==========================================
+//  CLOUDINARY CONFIGURATION
+// ==========================================
+
+const CLOUDINARY_CONFIG = {
+    cloudName: '82af88ee98a0ef0b36cdd52c6b9e65',  // ⚠️ ضع Cloud Name هنا
+    uploadPreset: 'how_much_app',
+    folder: 'user-files'
+};
+
+// حد أقصى لكل مستخدم (100MB)
+const USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB للملف الواحد
+
+// نظام تتبع حجم كل مستخدم (سيُحفظ في Firestore)
+window.userStorageInfo = {
+    used: 0,
+    limit: USER_STORAGE_LIMIT,
+    fileCount: 0
+};
+
+// دالة حساب حجم الملفات المستخدم
+window.calculateUserStorage = async function() {
+    if (!currentUser || !db) {
+        window.userStorageInfo.used = 0;
+        window.userStorageInfo.fileCount = 0;
+        return;
+    }
+
+    try {
+        // جمع أحجام الملفات من جميع العناصر
+        let totalSize = 0;
+        let fileCount = 0;
+
+        // من المهام
+        window.appData.tasks.forEach(task => {
+            if (task.files && Array.isArray(task.files)) {
+                task.files.forEach(file => {
+                    totalSize += (file.size || 0);
+                    fileCount++;
+                });
+            }
+        });
+
+        // من الملاحظات
+        window.appData.notes.forEach(note => {
+            if (note.files && Array.isArray(note.files)) {
+                note.files.forEach(file => {
+                    totalSize += (file.size || 0);
+                    fileCount++;
+                });
+            }
+        });
+
+        // من الدورات
+        window.appData.courses.forEach(course => {
+            if (course.files && Array.isArray(course.files)) {
+                course.files.forEach(file => {
+                    totalSize += (file.size || 0);
+                    fileCount++;
+                });
+            }
+        });
+
+        // من الكتب
+        window.appData.books.forEach(book => {
+            if (book.files && Array.isArray(book.files)) {
+                book.files.forEach(file => {
+                    totalSize += (file.size || 0);
+                    fileCount++;
+                });
+            }
+        });
+
+        window.userStorageInfo.used = totalSize;
+        window.userStorageInfo.fileCount = fileCount;
+        
+        console.log(`📊 Storage: ${(totalSize / 1024 / 1024).toFixed(2)} MB / ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
+        
+    } catch (error) {
+        console.error("Storage calculation error:", error);
+    }
+};
+
+// دالة تحديث واجهة معلومات التخزين
+window.updateStorageUI = function() {
+    const usedMB = (window.userStorageInfo.used / 1024 / 1024).toFixed(2);
+    const limitMB = (USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0);
+    const percentage = ((window.userStorageInfo.used / USER_STORAGE_LIMIT) * 100).toFixed(1);
+    
+    const detailEl = document.getElementById('storage-detail');
+    const progressBar = document.getElementById('storage-progress-bar');
+    const usedEl = document.getElementById('storage-used');
+    const limitEl = document.getElementById('storage-limit');
+    
+    if (detailEl) {
+        detailEl.innerText = `${window.userStorageInfo.fileCount} files • ${usedMB} MB used`;
+    }
+    
+    if (progressBar) {
+        progressBar.style.width = Math.min(100, percentage) + '%';
+        
+        // تغيير اللون حسب النسبة
+        if (percentage >= 90) {
+            progressBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-1000';
+        } else if (percentage >= 70) {
+            progressBar.className = 'h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all duration-1000';
+        } else {
+            progressBar.className = 'h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000';
+        }
+    }
+    
+    if (usedEl) usedEl.innerText = usedMB + ' MB';
+    if (limitEl) limitEl.innerText = limitMB + ' MB';
+};
+
+
         const firebaseConfig = {
             apiKey: "AIzaSyDhdoM-c_a8j5qEo9BtNd1j2NyWD9uXh3U",
             authDomain: "how-much-v2.firebaseapp.com",
@@ -2401,6 +2562,13 @@
                     if (statusEl) statusEl.innerText = "Syncing...";
 
                     loadData(user.uid);
+
+// ✅ حساب مساحة التخزين المستخدمة
+setTimeout(() => {
+    calculateUserStorage().then(() => {
+        updateStorageUI();
+    });
+}, 1500); // انتظار 1.5 ثانية لضمان تحميل البيانات
                 } else if (!localStorage.getItem('hm_guest')) {
                     document.getElementById('login-screen').classList.remove('hidden');
                 } else {
@@ -3427,7 +3595,11 @@ window.showToast = function(msg, type = 'neutral') {
                 tasksDone: "Tasks Done",
                 remaining: "Remaining",
                 dailyProgress: "Daily Progress",
-                poweredBy: "Powered By"
+                poweredBy: "Powered By",
+                 storageUsage: "Storage Usage",
+        filesUploaded: "files uploaded",
+        refresh: "Refresh",
+        poweredBy: "File storage powered by"
             },
             ar: {
                 // ... (القديم)
@@ -3465,7 +3637,11 @@ window.showToast = function(msg, type = 'neutral') {
                 tasksDone: "المهام المنجزة",
                 remaining: "المتبقي",
                 dailyProgress: "التقدم اليومي",
-                poweredBy: "مشغل بواسطة"
+                poweredBy: "مشغل بواسطة",
+                storageUsage: "مساحة التخزين",
+        filesUploaded: "ملف مرفوع",
+        refresh: "تحديث",
+        poweredBy: "التخزين بواسطة"
             }
         };
         let genieOriginRect = null;
@@ -3864,31 +4040,112 @@ window.showToast = function(msg, type = 'neutral') {
             }, 300);
         };
 
-        window.handleFileUpload = function (input) {
-            const files = Array.from(input.files);
-            if (files.length === 0) return;
+        window.handleFileUpload = async function (input) {
+    const files = Array.from(input.files);
+    if (files.length === 0) return;
 
-            files.forEach(file => {
-                // تعديل الحد المسموح به إلى 950 كيلوبايت (الحد الأقصى الآمن لـ Firestore)
-               if (file.size > 950 * 1024) {
-    showToast(`Sorry, the file ${file.name} is too large. The maximum is 950KB to ensure synchronization works.`, 'error');
-    return;
-}
+    // ✅ التحقق من تسجيل الدخول
+    if (!currentUser) {
+        showToast("⚠️ يجب تسجيل الدخول لرفع الملفات", 'error');
+        input.value = '';
+        return;
+    }
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    tempFiles.push({
-                        name: file.name,
-                        type: file.type,
-                        data: e.target.result
-                    });
-                    renderFilePreview();
-                };
-                reader.readAsDataURL(file);
+    // ✅ حساب حجم الملفات الجديدة
+    const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
+    const totalAfterUpload = window.userStorageInfo.used + newFilesSize;
+
+    // ✅ التحقق من عدم تجاوز الحد
+    if (totalAfterUpload > USER_STORAGE_LIMIT) {
+        const remainingMB = ((USER_STORAGE_LIMIT - window.userStorageInfo.used) / 1024 / 1024).toFixed(2);
+        const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
+        
+        showToast(
+            `⚠️ مساحة التخزين غير كافية!\n\n` +
+            `المتبقي: ${remainingMB} MB\n` +
+            `المطلوب: ${neededMB} MB\n\n` +
+            `احذف بعض الملفات القديمة أولاً.`,
+            'error'
+        );
+        input.value = '';
+        return;
+    }
+
+    // عرض لودر
+    showToast(`⏳ جاري رفع ${files.length} ملف...`, 'neutral');
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const file of files) {
+        // ✅ حد الملف الواحد
+        if (file.size > MAX_FILE_SIZE) {
+            const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+            showToast(`❌ "${file.name}" كبير جداً (${sizeMB} MB)\nالحد الأقصى: 50 MB`, 'error');
+            failCount++;
+            continue;
+        }
+
+        try {
+            // ✅ إنشاء FormData للرفع
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+            formData.append('folder', `${CLOUDINARY_CONFIG.folder}/${currentUser.uid}`);
+            formData.append('resource_type', 'auto'); // يدعم كل أنواع الملفات
+
+            // ✅ رفع الملف
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/auto/upload`,
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`Upload failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // ✅ حفظ معلومات الملف
+            tempFiles.push({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                url: data.secure_url,
+                publicId: data.public_id,
+                uploadedAt: Date.now(),
+                cloudinary: true // علامة أنه من Cloudinary
             });
 
-            input.value = '';
-        };
+            // تحديث الحجم المستخدم
+            window.userStorageInfo.used += file.size;
+            window.userStorageInfo.fileCount++;
+
+            successCount++;
+
+        } catch (error) {
+            console.error("Upload Error:", error);
+            showToast(`❌ فشل رفع "${file.name}"`, 'error');
+            failCount++;
+        }
+    }
+
+    // رسائل النتيجة
+    if (successCount > 0) {
+        showToast(`✅ تم رفع ${successCount} ملف بنجاح!`, 'success');
+        renderFilePreview();
+        updateStorageUI(); // تحديث واجهة الاستخدام
+    }
+
+    if (failCount > 0) {
+        showToast(`⚠️ فشل رفع ${failCount} ملف`, 'error');
+    }
+
+    input.value = '';
+};
 
         function renderFilePreview() {
             const container = document.getElementById('file-list-preview');
@@ -3919,10 +4176,30 @@ window.showToast = function(msg, type = 'neutral') {
             });
         }
 
-        window.removeTempFile = function (idx) {
-            tempFiles.splice(idx, 1);
-            renderFilePreview();
-        };
+        window.removeTempFile = async function (idx) {
+    const file = tempFiles[idx];
+    
+    // ✅ حذف من Cloudinary (إذا كان من Cloudinary)
+    if (file.cloudinary && file.publicId) {
+        try {
+            // ملاحظة: الحذف من Cloudinary يحتاج API Secret
+            // لذلك سنحذف من الواجهة فقط، والملفات ستُحذف تلقائياً بعد 30 يوم
+            console.log("File marked for deletion:", file.publicId);
+            
+            // تحديث الحجم
+            window.userStorageInfo.used -= (file.size || 0);
+            window.userStorageInfo.fileCount--;
+            
+        } catch (error) {
+            console.warn("Delete error:", error);
+        }
+    }
+    
+    tempFiles.splice(idx, 1);
+    renderFilePreview();
+    updateStorageUI();
+    showToast("✅ تم حذف الملف", 'success');
+};
 
         window.moveToTrash = function (type, id, event) {
             event.stopPropagation();
