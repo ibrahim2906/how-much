@@ -4057,7 +4057,7 @@ window.showToast = function(msg, type = 'neutral') {
     if (files.length === 0) return;
 
     // ✅ التحقق من تسجيل الدخول
-    if (!currentUser) {
+    if (!window.currentUser) {
         showToast("⚠️ يجب تسجيل الدخول لرفع الملفات", 'error');
         input.value = '';
         return;
@@ -4103,7 +4103,7 @@ window.showToast = function(msg, type = 'neutral') {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
-            formData.append('folder', `${CLOUDINARY_CONFIG.folder}/${currentUser.uid}`);
+            formData.append('folder', `${CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`); // ✅ صحيح
             formData.append('resource_type', 'auto'); // يدعم كل أنواع الملفات
 
             // ✅ رفع الملف
@@ -5928,7 +5928,7 @@ Be helpful, safe, and focused on productivity!`
 // ==========================================
 window.downloadFileDirect = async function(url, filename) {
     try {
-        showToast("⏳ جاري التحميل...", 'neutral');
+        showToast("⏳ downloading", 'neutral');
         
         const response = await fetch(url);
         const blob = await response.blob();
@@ -5941,11 +5941,11 @@ window.downloadFileDirect = async function(url, filename) {
         document.body.removeChild(link);
         
         URL.revokeObjectURL(link.href);
-        showToast("✅ تم التحميل بنجاح!", 'success');
+        showToast("✅ success", 'success');
         
     } catch (error) {
         console.error("Download error:", error);
-        showToast("❌ فشل التحميل. حاول فتح الملف في صفحة جديدة", 'error');
+        showToast("❌ failed", 'error');
     }
 };
     </script>
