@@ -4125,12 +4125,16 @@ window.showToast = function(msg, type = 'neutral') {
         console.log(`\n📤 رفع الملف: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
         
         if (file.size > MAX_FILE_SIZE) {
-            const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-            console.error(`❌ الملف كبير جداً: ${sizeMB} MB`);
-            showToast(`❌ "${file.name}" كبير جداً (${sizeMB} MB)\nالحد الأقصى: 50 MB`, 'error');
-            failCount++;
-            continue;
-        }
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+
+    const message = `❌ "${file.name}" is too large (${sizeMB} MB). Maximum allowed size is 50 MB.`;
+
+    console.error(message);
+    showToast(message, 'error');
+
+    failCount++;
+    continue;
+}
 
         try {
             // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
@@ -6017,3 +6021,4 @@ window.downloadFileDirect = async function(url, filename) {
     </script>
 </body>
 </html>
+
