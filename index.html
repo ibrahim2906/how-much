@@ -4205,7 +4205,6 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
             console.error("❌ خطأ في الرفع:", error);
             console.error("   الملف:", file.name);
             console.error("   التفاصيل:", error.message);
-            showToast(`❌ فشل رفع "${file.name}"\n${error.message}`, 'error');
             failCount++;
         }
     }
@@ -6021,4 +6020,5 @@ window.downloadFileDirect = async function(url, filename) {
     </script>
 </body>
 </html>
+
 
