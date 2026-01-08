@@ -2375,20 +2375,19 @@
 //  CLOUDINARY CONFIGURATION
 // ==========================================
 
-const CLOUDINARY_CONFIG = {
-    cloudName: 'dnpnpmdcf',  // ⚠️ ضع Cloud Name هنا
-    uploadPreset: 'how_much_app',
-    folder: 'user-files'
-};
-
-// حد أقصى لكل مستخدم (100MB)
-const USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB للملف الواحد
+    window.CLOUDINARY_CONFIG = {
+        cloudName: 'dnpnpmdcf',
+        uploadPreset: 'how_much_app',
+        folder: 'user-files'
+    };
+    
+    window.USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
+    window.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 // نظام تتبع حجم كل مستخدم (سيُحفظ في Firestore)
 window.userStorageInfo = {
     used: 0,
-    limit: USER_STORAGE_LIMIT,
+    limit: 100 * 1024 * 1024, // 100MB
     fileCount: 0
 };
 
@@ -4082,9 +4081,9 @@ window.showToast = function(msg, type = 'neutral') {
 
     // 🆕 إضافة 6: فحص إعدادات Cloudinary
     console.log("🔧 فحص إعدادات Cloudinary...");
-    console.log("CLOUDINARY_CONFIG:", CLOUDINARY_CONFIG);
+    console.log("CLOUDINARY_CONFIG:", window.CLOUDINARY_CONFIG);
     
-    if (!CLOUDINARY_CONFIG.cloudName || !CLOUDINARY_CONFIG.uploadPreset) {
+    if (!window.CLOUDINARY_CONFIG.cloudName || !window.CLOUDINARY_CONFIG.uploadPreset) {
         console.error("❌ إعدادات Cloudinary مفقودة!");
         showToast("❌ خطأ في إعدادات الرفع", 'error');
         return;
@@ -4100,7 +4099,7 @@ window.showToast = function(msg, type = 'neutral') {
     console.log(`   الإجمالي بعد: ${(totalAfterUpload / 1024 / 1024).toFixed(2)} MB`);
     console.log(`   الحد الأقصى: ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
 
-    if (totalAfterUpload > USER_STORAGE_LIMIT) {
+    if (totalAfterUpload > window.USER_STORAGE_LIMIT) {
         const remainingMB = ((USER_STORAGE_LIMIT - window.userStorageInfo.used) / 1024 / 1024).toFixed(2);
         const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
         
@@ -4149,11 +4148,11 @@ window.showToast = function(msg, type = 'neutral') {
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
-            formData.append('folder', `${CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
+            formData.append('upload_preset', window.CLOUDINARY_CONFIG.uploadPreset);
+formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
             
             // 🆕 إضافة 11: الرابط الصحيح (حل المشكلة رقم 1)
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/${resourceType}/upload`;
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${window.CLOUDINARY_CONFIG.cloudName}/${resourceType}/upload`;
             
             // 🆕 إضافة 12: عرض معلومات الطلب
             console.log(`🌐 الرابط: ${uploadUrl}`);
