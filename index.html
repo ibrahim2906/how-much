@@ -1670,6 +1670,8 @@
                         <span data-i18n="privacyPolicy">privacy policy</span>
                     </button>
 
+                    
+
                     <button onclick="handleLogout()"
                         class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2"
                         aria-label="Logout">
@@ -2317,9 +2319,56 @@
                     <i class="fas fa-image"></i>
                     <input type="file" class="hidden" accept="image/*" onchange="addImageToCanvas(this)">
                 </label>
+            <!-- بعد زر Add Image -->
 
+<div class="w-px h-6 bg-white/10"></div>
+
+<!-- الأشكال الهندسية -->
+<button onclick="addShape('rect')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="مربع">
+    <i class="fas fa-square"></i>
+</button>
+
+<button onclick="addShape('circle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="دائرة">
+    <i class="fas fa-circle"></i>
+</button>
+
+<button onclick="addShape('triangle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="مثلث">
+    <i class="fas fa-play" style="transform: rotate(-90deg)"></i>
+</button>
+
+<button onclick="addShape('line')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="خط">
+    <i class="fas fa-minus"></i>
+</button>
+
+<div class="w-px h-6 bg-white/10"></div>
+
+<!-- أدوات إضافية -->
+<button onclick="toggleEraser()" id="btn-eraser"
+        class="w-8 h-8 rounded hover:bg-white/10 text-white" title="ممحاة">
+    <i class="fas fa-eraser"></i>
+</button>
+
+<button onclick="duplicateObject()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="نسخ">
+    <i class="fas fa-clone"></i>
+</button>
+
+<button onclick="flipObject('x')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="قلب أفقي">
+    <i class="fas fa-arrows-alt-h"></i>
+</button>
                 <div class="w-px h-6 bg-white/10"></div>
+                <button onclick="undoCanvas()" id="btn-undo"
+        class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30"
+        title="Undo (Ctrl+Z)">
+    <i class="fas fa-undo"></i>
+</button>
 
+<button onclick="redoCanvas()" id="btn-redo"
+        class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30"
+        title="Redo (Ctrl+Y)">
+    <i class="fas fa-redo"></i>
+</button>
+
+<div class="w-px h-6 bg-white/10"></div>
                 <button onclick="toggleDrawMode(true)" id="btn-draw-mode"
                     class="w-8 h-8 rounded hover:bg-white/10 text-indigo-400" title="freehand sketch"><i
                         class="fas fa-pencil-alt"></i></button>
@@ -3024,18 +3073,17 @@ setTimeout(() => {
 
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         /* ==========================================
-   TIMER & COUNTER LOGIC (BACKGROUND SAFE)
+   TIMER (يعمل في الخلفية - محسّن)
    ========================================== */
 
 let timerInterval = null;
-let timerStartTime = null; // الوقت الحقيقي لبداية العد
+let timerStartTime = null; // وقت البدء الفعلي
 let timerElapsedSeconds = 0; // الثواني المنقضية
 let timerTarget = 0;
 let timerMode = 'stopwatch';
 let timerRunning = false;
-let timerPausedAt = 0; // متى تم الإيقاف
 
-// دالة حساب الوقت الحقيقي (لا تتأثر بالخلفية)
+// حساب الوقت الحقيقي
 function getRealElapsedTime() {
     if (!timerRunning || !timerStartTime) return timerElapsedSeconds;
     
@@ -3049,7 +3097,7 @@ function getRealElapsedTime() {
     }
 }
 
-// دالة التحديث (تعمل كل 100ms بدلاً من 1000ms)
+// تحديث العرض
 function updateTimerDisplay() {
     if (!timerRunning) return;
     
@@ -3060,23 +3108,12 @@ function updateTimerDisplay() {
     // فحص انتهاء المؤقت
     if (timerMode === 'timer' && currentSeconds <= 0) {
         window.stopTimer();
-        
-        // تشغيل الصوت مرتين
-        const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-        beep1.play();
-        setTimeout(() => {
-            const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-            beep2.play();
-        }, 300);
-        
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200, 100, 200]);
-        }
-        
-        showToast("⏰ time ended!", 'success');
+        playAlarmSound();
+        showToast("⏰ انتهى الوقت!", 'success');
     }
 }
 
+// بدء التايمر
 window.startTimer = function () {
     const inputWrapper = document.getElementById('timer-input-wrapper');
 
@@ -3087,7 +3124,6 @@ window.startTimer = function () {
         inputWrapper.classList.add('hidden');
     }
 
-    // حفظ وقت البدء الحقيقي
     timerStartTime = Date.now();
     timerRunning = true;
     
@@ -3095,16 +3131,18 @@ window.startTimer = function () {
     iconEl.className = 'fas fa-pause';
     document.getElementById('timer-digits').classList.add('animate-pulse');
 
-    // تحديث كل 100ms بدلاً من 1000ms (أكثر دقة)
+    // تحديث كل 100ms (أكثر دقة)
     timerInterval = setInterval(updateTimerDisplay, 100);
+    updateTimerDisplay();
     
-    updateTimerDisplay(); // تحديث فوري
+    // تحديث الويدجت
+    updateWidgetTimer(true);
 };
 
+// إيقاف التايمر
 window.stopTimer = function () {
     if (!timerRunning) return;
     
-    // حفظ الوقت المنقضي قبل الإيقاف
     timerElapsedSeconds = getRealElapsedTime();
     timerStartTime = null;
     timerRunning = false;
@@ -3114,8 +3152,11 @@ window.stopTimer = function () {
     const iconEl = document.getElementById('icon-timer-toggle');
     iconEl.className = 'fas fa-play pl-1';
     document.getElementById('timer-digits').classList.remove('animate-pulse');
+    
+    updateWidgetTimer(false);
 };
 
+// إعادة تعيين
 window.resetTimer = function () {
     window.stopTimer();
     timerElapsedSeconds = 0;
@@ -3129,6 +3170,7 @@ window.resetTimer = function () {
     updateTimerRing();
 };
 
+// تبديل
 window.toggleTimer = function () {
     if (timerRunning) {
         window.stopTimer();
@@ -3137,6 +3179,7 @@ window.toggleTimer = function () {
     }
 };
 
+// تغيير الوضع
 window.switchTimerMode = function () {
     window.stopTimer();
     timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
@@ -3147,7 +3190,7 @@ window.switchTimerMode = function () {
     const progress = document.getElementById('timer-progress');
 
     if (timerMode === 'timer') {
-        label.innerText = "TIMER (COUNTDOWN)";
+        label.innerText = "TIMER";
         inputWrapper.classList.remove('hidden');
         progress.style.stroke = "url(#gradientTimer)";
     } else {
@@ -3159,15 +3202,7 @@ window.switchTimerMode = function () {
     updateDigitDisplay(0);
 };
 
-// استمع لتغيير حالة الصفحة (عند العودة من الخلفية)
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && timerRunning) {
-        // الصفحة عادت للواجهة، قم بالتحديث الفوري
-        updateTimerDisplay();
-    }
-});
-
-// دالة تحديث الأرقام (بدون تغيير)
+// تحديث الأرقام
 function updateDigitDisplay(totalSeconds) {
     const m = Math.floor(totalSeconds / 60);
     const s = totalSeconds % 60;
@@ -3179,9 +3214,6 @@ function updateDigitDisplay(totalSeconds) {
     updateSingleDigit('digit-m2', mStr[1]);
     updateSingleDigit('digit-s1', sStr[0]);
     updateSingleDigit('digit-s2', sStr[1]);
-
-    const widgetTimer = document.getElementById('widget-timer-val');
-    if (widgetTimer) widgetTimer.innerText = `${mStr}:${sStr}`;
 }
 
 function updateSingleDigit(id, newVal) {
@@ -3214,70 +3246,61 @@ function updateTimerRing() {
     }
 }
 
-        /* --- TALLY COUNTER LOGIC --- */
-        let tallyCount = 0;
-        let tallyDir = 1; // 1 for Up, -1 for Down
-
-        window.clickTally = function () {
-            tallyCount += tallyDir;
-            if (tallyCount < 0) tallyCount = 0;
-
-            const display = document.getElementById('tally-display');
-
-            // 1. Text Animation (Rolling Number)
-            gsap.to(display, {
-                scale: 1.5,
-                duration: 0.1,
-                y: -10,
-                onComplete: () => {
-                    display.innerText = tallyCount;
-                    gsap.to(display, { scale: 1, y: 0, duration: 0.3, ease: "bounce.out" });
-                }
-            });
-
-            // 2. Ripple Effect Logic
-            const btn = document.getElementById('tally-btn');
-            const circle = document.createElement('div');
-            const diameter = Math.max(btn.clientWidth, btn.clientHeight);
-
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = '50%';
-            circle.style.top = '50%';
-            circle.style.transform = 'translate(-50%, -50%) scale(0)';
-            circle.classList.add('absolute', 'rounded-full', 'bg-white/10', 'pointer-events-none');
-
-            document.getElementById('ripple-container').appendChild(circle);
-
-            gsap.to(circle, {
-                scale: 2,
-                opacity: 0,
-                duration: 0.6,
-                onComplete: () => circle.remove()
-            });
-
-            // 3. Vibrate
-            if (navigator.vibrate) navigator.vibrate(30);
+// تحديث الويدجت
+function updateWidgetTimer(isRunning) {
+    const container = document.getElementById('widget-timer-container');
+    const display = document.getElementById('widget-timer-val');
+    
+    if (!container || !display) return;
+    
+    if (isRunning) {
+        container.classList.remove('hidden');
+        
+        const update = () => {
+            if (!timerRunning) return;
+            
+            const seconds = getRealElapsedTime();
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         };
+        
+        update();
+        setInterval(update, 1000);
+    } else {
+        container.classList.add('hidden');
+    }
+}
 
-        window.resetTally = function () {
-            const startVal = parseInt(document.getElementById('tally-start-val').value) || 0;
-            tallyCount = startVal;
-            document.getElementById('tally-display').innerText = tallyCount;
-        };
+// صوت الإنذار (محسّن)
+function playAlarmSound() {
+    try {
+        // صوت أول
+        const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+        beep1.play().catch(e => console.log('Audio blocked:', e));
+        
+        // صوت ثاني بعد 300ms
+        setTimeout(() => {
+            const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+            beep2.play().catch(e => console.log('Audio blocked:', e));
+        }, 1000);
+        
+        // اهتزاز (إذا مدعوم)
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200, 100, 200]);
+        }
+        
+    } catch (error) {
+        console.error('Alarm sound error:', error);
+    }
+}
 
-        window.setTallyMode = function (mode) {
-            const btn = document.getElementById('btn-tally-dir');
-            if (tallyDir === 1) {
-                tallyDir = -1;
-                btn.innerHTML = '<i class="fas fa-arrow-down mr-2"></i> Down';
-                btn.classList.replace('text-indigo-400', 'text-pink-400');
-            } else {
-                tallyDir = 1;
-                btn.innerHTML = '<i class="fas fa-arrow-up mr-2"></i> Up';
-                btn.classList.replace('text-pink-400', 'text-indigo-400');
-            }
-        };
-
+// التحديث عند العودة للصفحة
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && timerRunning) {
+        updateTimerDisplay();
+    }
+});
         const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms";
         let tempAudioBase64 = null;
         let tempDrawingData = null;
@@ -4629,33 +4652,156 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
             document.getElementById('btn-draw-label').innerText = "Add Drawing";
         };
         // ==========================================
-        //  FABRIC.JS LOGIC (كود الرسم المصحح)
-        // ==========================================
-        let fCanvas = null;
+//  FABRIC.JS LOGIC (كود الرسم المصحح)
+// ==========================================
+let fCanvas = null;
 
-        // 1. تهيئة اللوحة
-        function initFabric() {
-            const canvasEl = document.getElementById('fabric-canvas');
-            if (!canvasEl) return;
-
-            // إذا كانت اللوحة موجودة بالفعل، لا نعد تهيئتها
-            if (fCanvas) {
-                fCanvas.clear();
-                return;
-            }
-
-            // إنشاء لوحة Fabric جديدة
-            fCanvas = new fabric.Canvas('fabric-canvas', {
-                isDrawingMode: true,
-                selection: true,
-                backgroundColor: 'transparent' // خلفية شفافة
-            });
-
-            // إعدادات الفرشاة الافتراضية
-            fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
-            fCanvas.freeDrawingBrush.width = 4;
-            fCanvas.freeDrawingBrush.color = "#ffffff";
+// ==========================================
+//  UNDO/REDO SYSTEM (نظام التراجع المحسّن)
+// ==========================================
+let canvasHistory = {
+    stack: [],
+    currentStep: -1,
+    maxHistory: 50,
+    isRestoring: false, // علم لمنع الحفظ أثناء الاستعادة
+    
+    // حفظ حالة جديدة
+    save: function() {
+        if (!fCanvas || this.isRestoring) return;
+        
+        const json = JSON.stringify(fCanvas.toJSON());
+        
+        // حذف كل الخطوات المستقبلية
+        this.stack = this.stack.slice(0, this.currentStep + 1);
+        
+        // إضافة الحالة الجديدة
+        this.stack.push(json);
+        
+        // الحد الأقصى للتاريخ
+        if (this.stack.length > this.maxHistory) {
+            this.stack.shift();
+        } else {
+            this.currentStep++;
         }
+        
+        this.updateButtons();
+    },
+    
+    // التراجع
+    undo: function() {
+        if (this.currentStep > 0) {
+            this.currentStep--;
+            this.restore();
+        }
+    },
+    
+    // الإعادة
+    redo: function() {
+        if (this.currentStep < this.stack.length - 1) {
+            this.currentStep++;
+            this.restore();
+        }
+    },
+    
+    // استعادة حالة
+    restore: function() {
+        if (!fCanvas || this.currentStep < 0) return;
+        
+        this.isRestoring = true;
+        const state = this.stack[this.currentStep];
+        
+        fCanvas.loadFromJSON(state, () => {
+            fCanvas.renderAll();
+            this.isRestoring = false;
+            this.updateButtons();
+        });
+    },
+    
+    // تحديث حالة الأزرار
+    updateButtons: function() {
+        const undoBtn = document.getElementById('btn-undo');
+        const redoBtn = document.getElementById('btn-redo');
+        
+        if (undoBtn) {
+            const canUndo = this.currentStep > 0;
+            undoBtn.disabled = !canUndo;
+            undoBtn.style.opacity = canUndo ? '1' : '0.3';
+            undoBtn.style.cursor = canUndo ? 'pointer' : 'not-allowed';
+        }
+        
+        if (redoBtn) {
+            const canRedo = this.currentStep < this.stack.length - 1;
+            redoBtn.disabled = !canRedo;
+            redoBtn.style.opacity = canRedo ? '1' : '0.3';
+            redoBtn.style.cursor = canRedo ? 'pointer' : 'not-allowed';
+        }
+    },
+    
+    // إعادة تعيين
+    reset: function() {
+        this.stack = [];
+        this.currentStep = -1;
+        this.isRestoring = false;
+        this.updateButtons();
+    },
+    
+    // تهيئة الاستماع للتغييرات
+    setup: function() {
+        if (!fCanvas) return;
+        
+        // حفظ الحالة الأولية
+        this.save();
+        
+        // الاستماع للتغييرات
+        fCanvas.on('object:added', () => {
+            if (!this.isRestoring) this.save();
+        });
+        
+        fCanvas.on('object:modified', () => {
+            if (!this.isRestoring) this.save();
+        });
+        
+        fCanvas.on('object:removed', () => {
+            if (!this.isRestoring) this.save();
+        });
+    }
+};
+
+// الدالات العامة
+window.undoCanvas = function() {
+    canvasHistory.undo();
+};
+
+window.redoCanvas = function() {
+    canvasHistory.redo();
+};
+
+
+
+       function initFabric() {
+    const canvasEl = document.getElementById('fabric-canvas');
+    if (!canvasEl) return;
+
+    // إذا كانت اللوحة موجودة بالفعل، نعيد استخدامها
+    if (fCanvas) {
+        fCanvas.clear();
+        canvasHistory.reset(); // ✅ إعادة تعيين التاريخ
+        return;
+    }
+
+    // إنشاء لوحة Fabric جديدة
+    fCanvas = new fabric.Canvas('fabric-canvas', {
+        isDrawingMode: true,
+        selection: true,
+        backgroundColor: 'transparent'
+    });
+
+    // إعدادات الفرشاة الافتراضية
+    fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
+    fCanvas.freeDrawingBrush.width = 4;
+    fCanvas.freeDrawingBrush.color = "#ffffff";
+}
+
 
         // 2. ضبط الحجم (مهم جداً لظهور الرسم)
         function resizeFabric() {
@@ -4678,26 +4824,40 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
 
         // 3. فتح المودال وتشغيل الرسم
         window.openDrawingCanvas = function () {
-            const modal = document.getElementById('drawing-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    const modal = document.getElementById('drawing-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 
-            // ننتظر قليلاً (100ms) حتى يظهر المودال وتكتمل أبعاده
-            setTimeout(() => {
-                initFabric();    // تهيئة اللوحة
-                resizeFabric();  // ضبط الحجم
+    setTimeout(() => {
+        initFabric();
+        resizeFabric();
+        
+        window.toggleDrawMode(true);
 
-                // إعادة ضبط الوضع الافتراضي (رسم)
-                window.toggleDrawMode(true);
-
-                // إذا كان هناك رسم محفوظ مسبقاً، قم بتحميله
-                if (window.tempDrawingData) {
-                    fCanvas.loadFromJSON(window.tempDrawingData, function () {
-                        fCanvas.renderAll();
-                    });
-                }
-            }, 150);
-        };
+        if (window.tempDrawingJSON) {
+            canvasHistory.isRestoring = true; // ✅ منع الحفظ أثناء التحميل
+            fCanvas.loadFromJSON(window.tempDrawingJSON, function () {
+                fCanvas.renderAll();
+                canvasHistory.isRestoring = false;
+                canvasHistory.setup(); // ✅ تهيئة التاريخ
+            });
+        } else if (window.tempDrawingData) {
+            fCanvas.clear();
+            canvasHistory.isRestoring = true;
+            fabric.Image.fromURL(window.tempDrawingData, function (img) {
+                fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas), {
+                    scaleX: fCanvas.width / img.width,
+                    scaleY: fCanvas.height / img.height
+                });
+                canvasHistory.isRestoring = false;
+                canvasHistory.setup(); // ✅ تهيئة التاريخ
+            });
+        } else {
+            fCanvas.clear();
+            canvasHistory.setup(); // ✅ تهيئة التاريخ
+        }
+    }, 150);
+};
 
         // 4. إغلاق المودال
         window.closeDrawingModal = function () {
@@ -4872,41 +5032,26 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
         // الكود الجديد الآمن ✅
 
         window.callGroq = async (messagesArray) => {
+    const WORKER_URL = 'https://my-groq-proxy.brhm93102.workers.dev'; // ضع رابطك
+    
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: messagesArray })
+        });
 
-            // ⚠️ ضع رابط الـ Worker اللي نسخته
-            const WORKER_URL = 'https://my-groq-proxy.YOUR-NAME.workers.dev';
-
-            try {
-                console.log('بنكلم الحارس...');
-
-                // إرسال الطلب للحارس (Worker)
-                const response = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        messages: messagesArray
-                    })
-                });
-
-                // لو في مشكلة
-                if (!response.ok) {
-                    throw new Error('الحارس رفض الطلب: ' + response.status);
-                }
-
-                // اقرأ الرد
-                const data = await response.json();
-                console.log('الحارس رجع الرد! ✅');
-
-                return data.choices[0]?.message?.content;
-
-            } catch (error) {
-                console.error('خطأ:', error);
-                showToast('❌ no response:\n' + error.message);
-                return null;
-            }
-        };
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const data = await response.json();
+        return data.choices[0]?.message?.content;
+        
+    } catch (error) {
+        console.error('AI Error:', error);
+        showToast('❌ فشل الاتصال بالذكاء الاصطناعي', 'error');
+        return null;
+    }
+};
 
         window.aiMagicSplit = async () => {
             const name = document.getElementById('modal-name').value;
@@ -5120,7 +5265,7 @@ Be helpful, safe, and focused on productivity!`
         // 2. دالة الاتصال بـ Groq (تدعم الذاكرة)
         window.callGroq = async (messagesArray) => {
             // ⚠️ ضع مفتاحك هنا
-            const apiKey = "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";
+            const apiKey = "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";
 
             if (!apiKey) {
                 showToast("Please set your Groq API Key in the code.");
@@ -6001,7 +6146,126 @@ window.downloadFileDirect = async function(url, filename) {
         showToast("❌ failed", 'error');
     }
 };
+
+// === إضافة الأشكال ===
+window.addShape = function(type) {
+    if (!fCanvas) return;
+    const color = document.getElementById('brush-color').value;
+    let shape;
+    
+    switch(type) {
+        case 'rect':
+            shape = new fabric.Rect({
+                left: fCanvas.width / 2,
+                top: fCanvas.height / 2,
+                width: 100,
+                height: 100,
+                fill: color,
+                stroke: '#ffffff',
+                strokeWidth: 2
+            });
+            break;
+            
+        case 'circle':
+            shape = new fabric.Circle({
+                left: fCanvas.width / 2,
+                top: fCanvas.height / 2,
+                radius: 50,
+                fill: color,
+                stroke: '#ffffff',
+                strokeWidth: 2
+            });
+            break;
+            
+        case 'triangle':
+            shape = new fabric.Triangle({
+                left: fCanvas.width / 2,
+                top: fCanvas.height / 2,
+                width: 100,
+                height: 100,
+                fill: color,
+                stroke: '#ffffff',
+                strokeWidth: 2
+            });
+            break;
+            
+        case 'line':
+            shape = new fabric.Line([50, 50, 200, 50], {
+                left: fCanvas.width / 2,
+                top: fCanvas.height / 2,
+                stroke: color,
+                strokeWidth: 4
+            });
+            break;
+    }
+    
+    if (shape) {
+        shape.set({
+            originX: 'center',
+            originY: 'center'
+        });
+        fCanvas.add(shape);
+        fCanvas.setActiveObject(shape);
+        toggleDrawMode(false);
+    }
+};
+
+// === الممحاة ===
+let isEraserMode = false;
+
+window.toggleEraser = function() {
+    if (!fCanvas) return;
+    
+    isEraserMode = !isEraserMode;
+    const btn = document.getElementById('btn-eraser');
+    
+    if (isEraserMode) {
+        fCanvas.isDrawingMode = true;
+        fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
+        fCanvas.freeDrawingBrush.width = 20;
+        fCanvas.freeDrawingBrush.color = 'rgba(0,0,0,1)'; // أسود
+        fCanvas.freeDrawingBrush.globalCompositeOperation = 'destination-out'; // وضع المسح
+        
+        btn.classList.add('bg-red-500', 'text-white');
+    } else {
+        fCanvas.freeDrawingBrush.globalCompositeOperation = 'source-over';
+        updateBrush();
+        btn.classList.remove('bg-red-500', 'text-white');
+    }
+};
+
+// === النسخ ===
+window.duplicateObject = function() {
+    if (!fCanvas) return;
+    const active = fCanvas.getActiveObject();
+    
+    if (active) {
+        active.clone(function(cloned) {
+            cloned.set({
+                left: active.left + 20,
+                top: active.top + 20
+            });
+            fCanvas.add(cloned);
+            fCanvas.setActiveObject(cloned);
+            fCanvas.requestRenderAll();
+        });
+    }
+};
+
+// === القلب ===
+window.flipObject = function(axis) {
+    if (!fCanvas) return;
+    const active = fCanvas.getActiveObject();
+    
+    if (active) {
+        if (axis === 'x') {
+            active.set('flipX', !active.flipX);
+        } else {
+            active.set('flipY', !active.flipY);
+        }
+        fCanvas.requestRenderAll();
+    }
+};
     </script>
 </body>
 </html>
-
