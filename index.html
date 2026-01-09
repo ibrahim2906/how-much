@@ -993,42 +993,45 @@
                 left: 100px !important;
             }
         }
+
         /* تصميم الإشعارات الجديد */
-.custom-toast {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: rgba(30, 41, 59, 0.95); /* لون داكن عصري */
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 16px;
-    z-index: 10000; /* للتأكد من ظهوره فوق كل شيء */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    pointer-events: none;
-}
+        .custom-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(30, 41, 59, 0.95);
+            /* لون داكن عصري */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 16px;
+            z-index: 10000;
+            /* للتأكد من ظهوره فوق كل شيء */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
 
-.custom-toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-}
+        .custom-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
 
-.custom-toast.error { 
-    border-left: 4px solid #ef4444; 
-}
+        .custom-toast.error {
+            border-left: 4px solid #ef4444;
+        }
 
-.custom-toast.success { 
-    border-left: 4px solid #22c55e; 
-}
+        .custom-toast.success {
+            border-left: 4px solid #22c55e;
+        }
     </style>
 </head>
 
@@ -1587,48 +1590,48 @@
                             </div>
                         </div>
 
-                       <!-- Storage Usage Card --> 
-<div class="glass-panel rounded-3xl overflow-hidden mb-8"> 
-    <div class="p-6"> 
-        <div class="flex justify-between items-center mb-4"> 
-            <div> 
-                <h3 class="font-bold flex items-center gap-2"> 
-                    <i class="fas fa-hdd text-purple-400"></i>  
-                    <span data-i18n="storageUsage">Storage Usage</span> 
-                </h3> 
-                <p class="text-xs text-slate-400 mt-1" id="storage-detail">Loading...</p> 
-            </div> 
-            <button onclick="calculateUserStorage().then(() => updateStorageUI())"  
-                    class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all" 
-                    title="Refresh"> 
-                <i class="fas fa-sync-alt"></i> 
-            </button> 
-        </div> 
-         
-        <!-- Progress Bar --> 
-        <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-2 relative"> 
-            <div id="storage-progress-bar"  
-                 class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"  
-                 style="width: 0%"></div> 
-        </div> 
-         
-        <div class="flex justify-between text-xs text-slate-400"> 
-            <span id="storage-used">0 MB</span> 
-            <span id="storage-limit">100 MB</span> 
-        </div> 
- 
-        <!-- Cloudinary Credit (No Link) --> 
-        <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between"> 
-            <div class="flex items-center gap-2 text-xs text-slate-500"> 
-                <i class="fas fa-cloud"></i> 
-                <span>File storage powered by</span> 
-                <span class="text-blue-400 font-bold">
-                    Cloudinary
-                </span> 
-            </div> 
-        </div> 
-    </div> 
-</div>
+                        <!-- Storage Usage Card -->
+                        <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+                            <div class="p-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <h3 class="font-bold flex items-center gap-2">
+                                            <i class="fas fa-hdd text-purple-400"></i>
+                                            <span data-i18n="storageUsage">Storage Usage</span>
+                                        </h3>
+                                        <p class="text-xs text-slate-400 mt-1" id="storage-detail">Loading...</p>
+                                    </div>
+                                    <button onclick="calculateUserStorage().then(() => updateStorageUI())"
+                                        class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all"
+                                        title="Refresh">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-2 relative">
+                                    <div id="storage-progress-bar"
+                                        class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"
+                                        style="width: 0%"></div>
+                                </div>
+
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span id="storage-used">0 MB</span>
+                                    <span id="storage-limit">100 MB</span>
+                                </div>
+
+                                <!-- Cloudinary Credit (No Link) -->
+                                <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                                        <i class="fas fa-cloud"></i>
+                                        <span>File storage powered by</span>
+                                        <span class="text-blue-400 font-bold">
+                                            Cloudinary
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
@@ -1670,7 +1673,7 @@
                         <span data-i18n="privacyPolicy">privacy policy</span>
                     </button>
 
-                    
+
 
                     <button onclick="handleLogout()"
                         class="w-full py-4 rounded-2xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-medium flex items-center justify-center gap-2"
@@ -2319,56 +2322,55 @@
                     <i class="fas fa-image"></i>
                     <input type="file" class="hidden" accept="image/*" onchange="addImageToCanvas(this)">
                 </label>
-            <!-- بعد زر Add Image -->
+                <!-- بعد زر Add Image -->
 
-<div class="w-px h-6 bg-white/10"></div>
+                <div class="w-px h-6 bg-white/10"></div>
 
-<!-- الأشكال الهندسية -->
-<button onclick="addShape('rect')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="مربع">
-    <i class="fas fa-square"></i>
-</button>
+                <!-- الأشكال الهندسية -->
+                <button onclick="addShape('rect')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="square">
+                    <i class="fas fa-square"></i>
+                </button>
 
-<button onclick="addShape('circle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="دائرة">
-    <i class="fas fa-circle"></i>
-</button>
+                <button onclick="addShape('circle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="circle">
+                    <i class="fas fa-circle"></i>
+                </button>
 
-<button onclick="addShape('triangle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="مثلث">
-    <i class="fas fa-play" style="transform: rotate(-90deg)"></i>
-</button>
+                <button onclick="addShape('triangle')" class="w-8 h-8 rounded hover:bg-white/10 text-white"
+                    title="triangle">
+                    <i class="fas fa-play" style="transform: rotate(-90deg)"></i>
+                </button>
 
-<button onclick="addShape('line')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="خط">
-    <i class="fas fa-minus"></i>
-</button>
+                <button onclick="addShape('line')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="line">
+                    <i class="fas fa-minus"></i>
+                </button>
 
-<div class="w-px h-6 bg-white/10"></div>
+                <div class="w-px h-6 bg-white/10"></div>
 
-<!-- أدوات إضافية -->
-<button onclick="toggleEraser()" id="btn-eraser"
-        class="w-8 h-8 rounded hover:bg-white/10 text-white" title="ممحاة">
-    <i class="fas fa-eraser"></i>
-</button>
+                <!-- أدوات إضافية -->
+                <button onclick="toggleEraser()" id="btn-eraser" class="w-8 h-8 rounded hover:bg-white/10 text-white"
+                    title="eraser">
+                    <i class="fas fa-eraser"></i>
+                </button>
 
-<button onclick="duplicateObject()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="نسخ">
-    <i class="fas fa-clone"></i>
-</button>
+                <button onclick="duplicateObject()" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="copy">
+                    <i class="fas fa-clone"></i>
+                </button>
 
-<button onclick="flipObject('x')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="قلب أفقي">
-    <i class="fas fa-arrows-alt-h"></i>
-</button>
+                <button onclick="flipObject('x')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="horizontal turn">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </button>
                 <div class="w-px h-6 bg-white/10"></div>
                 <button onclick="undoCanvas()" id="btn-undo"
-        class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30"
-        title="Undo (Ctrl+Z)">
-    <i class="fas fa-undo"></i>
-</button>
+                    class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30" title="Undo (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
 
-<button onclick="redoCanvas()" id="btn-redo"
-        class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30"
-        title="Redo (Ctrl+Y)">
-    <i class="fas fa-redo"></i>
-</button>
+                <button onclick="redoCanvas()" id="btn-redo"
+                    class="w-8 h-8 rounded hover:bg-white/10 text-white disabled:opacity-30" title="Redo (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
 
-<div class="w-px h-6 bg-white/10"></div>
+                <div class="w-px h-6 bg-white/10"></div>
                 <button onclick="toggleDrawMode(true)" id="btn-draw-mode"
                     class="w-8 h-8 rounded hover:bg-white/10 text-indigo-400" title="freehand sketch"><i
                         class="fas fa-pencil-alt"></i></button>
@@ -2421,119 +2423,119 @@
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // ==========================================
-//  CLOUDINARY CONFIGURATION
-// ==========================================
+        //  CLOUDINARY CONFIGURATION
+        // ==========================================
 
-    window.CLOUDINARY_CONFIG = {
-        cloudName: 'dnpnpmdcf',
-        uploadPreset: 'how_much_app',
-        folder: 'user-files'
-    };
-    
-    window.USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
-    window.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        window.CLOUDINARY_CONFIG = {
+            cloudName: 'dnpnpmdcf',
+            uploadPreset: 'how_much_app',
+            folder: 'user-files'
+        };
 
-// نظام تتبع حجم كل مستخدم (سيُحفظ في Firestore)
-window.userStorageInfo = {
-    used: 0,
-    limit: 100 * 1024 * 1024, // 100MB
-    fileCount: 0
-};
+        window.USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
+        window.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-// دالة حساب حجم الملفات المستخدم
-window.calculateUserStorage = async function() {
-    if (!currentUser || !db) {
-        window.userStorageInfo.used = 0;
-        window.userStorageInfo.fileCount = 0;
-        return;
-    }
+        // نظام تتبع حجم كل مستخدم (سيُحفظ في Firestore)
+        window.userStorageInfo = {
+            used: 0,
+            limit: 100 * 1024 * 1024, // 100MB
+            fileCount: 0
+        };
 
-    try {
-        // جمع أحجام الملفات من جميع العناصر
-        let totalSize = 0;
-        let fileCount = 0;
-
-        // من المهام
-        window.appData.tasks.forEach(task => {
-            if (task.files && Array.isArray(task.files)) {
-                task.files.forEach(file => {
-                    totalSize += (file.size || 0);
-                    fileCount++;
-                });
+        // دالة حساب حجم الملفات المستخدم
+        window.calculateUserStorage = async function () {
+            if (!currentUser || !db) {
+                window.userStorageInfo.used = 0;
+                window.userStorageInfo.fileCount = 0;
+                return;
             }
-        });
 
-        // من الملاحظات
-        window.appData.notes.forEach(note => {
-            if (note.files && Array.isArray(note.files)) {
-                note.files.forEach(file => {
-                    totalSize += (file.size || 0);
-                    fileCount++;
+            try {
+                // جمع أحجام الملفات من جميع العناصر
+                let totalSize = 0;
+                let fileCount = 0;
+
+                // من المهام
+                window.appData.tasks.forEach(task => {
+                    if (task.files && Array.isArray(task.files)) {
+                        task.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
                 });
-            }
-        });
 
-        // من الدورات
-        window.appData.courses.forEach(course => {
-            if (course.files && Array.isArray(course.files)) {
-                course.files.forEach(file => {
-                    totalSize += (file.size || 0);
-                    fileCount++;
+                // من الملاحظات
+                window.appData.notes.forEach(note => {
+                    if (note.files && Array.isArray(note.files)) {
+                        note.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
                 });
-            }
-        });
 
-        // من الكتب
-        window.appData.books.forEach(book => {
-            if (book.files && Array.isArray(book.files)) {
-                book.files.forEach(file => {
-                    totalSize += (file.size || 0);
-                    fileCount++;
+                // من الدورات
+                window.appData.courses.forEach(course => {
+                    if (course.files && Array.isArray(course.files)) {
+                        course.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
                 });
+
+                // من الكتب
+                window.appData.books.forEach(book => {
+                    if (book.files && Array.isArray(book.files)) {
+                        book.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
+                });
+
+                window.userStorageInfo.used = totalSize;
+                window.userStorageInfo.fileCount = fileCount;
+
+                console.log(`📊 Storage: ${(totalSize / 1024 / 1024).toFixed(2)} MB / ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
+
+            } catch (error) {
+                console.error("Storage calculation error:", error);
             }
-        });
+        };
 
-        window.userStorageInfo.used = totalSize;
-        window.userStorageInfo.fileCount = fileCount;
-        
-        console.log(`📊 Storage: ${(totalSize / 1024 / 1024).toFixed(2)} MB / ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
-        
-    } catch (error) {
-        console.error("Storage calculation error:", error);
-    }
-};
+        // دالة تحديث واجهة معلومات التخزين
+        window.updateStorageUI = function () {
+            const usedMB = (window.userStorageInfo.used / 1024 / 1024).toFixed(2);
+            const limitMB = (USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0);
+            const percentage = ((window.userStorageInfo.used / USER_STORAGE_LIMIT) * 100).toFixed(1);
 
-// دالة تحديث واجهة معلومات التخزين
-window.updateStorageUI = function() {
-    const usedMB = (window.userStorageInfo.used / 1024 / 1024).toFixed(2);
-    const limitMB = (USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0);
-    const percentage = ((window.userStorageInfo.used / USER_STORAGE_LIMIT) * 100).toFixed(1);
-    
-    const detailEl = document.getElementById('storage-detail');
-    const progressBar = document.getElementById('storage-progress-bar');
-    const usedEl = document.getElementById('storage-used');
-    const limitEl = document.getElementById('storage-limit');
-    
-    if (detailEl) {
-        detailEl.innerText = `${window.userStorageInfo.fileCount} files • ${usedMB} MB used`;
-    }
-    
-    if (progressBar) {
-        progressBar.style.width = Math.min(100, percentage) + '%';
-        
-        // تغيير اللون حسب النسبة
-        if (percentage >= 90) {
-            progressBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-1000';
-        } else if (percentage >= 70) {
-            progressBar.className = 'h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all duration-1000';
-        } else {
-            progressBar.className = 'h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000';
-        }
-    }
-    
-    if (usedEl) usedEl.innerText = usedMB + ' MB';
-    if (limitEl) limitEl.innerText = limitMB + ' MB';
-};
+            const detailEl = document.getElementById('storage-detail');
+            const progressBar = document.getElementById('storage-progress-bar');
+            const usedEl = document.getElementById('storage-used');
+            const limitEl = document.getElementById('storage-limit');
+
+            if (detailEl) {
+                detailEl.innerText = `${window.userStorageInfo.fileCount} files • ${usedMB} MB used`;
+            }
+
+            if (progressBar) {
+                progressBar.style.width = Math.min(100, percentage) + '%';
+
+                // تغيير اللون حسب النسبة
+                if (percentage >= 90) {
+                    progressBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-1000';
+                } else if (percentage >= 70) {
+                    progressBar.className = 'h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all duration-1000';
+                } else {
+                    progressBar.className = 'h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000';
+                }
+            }
+
+            if (usedEl) usedEl.innerText = usedMB + ' MB';
+            if (limitEl) limitEl.innerText = limitMB + ' MB';
+        };
 
 
         const firebaseConfig = {
@@ -2611,12 +2613,12 @@ window.updateStorageUI = function() {
 
                     loadData(user.uid);
 
-// ✅ حساب مساحة التخزين المستخدمة
-setTimeout(() => {
-    calculateUserStorage().then(() => {
-        updateStorageUI();
-    });
-}, 1500); // انتظار 1.5 ثانية لضمان تحميل البيانات
+                    // ✅ حساب مساحة التخزين المستخدمة
+                    setTimeout(() => {
+                        calculateUserStorage().then(() => {
+                            updateStorageUI();
+                        });
+                    }, 1500); // انتظار 1.5 ثانية لضمان تحميل البيانات
                 } else if (!localStorage.getItem('hm_guest')) {
                     document.getElementById('login-screen').classList.remove('hidden');
                 } else {
@@ -2630,74 +2632,74 @@ setTimeout(() => {
         }
 
         async function saveData() {
-    if (currentUser && db) {
-        try {
-            const userDocRef = doc(db, "artifacts", appId, "users", currentUser.uid);
-            
-            // 1. تجهيز البيانات المقسمة
-            const profileData = { settings: window.appData.settings, stats: window.appData.stats };
-            const tasksData = { tasks: window.appData.tasks };
-            const notesData = { notes: window.appData.notes };
-            const eduData = { courses: window.appData.courses, books: window.appData.books };
+            if (currentUser && db) {
+                try {
+                    const userDocRef = doc(db, "artifacts", appId, "users", currentUser.uid);
 
-            // 2. إرسال البيانات بشكل متوازي (Parallel) لـ 4 مستندات مختلفة
-            await Promise.all([
-                setDoc(doc(userDocRef, "data", "profile"), profileData),
-                setDoc(doc(userDocRef, "data", "tasks"), tasksData),
-                setDoc(doc(userDocRef, "data", "notes"), notesData),
-                setDoc(doc(userDocRef, "data", "edu"), eduData)
-            ]);
+                    // 1. تجهيز البيانات المقسمة
+                    const profileData = { settings: window.appData.settings, stats: window.appData.stats };
+                    const tasksData = { tasks: window.appData.tasks };
+                    const notesData = { notes: window.appData.notes };
+                    const eduData = { courses: window.appData.courses, books: window.appData.books };
 
-            const statusEl = document.getElementById('cloud-status');
-            if (statusEl) {
-                statusEl.innerText = "Synced";
-                statusEl.classList.remove('text-red-400');
-                statusEl.classList.add('text-green-400');
+                    // 2. إرسال البيانات بشكل متوازي (Parallel) لـ 4 مستندات مختلفة
+                    await Promise.all([
+                        setDoc(doc(userDocRef, "data", "profile"), profileData),
+                        setDoc(doc(userDocRef, "data", "tasks"), tasksData),
+                        setDoc(doc(userDocRef, "data", "notes"), notesData),
+                        setDoc(doc(userDocRef, "data", "edu"), eduData)
+                    ]);
+
+                    const statusEl = document.getElementById('cloud-status');
+                    if (statusEl) {
+                        statusEl.innerText = "Synced";
+                        statusEl.classList.remove('text-red-400');
+                        statusEl.classList.add('text-green-400');
+                    }
+                } catch (e) {
+                    console.error("Save Error:", e);
+                    showToast("❌ Cloud Save Failed: " + e.message);
+                }
             }
-        } catch (e) {
-            console.error("Save Error:", e);
-            showToast("❌ Cloud Save Failed: " + e.message);
         }
-    }
-}
 
         async function loadData(uid) {
-    if (!db) return;
+            if (!db) return;
 
-    // الاستماع للمجموعة الفرعية "data" بالكامل لجلب الملفات الأربعة
-    const dataCollectionRef = collection(db, "artifacts", appId, "users", uid, "data");
+            // الاستماع للمجموعة الفرعية "data" بالكامل لجلب الملفات الأربعة
+            const dataCollectionRef = collection(db, "artifacts", appId, "users", uid, "data");
 
-    onSnapshot(dataCollectionRef, (snapshot) => {
-        if (!snapshot.empty) {
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                // دمج البيانات القادمة مع البيانات الحالية
-                window.appData = { ...window.appData, ...data };
+            onSnapshot(dataCollectionRef, (snapshot) => {
+                if (!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        // دمج البيانات القادمة مع البيانات الحالية
+                        window.appData = { ...window.appData, ...data };
+                    });
+
+                    // التأكد من وجود المصفوفات الأساسية بعد الدمج
+                    if (!window.appData.notes) window.appData.notes = [];
+                    if (!window.appData.tasks) window.appData.tasks = [];
+                    if (!window.appData.courses) window.appData.courses = [];
+                    if (!window.appData.books) window.appData.books = [];
+                    if (!window.appData.stats) window.appData.stats = { historicXP: 0 };
+
+                    // حفظ نسخة محلية وتحديث الواجهة
+                    localStorage.setItem('hm_data', JSON.stringify(window.appData));
+                    refreshAllUI();
+
+                    const statusEl = document.getElementById('cloud-status');
+                    if (statusEl) {
+                        statusEl.innerText = "Synced";
+                        statusEl.classList.remove('text-red-400');
+                        statusEl.classList.add('text-green-400');
+                    }
+                } else {
+                    // مستخدم جديد: قم بإنشاء الهيكل الأولي
+                    saveData();
+                }
             });
-
-            // التأكد من وجود المصفوفات الأساسية بعد الدمج
-            if (!window.appData.notes) window.appData.notes = [];
-            if (!window.appData.tasks) window.appData.tasks = [];
-            if (!window.appData.courses) window.appData.courses = [];
-            if (!window.appData.books) window.appData.books = [];
-            if (!window.appData.stats) window.appData.stats = { historicXP: 0 };
-
-            // حفظ نسخة محلية وتحديث الواجهة
-            localStorage.setItem('hm_data', JSON.stringify(window.appData));
-            refreshAllUI();
-
-            const statusEl = document.getElementById('cloud-status');
-            if (statusEl) {
-                statusEl.innerText = "Synced";
-                statusEl.classList.remove('text-red-400');
-                statusEl.classList.add('text-green-400');
-            }
-        } else {
-            // مستخدم جديد: قم بإنشاء الهيكل الأولي
-            saveData();
         }
-    });
-}
 
         window.triggerCloudSave = saveData;
     </script>
@@ -3076,260 +3078,260 @@ setTimeout(() => {
    TIMER (يعمل في الخلفية - محسّن)
    ========================================== */
 
-let timerInterval = null;
-let timerStartTime = null; // وقت البدء الفعلي
-let timerElapsedSeconds = 0; // الثواني المنقضية
-let timerTarget = 0;
-let timerMode = 'stopwatch';
-let timerRunning = false;
+        let timerInterval = null;
+        let timerStartTime = null; // وقت البدء الفعلي
+        let timerElapsedSeconds = 0; // الثواني المنقضية
+        let timerTarget = 0;
+        let timerMode = 'stopwatch';
+        let timerRunning = false;
 
-// حساب الوقت الحقيقي
-function getRealElapsedTime() {
-    if (!timerRunning || !timerStartTime) return timerElapsedSeconds;
-    
-    const now = Date.now();
-    const elapsed = Math.floor((now - timerStartTime) / 1000);
-    
-    if (timerMode === 'timer') {
-        return Math.max(0, timerTarget - elapsed);
-    } else {
-        return timerElapsedSeconds + elapsed;
-    }
-}
+        // حساب الوقت الحقيقي
+        function getRealElapsedTime() {
+            if (!timerRunning || !timerStartTime) return timerElapsedSeconds;
 
-// تحديث العرض
-function updateTimerDisplay() {
-    if (!timerRunning) return;
-    
-    const currentSeconds = getRealElapsedTime();
-    updateDigitDisplay(currentSeconds);
-    updateTimerRing();
-    
-    // فحص انتهاء المؤقت
-    if (timerMode === 'timer' && currentSeconds <= 0) {
-        window.stopTimer();
-        playAlarmSound();
-        showToast("⏰ انتهى الوقت!", 'success');
-    }
-}
+            const now = Date.now();
+            const elapsed = Math.floor((now - timerStartTime) / 1000);
 
-// بدء التايمر
-window.startTimer = function () {
-    const inputWrapper = document.getElementById('timer-input-wrapper');
+            if (timerMode === 'timer') {
+                return Math.max(0, timerTarget - elapsed);
+            } else {
+                return timerElapsedSeconds + elapsed;
+            }
+        }
 
-    if (timerMode === 'timer' && !timerRunning && timerElapsedSeconds === 0) {
-        const mins = parseInt(document.getElementById('timer-input').value) || 25;
-        timerTarget = mins * 60;
-        timerElapsedSeconds = 0;
-        inputWrapper.classList.add('hidden');
-    }
+        // تحديث العرض
+        function updateTimerDisplay() {
+            if (!timerRunning) return;
 
-    timerStartTime = Date.now();
-    timerRunning = true;
-    
-    const iconEl = document.getElementById('icon-timer-toggle');
-    iconEl.className = 'fas fa-pause';
-    document.getElementById('timer-digits').classList.add('animate-pulse');
+            const currentSeconds = getRealElapsedTime();
+            updateDigitDisplay(currentSeconds);
+            updateTimerRing();
 
-    // تحديث كل 100ms (أكثر دقة)
-    timerInterval = setInterval(updateTimerDisplay, 100);
-    updateTimerDisplay();
-    
-    // تحديث الويدجت
-    updateWidgetTimer(true);
-};
+            // فحص انتهاء المؤقت
+            if (timerMode === 'timer' && currentSeconds <= 0) {
+                window.stopTimer();
+                playAlarmSound();
+                showToast("⏰ انتهى الوقت!", 'success');
+            }
+        }
 
-// إيقاف التايمر
-window.stopTimer = function () {
-    if (!timerRunning) return;
-    
-    timerElapsedSeconds = getRealElapsedTime();
-    timerStartTime = null;
-    timerRunning = false;
-    
-    clearInterval(timerInterval);
-    
-    const iconEl = document.getElementById('icon-timer-toggle');
-    iconEl.className = 'fas fa-play pl-1';
-    document.getElementById('timer-digits').classList.remove('animate-pulse');
-    
-    updateWidgetTimer(false);
-};
+        // بدء التايمر
+        window.startTimer = function () {
+            const inputWrapper = document.getElementById('timer-input-wrapper');
 
-// إعادة تعيين
-window.resetTimer = function () {
-    window.stopTimer();
-    timerElapsedSeconds = 0;
-    timerStartTime = null;
-    
-    if (timerMode === 'timer') {
-        document.getElementById('timer-input-wrapper').classList.remove('hidden');
-    }
-    
-    updateDigitDisplay(0);
-    updateTimerRing();
-};
+            if (timerMode === 'timer' && !timerRunning && timerElapsedSeconds === 0) {
+                const mins = parseInt(document.getElementById('timer-input').value) || 25;
+                timerTarget = mins * 60;
+                timerElapsedSeconds = 0;
+                inputWrapper.classList.add('hidden');
+            }
 
-// تبديل
-window.toggleTimer = function () {
-    if (timerRunning) {
-        window.stopTimer();
-    } else {
-        window.startTimer();
-    }
-};
+            timerStartTime = Date.now();
+            timerRunning = true;
 
-// تغيير الوضع
-window.switchTimerMode = function () {
-    window.stopTimer();
-    timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
-    timerElapsedSeconds = 0;
+            const iconEl = document.getElementById('icon-timer-toggle');
+            iconEl.className = 'fas fa-pause';
+            document.getElementById('timer-digits').classList.add('animate-pulse');
 
-    const label = document.getElementById('timer-mode-label');
-    const inputWrapper = document.getElementById('timer-input-wrapper');
-    const progress = document.getElementById('timer-progress');
+            // تحديث كل 100ms (أكثر دقة)
+            timerInterval = setInterval(updateTimerDisplay, 100);
+            updateTimerDisplay();
 
-    if (timerMode === 'timer') {
-        label.innerText = "TIMER";
-        inputWrapper.classList.remove('hidden');
-        progress.style.stroke = "url(#gradientTimer)";
-    } else {
-        label.innerText = "STOPWATCH";
-        inputWrapper.classList.add('hidden');
-        progress.style.strokeDashoffset = 0;
-    }
+            // تحديث الويدجت
+            updateWidgetTimer(true);
+        };
 
-    updateDigitDisplay(0);
-};
+        // إيقاف التايمر
+        window.stopTimer = function () {
+            if (!timerRunning) return;
 
-// تحديث الأرقام
-function updateDigitDisplay(totalSeconds) {
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
+            timerElapsedSeconds = getRealElapsedTime();
+            timerStartTime = null;
+            timerRunning = false;
 
-    const mStr = m.toString().padStart(2, '0');
-    const sStr = s.toString().padStart(2, '0');
+            clearInterval(timerInterval);
 
-    updateSingleDigit('digit-m1', mStr[0]);
-    updateSingleDigit('digit-m2', mStr[1]);
-    updateSingleDigit('digit-s1', sStr[0]);
-    updateSingleDigit('digit-s2', sStr[1]);
-}
+            const iconEl = document.getElementById('icon-timer-toggle');
+            iconEl.className = 'fas fa-play pl-1';
+            document.getElementById('timer-digits').classList.remove('animate-pulse');
 
-function updateSingleDigit(id, newVal) {
-    const el = document.getElementById(id);
-    if (el && el.innerText !== newVal) {
-        gsap.to(el, {
-            scaleY: 0,
-            duration: 0.15,
-            onComplete: () => {
-                el.innerText = newVal;
-                gsap.to(el, { scaleY: 1, duration: 0.15, ease: "back.out(1.7)" });
+            updateWidgetTimer(false);
+        };
+
+        // إعادة تعيين
+        window.resetTimer = function () {
+            window.stopTimer();
+            timerElapsedSeconds = 0;
+            timerStartTime = null;
+
+            if (timerMode === 'timer') {
+                document.getElementById('timer-input-wrapper').classList.remove('hidden');
+            }
+
+            updateDigitDisplay(0);
+            updateTimerRing();
+        };
+
+        // تبديل
+        window.toggleTimer = function () {
+            if (timerRunning) {
+                window.stopTimer();
+            } else {
+                window.startTimer();
+            }
+        };
+
+        // تغيير الوضع
+        window.switchTimerMode = function () {
+            window.stopTimer();
+            timerMode = timerMode === 'stopwatch' ? 'timer' : 'stopwatch';
+            timerElapsedSeconds = 0;
+
+            const label = document.getElementById('timer-mode-label');
+            const inputWrapper = document.getElementById('timer-input-wrapper');
+            const progress = document.getElementById('timer-progress');
+
+            if (timerMode === 'timer') {
+                label.innerText = "TIMER";
+                inputWrapper.classList.remove('hidden');
+                progress.style.stroke = "url(#gradientTimer)";
+            } else {
+                label.innerText = "STOPWATCH";
+                inputWrapper.classList.add('hidden');
+                progress.style.strokeDashoffset = 0;
+            }
+
+            updateDigitDisplay(0);
+        };
+
+        // تحديث الأرقام
+        function updateDigitDisplay(totalSeconds) {
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+
+            const mStr = m.toString().padStart(2, '0');
+            const sStr = s.toString().padStart(2, '0');
+
+            updateSingleDigit('digit-m1', mStr[0]);
+            updateSingleDigit('digit-m2', mStr[1]);
+            updateSingleDigit('digit-s1', sStr[0]);
+            updateSingleDigit('digit-s2', sStr[1]);
+        }
+
+        function updateSingleDigit(id, newVal) {
+            const el = document.getElementById(id);
+            if (el && el.innerText !== newVal) {
+                gsap.to(el, {
+                    scaleY: 0,
+                    duration: 0.15,
+                    onComplete: () => {
+                        el.innerText = newVal;
+                        gsap.to(el, { scaleY: 1, duration: 0.15, ease: "back.out(1.7)" });
+                    }
+                });
+            }
+        }
+
+        function updateTimerRing() {
+            const circle = document.getElementById('timer-progress');
+            if (!circle) return;
+
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+
+            if (timerMode === 'timer' && timerTarget > 0) {
+                const currentSeconds = getRealElapsedTime();
+                const offset = circumference - ((currentSeconds / timerTarget) * circumference);
+                circle.style.strokeDashoffset = offset;
+            } else {
+                circle.style.strokeDashoffset = 0;
+            }
+        }
+
+        // تحديث الويدجت
+        function updateWidgetTimer(isRunning) {
+            const container = document.getElementById('widget-timer-container');
+            const display = document.getElementById('widget-timer-val');
+
+            if (!container || !display) return;
+
+            if (isRunning) {
+                container.classList.remove('hidden');
+
+                const update = () => {
+                    if (!timerRunning) return;
+
+                    const seconds = getRealElapsedTime();
+                    const m = Math.floor(seconds / 60);
+                    const s = seconds % 60;
+                    display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                };
+
+                update();
+                setInterval(update, 1000);
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // صوت الإنذار (محسّن)
+        function playAlarmSound() {
+            try {
+                // صوت أول
+                const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+                beep1.play().catch(e => console.log('Audio blocked:', e));
+
+                // صوت ثاني بعد 300ms
+                setTimeout(() => {
+                    const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+                    beep2.play().catch(e => console.log('Audio blocked:', e));
+                }, 1000);
+
+                // اهتزاز (إذا مدعوم)
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200, 100, 200]);
+                }
+
+            } catch (error) {
+                console.error('Alarm sound error:', error);
+            }
+        }
+
+        // التحديث عند العودة للصفحة
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && timerRunning) {
+                updateTimerDisplay();
             }
         });
-    }
-}
-
-function updateTimerRing() {
-    const circle = document.getElementById('timer-progress');
-    if (!circle) return;
-    
-    const radius = circle.r.baseVal.value;
-    const circumference = radius * 2 * Math.PI;
-
-    if (timerMode === 'timer' && timerTarget > 0) {
-        const currentSeconds = getRealElapsedTime();
-        const offset = circumference - ((currentSeconds / timerTarget) * circumference);
-        circle.style.strokeDashoffset = offset;
-    } else {
-        circle.style.strokeDashoffset = 0;
-    }
-}
-
-// تحديث الويدجت
-function updateWidgetTimer(isRunning) {
-    const container = document.getElementById('widget-timer-container');
-    const display = document.getElementById('widget-timer-val');
-    
-    if (!container || !display) return;
-    
-    if (isRunning) {
-        container.classList.remove('hidden');
-        
-        const update = () => {
-            if (!timerRunning) return;
-            
-            const seconds = getRealElapsedTime();
-            const m = Math.floor(seconds / 60);
-            const s = seconds % 60;
-            display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        };
-        
-        update();
-        setInterval(update, 1000);
-    } else {
-        container.classList.add('hidden');
-    }
-}
-
-// صوت الإنذار (محسّن)
-function playAlarmSound() {
-    try {
-        // صوت أول
-        const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-        beep1.play().catch(e => console.log('Audio blocked:', e));
-        
-        // صوت ثاني بعد 300ms
-        setTimeout(() => {
-            const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-            beep2.play().catch(e => console.log('Audio blocked:', e));
-        }, 1000);
-        
-        // اهتزاز (إذا مدعوم)
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200, 100, 200]);
-        }
-        
-    } catch (error) {
-        console.error('Alarm sound error:', error);
-    }
-}
-
-// التحديث عند العودة للصفحة
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && timerRunning) {
-        updateTimerDisplay();
-    }
-});
         const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms";
         let tempAudioBase64 = null;
         let tempDrawingData = null;
         let tempFiles = [];
 
         // دالة الإشعار الجديدة
-window.showToast = function(msg, type = 'neutral') {
-    const div = document.createElement('div');
-    div.className = `custom-toast ${type}`;
-    
-    let icon = '<i class="fas fa-info-circle text-blue-400"></i>';
-    if (type === 'error') icon = '<i class="fas fa-exclamation-circle text-red-400"></i>';
-    if (type === 'success') icon = '<i class="fas fa-check-circle text-green-400"></i>';
+        window.showToast = function (msg, type = 'neutral') {
+            const div = document.createElement('div');
+            div.className = `custom-toast ${type}`;
 
-    // دعم النص متعدد الأسطر
-    const formattedMsg = msg.replace(/\n/g, '<br>');
-    
-    div.innerHTML = `${icon} <span style="line-height: 1.5;">${formattedMsg}</span>`;
-    document.body.appendChild(div);
+            let icon = '<i class="fas fa-info-circle text-blue-400"></i>';
+            if (type === 'error') icon = '<i class="fas fa-exclamation-circle text-red-400"></i>';
+            if (type === 'success') icon = '<i class="fas fa-check-circle text-green-400"></i>';
 
-    requestAnimationFrame(() => {
-        div.classList.add('show');
-    });
+            // دعم النص متعدد الأسطر
+            const formattedMsg = msg.replace(/\n/g, '<br>');
 
-    setTimeout(() => {
-        div.classList.remove('show');
-        setTimeout(() => div.remove(), 400);
-    }, 4000); // زودت الوقت من 3 لـ 4 ثواني للرسائل الطويلة
-};
+            div.innerHTML = `${icon} <span style="line-height: 1.5;">${formattedMsg}</span>`;
+            document.body.appendChild(div);
+
+            requestAnimationFrame(() => {
+                div.classList.add('show');
+            });
+
+            setTimeout(() => {
+                div.classList.remove('show');
+                setTimeout(() => div.remove(), 400);
+            }, 4000); // زودت الوقت من 3 لـ 4 ثواني للرسائل الطويلة
+        };
 
         window.onload = () => {
             try {
@@ -3630,10 +3632,10 @@ window.showToast = function(msg, type = 'neutral') {
                 remaining: "Remaining",
                 dailyProgress: "Daily Progress",
                 poweredBy: "Powered By",
-                 storageUsage: "Storage Usage",
-        filesUploaded: "files uploaded",
-        refresh: "Refresh",
-        poweredBy: "File storage powered by"
+                storageUsage: "Storage Usage",
+                filesUploaded: "files uploaded",
+                refresh: "Refresh",
+                poweredBy: "File storage powered by"
             },
             ar: {
                 // ... (القديم)
@@ -3673,9 +3675,9 @@ window.showToast = function(msg, type = 'neutral') {
                 dailyProgress: "التقدم اليومي",
                 poweredBy: "مشغل بواسطة",
                 storageUsage: "مساحة التخزين",
-        filesUploaded: "ملف مرفوع",
-        refresh: "تحديث",
-        poweredBy: "التخزين بواسطة"
+                filesUploaded: "ملف مرفوع",
+                refresh: "تحديث",
+                poweredBy: "التخزين بواسطة"
             }
         };
         let genieOriginRect = null;
@@ -3939,9 +3941,9 @@ window.showToast = function(msg, type = 'neutral') {
         window.saveItem = async function (btnElement) {
             const name = document.getElementById('modal-name').value;
             if (!name) {
-    showToast("Enter the name of the task", 'error');
-    return;
-}
+                showToast("Enter the name of the task", 'error');
+                return;
+            }
 
             if (btnElement) btnElement.classList.add('loading');
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -4024,7 +4026,7 @@ window.showToast = function(msg, type = 'neutral') {
 
             await new Promise(resolve => setTimeout(resolve, 800));
             window.closeAllModals();
-            
+
             // تنظيف بعد الحفظ
             if (btnElement) btnElement.classList.remove('success');
         };
@@ -4034,7 +4036,7 @@ window.showToast = function(msg, type = 'neutral') {
                 window.closeDrawingModal();
                 return;
             }
-            
+
             // تشغيل اللودر إذا تم الضغط على زر الحفظ اليدوي
             if (btnElement) btnElement.classList.add('loading');
 
@@ -4075,190 +4077,190 @@ window.showToast = function(msg, type = 'neutral') {
         };
 
         window.handleFileUpload = async function (input) {
-    // 🆕 إضافة 1: رسالة البداية
-    console.log("🔵 بدء عملية الرفع...");
-    
-    const files = Array.from(input.files);
-    if (files.length === 0) {
-        console.log("❌ لا توجد ملفات"); // 🆕 إضافة 2
-        return;
-    }
+            // 🆕 إضافة 1: رسالة البداية
+            console.log("🔵 بدء عملية الرفع...");
 
-    // 🆕 إضافة 3: عرض عدد الملفات
-    console.log(`📁 عدد الملفات: ${files.length}`);
-
-    // 🆕 إضافة 4: فحص تسجيل الدخول مع Logging
-    console.log("🔍 فحص تسجيل الدخول...");
-    console.log("window.currentUser:", window.currentUser);
-    
-    if (!window.currentUser) {
-        console.error("❌ لم يتم تسجيل الدخول");
-        showToast("⚠️ you should sign in", 'error');
-        input.value = '';
-        return;
-    }
-
-    // 🆕 إضافة 5: عرض معلومات المستخدم
-    console.log("✅ المستخدم مسجل:", window.currentUser.email);
-    console.log("✅ User ID:", window.currentUser.uid);
-
-    // 🆕 إضافة 6: فحص إعدادات Cloudinary
-    console.log("🔧 فحص إعدادات Cloudinary...");
-    console.log("CLOUDINARY_CONFIG:", window.CLOUDINARY_CONFIG);
-    
-    if (!window.CLOUDINARY_CONFIG.cloudName || !window.CLOUDINARY_CONFIG.uploadPreset) {
-        console.error("❌ إعدادات Cloudinary مفقودة!");
-        showToast("❌ Upload settings error", 'error');
-        return;
-    }
-
-    // 🆕 إضافة 7: حساب وعرض المساحة
-    const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
-    const totalAfterUpload = window.userStorageInfo.used + newFilesSize;
-
-    console.log("📊 فحص المساحة:");
-    console.log(`   الحالي: ${(window.userStorageInfo.used / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   الملفات الجديدة: ${(newFilesSize / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   الإجمالي بعد: ${(totalAfterUpload / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   الحد الأقصى: ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
-
-    if (totalAfterUpload > window.USER_STORAGE_LIMIT) {
-        const remainingMB = ((USER_STORAGE_LIMIT - window.userStorageInfo.used) / 1024 / 1024).toFixed(2);
-        const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
-        
-        console.error("❌ تجاوز الحد الأقصى للمساحة");
-        showToast(
-            `⚠️ Insufficient storage space!\n\n` +
-            `remaining: ${remainingMB} MB\n` +
-            `needed: ${neededMB} MB\n\n` +
-            `Delete some old files first.`,
-            'error'
-        );
-        input.value = '';
-        return;
-    }
-
-    showToast(`⏳ uploading file${files.length} file...`, 'neutral');
-
-    let successCount = 0;
-    let failCount = 0;
-
-    for (const file of files) {
-        // 🆕 إضافة 8: معلومات الملف الحالي
-        console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-
-      
-
-        try {
-            // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
-            let resourceType = 'raw';
-            
-            if (file.type.startsWith('image/')) {
-                resourceType = 'image';
-            } else if (file.type.startsWith('video/')) {
-                resourceType = 'video';
-            }
-            
-            // 🆕 إضافة 10: عرض نوع المورد
-            console.log(`📋 نوع المورد: ${resourceType}`);
-            console.log(`📋 نوع الملف: ${file.type}`);
-
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', window.CLOUDINARY_CONFIG.uploadPreset);
-formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
-            
-            // 🆕 إضافة 11: الرابط الصحيح (حل المشكلة رقم 1)
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${window.CLOUDINARY_CONFIG.cloudName}/${resourceType}/upload`;
-            
-            // 🆕 إضافة 12: عرض معلومات الطلب
-            console.log(`🌐 الرابط: ${uploadUrl}`);
-            console.log(`📁 المجلد: ${CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
-            console.log("🚀 إرسال الطلب...");
-
-            const response = await fetch(uploadUrl, {
-                method: 'POST',
-                body: formData
-            });
-
-            // 🆕 إضافة 13: عرض استجابة الخادم
-            console.log(`📡 استجابة الخادم: ${response.status} ${response.statusText}`);
-
-            if (!response.ok) {
-                // 🆕 إضافة 14: قراءة رسالة الخطأ من Cloudinary
-                const errorText = await response.text();
-                console.error("❌ خطأ من Cloudinary:", errorText);
-                throw new Error(`Upload failed: ${response.status} - ${errorText}`);
+            const files = Array.from(input.files);
+            if (files.length === 0) {
+                console.log("❌ لا توجد ملفات"); // 🆕 إضافة 2
+                return;
             }
 
-            const data = await response.json();
-            // 🆕 إضافة 15: عرض الاستجابة الناجحة
-            console.log("✅ استجابة ناجحة:", data);
+            // 🆕 إضافة 3: عرض عدد الملفات
+            console.log(`📁 عدد الملفات: ${files.length}`);
 
-            tempFiles.push({
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                url: data.secure_url,
-                publicId: data.public_id,
-                uploadedAt: Date.now(),
-                cloudinary: true
-            });
+            // 🆕 إضافة 4: فحص تسجيل الدخول مع Logging
+            console.log("🔍 فحص تسجيل الدخول...");
+            console.log("window.currentUser:", window.currentUser);
 
-            window.userStorageInfo.used += file.size;
-            window.userStorageInfo.fileCount++;
+            if (!window.currentUser) {
+                console.error("❌ لم يتم تسجيل الدخول");
+                showToast("⚠️ you should sign in", 'error');
+                input.value = '';
+                return;
+            }
 
-            // 🆕 إضافة 16: رسالة نجاح مفصلة
-            console.log(`✅ Uploaded: ${file.name}`);
-            console.log(`  URL: ${data.secure_url}`);
-            successCount++;
+            // 🆕 إضافة 5: عرض معلومات المستخدم
+            console.log("✅ المستخدم مسجل:", window.currentUser.email);
+            console.log("✅ User ID:", window.currentUser.uid);
 
-        } catch (error) {
-            // 🆕 إضافة 17: معالجة أخطاء مفصلة
-            console.error("❌ خطأ في الرفع:", error);
-            console.error("   الملف:", file.name);
-            console.error("   التفاصيل:", error.message);
-            showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
-            failCount++;
-        }
-    }
+            // 🆕 إضافة 6: فحص إعدادات Cloudinary
+            console.log("🔧 فحص إعدادات Cloudinary...");
+            console.log("CLOUDINARY_CONFIG:", window.CLOUDINARY_CONFIG);
 
-    // 🆕 إضافة 18: تقرير نهائي
-    console.log("\n📊 النتيجة النهائية:");
-    console.log(`   ناجح: ${successCount}`);
-    console.log(`   فاشل: ${failCount}`);
+            if (!window.CLOUDINARY_CONFIG.cloudName || !window.CLOUDINARY_CONFIG.uploadPreset) {
+                console.error("❌ إعدادات Cloudinary مفقودة!");
+                showToast("❌ Upload settings error", 'error');
+                return;
+            }
 
-    if (successCount > 0) {
-        showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
-        renderFilePreview();
-        updateStorageUI();
-    }
+            // 🆕 إضافة 7: حساب وعرض المساحة
+            const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
+            const totalAfterUpload = window.userStorageInfo.used + newFilesSize;
 
-    if (failCount > 0) {
-        showToast(`⚠️ failed to upload${failCount} file`, 'error');
-    }
+            console.log("📊 فحص المساحة:");
+            console.log(`   الحالي: ${(window.userStorageInfo.used / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الملفات الجديدة: ${(newFilesSize / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الإجمالي بعد: ${(totalAfterUpload / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الحد الأقصى: ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
 
-    input.value = '';
-    // 🆕 إضافة 19: رسالة النهاية
-    console.log("🏁 انتهت عملية الرفع");
-};
+            if (totalAfterUpload > window.USER_STORAGE_LIMIT) {
+                const remainingMB = ((USER_STORAGE_LIMIT - window.userStorageInfo.used) / 1024 / 1024).toFixed(2);
+                const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
+
+                console.error("❌ تجاوز الحد الأقصى للمساحة");
+                showToast(
+                    `⚠️ Insufficient storage space!\n\n` +
+                    `remaining: ${remainingMB} MB\n` +
+                    `needed: ${neededMB} MB\n\n` +
+                    `Delete some old files first.`,
+                    'error'
+                );
+                input.value = '';
+                return;
+            }
+
+            showToast(`⏳ uploading file${files.length} file...`, 'neutral');
+
+            let successCount = 0;
+            let failCount = 0;
+
+            for (const file of files) {
+                // 🆕 إضافة 8: معلومات الملف الحالي
+                console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+
+
+
+                try {
+                    // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
+                    let resourceType = 'raw';
+
+                    if (file.type.startsWith('image/')) {
+                        resourceType = 'image';
+                    } else if (file.type.startsWith('video/')) {
+                        resourceType = 'video';
+                    }
+
+                    // 🆕 إضافة 10: عرض نوع المورد
+                    console.log(`📋 نوع المورد: ${resourceType}`);
+                    console.log(`📋 نوع الملف: ${file.type}`);
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', window.CLOUDINARY_CONFIG.uploadPreset);
+                    formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
+
+                    // 🆕 إضافة 11: الرابط الصحيح (حل المشكلة رقم 1)
+                    const uploadUrl = `https://api.cloudinary.com/v1_1/${window.CLOUDINARY_CONFIG.cloudName}/${resourceType}/upload`;
+
+                    // 🆕 إضافة 12: عرض معلومات الطلب
+                    console.log(`🌐 الرابط: ${uploadUrl}`);
+                    console.log(`📁 المجلد: ${CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
+                    console.log("🚀 إرسال الطلب...");
+
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    // 🆕 إضافة 13: عرض استجابة الخادم
+                    console.log(`📡 استجابة الخادم: ${response.status} ${response.statusText}`);
+
+                    if (!response.ok) {
+                        // 🆕 إضافة 14: قراءة رسالة الخطأ من Cloudinary
+                        const errorText = await response.text();
+                        console.error("❌ خطأ من Cloudinary:", errorText);
+                        throw new Error(`Upload failed: ${response.status} - ${errorText}`);
+                    }
+
+                    const data = await response.json();
+                    // 🆕 إضافة 15: عرض الاستجابة الناجحة
+                    console.log("✅ استجابة ناجحة:", data);
+
+                    tempFiles.push({
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        url: data.secure_url,
+                        publicId: data.public_id,
+                        uploadedAt: Date.now(),
+                        cloudinary: true
+                    });
+
+                    window.userStorageInfo.used += file.size;
+                    window.userStorageInfo.fileCount++;
+
+                    // 🆕 إضافة 16: رسالة نجاح مفصلة
+                    console.log(`✅ Uploaded: ${file.name}`);
+                    console.log(`  URL: ${data.secure_url}`);
+                    successCount++;
+
+                } catch (error) {
+                    // 🆕 إضافة 17: معالجة أخطاء مفصلة
+                    console.error("❌ خطأ في الرفع:", error);
+                    console.error("   الملف:", file.name);
+                    console.error("   التفاصيل:", error.message);
+                    showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
+                    failCount++;
+                }
+            }
+
+            // 🆕 إضافة 18: تقرير نهائي
+            console.log("\n📊 النتيجة النهائية:");
+            console.log(`   ناجح: ${successCount}`);
+            console.log(`   فاشل: ${failCount}`);
+
+            if (successCount > 0) {
+                showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
+                renderFilePreview();
+                updateStorageUI();
+            }
+
+            if (failCount > 0) {
+                showToast(`⚠️ failed to upload${failCount} file`, 'error');
+            }
+
+            input.value = '';
+            // 🆕 إضافة 19: رسالة النهاية
+            console.log("🏁 انتهت عملية الرفع");
+        };
         function renderFilePreview() {
-    const container = document.getElementById('file-list-preview');
-    container.innerHTML = '';
+            const container = document.getElementById('file-list-preview');
+            container.innerHTML = '';
 
-    console.log("📂 Rendering files:", tempFiles);
+            console.log("📂 Rendering files:", tempFiles);
 
-    tempFiles.forEach((f, idx) => {
-        let icon = 'fa-file';
-        if (f.type && f.type.includes('image')) icon = 'fa-image';
-        if (f.type && f.type.includes('pdf')) icon = 'fa-file-pdf';
-        if (f.type && f.type.includes('video')) icon = 'fa-video';
+            tempFiles.forEach((f, idx) => {
+                let icon = 'fa-file';
+                if (f.type && f.type.includes('image')) icon = 'fa-image';
+                if (f.type && f.type.includes('pdf')) icon = 'fa-file-pdf';
+                if (f.type && f.type.includes('video')) icon = 'fa-video';
 
-        const sizeKB = f.size ? (f.size / 1024).toFixed(1) : '?';
+                const sizeKB = f.size ? (f.size / 1024).toFixed(1) : '?';
 
-        const fileEl = document.createElement('div');
-        fileEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs';
-        fileEl.innerHTML = `
+                const fileEl = document.createElement('div');
+                fileEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs';
+                fileEl.innerHTML = `
             <div class="flex items-center gap-2 overflow-hidden flex-1">
                 <i class="fas ${icon} text-slate-400"></i>
                 <div class="flex flex-col overflow-hidden">
@@ -4282,33 +4284,33 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
                 </button>
             </div>
         `;
-        container.appendChild(fileEl);
-    });
-}
-        window.removeTempFile = async function (idx) {
-    const file = tempFiles[idx];
-    
-    // ✅ حذف من Cloudinary (إذا كان من Cloudinary)
-    if (file.cloudinary && file.publicId) {
-        try {
-            // ملاحظة: الحذف من Cloudinary يحتاج API Secret
-            // لذلك سنحذف من الواجهة فقط، والملفات ستُحذف تلقائياً بعد 30 يوم
-            console.log("File marked for deletion:", file.publicId);
-            
-            // تحديث الحجم
-            window.userStorageInfo.used -= (file.size || 0);
-            window.userStorageInfo.fileCount--;
-            
-        } catch (error) {
-            console.warn("Delete error:", error);
+                container.appendChild(fileEl);
+            });
         }
-    }
-    
-    tempFiles.splice(idx, 1);
-    renderFilePreview();
-    updateStorageUI();
-    showToast("✅ file deleted", 'success');
-};
+        window.removeTempFile = async function (idx) {
+            const file = tempFiles[idx];
+
+            // ✅ حذف من Cloudinary (إذا كان من Cloudinary)
+            if (file.cloudinary && file.publicId) {
+                try {
+                    // ملاحظة: الحذف من Cloudinary يحتاج API Secret
+                    // لذلك سنحذف من الواجهة فقط، والملفات ستُحذف تلقائياً بعد 30 يوم
+                    console.log("File marked for deletion:", file.publicId);
+
+                    // تحديث الحجم
+                    window.userStorageInfo.used -= (file.size || 0);
+                    window.userStorageInfo.fileCount--;
+
+                } catch (error) {
+                    console.warn("Delete error:", error);
+                }
+            }
+
+            tempFiles.splice(idx, 1);
+            renderFilePreview();
+            updateStorageUI();
+            showToast("✅ file deleted", 'success');
+        };
 
         window.moveToTrash = function (type, id, event) {
             event.stopPropagation();
@@ -4434,7 +4436,7 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
                 localStorage.setItem('hm_data', JSON.stringify(window.appData));
             } catch (e) {
                 console.error("Storage Error:", e);
-            showToast("Storage Full! Your data may not be saved locally. Please delete some items.", 'error');      
+                showToast("Storage Full! Your data may not be saved locally. Please delete some items.", 'error');
             }
             updateWidget();
             if (window.triggerCloudSave) window.triggerCloudSave();
@@ -4652,155 +4654,174 @@ formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUs
             document.getElementById('btn-draw-label').innerText = "Add Drawing";
         };
         // ==========================================
-//  FABRIC.JS LOGIC (كود الرسم المصحح)
-// ==========================================
-let fCanvas = null;
+        //  FABRIC.JS LOGIC (كود الرسم المصحح)
+        // ==========================================
+        let fCanvas = null;
 
-// ==========================================
-//  UNDO/REDO SYSTEM (نظام التراجع المحسّن)
-// ==========================================
-let canvasHistory = {
-    stack: [],
-    currentStep: -1,
-    maxHistory: 50,
-    isRestoring: false, // علم لمنع الحفظ أثناء الاستعادة
-    
-    // حفظ حالة جديدة
-    save: function() {
-        if (!fCanvas || this.isRestoring) return;
-        
-        const json = JSON.stringify(fCanvas.toJSON());
-        
-        // حذف كل الخطوات المستقبلية
-        this.stack = this.stack.slice(0, this.currentStep + 1);
-        
-        // إضافة الحالة الجديدة
-        this.stack.push(json);
-        
-        // الحد الأقصى للتاريخ
-        if (this.stack.length > this.maxHistory) {
-            this.stack.shift();
-        } else {
-            this.currentStep++;
+        // ==========================================
+        //  UNDO/REDO SYSTEM (نظام التراجع المحسّن)
+        // ==========================================
+        let canvasHistory = {
+            stack: [],
+            currentStep: -1,
+            maxHistory: 50,
+            isRestoring: false, // علم لمنع الحفظ أثناء الاستعادة
+
+            // حفظ حالة جديدة
+            save: function () {
+                if (!fCanvas || this.isRestoring) return;
+
+                const json = JSON.stringify(fCanvas.toJSON());
+
+                // حذف كل الخطوات المستقبلية
+                this.stack = this.stack.slice(0, this.currentStep + 1);
+
+                // إضافة الحالة الجديدة
+                this.stack.push(json);
+
+                // الحد الأقصى للتاريخ
+                if (this.stack.length > this.maxHistory) {
+                    this.stack.shift();
+                } else {
+                    this.currentStep++;
+                }
+
+                this.updateButtons();
+            },
+
+            // التراجع
+            undo: function () {
+                if (this.currentStep > 0) {
+                    this.currentStep--;
+                    this.restore();
+                }
+            },
+
+            // الإعادة
+            redo: function () {
+                if (this.currentStep < this.stack.length - 1) {
+                    this.currentStep++;
+                    this.restore();
+                }
+            },
+
+            // استعادة حالة
+            restore: function () {
+                if (!fCanvas || this.currentStep < 0) return;
+
+                this.isRestoring = true;
+                const state = this.stack[this.currentStep];
+
+                const jsonState = typeof state === 'string' ? JSON.parse(state) : state;
+                fCanvas.loadFromJSON(jsonState, () => {
+                    fCanvas.renderAll();
+                    this.isRestoring = false;
+                    this.updateButtons();
+                });
+            },
+
+            // تحديث حالة الأزرار
+            updateButtons: function () {
+                const undoBtn = document.getElementById('btn-undo');
+                const redoBtn = document.getElementById('btn-redo');
+
+                if (undoBtn) {
+                    const canUndo = this.currentStep > 0;
+                    undoBtn.disabled = !canUndo;
+                    undoBtn.style.opacity = canUndo ? '1' : '0.3';
+                    undoBtn.style.cursor = canUndo ? 'pointer' : 'not-allowed';
+                }
+
+                if (redoBtn) {
+                    const canRedo = this.currentStep < this.stack.length - 1;
+                    redoBtn.disabled = !canRedo;
+                    redoBtn.style.opacity = canRedo ? '1' : '0.3';
+                    redoBtn.style.cursor = canRedo ? 'pointer' : 'not-allowed';
+                }
+            },
+
+            // إعادة تعيين
+            reset: function () {
+                this.stack = [];
+                this.currentStep = -1;
+                this.isRestoring = false;
+                this.updateButtons();
+            },
+
+            // تهيئة الاستماع للتغييرات
+            setup: function () {
+                if (!fCanvas) return;
+
+                // إزالة المستمعين السابقين لتجنب التكرار وإصلاح مشكلة الـ Undo/Redo
+                fCanvas.off('object:added');
+                fCanvas.off('object:modified');
+                fCanvas.off('object:removed');
+
+                // حفظ الحالة الأولية
+                this.save();
+
+                // الاستماع للتغييرات
+                fCanvas.on('object:added', () => {
+                    if (!this.isRestoring) this.save();
+                });
+
+                fCanvas.on('object:modified', () => {
+                    if (!this.isRestoring) this.save();
+                });
+
+                fCanvas.on('object:removed', () => {
+                    if (!this.isRestoring) this.save();
+                });
+            }
+        };
+
+        // الدالات العامة
+        window.undoCanvas = function () {
+            canvasHistory.undo();
+        };
+
+        window.redoCanvas = function () {
+            canvasHistory.redo();
+        };
+
+        // تعريف دالة اختصارات الكيبورد (Ctrl+Z / Ctrl+Y)
+        window.handleCanvasKeydown = function (e) {
+            const modal = document.getElementById('drawing-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                window.undoCanvas();
+            }
+            if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) {
+                e.preventDefault();
+                window.redoCanvas();
+            }
+        };
+
+        function initFabric() {
+            const canvasEl = document.getElementById('fabric-canvas');
+            if (!canvasEl) return;
+
+            // إذا كانت اللوحة موجودة بالفعل، نعيد استخدامها
+            if (fCanvas) {
+                fCanvas.clear();
+                canvasHistory.reset(); // ✅ إعادة تعيين التاريخ
+                return;
+            }
+
+            // إنشاء لوحة Fabric جديدة
+            fCanvas = new fabric.Canvas('fabric-canvas', {
+                isDrawingMode: true,
+                selection: true,
+                backgroundColor: 'transparent'
+            });
+
+            // إعدادات الفرشاة الافتراضية
+            fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
+            fCanvas.freeDrawingBrush.width = 4;
+            fCanvas.freeDrawingBrush.color = "#ffffff";
         }
-        
-        this.updateButtons();
-    },
-    
-    // التراجع
-    undo: function() {
-        if (this.currentStep > 0) {
-            this.currentStep--;
-            this.restore();
-        }
-    },
-    
-    // الإعادة
-    redo: function() {
-        if (this.currentStep < this.stack.length - 1) {
-            this.currentStep++;
-            this.restore();
-        }
-    },
-    
-    // استعادة حالة
-    restore: function() {
-        if (!fCanvas || this.currentStep < 0) return;
-        
-        this.isRestoring = true;
-        const state = this.stack[this.currentStep];
-        
-        fCanvas.loadFromJSON(state, () => {
-            fCanvas.renderAll();
-            this.isRestoring = false;
-            this.updateButtons();
-        });
-    },
-    
-    // تحديث حالة الأزرار
-    updateButtons: function() {
-        const undoBtn = document.getElementById('btn-undo');
-        const redoBtn = document.getElementById('btn-redo');
-        
-        if (undoBtn) {
-            const canUndo = this.currentStep > 0;
-            undoBtn.disabled = !canUndo;
-            undoBtn.style.opacity = canUndo ? '1' : '0.3';
-            undoBtn.style.cursor = canUndo ? 'pointer' : 'not-allowed';
-        }
-        
-        if (redoBtn) {
-            const canRedo = this.currentStep < this.stack.length - 1;
-            redoBtn.disabled = !canRedo;
-            redoBtn.style.opacity = canRedo ? '1' : '0.3';
-            redoBtn.style.cursor = canRedo ? 'pointer' : 'not-allowed';
-        }
-    },
-    
-    // إعادة تعيين
-    reset: function() {
-        this.stack = [];
-        this.currentStep = -1;
-        this.isRestoring = false;
-        this.updateButtons();
-    },
-    
-    // تهيئة الاستماع للتغييرات
-    setup: function() {
-        if (!fCanvas) return;
-        
-        // حفظ الحالة الأولية
-        this.save();
-        
-        // الاستماع للتغييرات
-        fCanvas.on('object:added', () => {
-            if (!this.isRestoring) this.save();
-        });
-        
-        fCanvas.on('object:modified', () => {
-            if (!this.isRestoring) this.save();
-        });
-        
-        fCanvas.on('object:removed', () => {
-            if (!this.isRestoring) this.save();
-        });
-    }
-};
-
-// الدالات العامة
-window.undoCanvas = function() {
-    canvasHistory.undo();
-};
-
-window.redoCanvas = function() {
-    canvasHistory.redo();
-};
-
-
-
-       function initFabric() {
-    const canvasEl = document.getElementById('fabric-canvas');
-    if (!canvasEl) return;
-
-    // إذا كانت اللوحة موجودة بالفعل، نعيد استخدامها
-    if (fCanvas) {
-        fCanvas.clear();
-        canvasHistory.reset(); // ✅ إعادة تعيين التاريخ
-        return;
-    }
-
-    // إنشاء لوحة Fabric جديدة
-    fCanvas = new fabric.Canvas('fabric-canvas', {
-        isDrawingMode: true,
-        selection: true,
-        backgroundColor: 'transparent'
-    });
-
-    // إعدادات الفرشاة الافتراضية
-    fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
-    fCanvas.freeDrawingBrush.width = 4;
-    fCanvas.freeDrawingBrush.color = "#ffffff";
-}
 
 
         // 2. ضبط الحجم (مهم جداً لظهور الرسم)
@@ -4824,46 +4845,52 @@ window.redoCanvas = function() {
 
         // 3. فتح المودال وتشغيل الرسم
         window.openDrawingCanvas = function () {
-    const modal = document.getElementById('drawing-modal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+            const modal = document.getElementById('drawing-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
 
-    setTimeout(() => {
-        initFabric();
-        resizeFabric();
-        
-        window.toggleDrawMode(true);
+            // تفعيل اختصارات الكيبورد عند فتح النافذة
+            document.addEventListener('keydown', window.handleCanvasKeydown);
 
-        if (window.tempDrawingJSON) {
-            canvasHistory.isRestoring = true; // ✅ منع الحفظ أثناء التحميل
-            fCanvas.loadFromJSON(window.tempDrawingJSON, function () {
-                fCanvas.renderAll();
-                canvasHistory.isRestoring = false;
-                canvasHistory.setup(); // ✅ تهيئة التاريخ
-            });
-        } else if (window.tempDrawingData) {
-            fCanvas.clear();
-            canvasHistory.isRestoring = true;
-            fabric.Image.fromURL(window.tempDrawingData, function (img) {
-                fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas), {
-                    scaleX: fCanvas.width / img.width,
-                    scaleY: fCanvas.height / img.height
-                });
-                canvasHistory.isRestoring = false;
-                canvasHistory.setup(); // ✅ تهيئة التاريخ
-            });
-        } else {
-            fCanvas.clear();
-            canvasHistory.setup(); // ✅ تهيئة التاريخ
-        }
-    }, 150);
-};
+            setTimeout(() => {
+                initFabric();
+                resizeFabric();
+
+                window.toggleDrawMode(true);
+
+                if (window.tempDrawingJSON) {
+                    canvasHistory.isRestoring = true; // ✅ منع الحفظ أثناء التحميل
+                    fCanvas.loadFromJSON(window.tempDrawingJSON, function () {
+                        fCanvas.renderAll();
+                        canvasHistory.isRestoring = false;
+                        canvasHistory.setup(); // ✅ تهيئة التاريخ
+                    });
+                } else if (window.tempDrawingData) {
+                    fCanvas.clear();
+                    canvasHistory.isRestoring = true;
+                    fabric.Image.fromURL(window.tempDrawingData, function (img) {
+                        fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas), {
+                            scaleX: fCanvas.width / img.width,
+                            scaleY: fCanvas.height / img.height
+                        });
+                        canvasHistory.isRestoring = false;
+                        canvasHistory.setup(); // ✅ تهيئة التاريخ
+                    });
+                } else {
+                    fCanvas.clear();
+                    canvasHistory.setup(); // ✅ تهيئة التاريخ
+                }
+            }, 150);
+        };
 
         // 4. إغلاق المودال
         window.closeDrawingModal = function () {
             const modal = document.getElementById('drawing-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+
+            // إزالة اختصارات الكيبورد
+            document.removeEventListener('keydown', window.handleCanvasKeydown);
         };
 
         // 5. أدوات التحكم
@@ -4959,12 +4986,12 @@ window.redoCanvas = function() {
                     fCanvas.remove(obj);
                 });
             } else {
-                alert("يرجى تحديد العنصر أولاً (باستخدام أداة السهم) لحذفه");
+                showToast("Please select the item first (using the arrow tool) to delete it");
             }
         };
 
         window.clearCanvas = function () {
-            if (fCanvas && confirm("مسح اللوحة بالكامل؟")) {
+            if (fCanvas && confirm("Erase the entire board?")) {
                 fCanvas.clear();
                 fCanvas.setBackgroundColor('transparent', fCanvas.renderAll.bind(fCanvas));
             }
@@ -4976,7 +5003,7 @@ window.redoCanvas = function() {
                 window.closeDrawingModal();
                 return;
             }
-            
+
             // 2. تفعيل تأثير التحميل للزر فقط إذا تم الضغط عليه
             if (btnElement && btnElement.classList) {
                 btnElement.classList.add('loading');
@@ -5032,26 +5059,26 @@ window.redoCanvas = function() {
         // الكود الجديد الآمن ✅
 
         window.callGroq = async (messagesArray) => {
-    const WORKER_URL = 'https://my-groq-proxy.brhm93102.workers.dev'; // ضع رابطك
-    
-    try {
-        const response = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: messagesArray })
-        });
+            const WORKER_URL = 'https://my-groq-proxy.brhm93102.workers.dev'; // ضع رابطك
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const data = await response.json();
-        return data.choices[0]?.message?.content;
-        
-    } catch (error) {
-        console.error('AI Error:', error);
-        showToast('❌ فشل الاتصال بالذكاء الاصطناعي', 'error');
-        return null;
-    }
-};
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: messagesArray })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                return data.choices[0]?.message?.content;
+
+            } catch (error) {
+                console.error('AI Error:', error);
+                showToast('❌ AI connection failed', 'error');
+                return null;
+            }
+        };
 
         window.aiMagicSplit = async () => {
             const name = document.getElementById('modal-name').value;
@@ -5271,7 +5298,7 @@ Be helpful, safe, and focused on productivity!`
                 showToast("Please set your Groq API Key in the code.");
                 return null;
             }
-            
+
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -6047,6 +6074,9 @@ Be helpful, safe, and focused on productivity!`
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
+            // تفعيل اختصارات الكيبورد
+            document.addEventListener('keydown', window.handleCanvasKeydown);
+
             setTimeout(() => {
                 initFabric();
                 resizeFabric();
@@ -6056,19 +6086,26 @@ Be helpful, safe, and focused on productivity!`
                 // Priority: Try loading JSON (Editable). Fallback: Load Image (Background).
                 if (window.tempDrawingJSON) {
                     fCanvas.clear();
+                    canvasHistory.isRestoring = true;
                     fCanvas.loadFromJSON(window.tempDrawingJSON, function () {
                         fCanvas.renderAll();
+                        canvasHistory.isRestoring = false;
+                        canvasHistory.setup();
                     });
                 } else if (window.tempDrawingData) {
                     fCanvas.clear();
+                    canvasHistory.isRestoring = true;
                     fabric.Image.fromURL(window.tempDrawingData, function (img) {
                         fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas), {
                             scaleX: fCanvas.width / img.width,
                             scaleY: fCanvas.height / img.height
                         });
+                        canvasHistory.isRestoring = false;
+                        canvasHistory.setup();
                     });
                 } else {
                     fCanvas.clear();
+                    canvasHistory.setup();
                 }
             }, 150);
         };
@@ -6122,151 +6159,151 @@ Be helpful, safe, and focused on productivity!`
         })();
 
         // ==========================================
-//  دالة التحميل المباشر للملفات
-// ==========================================
-window.downloadFileDirect = async function(url, filename) {
-    try {
-        showToast("⏳ downloading", 'neutral');
-        
-        const response = await fetch(url);
-        const blob = await response.blob();
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename || 'downloaded-file';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        URL.revokeObjectURL(link.href);
-        showToast("✅ success", 'success');
-        
-    } catch (error) {
-        console.error("Download error:", error);
-        showToast("❌ failed", 'error');
-    }
-};
+        //  دالة التحميل المباشر للملفات
+        // ==========================================
+        window.downloadFileDirect = async function (url, filename) {
+            try {
+                showToast("⏳ downloading", 'neutral');
 
-// === إضافة الأشكال ===
-window.addShape = function(type) {
-    if (!fCanvas) return;
-    const color = document.getElementById('brush-color').value;
-    let shape;
-    
-    switch(type) {
-        case 'rect':
-            shape = new fabric.Rect({
-                left: fCanvas.width / 2,
-                top: fCanvas.height / 2,
-                width: 100,
-                height: 100,
-                fill: color,
-                stroke: '#ffffff',
-                strokeWidth: 2
-            });
-            break;
-            
-        case 'circle':
-            shape = new fabric.Circle({
-                left: fCanvas.width / 2,
-                top: fCanvas.height / 2,
-                radius: 50,
-                fill: color,
-                stroke: '#ffffff',
-                strokeWidth: 2
-            });
-            break;
-            
-        case 'triangle':
-            shape = new fabric.Triangle({
-                left: fCanvas.width / 2,
-                top: fCanvas.height / 2,
-                width: 100,
-                height: 100,
-                fill: color,
-                stroke: '#ffffff',
-                strokeWidth: 2
-            });
-            break;
-            
-        case 'line':
-            shape = new fabric.Line([50, 50, 200, 50], {
-                left: fCanvas.width / 2,
-                top: fCanvas.height / 2,
-                stroke: color,
-                strokeWidth: 4
-            });
-            break;
-    }
-    
-    if (shape) {
-        shape.set({
-            originX: 'center',
-            originY: 'center'
-        });
-        fCanvas.add(shape);
-        fCanvas.setActiveObject(shape);
-        toggleDrawMode(false);
-    }
-};
+                const response = await fetch(url);
+                const blob = await response.blob();
 
-// === الممحاة ===
-let isEraserMode = false;
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename || 'downloaded-file';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-window.toggleEraser = function() {
-    if (!fCanvas) return;
-    
-    isEraserMode = !isEraserMode;
-    const btn = document.getElementById('btn-eraser');
-    
-    if (isEraserMode) {
-        fCanvas.isDrawingMode = true;
-        fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
-        fCanvas.freeDrawingBrush.width = 20;
-        fCanvas.freeDrawingBrush.color = 'rgba(0,0,0,1)'; // أسود
-        fCanvas.freeDrawingBrush.globalCompositeOperation = 'destination-out'; // وضع المسح
-        
-        btn.classList.add('bg-red-500', 'text-white');
-    } else {
-        fCanvas.freeDrawingBrush.globalCompositeOperation = 'source-over';
-        updateBrush();
-        btn.classList.remove('bg-red-500', 'text-white');
-    }
-};
+                URL.revokeObjectURL(link.href);
+                showToast("✅ success", 'success');
 
-// === النسخ ===
-window.duplicateObject = function() {
-    if (!fCanvas) return;
-    const active = fCanvas.getActiveObject();
-    
-    if (active) {
-        active.clone(function(cloned) {
-            cloned.set({
-                left: active.left + 20,
-                top: active.top + 20
-            });
-            fCanvas.add(cloned);
-            fCanvas.setActiveObject(cloned);
-            fCanvas.requestRenderAll();
-        });
-    }
-};
+            } catch (error) {
+                console.error("Download error:", error);
+                showToast("❌ failed", 'error');
+            }
+        };
 
-// === القلب ===
-window.flipObject = function(axis) {
-    if (!fCanvas) return;
-    const active = fCanvas.getActiveObject();
-    
-    if (active) {
-        if (axis === 'x') {
-            active.set('flipX', !active.flipX);
-        } else {
-            active.set('flipY', !active.flipY);
-        }
-        fCanvas.requestRenderAll();
-    }
-};
+        // === إضافة الأشكال ===
+        window.addShape = function (type) {
+            if (!fCanvas) return;
+            const color = document.getElementById('brush-color').value;
+            let shape;
+
+            switch (type) {
+                case 'rect':
+                    shape = new fabric.Rect({
+                        left: fCanvas.width / 2,
+                        top: fCanvas.height / 2,
+                        width: 100,
+                        height: 100,
+                        fill: color,
+                        stroke: '#ffffff',
+                        strokeWidth: 2
+                    });
+                    break;
+
+                case 'circle':
+                    shape = new fabric.Circle({
+                        left: fCanvas.width / 2,
+                        top: fCanvas.height / 2,
+                        radius: 50,
+                        fill: color,
+                        stroke: '#ffffff',
+                        strokeWidth: 2
+                    });
+                    break;
+
+                case 'triangle':
+                    shape = new fabric.Triangle({
+                        left: fCanvas.width / 2,
+                        top: fCanvas.height / 2,
+                        width: 100,
+                        height: 100,
+                        fill: color,
+                        stroke: '#ffffff',
+                        strokeWidth: 2
+                    });
+                    break;
+
+                case 'line':
+                    shape = new fabric.Line([50, 50, 200, 50], {
+                        left: fCanvas.width / 2,
+                        top: fCanvas.height / 2,
+                        stroke: color,
+                        strokeWidth: 4
+                    });
+                    break;
+            }
+
+            if (shape) {
+                shape.set({
+                    originX: 'center',
+                    originY: 'center'
+                });
+                fCanvas.add(shape);
+                fCanvas.setActiveObject(shape);
+                toggleDrawMode(false);
+            }
+        };
+
+        // === الممحاة ===
+        let isEraserMode = false;
+
+        window.toggleEraser = function () {
+            if (!fCanvas) return;
+
+            isEraserMode = !isEraserMode;
+            const btn = document.getElementById('btn-eraser');
+
+            if (isEraserMode) {
+                fCanvas.isDrawingMode = true;
+                fCanvas.freeDrawingBrush = new fabric.PencilBrush(fCanvas);
+                fCanvas.freeDrawingBrush.width = 20;
+                fCanvas.freeDrawingBrush.color = '#0f172a'; // لون الخلفية كما طلبت
+                fCanvas.freeDrawingBrush.globalCompositeOperation = 'destination-out'; // وضع المسح
+
+                btn.classList.add('bg-red-500', 'text-white');
+            } else {
+                fCanvas.freeDrawingBrush.globalCompositeOperation = 'source-over';
+                updateBrush();
+                btn.classList.remove('bg-red-500', 'text-white');
+            }
+        };
+
+        // === النسخ ===
+        window.duplicateObject = function () {
+            if (!fCanvas) return;
+            const active = fCanvas.getActiveObject();
+
+            if (active) {
+                active.clone(function (cloned) {
+                    cloned.set({
+                        left: active.left + 20,
+                        top: active.top + 20
+                    });
+                    fCanvas.add(cloned);
+                    fCanvas.setActiveObject(cloned);
+                    fCanvas.requestRenderAll();
+                });
+            }
+        };
+
+        // === القلب ===
+        window.flipObject = function (axis) {
+            if (!fCanvas) return;
+            const active = fCanvas.getActiveObject();
+
+            if (active) {
+                if (axis === 'x') {
+                    active.set('flipX', !active.flipX);
+                } else {
+                    active.set('flipY', !active.flipY);
+                }
+                fCanvas.requestRenderAll();
+            }
+        };
     </script>
 </body>
-</html>
 
+</html>
