@@ -2136,6 +2136,60 @@
             </div>
         </div>
     </div>
+
+    <!-- AI Key Modal -->
+    <div id="api-key-modal" class="modal-wrapper hidden fixed inset-0 z-[80] flex items-center justify-center pointer-events-none p-4" role="dialog" aria-modal="true">
+        <div class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
+                    <i class="fas fa-robot text-2xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2" data-i18n="aiSetup">AI Setup</h3>
+                <p class="text-slate-400 text-sm" data-i18n="aiSetupDesc">Enter your Gemini API Key to unlock the full potential of your Life OS.</p>
+            </div>
+
+            <input type="password" id="gemini-key-input" placeholder="Paste API Key here..." class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white mb-4 focus:border-indigo-500 focus:outline-none transition-colors text-center font-mono text-sm">
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button onclick="openAIHelp('features')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span data-i18n="aiFeaturesBtn">Features</span>
+                </button>
+                <button onclick="openAIHelp('getKey')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
+                    <i class="fas fa-key text-green-400"></i>
+                    <span data-i18n="howToGetBtn">Get Key</span>
+                </button>
+            </div>
+
+            <button onclick="saveGeminiKey()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-indigo-500/25 transition-all active:scale-95">
+                <span data-i18n="confirm">Confirm</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Help Modal -->
+    <div id="ai-help-modal" class="modal-wrapper hidden fixed inset-0 z-[90] flex items-center justify-center pointer-events-none p-4" role="dialog" aria-modal="true">
+        <div class="modal-content glass-panel w-full max-w-2xl rounded-3xl p-0 bg-[#0f172a] pointer-events-auto border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                <h3 id="ai-help-title" class="font-bold text-lg text-white">Help</h3>
+                <button onclick="closeAIHelp()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="ai-help-content" class="p-6 overflow-y-auto text-slate-300 space-y-4 leading-relaxed">
+                <!-- Content injected via JS -->
+            </div>
+
+            <div class="p-4 border-t border-white/10 bg-white/5">
+                <button onclick="closeAIHelp()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-i18n="backToAI">Back to AI</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="generic-modal"
         class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4"
         role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -2331,7 +2385,8 @@
                     <i class="fas fa-square"></i>
                 </button>
 
-                <button onclick="addShape('circle')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="circle">
+                <button onclick="addShape('circle')" class="w-8 h-8 rounded hover:bg-white/10 text-white"
+                    title="circle">
                     <i class="fas fa-circle"></i>
                 </button>
 
@@ -2356,7 +2411,8 @@
                     <i class="fas fa-clone"></i>
                 </button>
 
-                <button onclick="flipObject('x')" class="w-8 h-8 rounded hover:bg-white/10 text-white" title="horizontal turn">
+                <button onclick="flipObject('x')" class="w-8 h-8 rounded hover:bg-white/10 text-white"
+                    title="horizontal turn">
                     <i class="fas fa-arrows-alt-h"></i>
                 </button>
                 <div class="w-px h-6 bg-white/10"></div>
@@ -2755,6 +2811,13 @@
             }
 
             if (activePage === nextPage) return;
+
+            // AI Page Logic
+            if (pageId === 'ai') {
+                if (!window.appData.settings.geminiKey) {
+                    setTimeout(() => openGenieModal('api-key-modal'), 300);
+                }
+            }
 
             if (pageId === 'courses') renderCourses();
             if (pageId === 'tasks') renderTasks();
@@ -3610,6 +3673,13 @@
                 aiWelcome: "Hello! I can add tasks, books, or courses for you.",
                 nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
                 language: "Language", logout: "Logout", back: "Exit",
+                aiSetup: "AI Setup",
+                aiSetupDesc: "Enter your Gemini API Key to unlock the full potential of your Life OS.",
+                aiFeaturesBtn: "AI Features",
+                howToGetBtn: "How to Get Key",
+                confirm: "Confirm",
+                backToAI: "Back to AI",
+                keySaved: "Key Saved Successfully!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "Add Course", addBook: "Add Book", addTask: "Add Task",
@@ -3652,6 +3722,13 @@
                 aiWelcome: "أهلاً! يمكنني إضافة مهام، كتب، أو دورات لك.",
                 nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
                 language: "اللغة", logout: "خروج", back: "رجوع",
+                aiSetup: "إعداد الذكاء الاصطناعي",
+                aiSetupDesc: "أدخل مفتاح Gemini API لفتح القدرات الكاملة للنظام.",
+                aiFeaturesBtn: "مميزات الذكاء",
+                howToGetBtn: "كيف تحصل على المفتاح",
+                confirm: "موافق",
+                backToAI: "العودة للذكاء الاصطناعي",
+                keySaved: "تم حفظ المفتاح بنجاح!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "إضافة دورة", addBook: "إضافة كتاب", addTask: "إضافة مهمة",
@@ -4404,11 +4481,8 @@
             refreshAllUI();
         };
 
-        window.emptyTrash = function () {
-            // بدلاً من confirm، نستخدم المودال الجديد
-            openConfirmModal("Permanently delete all items in trash?", function () {
-                // هذا الكود يتم تنفيذه فقط عند الضغط على زر Confirm في المودال
-
+        window.emptyTrash = function (force = false) {
+            const action = function () {
                 if (!window.appData.stats) window.appData.stats = { historicXP: 0 };
 
                 const trashTasks = window.appData.tasks.filter(x => x.deleted && x.completed);
@@ -4426,9 +4500,15 @@
                 commitData();
                 refreshAllUI();
 
-                // تشغيل صوت أو تأثير بسيط للتأكيد (اختياري)
                 if (navigator.vibrate) navigator.vibrate(50);
-            });
+            };
+
+            if(force) {
+                action();
+            } else {
+            // بدلاً من confirm، نستخدم المودال الجديد
+            openConfirmModal("Permanently delete all items in trash?", action);
+            }
         };
 
         function commitData() {
@@ -5058,24 +5138,38 @@
 
         // الكود الجديد الآمن ✅
 
-        window.callGroq = async (messagesArray) => {
-            const WORKER_URL = 'https://my-groq-proxy.brhm93102.workers.dev'; // ضع رابطك
+        window.callGemini = async (messagesArray) => {
+            const apiKey = window.appData.settings.geminiKey;
+            if (!apiKey) {
+                openGenieModal('api-key-modal');
+                return null;
+            }
 
             try {
-                const response = await fetch(WORKER_URL, {
+                const systemInstruction = messagesArray.find(m => m.role === 'system')?.content || "";
+                const contents = messagesArray.filter(m => m.role !== 'system').map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content }]
+                }));
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: messagesArray })
+                    body: JSON.stringify({
+                        contents: contents,
+                        systemInstruction: { parts: [{ text: systemInstruction }] },
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
                 });
 
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                 const data = await response.json();
-                return data.choices[0]?.message?.content;
+                return data.candidates[0].content.parts[0].text;
 
             } catch (error) {
                 console.error('AI Error:', error);
-                showToast('❌ AI connection failed', 'error');
+                showToast('❌ AI connection failed. Check Key.', 'error');
                 return null;
             }
         };
@@ -5087,7 +5181,7 @@
             const btn = document.getElementById('btn-ai-task');
             if (btn) btn.innerText = "Thinking...";
 
-            const res = await callGroq(`For the task '${name}', break it into 3-5 actionable subtasks. Return as simple numbered list.`);
+            const res = await callGemini([{ role: "user", content: `For the task '${name}', break it into 3-5 actionable subtasks. Return as simple numbered list.` }]);
 
             if (res && btn) {
                 document.getElementById('modal-desc').value = res.trim();
@@ -5102,7 +5196,7 @@
             const btn = document.getElementById('btn-ai-book');
             if (btn) btn.innerText = "Scouting...";
 
-            const res = await callGroq(`For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }`);
+            const res = await callGemini([{ role: "user", content: `For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }` }]);
 
             try {
                 const json = JSON.parse(res.replace(/```json/g, '').replace(/```/g, '').trim());
@@ -5122,7 +5216,7 @@
             const btn = document.getElementById('btn-ai-course');
             if (btn) btn.innerText = "Planning...";
 
-            const res = await callGroq(`Create a short 5-module syllabus for a course titled '${name}'. Plain text only.`);
+            const res = await callGemini([{ role: "user", content: `Create a short 5-module syllabus for a course titled '${name}'. Plain text only.` }]);
 
             if (res) {
                 document.getElementById('modal-desc').value = res.trim();
@@ -5147,7 +5241,8 @@ Help users manage their tasks, books, courses, and notes for ANY topic (programm
 
 ✅ WHAT YOU SHOULD DO:
 1. Add tasks, books, courses, notes about ANY educational/productive topic
-2. Help organize learning goals and personal development
+2. Manage Timers and Stopwatches (Set, Stop, Cancel, Reset)
+3. Manage Content (Delete items to trash, Restore, Empty Trash)
 3. Suggest course outlines, book recommendations, study plans
 4. Answer questions about the app features
 5. Maintain conversation context
@@ -5156,6 +5251,8 @@ Examples of VALID requests:
 - "add a course about C++ programming"
 - "add a book about cooking with 200 pages"
 - "create a task to learn guitar"
+- "set a timer for 20 minutes"
+- "delete the task named 'Buy Milk'"
 - "add a note about workout routine"
 - "suggest books about history"
 
@@ -5222,6 +5319,14 @@ Examples of VALID requests:
      { "action": "addBook", "data": { "name": "Book Name", "total": 0, "desc": "Description" } },
      { "action": "addCourse", "data": { "name": "Course Name", "total": 0, "desc": "Description" } },
      { "action": "addNote", "data": { "name": "Note Title", "desc": "Content" } },
+     { "action": "setTimer", "data": { "minutes": 10 } },
+     { "action": "stopTimer", "data": {} },
+     { "action": "cancelTimer", "data": {} },
+     { "action": "startStopwatch", "data": {} },
+     { "action": "stopStopwatch", "data": {} },
+     { "action": "resetStopwatch", "data": {} },
+     { "action": "deleteItem", "data": { "type": "task|book|course|note", "name": "Item Name" } },
+     { "action": "emptyTrash", "data": {} },
      { "action": "reply", "data": { "text": "Your response in user's language" } }
   ]
 }
@@ -5236,6 +5341,16 @@ Response:
   "operations": [
     {"action": "addCourse", "data": {"name": "تعلم لغة C++", "total": 40, "desc": "دورة برمجة متقدمة"}},
     {"action": "reply", "data": {"text": "تمت إضافة دورة تعلم C++ بنجاح! يمكنك البدء الآن 🚀"}}
+  ]
+}
+
+✅ User: "Set timer for 45 mins and delete task 'Old Task'"
+Response:
+{
+  "operations": [
+    {"action": "setTimer", "data": {"minutes": 45}},
+    {"action": "deleteItem", "data": {"type": "task", "name": "Old Task"}},
+    {"action": "reply", "data": {"text": "Timer set and task deleted."}}
   ]
 }
 
@@ -5289,41 +5404,6 @@ If the request could cause harm, violate privacy, or spread hate → ❌ REFUSE 
 Be helpful, safe, and focused on productivity!`
         };
 
-        // 2. دالة الاتصال بـ Groq (تدعم الذاكرة)
-        window.callGroq = async (messagesArray) => {
-            // ⚠️ ضع مفتاحك هنا
-            const apiKey = "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";
-
-            if (!apiKey) {
-                showToast("Please set your Groq API Key in the code.");
-                return null;
-            }
-
-            try {
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        messages: messagesArray,
-                        model: "llama-3.3-70b-versatile",
-                        temperature: 0.5,
-                        max_tokens: 1024,
-                        response_format: { type: "json_object" }
-                    })
-                });
-
-                if (!response.ok) throw new Error(`HTTP error! ${response.status}`);
-                const data = await response.json();
-                return data.choices[0]?.message?.content;
-            } catch (e) {
-                console.error("Groq API Error:", e);
-                return null;
-            }
-        };
-
         // 3. دالة الإرسال الرئيسية (تعالج الردود المتعددة وتحفظ الذاكرة)
         window.sendAIChat = async function () {
             const input = document.getElementById('chat-input');
@@ -5371,7 +5451,7 @@ Be helpful, safe, and focused on productivity!`
 
             // إرسال المحادثة كاملة
             const fullConversation = [SYSTEM_PROMPT, ...window.chatHistory];
-            const res = await callGroq(fullConversation);
+            const res = await callGemini(fullConversation);
 
             const loaderEl = document.getElementById(id);
             if (loaderEl) loaderEl.remove();
@@ -5437,6 +5517,42 @@ Be helpful, safe, and focused on productivity!`
                                         deleted: false
                                     });
                                     showSuccessMsg(container, `✓ Added Note: ${op.data.name}`);
+                                }
+                                else if (op.action === 'setTimer') {
+                                    window.setTimerAI(op.data.minutes);
+                                    showSuccessMsg(container, `✓ Timer Set: ${op.data.minutes}m`);
+                                }
+                                else if (op.action === 'stopTimer') {
+                                    window.stopTimer();
+                                    showSuccessMsg(container, `✓ Timer Stopped`);
+                                }
+                                else if (op.action === 'cancelTimer') {
+                                    window.resetTimer();
+                                    showSuccessMsg(container, `✓ Timer Cancelled`);
+                                }
+                                else if (op.action === 'startStopwatch') {
+                                    window.setStopwatchMode('start');
+                                    showSuccessMsg(container, `✓ Stopwatch Started`);
+                                }
+                                else if (op.action === 'stopStopwatch') {
+                                    window.setStopwatchMode('stop');
+                                    showSuccessMsg(container, `✓ Stopwatch Stopped`);
+                                }
+                                else if (op.action === 'resetStopwatch') {
+                                    window.setStopwatchMode('reset');
+                                    showSuccessMsg(container, `✓ Stopwatch Reset`);
+                                }
+                                else if (op.action === 'deleteItem') {
+                                    const found = window.findAndTrashItem(op.data.type, op.data.name);
+                                    if (found) {
+                                        showSuccessMsg(container, `✓ Deleted: ${op.data.name}`);
+                                    } else {
+                                        showSuccessMsg(container, `⚠ Not Found: ${op.data.name}`);
+                                    }
+                                }
+                                else if (op.action === 'emptyTrash') {
+                                    window.emptyTrash(true); // Force empty without confirm
+                                    showSuccessMsg(container, `✓ Trash Emptied`);
                                 }
                                 else if (op.action === 'reply') {
                                     replyText += op.data.text + "\n";
@@ -5506,6 +5622,120 @@ Be helpful, safe, and focused on productivity!`
         // ==========================================
         //  نهاية كود الذكاء الاصطناعي الجديد
         // ==========================================
+
+        // === AI Helper Functions ===
+
+        window.saveGeminiKey = function() {
+            const input = document.getElementById('gemini-key-input');
+            const key = input.value.trim();
+            if(key) {
+                window.appData.settings.geminiKey = key;
+                commitData();
+                window.closeAllModals();
+                showToast(window.appData.settings.lang === 'ar' ? "تم حفظ المفتاح بنجاح!" : "Key Saved Successfully!", "success");
+                // Refresh AI page if active
+                const aiPage = document.getElementById('page-ai');
+                if(!aiPage.classList.contains('hidden')) {
+                    // Maybe send a welcome message automatically?
+                }
+            } else {
+                showToast("Please enter a valid key", "error");
+            }
+        };
+
+        window.openAIHelp = function(type) {
+            const modal = document.getElementById('ai-help-modal');
+            const title = document.getElementById('ai-help-title');
+            const content = document.getElementById('ai-help-content');
+            const isAr = window.appData.settings.lang === 'ar';
+
+            window.closeAllModals(); // Close key modal first
+            modal.classList.remove('hidden');
+            
+            if(type === 'getKey') {
+                title.innerText = isAr ? "كيف تحصل على المفتاح" : "How to Get Gemini Key";
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 1: Google AI Studio</h4>
+                            <p class="text-sm">Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-400 underline">Google AI Studio</a> and sign in.</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 2: Create Key</h4>
+                            <p class="text-sm">Click on "Create API Key" button. It's free!</p>
+                            <!-- Developer Note: Add <img src="path/to/image.jpg" class="mt-2 rounded-lg border border-white/10 w-full"> here -->
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 3: Copy & Paste</h4>
+                            <p class="text-sm">Copy the key starting with "AIza..." and paste it in the app.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                title.innerText = isAr ? "مميزات الذكاء الاصطناعي" : "AI Features";
+                content.innerHTML = `
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                            <i class="fas fa-brain text-indigo-400 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Smart Organization</h4>
+                                <p class="text-xs text-slate-400">Add tasks, books, and courses naturally.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                            <i class="fas fa-stopwatch text-purple-400 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Time Control</h4>
+                                <p class="text-xs text-slate-400">"Set timer for 20 mins", "Start stopwatch".</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                            <i class="fas fa-trash text-red-400 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Content Management</h4>
+                                <p class="text-xs text-slate-400">Delete items or empty trash via chat.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            gsap.fromTo(modal.querySelector('.modal-content'), {scale:0.9, opacity:0}, {scale:1, opacity:1, duration:0.3});
+        };
+
+        window.closeAIHelp = function() {
+            const modal = document.getElementById('ai-help-modal');
+            modal.classList.add('hidden');
+            // Re-open key modal if key is missing
+            if(!window.appData.settings.geminiKey) {
+                openGenieModal('api-key-modal');
+            }
+        };
+
+        window.setTimerAI = function(mins) {
+            document.getElementById('timer-input').value = mins;
+            if(timerMode !== 'timer') window.switchTimerMode();
+            window.startTimer();
+        };
+
+        window.setStopwatchMode = function(action) {
+            if(timerMode !== 'stopwatch') window.switchTimerMode();
+            if(action === 'start') window.startTimer();
+            if(action === 'stop') window.stopTimer();
+            if(action === 'reset') window.resetTimer();
+        };
+
+        window.findAndTrashItem = function(type, name) {
+            const list = window.appData[type + 's'] || window.appData[type]; // tasks -> tasks, book -> books
+            if(!list) return false;
+            // Fuzzy search
+            const item = list.find(x => x.name.toLowerCase().includes(name.toLowerCase()) && !x.deleted);
+            if(item) {
+                deleteItemLogic(type, item.id);
+                return true;
+            }
+            return false;
+        };
 
         window.clearChat = function () {
             const container = document.getElementById('chat-container');
