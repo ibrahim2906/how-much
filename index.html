@@ -1158,18 +1158,6 @@
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="timers">Timers</span>
                 </button>
 
-                <button onclick="showPage('ai')"
-                    class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group"
-                    aria-label="AI Assistant page">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-all flex-shrink-0">
-                        <i class="fas fa-robot text-lg" aria-hidden="true"></i>
-                    </div>
-                    <span
-                        class="font-medium nav-text whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 font-bold"
-                        data-i18n="aiAssistant">AI Assistant</span>
-                </button>
-
                 <button onclick="showPage('trash')"
                     class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group"
                     aria-label="Trash page">
@@ -1308,59 +1296,6 @@
                         </button>
                     </div>
                     <div id="notes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list"></div>
-                </section>
-
-                <section id="page-ai" class="page-section hidden max-w-4xl mx-auto h-[calc(100vh-140px)] flex flex-col">
-                    <!-- Header -->
-                    <div class="flex justify-between items-center mb-4 px-2 shrink-0">
-                        <div>
-                            <h2 class="text-2xl font-bold flex items-center gap-2">
-                                <span
-                                    class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400"
-                                    data-i18n="aiTitle">Gemini AI</span>
-                                <span
-                                    class="text-[10px] bg-white/10 border border-white/10 px-2 py-0.5 rounded-full text-slate-300">Beta</span>
-                            </h2>
-                            <p class="text-xs text-slate-400" data-i18n="aiSubtitle">Your intelligent assistant</p>
-                        </div>
-                        <button onclick="openAIKeyModal()"
-                            class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 transition-colors"
-                            aria-label="AI Settings">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                    </div>
-
-                    <!-- Chat Area -->
-                    <div class="flex-1 glass-panel rounded-2xl p-4 mb-4 overflow-y-auto min-h-0 flex flex-col gap-4 relative scroll-smooth"
-                        id="ai-chat-history">
-                        <!-- Welcome Message -->
-                        <div class="flex gap-3 stagger-entry">
-                            <div
-                                class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-xs text-white shadow-lg shrink-0">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="space-y-1 max-w-[85%]">
-                                <div
-                                    class="bg-white/5 rounded-2xl rounded-tl-none px-4 py-2 text-sm text-slate-200 border border-white/5 shadow-sm">
-                                    <span data-i18n="aiWelcome">Hello! I'm Gemini. I can help you add tasks, books,
-                                        courses, or answer your questions.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Input Area -->
-                    <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 relative z-20 shrink-0">
-                        <textarea id="ai-user-input" rows="1"
-                            class="w-full bg-transparent border-none focus:ring-0 text-slate-200 placeholder:text-slate-500 resize-none py-3 px-3 max-h-32 text-sm"
-                            placeholder="Ask me something..." data-i18n-placeholder="aiPlaceholder"
-                            style="min-height: 44px;"></textarea>
-
-                        <button id="btn-send-ai" onclick="handleAISend()"
-                            class="w-10 h-10 rounded-xl bg-accent text-white flex items-center justify-center hover:opacity-90 transition-opacity mb-0.5 shrink-0 shadow-lg shadow-accent/20">
-                            <i class="fas fa-paper-plane text-sm"></i>
-                        </button>
-                    </div>
                 </section>
 
                 <section id="page-trash" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0">
@@ -1918,13 +1853,6 @@
                     aria-label="Timers">
                     <i class="fas fa-stopwatch text-lg mb-1 group-[.active]:text-yellow-400 text-slate-400"></i>
                     <span class="text-[8px] uppercase font-bold opacity-60">Time</span>
-                </button>
-
-                <button onclick="showPage('ai')"
-                    class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group"
-                    aria-label="AI">
-                    <i class="fas fa-robot text-lg mb-1 group-[.active]:text-purple-400 text-slate-400"></i>
-                    <span class="text-[8px] uppercase font-bold opacity-60">AI</span>
                 </button>
 
                 <button onclick="showPage('books')"
@@ -2961,7 +2889,7 @@
         // Preload and prepare audio for better reliability when tab is inactive
         alarmSound.preload = 'auto';
         alarmSound.volume = 1.0;
-
+        
         /* ==========================================
    TIMER (يعمل في الخلفية - محسّن)
    ========================================== */
@@ -3003,19 +2931,19 @@
             if (timerMode === 'timer' && timerEndTime) {
                 const now = Date.now();
                 const remainingMs = timerEndTime - now;
-
+                
                 // التحقق من الوقت المطلق (أكثر موثوقية من الوقت المحسوب)
                 if (remainingMs <= 0) {
                     checkAndTriggerAlarm();
                     return;
                 }
-
+                
                 if (currentSeconds <= 0) {
                     // إذا كان الوقت المحسوب 0 أو أقل، تحقق مرة أخرى
                     checkAndTriggerAlarm();
                     return;
                 }
-
+                
                 // إعادة جدولة الإنذار إذا انتهى timeout السابق
                 // هذا يضمن أن الإنذار سيعمل حتى لو تم تأخير setInterval
                 if (timerAlarmTimeout === null && remainingMs > 0) {
@@ -3034,20 +2962,20 @@
                 clearTimeout(timerAlarmTimeout);
                 timerAlarmTimeout = null;
             }
-
+            
             if (!timerEndTime || remainingMs <= 0) {
                 checkAndTriggerAlarm();
                 return;
             }
-
+            
             // استخدام فترات قصيرة متسلسلة (كل دقيقة) لضمان العمل في الخلفية
             // هذا أكثر موثوقية من timeout طويل واحد
             const checkInterval = 60000; // التحقق كل دقيقة (60000ms)
             const nextCheck = Math.min(remainingMs, checkInterval);
-
+            
             timerAlarmTimeout = setTimeout(() => {
                 timerAlarmTimeout = null;
-
+                
                 // التحقق من الوقت الفعلي
                 const now = Date.now();
                 if (timerEndTime && now >= timerEndTime) {
@@ -3063,7 +2991,7 @@
                     }
                 }
             }, nextCheck);
-
+            
             // أيضا إعداد interval للتحقق المستمر (كل ثانية عند الاقتراب من النهاية)
             if (remainingMs <= 60000) { // إذا كان متبق أقل من دقيقة، تحقق كل ثانية
                 startContinuousAlarmCheck();
@@ -3071,17 +2999,17 @@
                 stopContinuousAlarmCheck();
             }
         }
-
+        
         // التحقق المستمر من الإنذار (كل ثانية عند الاقتراب من النهاية)
         function startContinuousAlarmCheck() {
             stopContinuousAlarmCheck(); // إيقاف أي تحقق سابق
-
+            
             timerCheckInterval = setInterval(() => {
                 if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
                     stopContinuousAlarmCheck();
                     return;
                 }
-
+                
                 const now = Date.now();
                 if (now >= timerEndTime) {
                     checkAndTriggerAlarm();
@@ -3089,20 +3017,20 @@
                 }
             }, 1000); // التحقق كل ثانية
         }
-
+        
         function stopContinuousAlarmCheck() {
             if (timerCheckInterval !== null) {
                 clearInterval(timerCheckInterval);
                 timerCheckInterval = null;
             }
         }
-
+        
         // التحقق من الوقت وتشغيل الإنذار
         function checkAndTriggerAlarm() {
             if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
                 return;
             }
-
+            
             const now = Date.now();
             if (now >= timerEndTime) {
                 window.stopTimer();
@@ -3111,24 +3039,24 @@
                 showToast("⏰ انتهى الوقت!", 'success');
             }
         }
-
+        
         // طلب إذن الإشعارات
         async function requestNotificationPermission() {
             if (!('Notification' in window)) {
                 return false;
             }
-
+            
             // التحقق من الصلاحية الحالية
             if (Notification.permission === 'granted') {
                 notificationPermission = 'granted';
                 return true;
             }
-
+            
             if (Notification.permission === 'denied') {
                 notificationPermission = 'denied';
                 return false;
             }
-
+            
             // طلب الإذن إذا كان default
             if (Notification.permission === 'default' || notificationPermission === null) {
                 try {
@@ -3141,15 +3069,15 @@
                     return false;
                 }
             }
-
+            
             return notificationPermission === 'granted';
         }
-
+        
         // تهيئة إذن الإشعارات عند تحميل الصفحة
         if ('Notification' in window) {
             notificationPermission = Notification.permission;
         }
-
+        
         // عرض إشعار
         function showNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
@@ -3160,7 +3088,7 @@
                         requireInteraction: true, // يتطلب تفاعل المستخدم
                         silent: false
                     };
-
+                    
                     // محاولة إضافة أيقونة إذا كانت متاحة (اختياري)
                     try {
                         // البحث عن أيقونة في الصفحة
@@ -3172,14 +3100,14 @@
                     } catch (e) {
                         // تجاهل إذا لم تجد أيقونة
                     }
-
+                    
                     const notification = new Notification(title, notificationOptions);
-
+                    
                     notification.onclick = () => {
                         window.focus();
                         notification.close();
                     };
-
+                    
                     // إغلاق الإشعار تلقائياً بعد 15 ثانية
                     setTimeout(() => {
                         if (notification) {
@@ -3201,7 +3129,7 @@
                 timerTarget = mins * 60;
                 timerElapsedSeconds = 0;
                 inputWrapper.classList.add('hidden');
-
+                
                 // طلب إذن الإشعارات عند بدء التايمر
                 requestNotificationPermission().then(granted => {
                     if (granted) {
@@ -3246,10 +3174,10 @@
 
             clearInterval(timerInterval);
             timerInterval = null;
-
+            
             // إيقاف التحقق المستمر
             stopContinuousAlarmCheck();
-
+            
             // إلغاء جدولة الإنذار
             if (timerAlarmTimeout !== null) {
                 clearTimeout(timerAlarmTimeout);
@@ -3385,7 +3313,7 @@
             try {
                 // استخدام AudioContext لضمان التشغيل حتى عند إغلاق التبويب
                 let audioContext = null;
-
+                
                 // محاولة استخدام AudioContext إذا كان متاحاً (أكثر موثوقية)
                 try {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -3425,7 +3353,7 @@
 
                 // صوت ثاني بعد 1000ms
                 playBeep(1000);
-
+                
                 // صوت ثالث بعد 2000ms للتأكيد
                 playBeep(2000);
 
@@ -3460,23 +3388,23 @@
         // التحديث عند العودة للصفحة وإعادة جدولة الإنذار
         document.addEventListener('visibilitychange', () => {
             if (!timerRunning) return;
-
+            
             if (!document.hidden) {
                 // عند العودة للصفحة: تحديث العرض فوراً
                 updateTimerDisplay();
-
+                
                 if (timerMode === 'timer' && timerEndTime) {
                     // التحقق من الوقت الفعلي عند العودة
                     const now = Date.now();
                     const remainingMs = timerEndTime - now;
-
+                    
                     if (remainingMs <= 0) {
                         // إذا انتهى الوقت بالفعل أثناء إغلاق التبويب
                         checkAndTriggerAlarm();
                     } else {
                         // إعادة جدولة الإنذار بالوقت المتبقي الصحيح
                         scheduleAlarm(remainingMs);
-
+                        
                         // التأكد من أن التحقق المستمر يعمل
                         if (remainingMs <= 60000) {
                             startContinuousAlarmCheck();
@@ -3488,13 +3416,13 @@
                 if (timerMode === 'timer' && timerEndTime) {
                     const now = Date.now();
                     const remainingMs = timerEndTime - now;
-
+                    
                     if (remainingMs > 0) {
                         // إعادة جدولة الإنذار
                         if (timerAlarmTimeout === null) {
                             scheduleAlarm(remainingMs);
                         }
-
+                        
                         // إيقاف التحقق المستمر لتوفير الطاقة (يتم التحقق من خلال timeouts)
                         if (remainingMs > 60000) {
                             stopContinuousAlarmCheck();
@@ -3506,7 +3434,7 @@
                 }
             }
         });
-
+        
         // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
         window.addEventListener('load', () => {
             if (timerRunning && timerMode === 'timer' && timerEndTime) {
@@ -3519,7 +3447,7 @@
                 }
             }
         });
-
+        
         // التحقق عند التركيز على النافذة
         window.addEventListener('focus', () => {
             if (timerRunning && timerMode === 'timer' && timerEndTime) {
@@ -3546,7 +3474,7 @@
         let tallyDirection = 'up'; // 'up' or 'down'
 
         // Switch between clock and counter tabs
-        window.switchCounterTab = function (tab) {
+        window.switchCounterTab = function(tab) {
             const clockTab = document.getElementById('tab-clock');
             const tallyTab = document.getElementById('tab-tally');
             const clockView = document.getElementById('view-clock');
@@ -3556,12 +3484,12 @@
                 // Show clock view
                 clockView.classList.remove('hidden');
                 tallyView.classList.add('hidden');
-
+                
                 // Update tab styles
                 clockTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 clockTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 clockTab.setAttribute('aria-selected', 'true');
-
+                
                 tallyTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 tallyTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 tallyTab.setAttribute('aria-selected', 'false');
@@ -3569,12 +3497,12 @@
                 // Show counter view
                 clockView.classList.add('hidden');
                 tallyView.classList.remove('hidden');
-
+                
                 // Update tab styles
                 tallyTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 tallyTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 tallyTab.setAttribute('aria-selected', 'true');
-
+                
                 clockTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 clockTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 clockTab.setAttribute('aria-selected', 'false');
@@ -3582,7 +3510,7 @@
         };
 
         // Increment or decrement the counter
-        window.clickTally = function (event) {
+        window.clickTally = function(event) {
             const display = document.getElementById('tally-display');
             if (!display) return;
 
@@ -3596,7 +3524,7 @@
             // Animate the display update
             display.style.transform = 'scale(1.1)';
             display.style.transition = 'transform 0.1s ease-out';
-
+            
             setTimeout(() => {
                 display.innerText = tallyCount;
                 display.style.transform = 'scale(1)';
@@ -3630,13 +3558,13 @@
 
             const button = document.getElementById('tally-btn');
             if (!button) return;
-
+            
             const ripple = document.createElement('div');
             ripple.className = 'absolute rounded-full bg-white/20';
-
+            
             const rect = button.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
-
+            
             // Calculate position relative to the button
             let x, y;
             if (event && event.clientX !== undefined && event.clientY !== undefined) {
@@ -3665,10 +3593,10 @@
         }
 
         // Reset counter to start value
-        window.resetTally = function () {
+        window.resetTally = function() {
             const display = document.getElementById('tally-display');
             const startInput = document.getElementById('tally-start-val');
-
+            
             if (!display) return;
 
             // Get start value from input
@@ -3688,13 +3616,13 @@
         };
 
         // Set counter direction (up or down)
-        window.setTallyMode = function (direction) {
+        window.setTallyMode = function(direction) {
             tallyDirection = direction;
             updateTallyDirectionButton();
         };
 
         // Toggle counter direction
-        window.toggleTallyDirection = function () {
+        window.toggleTallyDirection = function() {
             tallyDirection = tallyDirection === 'up' ? 'down' : 'up';
             updateTallyDirectionButton();
         };
@@ -4075,26 +4003,7 @@
                 storageUsage: "Storage Usage",
                 filesUploaded: "files uploaded",
                 refresh: "Refresh",
-                poweredBy: "File storage powered by",
-
-                // --- AI Features ---
-                aiAssistant: "AI Assistant",
-                aiActivationTitle: "Activate AI Intelligence",
-                aiActivationDesc: "Enable Gemini AI to manage your tasks, books, and courses using natural language.",
-                aiKeyLabel: "Gemini API Key",
-                saveKeyBtn: "Connect AI",
-                whatIsAiBtn: "What can this AI do?",
-                getKeyLink: "Get your free Gemini API Key here",
-                aiCapabilitiesTitle: "AI Capabilities",
-                aiCmdTitle: "Smart Commands",
-                aiCmdDesc: "The AI can execute actions directly from your chat:",
-                aiLangTitle: "Multi-Language",
-                aiLangDesc: "Fully supports Arabic and English. You can switch languages or just speak naturally in either language.",
-                closeBtn: "Close",
-                aiTitle: "Gemini AI",
-                aiSubtitle: "Your intelligent assistant",
-                aiWelcome: "Hello! I'm Gemini. I can help you add tasks, books, courses, or answer your questions.",
-                aiPlaceholder: "Ask me something...",
+                poweredBy: "File storage powered by"
             },
             ar: {
                 // ... (القديم)
@@ -4117,25 +4026,6 @@
                 totalPages: "إجمالي الصفحات", readPages: "الصفحات المقروءة",
                 totalHours: "إجمالي الساعات", doneHours: "الساعات المنجزة",
                 voiceNote: "ملاحظة صوتية", record: "تسجيل", stop: "إيقاف",
-
-                // --- AI Features ---
-                aiAssistant: "مساعد الذكاء",
-                aiActivationTitle: "تفعيل الذكاء الاصطناعي",
-                aiActivationDesc: "قم بتمكين Gemini AI لإدارة مهامك وكتبك ودوراتك باستخدام اللغة الطبيعية.",
-                aiKeyLabel: "مفتاح Gemini API",
-                saveKeyBtn: "ربط الذكاء الاصطناعي",
-                whatIsAiBtn: "ماذا يستطيع هذا الذكاء فعله؟",
-                getKeyLink: "احصل على مفتاح Gemini API المجاني هنا",
-                aiCapabilitiesTitle: "قدرات الذكاء الاصطناعي",
-                aiCmdTitle: "أوامر ذكية",
-                aiCmdDesc: "يمكن للذكاء الاصطناعي تنفيذ إجراءات مباشرة من الدردشة:",
-                aiLangTitle: "متعدد اللغات",
-                aiLangDesc: "يدعم العربية والإنجليزية بالكامل. يمكنك تبديل اللغات أو التحدث بشكل طبيعي بأي لغة.",
-                closeBtn: "إغلاق",
-                aiTitle: "ذكاء Gemini",
-                aiSubtitle: "مساعدك الذكي",
-                aiWelcome: "أهلاً! أنا Gemini. يمكنني مساعدتك في إضافة مهام، كتب، دورات، أو الإجابة على أسئلتك.",
-                aiPlaceholder: "اسألني شيئاً...",
                 files: "ملفات (صور، PDF)", attach: "إرفاق",
                 drawing: "رسم / سكتش", addDrawing: "إضافة رسم", editDrawing: "تعديل الرسم",
                 save: "حفظ",
@@ -6320,111 +6210,6 @@
             }
         };
     </script>
-
-    <!-- AI Key Modal -->
-    <div id="ai-key-modal"
-        class="modal-wrapper hidden fixed inset-0 z-[80] flex items-center justify-center pointer-events-none p-4"
-        role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
-        <div
-            class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
-            <h3 class="text-2xl font-bold mb-4 text-white flex items-center gap-2" id="ai-modal-title">
-                <i class="ri-robot-2-line text-accent"></i>
-                <span data-i18n="aiActivationTitle">Activate AI Intelligence</span>
-            </h3>
-
-            <p class="text-slate-300 text-sm mb-6" data-i18n="aiActivationDesc">
-                Enable Gemini AI to manage your tasks, books, and courses using natural language.
-            </p>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2" data-i18n="aiKeyLabel">Gemini
-                        API Key</label>
-                    <input type="password" id="ai-api-key"
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-slate-600"
-                        placeholder="AIzaSy..." autocomplete="off">
-                    <p class="text-[10px] text-red-400 mt-1 hidden" id="ai-key-error"></p>
-                </div>
-
-                <div class="flex flex-col gap-3 mt-6">
-                    <button onclick="saveAIKey()" id="btn-save-ai-key"
-                        class="interactive-btn relative w-full h-12 rounded-xl bg-accent text-white font-bold overflow-hidden group">
-                        <span class="btn-text-content relative z-10 flex items-center justify-center gap-2">
-                            <i class="ri-key-2-line"></i>
-                            <span data-i18n="saveKeyBtn">Connect AI</span>
-                        </span>
-                        <div
-                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        </div>
-                        <!-- Loading State -->
-                        <div class="btn-loader">
-                            <i class="ri-loader-4-line text-xl animate-spin"></i>
-                        </div>
-                    </button>
-
-                    <button onclick="showAIInfo()"
-                        class="w-full py-3 rounded-xl border border-white/10 text-slate-300 text-sm hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
-                        <i class="ri-question-line"></i>
-                        <span data-i18n="whatIsAiBtn">What can this AI do?</span>
-                    </button>
-
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank"
-                        class="text-[10px] text-accent text-center hover:underline opacity-80">
-                        <span data-i18n="getKeyLink">Get your free Gemini API Key here</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Info Modal -->
-    <div id="ai-info-modal"
-        class="modal-wrapper hidden fixed inset-0 z-[90] flex items-center justify-center pointer-events-none p-4"
-        role="dialog" aria-modal="true" aria-labelledby="ai-info-title">
-        <div
-            class="modal-content glass-panel w-full max-w-lg rounded-3xl p-6 md:p-8 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative max-h-[80vh] overflow-y-auto">
-            <button onclick="closeAIInfo()"
-                class="absolute top-4 right-4 text-white/50 hover:text-white">&times;</button>
-
-            <h3 class="text-xl font-bold mb-4 text-white flex items-center gap-2" id="ai-info-title">
-                <i class="ri-magic-line text-purple-400"></i>
-                <span data-i18n="aiCapabilitiesTitle">AI Capabilities</span>
-            </h3>
-
-            <div class="space-y-4 text-sm text-slate-300">
-                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-                    <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                        <i class="ri-command-line text-accent"></i>
-                        <span data-i18n="aiCmdTitle">Smart Commands</span>
-                    </h4>
-                    <p class="mb-2" data-i18n="aiCmdDesc">The AI can execute actions directly from your chat:</p>
-                    <ul class="list-disc pl-5 space-y-1 text-xs opacity-80">
-                        <li>"Add a task to buy groceries tomorrow"</li>
-                        <li>"Add a book named 'Clean Code'"</li>
-                        <li>"Add a new course specific to React"</li>
-                        <li>"Delete the 'Gym' task"</li>
-                        <li>"Empty the trash"</li>
-                    </ul>
-                </div>
-
-                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-                    <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                        <i class="ri-translate-2" data-i18n="aiLangTitle">Multi-Language</i>
-                    </h4>
-                    <p data-i18n="aiLangDesc">Fully supports Arabic and English. You can switch languages or just speak
-                        naturally in either language.</p>
-                </div>
-            </div>
-
-            <button onclick="closeAIInfo()"
-                class="mt-6 w-full py-3 rounded-xl bg-white/10 text-white font-bold hover:bg-white/20 transition-colors">
-                <span data-i18n="closeBtn">Close</span>
-            </button>
-        </div>
-    </div>
-
-    <script src="js/ai-client.js"></script>
-    <script src="js/ai-manager.js"></script>
 </body>
 
 </html>
