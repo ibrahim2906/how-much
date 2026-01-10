@@ -457,6 +457,47 @@
             transform-origin: center center;
         }
 
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            left: auto;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            z-index: 40;
+            transition: all 0.3s var(--transition-bounce);
+            animation: pulse-glow 3s infinite;
+        }
+
+        body.rtl .floating-ai-btn {
+            right: auto;
+            left: 20px;
+        }
+
+        .floating-ai-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        @media (min-width: 768px) {
+            .floating-ai-btn {
+                bottom: 30px;
+                right: 30px;
+            }
+
+            body.rtl .floating-ai-btn {
+                right: auto;
+                left: 30px;
+            }
+        }
+
         .widget-pill {
             position: fixed;
             z-index: 39;
@@ -1447,6 +1488,68 @@
                     </div>
                 </section>
 
+                <section id="page-ai"
+                    class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
+                    <div
+                        class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
+                        <div class="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"
+                            aria-hidden="true"></div>
+
+                        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
+                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-sm" data-i18n="assistantTitle">Assistant</h3>
+                                    <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="openApiKeyModal()"
+                                    class="text-slate-500 hover:text-white transition-colors" title="AI Settings">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                                <button onclick="clearChat()"
+                                    class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold"
+                                    data-i18n="clear" aria-label="Clear chat">Clear</button>
+                            </div>
+                        </div>
+
+                        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4" role="log"
+                            aria-live="polite" aria-atomic="false">
+                            <div class="flex gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
+                                </div>
+                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]"
+                                    data-i18n="aiWelcome">
+                                    Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named
+                                    Atomic Habits".
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-black/20 backdrop-blur-md">
+                            <div class="relative">
+                                <input type="text" id="chat-input"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base"
+                                    placeholder="Tell AI to do something..." data-i18n-placeholder="aiPlaceholder"
+                                    onkeydown="if(event.key === 'Enter') sendAIChat()" aria-label="Chat message input">
+
+                                <button onclick="sendAIChat()"
+                                    class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95"
+                                    aria-label="Send message">
+                                    <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
                     <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
 
@@ -1544,6 +1647,22 @@
                                 class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold"
                                 aria-label="Toggle language">
                                 <span id="current-lang-display">English</span>
+                            </button>
+                        </div>
+
+                        <div class="p-6 border-t border-white/5 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 rounded-xl bg-white/5">
+                                    <i class="fas fa-robot accent-text" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">AI Configuration</h3>
+                                    <p class="text-xs text-slate-400">Gemini API Key</p>
+                                </div>
+                            </div>
+                            <button onclick="openApiKeyModal()"
+                                class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold">
+                                <span data-i18n="updateKey">Update Key</span>
                             </button>
                         </div>
 
@@ -1816,6 +1935,11 @@
                 </div>
             </div>
 
+            <button onclick="showPage('ai')" class="floating-ai-btn hover:scale-110 active:scale-95"
+                aria-label="Open AI assistant">
+                <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
+            </button>
+
             <nav class="md:hidden fixed bottom-4 left-2 right-2 h-16 glass-panel rounded-2xl grid grid-cols-7 gap-0 items-center z-40 mobile-dock border border-white/20 px-1"
                 role="navigation" aria-label="Mobile navigation">
 
@@ -1979,6 +2103,73 @@
                 <button onclick="executeConfirmAction()"
                     class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white transition-colors font-bold shadow-lg shadow-red-900/20">
                     Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Key Modal -->
+    <div id="api-key-modal"
+        class="modal-wrapper hidden fixed inset-0 z-[80] flex items-center justify-center pointer-events-none p-4"
+        role="dialog" aria-modal="true">
+        <div
+            class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
+            <div class="text-center mb-6">
+                <div
+                    class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
+                    <i class="fas fa-robot text-2xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2" data-i18n="aiSetup">AI Setup</h3>
+                <p class="text-slate-400 text-sm" data-i18n="aiSetupDesc">Enter your Gemini API Key to unlock the full
+                    potential of your Life OS.</p>
+            </div>
+
+            <input type="password" id="gemini-key-input" placeholder="Paste API Key here..."
+                class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white mb-4 focus:border-indigo-500 focus:outline-none transition-colors text-center font-mono text-sm">
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button onclick="openAIHelp('features')"
+                    class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span data-i18n="aiFeaturesBtn">Features</span>
+                </button>
+                <button onclick="openAIHelp('getKey')"
+                    class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
+                    <i class="fas fa-key text-green-400"></i>
+                    <span data-i18n="howToGetBtn">Get Key</span>
+                </button>
+            </div>
+
+            <button onclick="saveGeminiKey()"
+                class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-indigo-500/25 transition-all active:scale-95">
+                <span data-i18n="confirm">Confirm</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Help Modal -->
+    <div id="ai-help-modal"
+        class="modal-wrapper hidden fixed inset-0 z-[90] flex items-center justify-center pointer-events-none p-4"
+        role="dialog" aria-modal="true">
+        <div
+            class="modal-content glass-panel w-full max-w-2xl rounded-3xl p-0 bg-[#0f172a] pointer-events-auto border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                <h3 id="ai-help-title" class="font-bold text-lg text-white">Help</h3>
+                <button onclick="closeAIHelp()"
+                    class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="ai-help-content" class="p-6 overflow-y-auto text-slate-300 space-y-4 leading-relaxed">
+                <!-- Content injected via JS -->
+            </div>
+
+            <div class="p-4 border-t border-white/10 bg-white/5">
+                <button onclick="closeAIHelp()"
+                    class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-i18n="backToAI">Back to AI</span>
                 </button>
             </div>
         </div>
@@ -2447,8 +2638,14 @@
                 try {
                     const userDocRef = doc(db, "artifacts", appId, "users", currentUser.uid);
 
+                    // Inject Secure Key into Profile Data for Cloud Save
+                    const settingsToSave = { ...window.appData.settings };
+                    if (window.secureGeminiKey) {
+                        settingsToSave.geminiKey = window.secureGeminiKey;
+                    }
+
                     // 1. تجهيز البيانات المقسمة
-                    const profileData = { settings: window.appData.settings, stats: window.appData.stats };
+                    const profileData = { settings: settingsToSave, stats: window.appData.stats };
                     const tasksData = { tasks: window.appData.tasks };
                     const notesData = { notes: window.appData.notes };
                     const eduData = { courses: window.appData.courses, books: window.appData.books };
@@ -2484,6 +2681,13 @@
                 if (!snapshot.empty) {
                     snapshot.forEach(doc => {
                         const data = doc.data();
+
+                        // Secure Key Extraction (Do not save to local appData)
+                        if (doc.id === 'profile' && data.settings && data.settings.geminiKey) {
+                            window.secureGeminiKey = data.settings.geminiKey;
+                            // Remove from data object so it doesn't get saved to localStorage in the next step
+                            delete data.settings.geminiKey;
+                        }
 
                         // دمج البيانات القادمة مع البيانات الحالية
                         window.appData = { ...window.appData, ...data };
@@ -2567,6 +2771,13 @@
             }
 
             if (activePage === nextPage) return;
+
+            // AI Page Logic
+            if (pageId === 'ai') {
+                if (!window.secureGeminiKey) {
+                    setTimeout(() => openGenieModal('api-key-modal'), 300);
+                }
+            }
 
             if (pageId === 'courses') renderCourses();
             if (pageId === 'tasks') renderTasks();
@@ -2889,7 +3100,7 @@
         // Preload and prepare audio for better reliability when tab is inactive
         alarmSound.preload = 'auto';
         alarmSound.volume = 1.0;
-        
+
         /* ==========================================
    TIMER (يعمل في الخلفية - محسّن)
    ========================================== */
@@ -2931,19 +3142,19 @@
             if (timerMode === 'timer' && timerEndTime) {
                 const now = Date.now();
                 const remainingMs = timerEndTime - now;
-                
+
                 // التحقق من الوقت المطلق (أكثر موثوقية من الوقت المحسوب)
                 if (remainingMs <= 0) {
                     checkAndTriggerAlarm();
                     return;
                 }
-                
+
                 if (currentSeconds <= 0) {
                     // إذا كان الوقت المحسوب 0 أو أقل، تحقق مرة أخرى
                     checkAndTriggerAlarm();
                     return;
                 }
-                
+
                 // إعادة جدولة الإنذار إذا انتهى timeout السابق
                 // هذا يضمن أن الإنذار سيعمل حتى لو تم تأخير setInterval
                 if (timerAlarmTimeout === null && remainingMs > 0) {
@@ -2962,20 +3173,20 @@
                 clearTimeout(timerAlarmTimeout);
                 timerAlarmTimeout = null;
             }
-            
+
             if (!timerEndTime || remainingMs <= 0) {
                 checkAndTriggerAlarm();
                 return;
             }
-            
+
             // استخدام فترات قصيرة متسلسلة (كل دقيقة) لضمان العمل في الخلفية
             // هذا أكثر موثوقية من timeout طويل واحد
             const checkInterval = 60000; // التحقق كل دقيقة (60000ms)
             const nextCheck = Math.min(remainingMs, checkInterval);
-            
+
             timerAlarmTimeout = setTimeout(() => {
                 timerAlarmTimeout = null;
-                
+
                 // التحقق من الوقت الفعلي
                 const now = Date.now();
                 if (timerEndTime && now >= timerEndTime) {
@@ -2991,7 +3202,7 @@
                     }
                 }
             }, nextCheck);
-            
+
             // أيضا إعداد interval للتحقق المستمر (كل ثانية عند الاقتراب من النهاية)
             if (remainingMs <= 60000) { // إذا كان متبق أقل من دقيقة، تحقق كل ثانية
                 startContinuousAlarmCheck();
@@ -2999,17 +3210,17 @@
                 stopContinuousAlarmCheck();
             }
         }
-        
+
         // التحقق المستمر من الإنذار (كل ثانية عند الاقتراب من النهاية)
         function startContinuousAlarmCheck() {
             stopContinuousAlarmCheck(); // إيقاف أي تحقق سابق
-            
+
             timerCheckInterval = setInterval(() => {
                 if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
                     stopContinuousAlarmCheck();
                     return;
                 }
-                
+
                 const now = Date.now();
                 if (now >= timerEndTime) {
                     checkAndTriggerAlarm();
@@ -3017,20 +3228,20 @@
                 }
             }, 1000); // التحقق كل ثانية
         }
-        
+
         function stopContinuousAlarmCheck() {
             if (timerCheckInterval !== null) {
                 clearInterval(timerCheckInterval);
                 timerCheckInterval = null;
             }
         }
-        
+
         // التحقق من الوقت وتشغيل الإنذار
         function checkAndTriggerAlarm() {
             if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
                 return;
             }
-            
+
             const now = Date.now();
             if (now >= timerEndTime) {
                 window.stopTimer();
@@ -3039,24 +3250,24 @@
                 showToast("⏰ انتهى الوقت!", 'success');
             }
         }
-        
+
         // طلب إذن الإشعارات
         async function requestNotificationPermission() {
             if (!('Notification' in window)) {
                 return false;
             }
-            
+
             // التحقق من الصلاحية الحالية
             if (Notification.permission === 'granted') {
                 notificationPermission = 'granted';
                 return true;
             }
-            
+
             if (Notification.permission === 'denied') {
                 notificationPermission = 'denied';
                 return false;
             }
-            
+
             // طلب الإذن إذا كان default
             if (Notification.permission === 'default' || notificationPermission === null) {
                 try {
@@ -3069,15 +3280,15 @@
                     return false;
                 }
             }
-            
+
             return notificationPermission === 'granted';
         }
-        
+
         // تهيئة إذن الإشعارات عند تحميل الصفحة
         if ('Notification' in window) {
             notificationPermission = Notification.permission;
         }
-        
+
         // عرض إشعار
         function showNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
@@ -3088,7 +3299,7 @@
                         requireInteraction: true, // يتطلب تفاعل المستخدم
                         silent: false
                     };
-                    
+
                     // محاولة إضافة أيقونة إذا كانت متاحة (اختياري)
                     try {
                         // البحث عن أيقونة في الصفحة
@@ -3100,14 +3311,14 @@
                     } catch (e) {
                         // تجاهل إذا لم تجد أيقونة
                     }
-                    
+
                     const notification = new Notification(title, notificationOptions);
-                    
+
                     notification.onclick = () => {
                         window.focus();
                         notification.close();
                     };
-                    
+
                     // إغلاق الإشعار تلقائياً بعد 15 ثانية
                     setTimeout(() => {
                         if (notification) {
@@ -3129,7 +3340,7 @@
                 timerTarget = mins * 60;
                 timerElapsedSeconds = 0;
                 inputWrapper.classList.add('hidden');
-                
+
                 // طلب إذن الإشعارات عند بدء التايمر
                 requestNotificationPermission().then(granted => {
                     if (granted) {
@@ -3174,10 +3385,10 @@
 
             clearInterval(timerInterval);
             timerInterval = null;
-            
+
             // إيقاف التحقق المستمر
             stopContinuousAlarmCheck();
-            
+
             // إلغاء جدولة الإنذار
             if (timerAlarmTimeout !== null) {
                 clearTimeout(timerAlarmTimeout);
@@ -3313,7 +3524,7 @@
             try {
                 // استخدام AudioContext لضمان التشغيل حتى عند إغلاق التبويب
                 let audioContext = null;
-                
+
                 // محاولة استخدام AudioContext إذا كان متاحاً (أكثر موثوقية)
                 try {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -3353,7 +3564,7 @@
 
                 // صوت ثاني بعد 1000ms
                 playBeep(1000);
-                
+
                 // صوت ثالث بعد 2000ms للتأكيد
                 playBeep(2000);
 
@@ -3388,23 +3599,23 @@
         // التحديث عند العودة للصفحة وإعادة جدولة الإنذار
         document.addEventListener('visibilitychange', () => {
             if (!timerRunning) return;
-            
+
             if (!document.hidden) {
                 // عند العودة للصفحة: تحديث العرض فوراً
                 updateTimerDisplay();
-                
+
                 if (timerMode === 'timer' && timerEndTime) {
                     // التحقق من الوقت الفعلي عند العودة
                     const now = Date.now();
                     const remainingMs = timerEndTime - now;
-                    
+
                     if (remainingMs <= 0) {
                         // إذا انتهى الوقت بالفعل أثناء إغلاق التبويب
                         checkAndTriggerAlarm();
                     } else {
                         // إعادة جدولة الإنذار بالوقت المتبقي الصحيح
                         scheduleAlarm(remainingMs);
-                        
+
                         // التأكد من أن التحقق المستمر يعمل
                         if (remainingMs <= 60000) {
                             startContinuousAlarmCheck();
@@ -3416,13 +3627,13 @@
                 if (timerMode === 'timer' && timerEndTime) {
                     const now = Date.now();
                     const remainingMs = timerEndTime - now;
-                    
+
                     if (remainingMs > 0) {
                         // إعادة جدولة الإنذار
                         if (timerAlarmTimeout === null) {
                             scheduleAlarm(remainingMs);
                         }
-                        
+
                         // إيقاف التحقق المستمر لتوفير الطاقة (يتم التحقق من خلال timeouts)
                         if (remainingMs > 60000) {
                             stopContinuousAlarmCheck();
@@ -3434,7 +3645,7 @@
                 }
             }
         });
-        
+
         // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
         window.addEventListener('load', () => {
             if (timerRunning && timerMode === 'timer' && timerEndTime) {
@@ -3447,7 +3658,7 @@
                 }
             }
         });
-        
+
         // التحقق عند التركيز على النافذة
         window.addEventListener('focus', () => {
             if (timerRunning && timerMode === 'timer' && timerEndTime) {
@@ -3474,7 +3685,7 @@
         let tallyDirection = 'up'; // 'up' or 'down'
 
         // Switch between clock and counter tabs
-        window.switchCounterTab = function(tab) {
+        window.switchCounterTab = function (tab) {
             const clockTab = document.getElementById('tab-clock');
             const tallyTab = document.getElementById('tab-tally');
             const clockView = document.getElementById('view-clock');
@@ -3484,12 +3695,12 @@
                 // Show clock view
                 clockView.classList.remove('hidden');
                 tallyView.classList.add('hidden');
-                
+
                 // Update tab styles
                 clockTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 clockTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 clockTab.setAttribute('aria-selected', 'true');
-                
+
                 tallyTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 tallyTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 tallyTab.setAttribute('aria-selected', 'false');
@@ -3497,12 +3708,12 @@
                 // Show counter view
                 clockView.classList.add('hidden');
                 tallyView.classList.remove('hidden');
-                
+
                 // Update tab styles
                 tallyTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 tallyTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 tallyTab.setAttribute('aria-selected', 'true');
-                
+
                 clockTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 clockTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
                 clockTab.setAttribute('aria-selected', 'false');
@@ -3510,7 +3721,7 @@
         };
 
         // Increment or decrement the counter
-        window.clickTally = function(event) {
+        window.clickTally = function (event) {
             const display = document.getElementById('tally-display');
             if (!display) return;
 
@@ -3524,7 +3735,7 @@
             // Animate the display update
             display.style.transform = 'scale(1.1)';
             display.style.transition = 'transform 0.1s ease-out';
-            
+
             setTimeout(() => {
                 display.innerText = tallyCount;
                 display.style.transform = 'scale(1)';
@@ -3558,13 +3769,13 @@
 
             const button = document.getElementById('tally-btn');
             if (!button) return;
-            
+
             const ripple = document.createElement('div');
             ripple.className = 'absolute rounded-full bg-white/20';
-            
+
             const rect = button.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
-            
+
             // Calculate position relative to the button
             let x, y;
             if (event && event.clientX !== undefined && event.clientY !== undefined) {
@@ -3593,10 +3804,10 @@
         }
 
         // Reset counter to start value
-        window.resetTally = function() {
+        window.resetTally = function () {
             const display = document.getElementById('tally-display');
             const startInput = document.getElementById('tally-start-val');
-            
+
             if (!display) return;
 
             // Get start value from input
@@ -3616,13 +3827,13 @@
         };
 
         // Set counter direction (up or down)
-        window.setTallyMode = function(direction) {
+        window.setTallyMode = function (direction) {
             tallyDirection = direction;
             updateTallyDirectionButton();
         };
 
         // Toggle counter direction
-        window.toggleTallyDirection = function() {
+        window.toggleTallyDirection = function () {
             tallyDirection = tallyDirection === 'up' ? 'down' : 'up';
             updateTallyDirectionButton();
         };
@@ -3861,7 +4072,7 @@
             window.closeAllModals(); // إغلاق المودال
             pendingConfirmAction = null; // تصفير المتغير
         };
-        const magneticBtns = document.querySelectorAll('.add-trigger-btn');
+        const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
         magneticBtns.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
@@ -3976,10 +4187,19 @@
                 continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
                 clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer",
                 tasbih: "Tasbih", countdown: "Countdown", startValue: "Start Value",
-                count: "Count", reset: "Reset Counter", clear: "Clear",
+                count: "Count", reset: "Reset Counter", assistantTitle: "Assistant",
+                assistantStatus: "Agent Mode Active", clear: "Clear",
+                aiWelcome: "Hello! I can add tasks, books, or courses for you. Try 'Add a task to buy milk'.",
                 nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
                 language: "Language", logout: "Logout", back: "Exit",
+                aiSetup: "AI Setup",
+                aiSetupDesc: "Enter your Gemini API Key to unlock the full potential of your Life OS.",
+                aiFeaturesBtn: "AI Features",
+                howToGetBtn: "How to Get Key",
                 confirm: "Confirm",
+                updateKey: "Update Key",
+                backToAI: "Back to AI",
+                keySaved: "Key Saved Successfully!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "Add Course", addBook: "Add Book", addTask: "Add Task",
@@ -3992,6 +4212,7 @@
                 save: "Save",
                 titlePlaceholder: "Title/Name",
                 descPlaceholder: "Description/Notes...",
+                aiPlaceholder: "Tell AI to do something...",
                 userProgression: "User Progression",
                 recentGains: "Recent Gains",
                 activeSession: "Active Session",
@@ -4015,10 +4236,19 @@
                 continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
                 clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت",
                 tasbih: "تسابيح", countdown: "عد تنازلي", startValue: "البداية",
-                count: "عد", reset: "تصفير", clear: "مسح",
+                count: "عد", reset: "تصفير", assistantTitle: "المساعد الذكي",
+                assistantStatus: "الوضع النشط", clear: "مسح",
+                aiWelcome: "أهلاً! يمكنني إضافة مهام، كتب، أو دورات لك.",
                 nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
                 language: "اللغة", logout: "خروج", back: "رجوع",
+                aiSetup: "إعداد الذكاء الاصطناعي",
+                aiSetupDesc: "أدخل مفتاح Gemini API لفتح القدرات الكاملة للنظام.",
+                aiFeaturesBtn: "مميزات الذكاء",
+                howToGetBtn: "كيف تحصل على المفتاح",
                 confirm: "موافق",
+                updateKey: "تحديث المفتاح",
+                backToAI: "العودة للذكاء الاصطناعي",
+                keySaved: "تم حفظ المفتاح بنجاح!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "إضافة دورة", addBook: "إضافة كتاب", addTask: "إضافة مهمة",
@@ -4031,6 +4261,7 @@
                 save: "حفظ",
                 titlePlaceholder: "العنوان / الاسم",
                 descPlaceholder: "الوصف / الملاحظات...",
+                aiPlaceholder: "اطلب من الذكاء الاصطناعي شيئاً...",
                 userProgression: "تقدم المستوى",
                 recentGains: "المكتسبات الأخيرة",
                 activeSession: "جلسة نشطة",
@@ -4162,6 +4393,19 @@
             }
 
             openGenieModal('generic-modal');
+        };
+
+        window.openApiKeyModal = function () {
+            const input = document.getElementById('gemini-key-input');
+            if (input) {
+                // Show masked key if exists
+                input.value = window.secureGeminiKey ? "********************" : "";
+                setTimeout(() => {
+                    input.focus();
+                    if (window.secureGeminiKey) input.select();
+                }, 500);
+            }
+            openGenieModal('api-key-modal');
         };
 
         window.openGenieModal = function (modalId) {
@@ -5407,6 +5651,337 @@
             if (fCanvas) resizeFabric();
         });
 
+        // ==========================================
+        //  AI SYSTEM INTEGRATION (GEMINI API)
+        // ==========================================
+
+        window.secureGeminiKey = null; // Global variable for key (not stored in LS)
+        window.chatHistory = [];
+
+        const SYSTEM_PROMPT = {
+            role: "system",
+            content: `You are the AI assistant for 'How Much', a life tracker app.
+
+🎯 YOUR GOAL:
+Execute user commands by returning a JSON object containing a list of operations.
+
+✅ SUPPORTED OPERATIONS:
+1. "addTask": { "name": "Title", "desc": "Description", "optional": boolean }
+2. "addBook": { "name": "Title", "total": number, "desc": "Description" }
+3. "addCourse": { "name": "Title", "total": number, "desc": "Description" }
+4. "addNote": { "name": "Title", "desc": "Content" }
+5. "deleteItem": { "type": "task|book|course|note", "name": "Item Name" }
+6. "emptyTrash": {}
+7. "reply": { "text": "Your conversational response here" }
+
+🔒 RULES:
+- Output JSON ONLY. No markdown formatting like \`\`\`json.
+- If the user asks a question, use the "reply" operation.
+- You can perform multiple operations in one response.
+- For "deleteItem", try to match the name as closely as possible.
+- Language: Respond in the same language as the user (English or Arabic).
+
+Example Input: "Add a task to buy milk and a book called Dune"
+Example Output:
+{
+  "operations": [
+    { "action": "addTask", "data": { "name": "Buy Milk", "desc": "Grocery", "optional": false } },
+    { "action": "addBook", "data": { "name": "Dune", "total": 0, "desc": "Sci-fi novel" } },
+    { "action": "reply", "data": { "text": "Added task 'Buy Milk' and book 'Dune'." } }
+  ]
+}
+`
+        };
+
+        window.callGemini = async (messagesArray) => {
+            if (!window.secureGeminiKey) {
+                openGenieModal('api-key-modal');
+                return null;
+            }
+
+            try {
+                const contents = messagesArray.map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content }]
+                }));
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${window.secureGeminiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: contents,
+                        systemInstruction: {
+                            parts: [{ text: SYSTEM_PROMPT.content }]
+                        },
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                if (!response.ok) throw new Error("API Error");
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+
+            } catch (error) {
+                console.error('AI Error:', error);
+                showToast(`AI Error: ${error.message}`, 'error');
+                return null;
+            }
+        };
+
+        window.sendAIChat = async function () {
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            input.value = '';
+            const container = document.getElementById('chat-container');
+
+            // User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex gap-3 justify-end';
+            userMsg.innerHTML = `
+            <div class="glass-panel p-3 rounded-2xl rounded-tr-none bg-indigo-500/20 text-white text-sm chat-bubble max-w-[85%]">
+                ${escapeHtml(txt)}
+            </div>
+        `;
+            container.appendChild(userMsg);
+            window.chatHistory.push({ role: "user", content: txt });
+
+            // Loader
+            const id = 'loader-' + Date.now();
+            const loaderMsg = document.createElement('div');
+            loaderMsg.id = id;
+            loaderMsg.className = 'flex gap-3';
+            loaderMsg.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
+                <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
+            </div>
+            <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble">
+                <div class="loader-ring"></div>
+            </div>
+        `;
+            container.appendChild(loaderMsg);
+            container.scrollTop = container.scrollHeight;
+
+            // Call API
+            const res = await callGemini(window.chatHistory);
+
+            const loaderEl = document.getElementById(id);
+            if (loaderEl) loaderEl.remove();
+
+            if (res) {
+                window.chatHistory.push({ role: "assistant", content: res });
+
+                try {
+                    const parsed = JSON.parse(res);
+                    let replyText = "";
+
+                    if (parsed.operations) {
+                        parsed.operations.forEach(op => {
+                            if (op.action === 'reply') {
+                                replyText += op.data.text + "\n";
+                            } else {
+                                executeAIAction(op, container);
+                            }
+                        });
+                    }
+
+                    if (replyText.trim()) {
+                        const aiMsg = document.createElement('div');
+                        aiMsg.className = 'flex gap-3';
+                        aiMsg.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
+                            <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">
+                            ${escapeHtml(replyText).replace(/\n/g, '<br>')}
+                        </div>`;
+                        container.appendChild(aiMsg);
+                    }
+
+                    // Save changes
+                    commitData();
+                    refreshAllUI();
+
+                } catch (e) {
+                    console.error("JSON Parse Error", e);
+                    // Fallback if not JSON
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'flex gap-3';
+                    aiMsg.innerHTML = `<div class="glass-panel p-3 rounded-2xl text-sm text-slate-200">${escapeHtml(res)}</div>`;
+                    container.appendChild(aiMsg);
+                }
+            } else {
+                // Remove failed message from history to prevent corruption (User, User)
+                window.chatHistory.pop();
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'text-red-400 text-xs text-center mt-2';
+                errorMsg.textContent = 'AI Connection Error. Please check your key.';
+                container.appendChild(errorMsg);
+            }
+            container.scrollTop = container.scrollHeight;
+        };
+
+        function executeAIAction(op, container) {
+            let msg = "";
+            if (op.action === 'addTask') {
+                window.appData.tasks.push({
+                    id: Date.now() + Math.random(),
+                    name: op.data.name,
+                    desc: op.data.desc || "",
+                    completed: false,
+                    optional: op.data.optional || false,
+                    files: [],
+                    deleted: false
+                });
+                msg = `Added Task: ${op.data.name}`;
+            } else if (op.action === 'addBook') {
+                window.appData.books.push({
+                    id: Date.now() + Math.random(),
+                    name: op.data.name,
+                    desc: op.data.desc || "",
+                    total: op.data.total || 0,
+                    done: 0,
+                    streak: 0,
+                    files: [],
+                    deleted: false
+                });
+                msg = `Added Book: ${op.data.name}`;
+            } else if (op.action === 'addCourse') {
+                window.appData.courses.push({
+                    id: Date.now() + Math.random(),
+                    name: op.data.name,
+                    notes: op.data.desc || "",
+                    total: op.data.total || 0,
+                    done: 0,
+                    files: [],
+                    deleted: false
+                });
+                msg = `Added Course: ${op.data.name}`;
+            } else if (op.action === 'addNote') {
+                window.appData.notes.push({
+                    id: Date.now() + Math.random(),
+                    name: op.data.name || "New Note",
+                    desc: op.data.desc || "",
+                    files: [],
+                    deleted: false
+                });
+                msg = `Added Note: ${op.data.name}`;
+            } else if (op.action === 'deleteItem') {
+                const found = window.findAndTrashItem(op.data.type, op.data.name);
+                msg = found ? `Deleted ${op.data.type}: ${op.data.name}` : `Could not find ${op.data.name}`;
+            } else if (op.action === 'emptyTrash') {
+                window.emptyTrash(true);
+                msg = "Trash Emptied";
+            }
+
+            if (msg) {
+                const successMsg = document.createElement('div');
+                successMsg.className = 'glass-panel p-2 px-4 rounded-xl text-xs text-green-300 mb-1 w-fit ml-auto border border-green-500/20 bg-green-500/10';
+                successMsg.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${escapeHtml(msg)}`;
+                container.appendChild(successMsg);
+            }
+        }
+
+        window.findAndTrashItem = function (type, name) {
+            const list = window.appData[type + 's'] || window.appData[type];
+            if (!list) return false;
+            const item = list.find(x => x.name.toLowerCase().includes(name.toLowerCase()) && !x.deleted);
+            if (item) {
+                deleteItemLogic(type, item.id);
+                return true;
+            }
+            return false;
+        };
+
+        window.saveGeminiKey = function () {
+            const input = document.getElementById('gemini-key-input');
+            const key = input.value.trim();
+
+            if (!key) {
+                showToast("Please enter a valid key", "error");
+                return;
+            }
+
+            // Save to global variable (secure memory)
+            window.secureGeminiKey = key;
+
+            if (localStorage.getItem('hm_guest')) {
+                showToast("Guest Mode: Key saved for this session only.", "neutral");
+                window.closeAllModals();
+                return;
+            }
+
+            // Trigger cloud save to persist in Firestore
+            if (window.triggerCloudSave) window.triggerCloudSave();
+
+            window.closeAllModals();
+            showToast("Key Saved Successfully!", "success");
+        };
+
+        window.openAIHelp = function (type) {
+            const modal = document.getElementById('ai-help-modal');
+            const title = document.getElementById('ai-help-title');
+            const content = document.getElementById('ai-help-content');
+            const isAr = window.appData.settings.lang === 'ar';
+
+            window.closeAllModals();
+            modal.classList.remove('hidden');
+
+            if (type === 'getKey') {
+                title.innerText = isAr ? "كيف تحصل على المفتاح" : "How to Get Gemini Key";
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 1: Google AI Studio</h4>
+                            <p class="text-sm">Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-400 underline">Google AI Studio</a> and sign in.</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 2: Create Key</h4>
+                            <p class="text-sm">Click on "Create API Key" button. It's free!</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                            <h4 class="font-bold text-indigo-400 mb-2">Step 3: Copy & Paste</h4>
+                            <p class="text-sm">Copy the key starting with "AIza..." and paste it in the app.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                title.innerText = isAr ? "مميزات الذكاء الاصطناعي" : "AI Features";
+                content.innerHTML = `
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                            <i class="fas fa-brain text-indigo-400 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Smart Organization</h4>
+                                <p class="text-xs text-slate-400">Add tasks, books, and courses naturally.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                            <i class="fas fa-trash text-red-400 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Content Management</h4>
+                                <p class="text-xs text-slate-400">Delete items or empty trash via chat.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            gsap.fromTo(modal.querySelector('.modal-content'), { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+        };
+
+        window.closeAIHelp = function () {
+            document.getElementById('ai-help-modal').classList.add('hidden');
+            if (!window.secureGeminiKey) openGenieModal('api-key-modal');
+        };
+
+        window.clearChat = function () {
+            const container = document.getElementById('chat-container');
+            if (container) container.innerHTML = '';
+            window.chatHistory = [];
+        };
+
         window.toggleTask = (id, e) => {
             if (e) e.stopPropagation();
 
@@ -6054,7 +6629,8 @@
                             settings: {
                                 theme: parsed.settings?.theme || 'dark',
                                 lang: parsed.settings?.lang || 'en',
-                                accent: parsed.settings?.accent || '#6366f1'
+                                accent: parsed.settings?.accent || '#6366f1',
+                                geminiKey: '' // Ensure key is not loaded from LS
                             },
                             stats: parsed.stats || { historicXP: 0 }
                         };
