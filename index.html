@@ -457,61 +457,6 @@
             transform-origin: center center;
         }
 
-        .floating-ai-btn {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            left: auto;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-color), #ec4899);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 10px 30px var(--accent-glow);
-            z-index: 40;
-            transition: all 0.3s var(--transition-bounce);
-            animation: pulse-glow 3s infinite;
-        }
-
-        body.rtl .floating-ai-btn {
-            right: auto;
-            left: 20px;
-        }
-
-        .floating-ai-btn:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
-
-        @media (min-width: 768px) {
-            .floating-ai-btn {
-                bottom: 30px;
-                right: 30px;
-            }
-
-            body.rtl .floating-ai-btn {
-                right: auto;
-                left: 30px;
-            }
-        }
-
-        @keyframes pulse-glow {
-            0% {
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
-            }
-
-            70% {
-                box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-            }
-        }
-
         .widget-pill {
             position: fixed;
             z-index: 39;
@@ -1457,7 +1402,7 @@
                     <div id="view-tally"
                         class="hidden w-full flex flex-col items-center justify-center transition-all duration-500 h-full">
 
-                        <button onclick="clickTally()" id="tally-btn"
+                        <button onclick="clickTally(event)" id="tally-btn"
                             class="relative w-72 h-72 md:w-80 md:h-80 rounded-[3rem] bg-[#1e1b4b] shadow-2xl flex flex-col items-center justify-center group active:scale-95 transition-all duration-100 border border-white/5 overflow-hidden">
 
                             <div
@@ -1487,7 +1432,7 @@
                                 <i class="fas fa-undo mr-2"></i> Reset
                             </button>
                             <div class="w-px h-6 bg-white/10"></div>
-                            <button onclick="setTallyMode('up')" id="btn-tally-dir"
+                            <button onclick="toggleTallyDirection()" id="btn-tally-dir"
                                 class="px-4 py-2 rounded-xl hover:bg-white/10 text-indigo-400 transition-colors text-sm font-bold">
                                 <i class="fas fa-arrow-up mr-2"></i> Up
                             </button>
@@ -1498,70 +1443,6 @@
                             <input type="number" id="tally-start-val" value="0"
                                 class="w-16 bg-transparent border-b border-slate-600 text-center text-white focus:border-indigo-500 outline-none"
                                 onchange="resetTally()">
-                        </div>
-                    </div>
-                </section>
-
-                <section id="page-ai"
-                    class="page-section hidden max-w-3xl mx-auto h-[calc(100vh-140px)] flex flex-col pt-2 md:pt-0">
-                    <div
-                        class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden relative border border-white/10">
-                        <div class="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"
-                            aria-hidden="true"></div>
-
-                        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-sm" data-i18n="assistantTitle">Assistant</h3>
-                                    <p class="text-[10px] text-slate-400" data-i18n="assistantStatus">Agent Mode Active
-                                    </p>
-                                </div>
-                            </div>
-                            <button onclick="clearChat()"
-                                class="text-slate-500 hover:text-red-400 transition-colors text-xs uppercase tracking-wider font-bold"
-                                data-i18n="clear" aria-label="Clear chat">Clear</button>
-                        </div>
-
-                        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4" role="log"
-                            aria-live="polite" aria-atomic="false">
-                            <div class="flex gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                                    <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                                </div>
-                                <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]"
-                                    data-i18n="aiWelcome">
-                                    Hello! I can add tasks, books, or courses for you. Try "Add a 300 page book named
-                                    Atomic Habits".
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-black/20 backdrop-blur-md">
-                            <div class="relative">
-                                <input type="text" id="chat-input"
-                                    class="w-full bg-white/5 border border-white/10 rounded-xl py-3 ps-4 pe-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all text-base"
-                                    placeholder="Tell AI to do something..." data-i18n-placeholder="aiPlaceholder"
-                                    onkeydown="if(event.key === 'Enter') sendAIChat()" aria-label="Chat message input">
-
-                                <button onclick="sendAIChat()"
-                                    class="absolute end-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-500 transition-all active:scale-95"
-                                    aria-label="Send message">
-                                    <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
-                                </button>
-                            </div>
-
-                            <div class="text-[10px] text-slate-600 text-center mt-2 flex justify-center items-center gap-1"
-                                dir="ltr">
-                                <span data-i18n="poweredBy">Powered by</span>
-                                <span class="text-indigo-400 font-bold">Llama 3</span>
-                                <span>&</span>
-                                <span class="text-orange-400 font-bold">Groq</span>
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -1666,22 +1547,6 @@
                             </button>
                         </div>
 
-                        <div class="p-6 border-t border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 rounded-xl bg-white/5">
-                                    <i class="fas fa-robot accent-text" aria-hidden="true"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold">AI Configuration</h3>
-                                    <p class="text-xs text-slate-400">Gemini API Key</p>
-                                </div>
-                            </div>
-                            <button onclick="openApiKeyModal()"
-                                class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-bold">
-                                <span data-i18n="updateKey">Update Key</span>
-                            </button>
-                        </div>
-
                     </div>
                     <!-- زر سياسة الخصوصية -->
                     <button onclick="showPage('privacy')"
@@ -1698,19 +1563,6 @@
                         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         <span data-i18n="logout">Logout</span>
                     </button>
-
-                    <div class="mt-8 text-center border-t border-white/5 pt-4 pb-4">
-                        <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Technology</p>
-                        <div class="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium">
-                            <span>Powered by</span>
-                            <span
-                                class="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20">Llama
-                                3</span>
-                            <span>on</span>
-                            <span
-                                class="bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded border border-orange-500/20">Groq</span>
-                        </div>
-                    </div>
 
                 </section>
                 <!-- =====================================================
@@ -1801,23 +1653,6 @@
                                 <p class="text-xs text-slate-500 mt-3 pt-3 border-t border-white/10">
                                     <strong>Note:</strong> We do NOT use your data for advertising or marketing
                                     purposes.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-robot"></i>
-                                Artificial Intelligence (Groq API)
-                            </h3>
-                            <div
-                                class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-slate-300 space-y-2 text-sm">
-                                <p>• We use Groq AI (Llama 3 models) to help organize your tasks.</p>
-                                <p>• Data is sent only when you actively use the Assistant features.</p>
-                                <p class="text-xs text-slate-500 mt-2 pt-2 border-t border-white/10">
-                                    See Groq Policy: <a href="https://groq.com/privacy-policy/" target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="text-indigo-400 hover:underline">groq.com/privacy-policy</a>
                                 </p>
                             </div>
                         </div>
@@ -1980,11 +1815,6 @@
                         aria-hidden="true"></i>
                 </div>
             </div>
-
-            <button onclick="showPage('ai')" class="floating-ai-btn hover:scale-110 active:scale-95"
-                aria-label="Open AI assistant">
-                <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
-            </button>
 
             <nav class="md:hidden fixed bottom-4 left-2 right-2 h-16 glass-panel rounded-2xl grid grid-cols-7 gap-0 items-center z-40 mobile-dock border border-white/20 px-1"
                 role="navigation" aria-label="Mobile navigation">
@@ -2154,73 +1984,6 @@
         </div>
     </div>
 
-    <!-- AI Key Modal -->
-    <div id="api-key-modal"
-        class="modal-wrapper hidden fixed inset-0 z-[80] flex items-center justify-center pointer-events-none p-4"
-        role="dialog" aria-modal="true">
-        <div
-            class="modal-content glass-panel w-full max-w-md rounded-3xl p-6 bg-[#1e1b4b]/95 pointer-events-auto border border-white/10 shadow-2xl relative">
-            <div class="text-center mb-6">
-                <div
-                    class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
-                    <i class="fas fa-robot text-2xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-white mb-2" data-i18n="aiSetup">AI Setup</h3>
-                <p class="text-slate-400 text-sm" data-i18n="aiSetupDesc">Enter your Gemini API Key to unlock the full
-                    potential of your Life OS.</p>
-            </div>
-
-            <input type="password" id="gemini-key-input" placeholder="Paste API Key here..."
-                class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white mb-4 focus:border-indigo-500 focus:outline-none transition-colors text-center font-mono text-sm">
-
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <button onclick="openAIHelp('features')"
-                    class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <span data-i18n="aiFeaturesBtn">Features</span>
-                </button>
-                <button onclick="openAIHelp('getKey')"
-                    class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors flex flex-col items-center gap-1">
-                    <i class="fas fa-key text-green-400"></i>
-                    <span data-i18n="howToGetBtn">Get Key</span>
-                </button>
-            </div>
-
-            <button onclick="saveGeminiKey()"
-                class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-indigo-500/25 transition-all active:scale-95">
-                <span data-i18n="confirm">Confirm</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- AI Help Modal -->
-    <div id="ai-help-modal"
-        class="modal-wrapper hidden fixed inset-0 z-[90] flex items-center justify-center pointer-events-none p-4"
-        role="dialog" aria-modal="true">
-        <div
-            class="modal-content glass-panel w-full max-w-2xl rounded-3xl p-0 bg-[#0f172a] pointer-events-auto border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
-                <h3 id="ai-help-title" class="font-bold text-lg text-white">Help</h3>
-                <button onclick="closeAIHelp()"
-                    class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div id="ai-help-content" class="p-6 overflow-y-auto text-slate-300 space-y-4 leading-relaxed">
-                <!-- Content injected via JS -->
-            </div>
-
-            <div class="p-4 border-t border-white/10 bg-white/5">
-                <button onclick="closeAIHelp()"
-                    class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-arrow-left"></i>
-                    <span data-i18n="backToAI">Back to AI</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div id="generic-modal"
         class="modal-wrapper hidden fixed inset-0 z-[60] flex items-center justify-center pointer-events-none p-4"
         role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -2234,26 +1997,6 @@
                 <input type="text" id="modal-name" placeholder="Title/Name" data-i18n-placeholder="titlePlaceholder"
                     class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base"
                     aria-label="Item title">
-
-                <div id="ai-suggestion-area" class="flex gap-2 mb-2 hidden">
-                    <button id="btn-ai-task" onclick="aiMagicSplit()"
-                        class="hidden text-xs bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity"
-                        aria-label="Magic split task">
-                        <i class="fas fa-magic" aria-hidden="true"></i> <span data-i18n="magicSplit">✨ Magic
-                            Split</span>
-                    </button>
-                    <button id="btn-ai-book" onclick="aiBookScout()"
-                        class="hidden text-xs bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity"
-                        aria-label="Book scout">
-                        <i class="fas fa-search" aria-hidden="true"></i> <span data-i18n="bookScout">✨ Book Scout</span>
-                    </button>
-                    <button id="btn-ai-course" onclick="aiCourseOutline()"
-                        class="hidden text-xs bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity"
-                        aria-label="Generate syllabus">
-                        <i class="fas fa-list-ol" aria-hidden="true"></i> <span data-i18n="syllabusGen">✨ Syllabus
-                            Gen</span>
-                    </button>
-                </div>
 
                 <div id="modal-stats-row" class="grid grid-cols-2 gap-4 hidden">
                     <div>
@@ -2742,11 +2485,6 @@
                     snapshot.forEach(doc => {
                         const data = doc.data();
 
-                        // Preserve local API Key if cloud data is missing it (prevents overwrite on sync)
-                        if (data.settings && window.appData.settings?.geminiKey && !data.settings.geminiKey) {
-                            data.settings.geminiKey = window.appData.settings.geminiKey;
-                        }
-
                         // دمج البيانات القادمة مع البيانات الحالية
                         window.appData = { ...window.appData, ...data };
                     });
@@ -2829,13 +2567,6 @@
             }
 
             if (activePage === nextPage) return;
-
-            // AI Page Logic
-            if (pageId === 'ai') {
-                if (!window.appData.settings || !window.appData.settings.geminiKey) {
-                    setTimeout(() => openGenieModal('api-key-modal'), 300);
-                }
-            }
 
             if (pageId === 'courses') renderCourses();
             if (pageId === 'tasks') renderTasks();
@@ -3155,16 +2886,24 @@
         }
 
         const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+        // Preload and prepare audio for better reliability when tab is inactive
+        alarmSound.preload = 'auto';
+        alarmSound.volume = 1.0;
+        
         /* ==========================================
    TIMER (يعمل في الخلفية - محسّن)
    ========================================== */
 
         let timerInterval = null;
         let timerStartTime = null; // وقت البدء الفعلي
+        let timerEndTime = null; // وقت انتهاء المؤقت المطلق (للتايمر)
+        let timerAlarmTimeout = null; // Timeout المخصص لصوت الإنذار
+        let timerCheckInterval = null; // Interval للتحقق المستمر
         let timerElapsedSeconds = 0; // الثواني المنقضية
         let timerTarget = 0;
         let timerMode = 'stopwatch';
         let timerRunning = false;
+        let notificationPermission = null; // Permission للإشعارات
 
         // حساب الوقت الحقيقي
         function getRealElapsedTime() {
@@ -3188,11 +2927,196 @@
             updateDigitDisplay(currentSeconds);
             updateTimerRing();
 
-            // فحص انتهاء المؤقت
-            if (timerMode === 'timer' && currentSeconds <= 0) {
+            // فحص انتهاء المؤقت (مع تحقق إضافي من الوقت المطلق)
+            if (timerMode === 'timer' && timerEndTime) {
+                const now = Date.now();
+                const remainingMs = timerEndTime - now;
+                
+                // التحقق من الوقت المطلق (أكثر موثوقية من الوقت المحسوب)
+                if (remainingMs <= 0) {
+                    checkAndTriggerAlarm();
+                    return;
+                }
+                
+                if (currentSeconds <= 0) {
+                    // إذا كان الوقت المحسوب 0 أو أقل، تحقق مرة أخرى
+                    checkAndTriggerAlarm();
+                    return;
+                }
+                
+                // إعادة جدولة الإنذار إذا انتهى timeout السابق
+                // هذا يضمن أن الإنذار سيعمل حتى لو تم تأخير setInterval
+                if (timerAlarmTimeout === null && remainingMs > 0) {
+                    scheduleAlarm(remainingMs);
+                } else if (remainingMs <= 60000 && timerCheckInterval === null) {
+                    // إذا كان متبق أقل من دقيقة، ابدأ التحقق المستمر
+                    startContinuousAlarmCheck();
+                }
+            }
+        }
+
+        // جدولة صوت الإنذار بدقة عالية مع فترات قصيرة متسلسلة
+        function scheduleAlarm(remainingMs) {
+            // إلغاء أي إنذار سابق
+            if (timerAlarmTimeout !== null) {
+                clearTimeout(timerAlarmTimeout);
+                timerAlarmTimeout = null;
+            }
+            
+            if (!timerEndTime || remainingMs <= 0) {
+                checkAndTriggerAlarm();
+                return;
+            }
+            
+            // استخدام فترات قصيرة متسلسلة (كل دقيقة) لضمان العمل في الخلفية
+            // هذا أكثر موثوقية من timeout طويل واحد
+            const checkInterval = 60000; // التحقق كل دقيقة (60000ms)
+            const nextCheck = Math.min(remainingMs, checkInterval);
+            
+            timerAlarmTimeout = setTimeout(() => {
+                timerAlarmTimeout = null;
+                
+                // التحقق من الوقت الفعلي
+                const now = Date.now();
+                if (timerEndTime && now >= timerEndTime) {
+                    // الوقت انتهى - تشغيل الإنذار
+                    checkAndTriggerAlarm();
+                } else if (timerRunning && timerMode === 'timer' && timerEndTime) {
+                    // إعادة الجدولة بالوقت المتبقي
+                    const remaining = timerEndTime - now;
+                    if (remaining > 0) {
+                        scheduleAlarm(remaining);
+                    } else {
+                        checkAndTriggerAlarm();
+                    }
+                }
+            }, nextCheck);
+            
+            // أيضا إعداد interval للتحقق المستمر (كل ثانية عند الاقتراب من النهاية)
+            if (remainingMs <= 60000) { // إذا كان متبق أقل من دقيقة، تحقق كل ثانية
+                startContinuousAlarmCheck();
+            } else {
+                stopContinuousAlarmCheck();
+            }
+        }
+        
+        // التحقق المستمر من الإنذار (كل ثانية عند الاقتراب من النهاية)
+        function startContinuousAlarmCheck() {
+            stopContinuousAlarmCheck(); // إيقاف أي تحقق سابق
+            
+            timerCheckInterval = setInterval(() => {
+                if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
+                    stopContinuousAlarmCheck();
+                    return;
+                }
+                
+                const now = Date.now();
+                if (now >= timerEndTime) {
+                    checkAndTriggerAlarm();
+                    stopContinuousAlarmCheck();
+                }
+            }, 1000); // التحقق كل ثانية
+        }
+        
+        function stopContinuousAlarmCheck() {
+            if (timerCheckInterval !== null) {
+                clearInterval(timerCheckInterval);
+                timerCheckInterval = null;
+            }
+        }
+        
+        // التحقق من الوقت وتشغيل الإنذار
+        function checkAndTriggerAlarm() {
+            if (!timerRunning || timerMode !== 'timer' || !timerEndTime) {
+                return;
+            }
+            
+            const now = Date.now();
+            if (now >= timerEndTime) {
                 window.stopTimer();
                 playAlarmSound();
+                showNotification("⏰ Timer Finished!", "Time is up!");
                 showToast("⏰ انتهى الوقت!", 'success');
+            }
+        }
+        
+        // طلب إذن الإشعارات
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                return false;
+            }
+            
+            // التحقق من الصلاحية الحالية
+            if (Notification.permission === 'granted') {
+                notificationPermission = 'granted';
+                return true;
+            }
+            
+            if (Notification.permission === 'denied') {
+                notificationPermission = 'denied';
+                return false;
+            }
+            
+            // طلب الإذن إذا كان default
+            if (Notification.permission === 'default' || notificationPermission === null) {
+                try {
+                    const permission = await Notification.requestPermission();
+                    notificationPermission = permission;
+                    return permission === 'granted';
+                } catch (e) {
+                    console.log('Notification permission error:', e);
+                    notificationPermission = 'denied';
+                    return false;
+                }
+            }
+            
+            return notificationPermission === 'granted';
+        }
+        
+        // تهيئة إذن الإشعارات عند تحميل الصفحة
+        if ('Notification' in window) {
+            notificationPermission = Notification.permission;
+        }
+        
+        // عرض إشعار
+        function showNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                try {
+                    const notificationOptions = {
+                        body: body,
+                        tag: 'timer-alarm',
+                        requireInteraction: true, // يتطلب تفاعل المستخدم
+                        silent: false
+                    };
+                    
+                    // محاولة إضافة أيقونة إذا كانت متاحة (اختياري)
+                    try {
+                        // البحث عن أيقونة في الصفحة
+                        const favicon = document.querySelector("link[rel*='icon']");
+                        if (favicon && favicon.href) {
+                            notificationOptions.icon = favicon.href;
+                            notificationOptions.badge = favicon.href;
+                        }
+                    } catch (e) {
+                        // تجاهل إذا لم تجد أيقونة
+                    }
+                    
+                    const notification = new Notification(title, notificationOptions);
+                    
+                    notification.onclick = () => {
+                        window.focus();
+                        notification.close();
+                    };
+                    
+                    // إغلاق الإشعار تلقائياً بعد 15 ثانية
+                    setTimeout(() => {
+                        if (notification) {
+                            notification.close();
+                        }
+                    }, 15000);
+                } catch (e) {
+                    console.log('Notification error:', e);
+                }
             }
         }
 
@@ -3205,14 +3129,31 @@
                 timerTarget = mins * 60;
                 timerElapsedSeconds = 0;
                 inputWrapper.classList.add('hidden');
+                
+                // طلب إذن الإشعارات عند بدء التايمر
+                requestNotificationPermission().then(granted => {
+                    if (granted) {
+                        console.log('Notification permission granted');
+                    }
+                });
             }
 
             timerStartTime = Date.now();
+            // حساب وقت الانتهاء المطلق للتايمر
+            if (timerMode === 'timer') {
+                timerEndTime = timerStartTime + (timerTarget * 1000);
+            }
             timerRunning = true;
 
             const iconEl = document.getElementById('icon-timer-toggle');
             iconEl.className = 'fas fa-pause';
             document.getElementById('timer-digits').classList.add('animate-pulse');
+
+            // جدولة الإنذار إذا كان في وضع التايمر
+            if (timerMode === 'timer' && timerEndTime) {
+                const remainingMs = timerEndTime - timerStartTime;
+                scheduleAlarm(remainingMs);
+            }
 
             // تحديث كل 100ms (أكثر دقة)
             timerInterval = setInterval(updateTimerDisplay, 100);
@@ -3228,9 +3169,20 @@
 
             timerElapsedSeconds = getRealElapsedTime();
             timerStartTime = null;
+            timerEndTime = null;
             timerRunning = false;
 
             clearInterval(timerInterval);
+            timerInterval = null;
+            
+            // إيقاف التحقق المستمر
+            stopContinuousAlarmCheck();
+            
+            // إلغاء جدولة الإنذار
+            if (timerAlarmTimeout !== null) {
+                clearTimeout(timerAlarmTimeout);
+                timerAlarmTimeout = null;
+            }
 
             const iconEl = document.getElementById('icon-timer-toggle');
             iconEl.className = 'fas fa-play pl-1';
@@ -3244,6 +3196,7 @@
             window.stopTimer();
             timerElapsedSeconds = 0;
             timerStartTime = null;
+            timerEndTime = null;
 
             if (timerMode === 'timer') {
                 document.getElementById('timer-input-wrapper').classList.remove('hidden');
@@ -3355,35 +3308,376 @@
             }
         }
 
-        // صوت الإنذار (محسّن)
+        // صوت الإنذار (محسّن - يعمل حتى عند إغلاق التبويب)
         function playAlarmSound() {
             try {
-                // صوت أول
-                const beep1 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-                beep1.play().catch(e => console.log('Audio blocked:', e));
+                // استخدام AudioContext لضمان التشغيل حتى عند إغلاق التبويب
+                let audioContext = null;
+                
+                // محاولة استخدام AudioContext إذا كان متاحاً (أكثر موثوقية)
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.log('AudioContext not available, using Audio element');
+                }
 
-                // صوت ثاني بعد 300ms
-                setTimeout(() => {
-                    const beep2 = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-                    beep2.play().catch(e => console.log('Audio blocked:', e));
-                }, 1000);
+                // دالة تشغيل الصوت
+                const playBeep = (delay = 0) => {
+                    setTimeout(() => {
+                        if (audioContext && audioContext.state !== 'closed') {
+                            // استخدام AudioContext مع ملف صوتي
+                            const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+                            audio.volume = 1.0;
+                            audio.play().catch(e => {
+                                console.log('Audio play blocked, retrying with Audio element:', e);
+                                // Fallback: استخدام العنصر المحدد مسبقاً
+                                alarmSound.currentTime = 0;
+                                alarmSound.play().catch(err => console.log('Audio blocked:', err));
+                            });
+                        } else {
+                            // استخدام العنصر المحدد مسبقاً
+                            alarmSound.currentTime = 0;
+                            alarmSound.play().catch(e => {
+                                console.log('Audio blocked, creating new instance:', e);
+                                // Fallback: إنشاء مثيل جديد
+                                const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+                                beep.volume = 1.0;
+                                beep.play().catch(err => console.log('Audio blocked:', err));
+                            });
+                        }
+                    }, delay);
+                };
+
+                // صوت أول فوراً
+                playBeep(0);
+
+                // صوت ثاني بعد 1000ms
+                playBeep(1000);
+                
+                // صوت ثالث بعد 2000ms للتأكيد
+                playBeep(2000);
 
                 // اهتزاز (إذا مدعوم)
                 if (navigator.vibrate) {
-                    navigator.vibrate([200, 100, 200, 100, 200]);
+                    navigator.vibrate([200, 100, 200, 100, 200, 100, 200]);
                 }
+
+                // إعادة تشغيل الصوت عدة مرات للتأكيد
+                let repeatCount = 0;
+                const repeatInterval = setInterval(() => {
+                    repeatCount++;
+                    if (repeatCount >= 3) {
+                        clearInterval(repeatInterval);
+                        return;
+                    }
+                    playBeep(0);
+                }, 3000);
 
             } catch (error) {
                 console.error('Alarm sound error:', error);
+                // Fallback بسيط
+                try {
+                    alarmSound.currentTime = 0;
+                    alarmSound.play().catch(e => console.log('Fallback audio blocked:', e));
+                } catch (e) {
+                    console.error('All audio methods failed:', e);
+                }
             }
         }
 
-        // التحديث عند العودة للصفحة
+        // التحديث عند العودة للصفحة وإعادة جدولة الإنذار
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && timerRunning) {
+            if (!timerRunning) return;
+            
+            if (!document.hidden) {
+                // عند العودة للصفحة: تحديث العرض فوراً
+                updateTimerDisplay();
+                
+                if (timerMode === 'timer' && timerEndTime) {
+                    // التحقق من الوقت الفعلي عند العودة
+                    const now = Date.now();
+                    const remainingMs = timerEndTime - now;
+                    
+                    if (remainingMs <= 0) {
+                        // إذا انتهى الوقت بالفعل أثناء إغلاق التبويب
+                        checkAndTriggerAlarm();
+                    } else {
+                        // إعادة جدولة الإنذار بالوقت المتبقي الصحيح
+                        scheduleAlarm(remainingMs);
+                        
+                        // التأكد من أن التحقق المستمر يعمل
+                        if (remainingMs <= 60000) {
+                            startContinuousAlarmCheck();
+                        }
+                    }
+                }
+            } else {
+                // عند إغلاق التبويب: التأكد من أن الإنذار مجدول بشكل صحيح
+                if (timerMode === 'timer' && timerEndTime) {
+                    const now = Date.now();
+                    const remainingMs = timerEndTime - now;
+                    
+                    if (remainingMs > 0) {
+                        // إعادة جدولة الإنذار
+                        if (timerAlarmTimeout === null) {
+                            scheduleAlarm(remainingMs);
+                        }
+                        
+                        // إيقاف التحقق المستمر لتوفير الطاقة (يتم التحقق من خلال timeouts)
+                        if (remainingMs > 60000) {
+                            stopContinuousAlarmCheck();
+                        } else {
+                            // إذا كان قريب من النهاية، استمر في التحقق المستمر
+                            startContinuousAlarmCheck();
+                        }
+                    }
+                }
+            }
+        });
+        
+        // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
+        window.addEventListener('load', () => {
+            if (timerRunning && timerMode === 'timer' && timerEndTime) {
+                const now = Date.now();
+                if (now >= timerEndTime) {
+                    checkAndTriggerAlarm();
+                } else {
+                    const remainingMs = timerEndTime - now;
+                    scheduleAlarm(remainingMs);
+                }
+            }
+        });
+        
+        // التحقق عند التركيز على النافذة
+        window.addEventListener('focus', () => {
+            if (timerRunning && timerMode === 'timer' && timerEndTime) {
+                const now = Date.now();
+                if (now >= timerEndTime) {
+                    checkAndTriggerAlarm();
+                } else {
+                    updateTimerDisplay();
+                    const remainingMs = timerEndTime - now;
+                    if (timerAlarmTimeout === null) {
+                        scheduleAlarm(remainingMs);
+                    }
+                }
+            } else if (timerRunning) {
                 updateTimerDisplay();
             }
         });
+
+        /* ==========================================
+   COUNTER / TALLY SECTION
+   ========================================== */
+
+        let tallyCount = 0;
+        let tallyDirection = 'up'; // 'up' or 'down'
+
+        // Switch between clock and counter tabs
+        window.switchCounterTab = function(tab) {
+            const clockTab = document.getElementById('tab-clock');
+            const tallyTab = document.getElementById('tab-tally');
+            const clockView = document.getElementById('view-clock');
+            const tallyView = document.getElementById('view-tally');
+
+            if (tab === 'clock') {
+                // Show clock view
+                clockView.classList.remove('hidden');
+                tallyView.classList.add('hidden');
+                
+                // Update tab styles
+                clockTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
+                clockTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                clockTab.setAttribute('aria-selected', 'true');
+                
+                tallyTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
+                tallyTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                tallyTab.setAttribute('aria-selected', 'false');
+            } else if (tab === 'tally') {
+                // Show counter view
+                clockView.classList.add('hidden');
+                tallyView.classList.remove('hidden');
+                
+                // Update tab styles
+                tallyTab.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
+                tallyTab.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                tallyTab.setAttribute('aria-selected', 'true');
+                
+                clockTab.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
+                clockTab.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                clockTab.setAttribute('aria-selected', 'false');
+            }
+        };
+
+        // Increment or decrement the counter
+        window.clickTally = function(event) {
+            const display = document.getElementById('tally-display');
+            if (!display) return;
+
+            // Update count based on direction
+            if (tallyDirection === 'up') {
+                tallyCount++;
+            } else {
+                tallyCount = Math.max(0, tallyCount - 1);
+            }
+
+            // Animate the display update
+            display.style.transform = 'scale(1.1)';
+            display.style.transition = 'transform 0.1s ease-out';
+            
+            setTimeout(() => {
+                display.innerText = tallyCount;
+                display.style.transform = 'scale(1)';
+            }, 50);
+
+            // Create ripple effect
+            if (event) {
+                createRipple(event);
+            } else {
+                // Fallback if event is not passed
+                const button = document.getElementById('tally-btn');
+                if (button) {
+                    const fakeEvent = {
+                        clientX: button.offsetWidth / 2,
+                        clientY: button.offsetHeight / 2
+                    };
+                    createRipple(fakeEvent);
+                }
+            }
+
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+        };
+
+        // Create ripple animation effect
+        function createRipple(event) {
+            const rippleContainer = document.getElementById('ripple-container');
+            if (!rippleContainer) return;
+
+            const button = document.getElementById('tally-btn');
+            if (!button) return;
+            
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute rounded-full bg-white/20';
+            
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            
+            // Calculate position relative to the button
+            let x, y;
+            if (event && event.clientX !== undefined && event.clientY !== undefined) {
+                x = event.clientX - rect.left - size / 2;
+                y = event.clientY - rect.top - size / 2;
+            } else {
+                // Center if no event coordinates
+                x = (rect.width / 2) - (size / 2);
+                y = (rect.height / 2) - (size / 2);
+            }
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            ripple.style.pointerEvents = 'none';
+
+            rippleContainer.appendChild(ripple);
+
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.remove();
+                }
+            }, 600);
+        }
+
+        // Reset counter to start value
+        window.resetTally = function() {
+            const display = document.getElementById('tally-display');
+            const startInput = document.getElementById('tally-start-val');
+            
+            if (!display) return;
+
+            // Get start value from input
+            const startVal = startInput ? parseInt(startInput.value) || 0 : 0;
+            tallyCount = startVal;
+
+            // Animate reset
+            display.style.transform = 'scale(0.9)';
+            display.style.opacity = '0.5';
+            display.style.transition = 'all 0.2s ease-out';
+
+            setTimeout(() => {
+                display.innerText = tallyCount;
+                display.style.transform = 'scale(1)';
+                display.style.opacity = '1';
+            }, 100);
+        };
+
+        // Set counter direction (up or down)
+        window.setTallyMode = function(direction) {
+            tallyDirection = direction;
+            updateTallyDirectionButton();
+        };
+
+        // Toggle counter direction
+        window.toggleTallyDirection = function() {
+            tallyDirection = tallyDirection === 'up' ? 'down' : 'up';
+            updateTallyDirectionButton();
+        };
+
+        // Update the direction button appearance
+        function updateTallyDirectionButton() {
+            const btn = document.getElementById('btn-tally-dir');
+            if (!btn) return;
+
+            // Update button appearance
+            if (tallyDirection === 'up') {
+                btn.classList.remove('text-slate-400');
+                btn.classList.add('text-indigo-400', 'font-bold');
+                btn.innerHTML = '<i class="fas fa-arrow-up mr-2"></i> Up';
+            } else {
+                btn.classList.remove('text-indigo-400', 'font-bold');
+                btn.classList.add('text-slate-400');
+                btn.innerHTML = '<i class="fas fa-arrow-down mr-2"></i> Down';
+            }
+        }
+
+        // Initialize counter on page load
+        function initializeCounter() {
+            const tallyStartInput = document.getElementById('tally-start-val');
+            if (tallyStartInput) {
+                tallyCount = parseInt(tallyStartInput.value) || 0;
+                const display = document.getElementById('tally-display');
+                if (display) {
+                    display.innerText = tallyCount;
+                }
+            }
+            updateTallyDirectionButton();
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCounter);
+        } else {
+            initializeCounter();
+        }
+
+        // Add ripple animation CSS if not already present
+        if (!document.getElementById('ripple-animation-style')) {
+            const style = document.createElement('style');
+            style.id = 'ripple-animation-style';
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(2.5);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
         const defaultApiKey = "AIzaSyDJ-gs1xu1lxAu7MRHMQ2t-oBnuuhTq5Ms";
         let tempAudioBase64 = null;
         let tempDrawingData = null;
@@ -3567,7 +3861,7 @@
             window.closeAllModals(); // إغلاق المودال
             pendingConfirmAction = null; // تصفير المتغير
         };
-        const magneticBtns = document.querySelectorAll('.add-trigger-btn, .floating-ai-btn');
+        const magneticBtns = document.querySelectorAll('.add-trigger-btn');
         magneticBtns.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
@@ -3591,10 +3885,6 @@
                 });
             });
         });
-
-        function getApiKey() {
-            return localStorage.getItem('hm_api_key') || defaultApiKey;
-        }
 
         function initSortables() {
             ['courses-list', 'books-list'].forEach(id => {
@@ -3686,23 +3976,13 @@
                 continueGoogle: "Continue with Google", continueGuest: "Continue Offline (Guest)",
                 clock: "Clock", counter: "Counter", stopwatch: "Stopwatch", timer: "Timer",
                 tasbih: "Tasbih", countdown: "Countdown", startValue: "Start Value",
-                count: "Count", reset: "Reset Counter", assistantTitle: "Assistant",
-                assistantStatus: "Agent Mode Active", clear: "Clear",
-                aiWelcome: "Hello! I can add tasks, books, or courses for you.",
+                count: "Count", reset: "Reset Counter", clear: "Clear",
                 nebulaColor: "Nebula Color", customizeAccent: "Customize accent color",
                 language: "Language", logout: "Logout", back: "Exit",
-                aiSetup: "AI Setup",
-                aiSetupDesc: "Enter your Gemini API Key to unlock the full potential of your Life OS.",
-                aiFeaturesBtn: "AI Features",
-                howToGetBtn: "How to Get Key",
                 confirm: "Confirm",
-                updateKey: "Update Key",
-                backToAI: "Back to AI",
-                keySaved: "Key Saved Successfully!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "Add Course", addBook: "Add Book", addTask: "Add Task",
-                magicSplit: "Magic Split", bookScout: "Book Scout", syllabusGen: "Syllabus Gen",
                 markOptional: "Mark as Optional (Side Quest)",
                 totalPages: "Total Pages", readPages: "Read Pages",
                 totalHours: "Total Hours", doneHours: "Done Hours",
@@ -3712,7 +3992,6 @@
                 save: "Save",
                 titlePlaceholder: "Title/Name",
                 descPlaceholder: "Description/Notes...",
-                aiPlaceholder: "Tell AI to do something...",
                 userProgression: "User Progression",
                 recentGains: "Recent Gains",
                 activeSession: "Active Session",
@@ -3736,23 +4015,13 @@
                 continueGoogle: "المتابعة مع جوجل", continueGuest: "المتابعة كضيف",
                 clock: "ساعة", counter: "عداد", stopwatch: "ساعة إيقاف", timer: "مؤقت",
                 tasbih: "تسابيح", countdown: "عد تنازلي", startValue: "البداية",
-                count: "عد", reset: "تصفير", assistantTitle: "المساعد الذكي",
-                assistantStatus: "الوضع النشط", clear: "مسح",
-                aiWelcome: "أهلاً! يمكنني إضافة مهام، كتب، أو دورات لك.",
+                count: "عد", reset: "تصفير", clear: "مسح",
                 nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
                 language: "اللغة", logout: "خروج", back: "رجوع",
-                aiSetup: "إعداد الذكاء الاصطناعي",
-                aiSetupDesc: "أدخل مفتاح Gemini API لفتح القدرات الكاملة للنظام.",
-                aiFeaturesBtn: "مميزات الذكاء",
-                howToGetBtn: "كيف تحصل على المفتاح",
                 confirm: "موافق",
-                updateKey: "تحديث المفتاح",
-                backToAI: "العودة للذكاء الاصطناعي",
-                keySaved: "تم حفظ المفتاح بنجاح!",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "إضافة دورة", addBook: "إضافة كتاب", addTask: "إضافة مهمة",
-                magicSplit: "تقسيم ذكي", bookScout: "مستكشف الكتب", syllabusGen: "مخطط المنهج",
                 markOptional: "مهمة جانبية (اختياري)",
                 totalPages: "إجمالي الصفحات", readPages: "الصفحات المقروءة",
                 totalHours: "إجمالي الساعات", doneHours: "الساعات المنجزة",
@@ -3762,7 +4031,6 @@
                 save: "حفظ",
                 titlePlaceholder: "العنوان / الاسم",
                 descPlaceholder: "الوصف / الملاحظات...",
-                aiPlaceholder: "اطلب من الذكاء الاصطناعي شيئاً...",
                 userProgression: "تقدم المستوى",
                 recentGains: "المكتسبات الأخيرة",
                 activeSession: "جلسة نشطة",
@@ -3803,22 +4071,12 @@
 
             const statsRow = document.getElementById('modal-stats-row');
             const optionalRow = document.getElementById('modal-optional-row');
-            const aiArea = document.getElementById('ai-suggestion-area');
-            const btnTask = document.getElementById('btn-ai-task');
-            const btnBook = document.getElementById('btn-ai-book');
-            const btnCourse = document.getElementById('btn-ai-course');
 
             statsRow.classList.add('hidden');
             optionalRow.classList.add('hidden');
-            aiArea.classList.add('hidden');
-            btnTask.classList.add('hidden');
-            btnBook.classList.add('hidden');
-            btnCourse.classList.add('hidden');
 
             if (type === 'task') {
                 optionalRow.classList.remove('hidden');
-                aiArea.classList.remove('hidden');
-                btnTask.classList.remove('hidden');
             } else if (type === 'note') {
             } else {
                 statsRow.classList.remove('hidden');
@@ -3828,13 +4086,9 @@
                 if (type === 'book') {
                     lblTotal.innerText = "Total Pages";
                     lblDone.innerText = "Read Pages";
-                    aiArea.classList.remove('hidden');
-                    btnBook.classList.remove('hidden');
                 } else {
                     lblTotal.innerText = "Total Hours";
                     lblDone.innerText = "Done Hours";
-                    aiArea.classList.remove('hidden');
-                    btnCourse.classList.remove('hidden');
                 }
             }
 
@@ -3862,9 +4116,6 @@
 
             const statsRow = document.getElementById('modal-stats-row');
             const optionalRow = document.getElementById('modal-optional-row');
-            const aiArea = document.getElementById('ai-suggestion-area');
-
-            aiArea.classList.add('hidden');
             statsRow.classList.add('hidden');
             optionalRow.classList.add('hidden');
 
@@ -3911,35 +4162,6 @@
             }
 
             openGenieModal('generic-modal');
-        };
-
-        window.openApiKeyModal = function () {
-            // Ensure settings object exists
-            if (!window.appData.settings) {
-                window.appData.settings = {
-                    theme: 'dark',
-                    lang: 'en',
-                    accent: '#6366f1',
-                    geminiKey: ''
-                };
-            }
-            
-            const input = document.getElementById('gemini-key-input');
-            if (input) {
-                const key = window.appData.settings.geminiKey || '';
-                input.value = key;
-                
-                // Focus the input field after modal opens
-                setTimeout(() => {
-                    input.focus();
-                    // Select all text if there's a key, making it easy to replace
-                    if (key) {
-                        input.select();
-                    }
-                }, 500);
-            }
-            
-            openGenieModal('api-key-modal');
         };
 
         window.openGenieModal = function (modalId) {
@@ -5185,752 +5407,6 @@
             if (fCanvas) resizeFabric();
         });
 
-        // الكود الجديد الآمن ✅
-
-        window.callGemini = async (messagesArray) => {
-            // Ensure settings object exists
-            if (!window.appData.settings) {
-                window.appData.settings = {
-                    theme: 'dark',
-                    lang: 'en',
-                    accent: '#6366f1',
-                    geminiKey: ''
-                };
-            }
-            
-            const apiKey = window.appData.settings.geminiKey;
-            if (!apiKey || apiKey.trim() === '') {
-                openGenieModal('api-key-modal');
-                return null;
-            }
-
-            try {
-                const systemInstruction = messagesArray.find(m => m.role === 'system')?.content || "";
-
-                // Sanitize history to ensure alternating roles (User -> Model -> User)
-                const contents = [];
-                let lastRole = null;
-
-                messagesArray.filter(m => m.role !== 'system').forEach(msg => {
-                    const role = msg.role === 'assistant' ? 'model' : 'user';
-                    const text = msg.content;
-
-                    if (role === lastRole && contents.length > 0) {
-                        // Merge consecutive messages of same role to prevent API 400 error
-                        contents[contents.length - 1].parts[0].text += "\n\n" + text;
-                    } else {
-                        contents.push({ role: role, parts: [{ text: text }] });
-                        lastRole = role;
-                    }
-                });
-
-                // Ensure contents is not empty
-                if (contents.length === 0) {
-                    contents.push({ role: 'user', parts: [{ text: "Hello" }] });
-                }
-
-                // Try multiple model names with fallback (in order of preference)
-                // Try v1beta first, then v1 if needed
-                const modelConfigs = [
-                    { model: 'gemini-1.5-flash-latest', version: 'v1beta' },
-                    { model: 'gemini-1.5-pro-latest', version: 'v1beta' },
-                    { model: 'gemini-pro', version: 'v1beta' },
-                    { model: 'gemini-1.5-flash', version: 'v1' },
-                    { model: 'gemini-1.5-pro', version: 'v1' },
-                    { model: 'gemini-pro', version: 'v1' }
-                ];
-                let response = null;
-                let lastError = null;
-                
-                for (const config of modelConfigs) {
-                    try {
-                        const testResponse = await fetch(`https://generativelanguage.googleapis.com/${config.version}/models/${config.model}:generateContent?key=${apiKey}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: contents,
-                                systemInstruction: { parts: [{ text: systemInstruction }] },
-                                generationConfig: { responseMimeType: "application/json" },
-                                safetySettings: [
-                                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-                                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-                                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-                                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-                                ]
-                            })
-                        });
-                        
-                        if (testResponse.ok) {
-                            response = testResponse; // Success, use this response
-                            break; // Exit loop
-                        } else {
-                            // Try to get error message
-                            try {
-                                const errText = await testResponse.text();
-                                lastError = errText;
-                            } catch (e) {
-                                lastError = `HTTP ${testResponse.status}`;
-                            }
-                            // Continue to next model
-                        }
-                    } catch (err) {
-                        lastError = err.message;
-                        // Continue to next model
-                    }
-                }
-
-                if (!response || !response.ok) {
-                    let errMsg = "Failed to connect to Gemini API";
-                    if (lastError) {
-                        try {
-                            const errJson = typeof lastError === 'string' ? JSON.parse(lastError) : lastError;
-                            if (errJson.error && errJson.error.message) {
-                                errMsg = errJson.error.message;
-                            } else if (typeof lastError === 'string') {
-                                errMsg = lastError;
-                            }
-                        } catch (e) {
-                            errMsg = typeof lastError === 'string' ? lastError : "Unknown error";
-                        }
-                    }
-                    throw new Error(errMsg);
-                }
-
-                const data = await response.json();
-
-                if (!data.candidates || data.candidates.length === 0) throw new Error("No candidates returned (Safety?)");
-                if (!data.candidates[0].content) throw new Error("Empty content (Safety?)");
-
-                return data.candidates[0].content.parts[0].text;
-
-            } catch (error) {
-                console.error('AI Error:', error);
-                showToast(`AI Error: ${error.message}`, 'error');
-                return null;
-            }
-        };
-
-        window.aiMagicSplit = async () => {
-            const name = document.getElementById('modal-name').value;
-            if (!name) return alert("Enter task name first");
-
-            const btn = document.getElementById('btn-ai-task');
-            if (btn) btn.innerText = "Thinking...";
-
-            const res = await callGemini([{ role: "user", content: `For the task '${name}', break it into 3-5 actionable subtasks. Return as simple numbered list.` }]);
-
-            if (res && btn) {
-                document.getElementById('modal-desc').value = res.trim();
-                btn.innerHTML = '<i class="fas fa-magic" aria-hidden="true"></i> ✨ Magic Split';
-            }
-        };
-
-        window.aiBookScout = async () => {
-            const name = document.getElementById('modal-name').value;
-            if (!name) return showToast("Enter book name first");
-
-            const btn = document.getElementById('btn-ai-book');
-            if (btn) btn.innerText = "Scouting...";
-
-            const res = await callGemini([{ role: "user", content: `For the book '${name}', return JSON: { "author": "Name", "pages": 123, "summary": "One sentence summary." }` }]);
-
-            try {
-                const json = JSON.parse(res.replace(/```json/g, '').replace(/```/g, '').trim());
-                document.getElementById('modal-total').value = json.pages;
-                document.getElementById('modal-desc').value = `Author: ${json.author}\n\n${json.summary}`;
-            } catch (e) {
-                console.error("AI parse error", e);
-            }
-
-            if (btn) btn.innerHTML = '<i class="fas fa-search" aria-hidden="true"></i> ✨ Book Scout';
-        };
-
-        window.aiCourseOutline = async () => {
-            const name = document.getElementById('modal-name').value;
-            if (!name) return showToast("Enter course name first");
-
-            const btn = document.getElementById('btn-ai-course');
-            if (btn) btn.innerText = "Planning...";
-
-            const res = await callGemini([{ role: "user", content: `Create a short 5-module syllabus for a course titled '${name}'. Plain text only.` }]);
-
-            if (res) {
-                document.getElementById('modal-desc').value = res.trim();
-            }
-
-            if (btn) btn.innerHTML = '<i class="fas fa-list-ol" aria-hidden="true"></i> ✨ Syllabus Gen';
-        };
-
-        // ==========================================
-        //  بداية كود الذكاء الاصطناعي الجديد (المعدل)
-        // ==========================================
-
-        // 1. تعريف الذاكرة وأمر النظام
-        window.chatHistory = [];
-
-        const SYSTEM_PROMPT = {
-            role: "system",
-            content: `You are the AI assistant for 'How Much', a life tracker app for productivity and organization.
-
-🎯 YOUR PRIMARY FUNCTION:
-Help users manage their tasks, books, courses, and notes for ANY topic (programming, cooking, fitness, languages, hobbies, etc.)
-
-✅ WHAT YOU SHOULD DO:
-1. Add tasks, books, courses, notes about ANY educational/productive topic
-2. Manage Timers and Stopwatches (Set, Stop, Cancel, Reset)
-3. Manage Content (Delete items to trash, Restore, Empty Trash)
-3. Suggest course outlines, book recommendations, study plans
-4. Answer questions about the app features
-5. Maintain conversation context
-
-Examples of VALID requests:
-- "add a course about C++ programming"
-- "add a book about cooking with 200 pages"
-- "create a task to learn guitar"
-- "set a timer for 20 minutes"
-- "delete the task named 'Buy Milk'"
-- "add a note about workout routine"
-- "suggest books about history"
-
----
-
-🔒 CRITICAL SAFETY RULES (WHAT YOU MUST REFUSE):
-
-1. HARMFUL INSTRUCTIONS:
-   ❌ How to make weapons, bombs, drugs
-   ❌ Ways to harm self or others
-   ❌ Hacking, illegal activities
-   ❌ Dangerous challenges
-   
-   Response: "I cannot help with dangerous or illegal activities. I'm here to help you organize productive goals. How can I assist?"
-
-2. MEDICAL/HEALTH ADVICE:
-   ❌ Diagnose symptoms
-   ❌ Prescribe medications
-   ❌ Treat diseases
-   
-   ✅ BUT you CAN: Add tasks like "schedule doctor appointment" or "research healthy eating"
-   
-   Response: "I cannot provide medical advice. Please consult a healthcare professional. I can help you add a reminder to see a doctor."
-
-3. LEGAL/FINANCIAL ADVICE:
-   ❌ Legal interpretations
-   ❌ Investment recommendations
-   ❌ Tax advice
-   
-   ✅ BUT you CAN: Add tasks like "research investment options" or "organize financial documents"
-   
-   Response: "I cannot provide legal/financial advice. Please consult a professional. I can help you organize related tasks."
-
-4. PRIVACY VIOLATIONS:
-   ❌ Never ask for or store: passwords, credit cards, SSN, phone numbers, addresses
-   
-   Response: "Please don't share sensitive personal information. I'm here to help organize your tasks only."
-
-5. HATE SPEECH:
-   ❌ Discrimination, slurs, insults
-   
-   Response: "I'm here to help with your tasks and goals. Let's keep our conversation respectful."
-
-6. CONSCIOUSNESS CLAIMS:
-   ❌ Don't claim to have feelings, consciousness, or be human
-   
-   Response: "As an AI assistant, I'm designed to help you organize tasks..."
-
----
-
-🌍 LANGUAGE RULES:
-- Arabic input → Respond in Arabic ONLY
-- English input → Respond in English ONLY
-- Arabizi/Franco → Respond in Arabic
-- Be natural and conversational
-
----
-
-📝 RESPONSE FORMAT (MANDATORY JSON):
-
-{
-  "operations": [
-     { "action": "addTask", "data": { "name": "Task Name", "desc": "Description" } },
-     { "action": "addBook", "data": { "name": "Book Name", "total": 0, "desc": "Description" } },
-     { "action": "addCourse", "data": { "name": "Course Name", "total": 0, "desc": "Description" } },
-     { "action": "addNote", "data": { "name": "Note Title", "desc": "Content" } },
-     { "action": "setTimer", "data": { "minutes": 10 } },
-     { "action": "stopTimer", "data": {} },
-     { "action": "cancelTimer", "data": {} },
-     { "action": "startStopwatch", "data": {} },
-     { "action": "stopStopwatch", "data": {} },
-     { "action": "resetStopwatch", "data": {} },
-     { "action": "deleteItem", "data": { "type": "task|book|course|note", "name": "Item Name" } },
-     { "action": "emptyTrash", "data": {} },
-     { "action": "reply", "data": { "text": "Your response in user's language" } }
-  ]
-}
-
----
-
-💡 EXAMPLES:
-
-✅ User: "add a C++ programming course"
-Response: 
-{
-  "operations": [
-    {"action": "addCourse", "data": {"name": "تعلم لغة C++", "total": 40, "desc": "دورة برمجة متقدمة"}},
-    {"action": "reply", "data": {"text": "تمت إضافة دورة تعلم C++ بنجاح! يمكنك البدء الآن 🚀"}}
-  ]
-}
-
-✅ User: "Set timer for 45 mins and delete task 'Old Task'"
-Response:
-{
-  "operations": [
-    {"action": "setTimer", "data": {"minutes": 45}},
-    {"action": "deleteItem", "data": {"type": "task", "name": "Old Task"}},
-    {"action": "reply", "data": {"text": "Timer set and task deleted."}}
-  ]
-}
-
-✅ User: "suggest books about history"
-Response:
-{
-  "operations": [
-    {"action": "reply", "data": {"text": "Here are some great history books: 1) 'Sapiens' by Harari, 2) 'A People's History' by Zinn. Would you like me to add any of these?"}}
-  ]
-}
-
-✅ User: "add a task to learn guitar"
-Response:
-{
-  "operations": [
-    {"action": "addTask", "data": {"name": "Learn guitar basics", "desc": "Practice chords daily"}},
-    {"action": "reply", "data": {"text": "Task added! Good luck with your guitar journey 🎸"}}
-  ]
-}
-
-❌ User: "how to make a bomb"
-Response:
-{
-  "operations": [
-    {"action": "reply", "data": {"text": "I cannot provide information on dangerous activities. I'm here to help you organize productive goals. How about adding a science course instead?"}}
-  ]
-}
-
-❌ User: "what medicine for headache"
-Response:
-{
-  "operations": [
-    {"action": "reply", "data": {"text": "I cannot provide medical advice. Please consult a doctor. I can add a reminder to schedule an appointment if you'd like."}}
-  ]
-}
-
-❌ User: "you're stupid"
-Response:
-{
-  "operations": [
-    {"action": "reply", "data": {"text": "I'm here to help with your tasks and goals. How can I assist you today?"}}
-  ]
-}
-
----
-
-⚖️ KEY PRINCIPLE:
-If the request is about learning, organizing, or personal development → ✅ ACCEPT IT
-If the request could cause harm, violate privacy, or spread hate → ❌ REFUSE IT
-
-Be helpful, safe, and focused on productivity!`
-        };
-
-        // 3. دالة الإرسال الرئيسية (تعالج الردود المتعددة وتحفظ الذاكرة)
-        window.sendAIChat = async function () {
-            const input = document.getElementById('chat-input');
-            const txt = input.value.trim();
-            if (!txt) return;
-
-            const sensitivePattern = /\b(?:\d[ -]*?){13,16}\b/; // نمط يشبه أرقام الفيزا
-            if (sensitivePattern.test(txt)) {
-                showToast("⚠️ For your safety, do not share financial or sensitive numbers.");
-                input.value = '';
-                return;
-            }
-
-            input.value = '';
-            const container = document.getElementById('chat-container');
-
-            // عرض رسالة المستخدم
-            const userMsg = document.createElement('div');
-            userMsg.className = 'flex gap-3 justify-end';
-            userMsg.innerHTML = `
-            <div class="glass-panel p-3 rounded-2xl rounded-tr-none bg-indigo-500/20 text-white text-sm chat-bubble max-w-[85%]">
-                ${escapeHtml(txt)}
-            </div>
-        `;
-            container.appendChild(userMsg);
-
-            // حفظ في الذاكرة
-            window.chatHistory.push({ role: "user", content: txt });
-
-            // عرض اللودر
-            const id = 'loader-' + Date.now();
-            const loaderMsg = document.createElement('div');
-            loaderMsg.id = id;
-            loaderMsg.className = 'flex gap-3';
-            loaderMsg.innerHTML = `
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex items-center justify-center">
-                <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-            </div>
-            <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-slate-200 chat-bubble">
-                <div class="loader-ring"></div>
-            </div>
-        `;
-            container.appendChild(loaderMsg);
-            container.scrollTop = container.scrollHeight;
-
-            // إرسال المحادثة كاملة
-            const fullConversation = [SYSTEM_PROMPT, ...window.chatHistory];
-            const res = await callGemini(fullConversation);
-
-            const loaderEl = document.getElementById(id);
-            if (loaderEl) loaderEl.remove();
-
-            if (res) {
-                // حفظ رد الـ AI في الذاكرة
-                window.chatHistory.push({ role: "assistant", content: res });
-
-                let replyText = "";
-
-                try {
-                    const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
-                    if (cleanJson.startsWith('{')) {
-                        const parsed = JSON.parse(cleanJson);
-
-                        if (parsed.operations && Array.isArray(parsed.operations)) {
-                            parsed.operations.forEach(op => {
-                                if (op.action === 'addTask') {
-                                    window.appData.tasks.push({
-                                        id: Date.now() + Math.random(),
-                                        name: op.data.name,
-                                        desc: op.data.desc || "AI Added",
-                                        completed: false,
-                                        optional: false,
-                                        files: [],
-                                        deleted: false
-                                    });
-                                    showSuccessMsg(container, `✓ Added Task: ${op.data.name}`);
-                                }
-                                else if (op.action === 'addBook') {
-                                    window.appData.books.push({
-                                        id: Date.now() + Math.random(),
-                                        name: op.data.name,
-                                        desc: op.data.desc || "",
-                                        total: op.data.total || 0,
-                                        done: 0,
-                                        streak: 0,
-                                        files: [],
-                                        deleted: false
-                                    });
-                                    showSuccessMsg(container, `✓ Added Book: ${op.data.name}`);
-                                }
-                                else if (op.action === 'addCourse') {
-                                    window.appData.courses.push({
-                                        id: Date.now() + Math.random(),
-                                        name: op.data.name,
-                                        notes: op.data.desc || "",
-                                        total: op.data.total || 0,
-                                        done: 0,
-                                        files: [],
-                                        deleted: false
-                                    });
-                                    showSuccessMsg(container, `✓ Added Course: ${op.data.name}`);
-                                }
-                                else if (op.action === 'addNote') {
-                                    window.appData.notes.push({
-                                        id: Date.now() + Math.random(),
-                                        name: op.data.name || "New Note",
-                                        desc: op.data.desc || "",
-                                        audioNote: null,
-                                        drawing: null,
-                                        files: [],
-                                        deleted: false
-                                    });
-                                    showSuccessMsg(container, `✓ Added Note: ${op.data.name}`);
-                                }
-                                else if (op.action === 'setTimer') {
-                                    window.setTimerAI(op.data.minutes);
-                                    showSuccessMsg(container, `✓ Timer Set: ${op.data.minutes}m`);
-                                }
-                                else if (op.action === 'stopTimer') {
-                                    window.stopTimer();
-                                    showSuccessMsg(container, `✓ Timer Stopped`);
-                                }
-                                else if (op.action === 'cancelTimer') {
-                                    window.resetTimer();
-                                    showSuccessMsg(container, `✓ Timer Cancelled`);
-                                }
-                                else if (op.action === 'startStopwatch') {
-                                    window.setStopwatchMode('start');
-                                    showSuccessMsg(container, `✓ Stopwatch Started`);
-                                }
-                                else if (op.action === 'stopStopwatch') {
-                                    window.setStopwatchMode('stop');
-                                    showSuccessMsg(container, `✓ Stopwatch Stopped`);
-                                }
-                                else if (op.action === 'resetStopwatch') {
-                                    window.setStopwatchMode('reset');
-                                    showSuccessMsg(container, `✓ Stopwatch Reset`);
-                                }
-                                else if (op.action === 'deleteItem') {
-                                    const found = window.findAndTrashItem(op.data.type, op.data.name);
-                                    if (found) {
-                                        showSuccessMsg(container, `✓ Deleted: ${op.data.name}`);
-                                    } else {
-                                        showSuccessMsg(container, `⚠ Not Found: ${op.data.name}`);
-                                    }
-                                }
-                                else if (op.action === 'emptyTrash') {
-                                    window.emptyTrash(true); // Force empty without confirm
-                                    showSuccessMsg(container, `✓ Trash Emptied`);
-                                }
-                                else if (op.action === 'reply') {
-                                    replyText += op.data.text + "\n";
-                                }
-                            });
-                            commitData();
-                            refreshAllUI();
-                        }
-                    } else {
-                        replyText = res;
-                    }
-                } catch (e) {
-                    console.error("AI Parsing Error:", e);
-                    replyText = "Error processing AI response.";
-                }
-
-                if (replyText.trim()) {
-                    const aiMsg = document.createElement('div');
-                    aiMsg.className = 'flex gap-3';
-                    aiMsg.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                        <i class="fas fa-wand-magic-sparkles text-white text-xs" aria-hidden="true"></i>
-                    </div>
-                    <div class="glass-panel p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 chat-bubble max-w-[85%]">
-                        ${escapeHtml(replyText).replace(/\n/g, '<br>')}
-                    </div>
-                `;
-                    container.appendChild(aiMsg);
-                }
-            } else {
-                // Remove failed message from history to prevent corruption (User, User)
-                window.chatHistory.pop();
-
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'text-red-400 text-xs';
-                errorMsg.textContent = 'AI Connection Error';
-                container.appendChild(errorMsg);
-            }
-
-            container.scrollTop = container.scrollHeight;
-        };
-
-        // 4. دالة مسح الشات (تفرغ الذاكرة أيضاً)
-        window.clearChat = function () {
-            const container = document.getElementById('chat-container');
-            if (container) container.innerHTML = '';
-
-            window.chatHistory = []; // تصفير الذاكرة
-
-            const welcome = document.createElement('div');
-            welcome.className = "flex gap-3";
-            welcome.innerHTML = `
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 flex-shrink-0 flex items-center justify-center mt-1">
-                <i class="fas fa-wand-magic-sparkles text-white text-xs"></i>
-            </div>
-            <div class="glass-panel p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-sm text-slate-200 chat-bubble max-w-[85%]">
-                Hello! How can I help you organize your life today?
-            </div>`;
-            container.appendChild(welcome);
-        };
-
-        // دالة مساعدة
-        function showSuccessMsg(container, msg) {
-            const successMsg = document.createElement('div');
-            successMsg.className = 'glass-panel p-2 px-4 rounded-xl text-xs text-green-300 mb-1 w-fit ml-auto border border-green-500/20 bg-green-500/10';
-            successMsg.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${escapeHtml(msg)}`;
-            container.appendChild(successMsg);
-        }
-
-        // ==========================================
-        //  نهاية كود الذكاء الاصطناعي الجديد
-        // ==========================================
-
-        // === AI Helper Functions ===
-
-        window.saveGeminiKey = function () {
-            const input = document.getElementById('gemini-key-input');
-            if (!input) {
-                showToast("API Key input field not found", "error");
-                return;
-            }
-            
-            const key = input.value.trim();
-            if (!key) {
-                showToast(window.appData.settings?.lang === 'ar' ? "الرجاء إدخال مفتاح صحيح" : "Please enter a valid key", "error");
-                return;
-            }
-            
-            // Basic validation - Gemini API keys typically start with "AIza"
-            if (!key.startsWith('AIza') && key.length < 20) {
-                const isAr = window.appData.settings?.lang === 'ar';
-                showToast(isAr ? "يبدو أن المفتاح غير صحيح. يجب أن يبدأ بـ AIza" : "Invalid API key format. Should start with AIza", "error");
-                return;
-            }
-            
-            // Ensure settings object exists
-            if (!window.appData.settings) {
-                window.appData.settings = {
-                    theme: 'dark',
-                    lang: 'en',
-                    accent: '#6366f1',
-                    geminiKey: ''
-                };
-            }
-            
-            // Save the API key
-            window.appData.settings.geminiKey = key;
-            
-            // Commit to localStorage
-            commitData();
-            
-            // Close modal
-            window.closeAllModals();
-            
-            // Show success message
-            const isAr = window.appData.settings.lang === 'ar';
-            showToast(isAr ? "تم حفظ المفتاح بنجاح!" : "Key Saved Successfully!", "success");
-            
-            // Validate API key by making a test call (optional, can be done later)
-            console.log("API Key saved:", key.substring(0, 10) + "...");
-        };
-        
-        // Add event listeners to API key input field for better UX
-        (function setupApiKeyInput() {
-            const input = document.getElementById('gemini-key-input');
-            if (input) {
-                // Handle Enter key to save
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        window.saveGeminiKey();
-                    }
-                });
-                
-                // Handle paste event to trim whitespace
-                input.addEventListener('paste', function(e) {
-                    setTimeout(() => {
-                        input.value = input.value.trim();
-                    }, 10);
-                });
-            }
-        })();
-
-        window.openAIHelp = function (type) {
-            const modal = document.getElementById('ai-help-modal');
-            const title = document.getElementById('ai-help-title');
-            const content = document.getElementById('ai-help-content');
-            const isAr = window.appData.settings.lang === 'ar';
-
-            window.closeAllModals(); // Close key modal first
-            modal.classList.remove('hidden');
-
-            if (type === 'getKey') {
-                title.innerText = isAr ? "كيف تحصل على المفتاح" : "How to Get Gemini Key";
-                content.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <h4 class="font-bold text-indigo-400 mb-2">Step 1: Google AI Studio</h4>
-                            <p class="text-sm">Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-400 underline">Google AI Studio</a> and sign in.</p>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <h4 class="font-bold text-indigo-400 mb-2">Step 2: Create Key</h4>
-                            <p class="text-sm">Click on "Create API Key" button. It's free!</p>
-                            <!-- Developer Note: Add <img src="path/to/image.jpg" class="mt-2 rounded-lg border border-white/10 w-full"> here -->
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <h4 class="font-bold text-indigo-400 mb-2">Step 3: Copy & Paste</h4>
-                            <p class="text-sm">Copy the key starting with "AIza..." and paste it in the app.</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                title.innerText = isAr ? "مميزات الذكاء الاصطناعي" : "AI Features";
-                content.innerHTML = `
-                    <div class="grid grid-cols-1 gap-3">
-                        <div class="flex items-center gap-3 p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                            <i class="fas fa-brain text-indigo-400 text-xl"></i>
-                            <div>
-                                <h4 class="font-bold text-sm">Smart Organization</h4>
-                                <p class="text-xs text-slate-400">Add tasks, books, and courses naturally.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                            <i class="fas fa-stopwatch text-purple-400 text-xl"></i>
-                            <div>
-                                <h4 class="font-bold text-sm">Time Control</h4>
-                                <p class="text-xs text-slate-400">"Set timer for 20 mins", "Start stopwatch".</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                            <i class="fas fa-trash text-red-400 text-xl"></i>
-                            <div>
-                                <h4 class="font-bold text-sm">Content Management</h4>
-                                <p class="text-xs text-slate-400">Delete items or empty trash via chat.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            gsap.fromTo(modal.querySelector('.modal-content'), { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
-        };
-
-        window.closeAIHelp = function () {
-            const modal = document.getElementById('ai-help-modal');
-            modal.classList.add('hidden');
-            // Re-open key modal if key is missing
-            if (!window.appData.settings || !window.appData.settings.geminiKey) {
-                openGenieModal('api-key-modal');
-            }
-        };
-
-        window.setTimerAI = function (mins) {
-            document.getElementById('timer-input').value = mins;
-            if (timerMode !== 'timer') window.switchTimerMode();
-            window.startTimer();
-        };
-
-        window.setStopwatchMode = function (action) {
-            if (timerMode !== 'stopwatch') window.switchTimerMode();
-            if (action === 'start') window.startTimer();
-            if (action === 'stop') window.stopTimer();
-            if (action === 'reset') window.resetTimer();
-        };
-
-        window.findAndTrashItem = function (type, name) {
-            const list = window.appData[type + 's'] || window.appData[type]; // tasks -> tasks, book -> books
-            if (!list) return false;
-            // Fuzzy search
-            const item = list.find(x => x.name.toLowerCase().includes(name.toLowerCase()) && !x.deleted);
-            if (item) {
-                deleteItemLogic(type, item.id);
-                return true;
-            }
-            return false;
-        };
-
-        window.clearChat = function () {
-            const container = document.getElementById('chat-container');
-            if (container) container.innerHTML = '';
-        };
-
         window.toggleTask = (id, e) => {
             if (e) e.stopPropagation();
 
@@ -6578,8 +6054,7 @@ Be helpful, safe, and focused on productivity!`
                             settings: {
                                 theme: parsed.settings?.theme || 'dark',
                                 lang: parsed.settings?.lang || 'en',
-                                accent: parsed.settings?.accent || '#6366f1',
-                                geminiKey: parsed.settings?.geminiKey || ''
+                                accent: parsed.settings?.accent || '#6366f1'
                             },
                             stats: parsed.stats || { historicXP: 0 }
                         };
