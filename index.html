@@ -86,12 +86,14 @@
         }
 
         @keyframes slideInUp {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(30px) scale(0.98);
+                transform: translateY(20px) scale(0.96);
             }
-
-            to {
+            60% {
+                transform: translateY(-2px) scale(1.01);
+            }
+            100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -99,7 +101,7 @@
 
         .stagger-entry {
             opacity: 0;
-            animation: slideInUp 0.5s var(--transition-smooth) forwards;
+            animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes fadeIn {
@@ -165,6 +167,28 @@
         .implode {
             animation: blackHoleSuck 0.5s cubic-bezier(0.55, -0.04, 0.91, 0.94) forwards !important;
             pointer-events: none;
+        }
+
+        /* SaaS-style Shimmer Effect */
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: skewX(-20deg);
+            transition: left 0.5s;
+            pointer-events: none;
+        }
+        .shimmer-btn:hover::after {
+            left: 100%;
+            transition: left 0.7s ease-in-out;
         }
 
         .interactive-btn {
@@ -977,6 +1001,79 @@
         .custom-toast.success {
             border-left: 4px solid #22c55e;
         }
+
+        /* --- New Level Shapes & 3D System --- */
+        .level-shape-wrapper {
+            width: 20px; height: 20px;
+            position: relative;
+            perspective: 200px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .shape-flat { width: 100%; height: 100%; display: block; }
+        
+        /* Flat Shapes */
+        .shape-circle { border-radius: 50%; }
+        .shape-diamond { transform: rotate(45deg); border-radius: 2px; }
+        .shape-hexagon { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+        .shape-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .shape-crystal { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+
+        /* 3D Animation */
+        .shape-3d-container {
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            animation: rotate3d linear infinite;
+        }
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* 3D Cube */
+        .cube-face {
+            position: absolute; width: 100%; height: 100%;
+            background: currentColor; opacity: 0.6;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .cf-front  { transform: rotateY(0deg) translateZ(10px); }
+        .cf-back   { transform: rotateY(180deg) translateZ(10px); }
+        .cf-right  { transform: rotateY(90deg) translateZ(10px); }
+        .cf-left   { transform: rotateY(-90deg) translateZ(10px); }
+        .cf-top    { transform: rotateX(90deg) translateZ(10px); }
+        .cf-bottom { transform: rotateX(-90deg) translateZ(10px); }
+
+        /* 3D Pyramid (Tetrahedron-ish) */
+        .pyr-face {
+            position: absolute; width: 100%; height: 100%;
+            background: currentColor; opacity: 0.7;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform-origin: bottom center;
+        }
+        
+        /* 3D Sphere (Rings) */
+        .sphere-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid currentColor; border-radius: 50%;
+        }
+
+        /* Azkar Extras */
+        .zikr-serial {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(212, 175, 55, 0.1); border: 1px solid var(--azkar-gold);
+            color: var(--azkar-gold); display: flex; align-items: center; justify-content: center;
+            font-family: 'Cairo'; font-weight: bold; font-size: 0.85rem;
+            margin-left: 12px; flex-shrink: 0;
+        }
+        .zikr-copy-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); color: #94a3b8;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; margin-right: 8px;
+        }
+        .zikr-copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--azkar-gold); }
+        .zikr-copy-btn:active { transform: scale(0.95); }
     </style>
 </head>
 
@@ -1091,9 +1188,10 @@
                 </svg>
                 <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
                     <h1 class="text-xl font-bold tracking-tight">How Much</h1>
-                    <div id="user-status-badge" onclick="openLevelModal()"
-                        class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full inline-block cursor-pointer hover:scale-105 transition-transform"
-                        role="button" aria-label="User level status">Online</div>
+                    <div id="user-status-badge" onclick="openLevelModal()" 
+                        class="text-[11px] font-bold px-3 py-1 rounded-full inline-flex items-center gap-2 cursor-pointer select-none transition-colors border border-white/10"
+                        style="background: rgba(255,255,255,0.05); color: #e2e8f0;"
+                        role="button" aria-label="User level status">Loading...</div>
                 </div>
             </div>
 
@@ -1199,6 +1297,11 @@
                     </svg>
                     <span class="font-bold text-lg">How Much</span>
                 </div>
+                <!-- Mobile Level Badge -->
+                <div id="mobile-user-badge" onclick="openLevelModal()" 
+                     class="text-[10px] font-bold px-2 py-1 rounded-full inline-flex items-center gap-1 cursor-pointer select-none border border-white/10 bg-white/5 text-slate-300"
+                     role="button">Lvl 1</div>
+
                 <button onclick="showPage('settings')"
                     class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"
                     aria-label="Open settings">
@@ -1224,7 +1327,7 @@
                             </p>
                         </div>
                         <button onclick="openAddModal('course', event)"
-                            class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
+                            class="add-trigger-btn shimmer-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
                             style="background-color: var(--accent-color)" aria-label="Add new course">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform" aria-hidden="true"></i>
                             <span data-i18n="add">Add Course</span>
@@ -1243,7 +1346,7 @@
                             </p>
                         </div>
                         <button onclick="openAddModal('task', event)"
-                            class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
+                            class="add-trigger-btn shimmer-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
                             style="background-color: var(--accent-color)" aria-label="Add new task">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform" aria-hidden="true"></i>
                             <span data-i18n="add">Add Task</span>
@@ -1272,7 +1375,7 @@
                                 base.</p>
                         </div>
                         <button onclick="openAddModal('book', event)"
-                            class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
+                            class="add-trigger-btn shimmer-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
                             style="background-color: var(--accent-color)" aria-label="Add new book">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform" aria-hidden="true"></i>
                             <span data-i18n="add">Add Book</span>
@@ -1289,7 +1392,7 @@
                             <p class="text-slate-400 text-xs md:text-sm">Capture ideas, voice, and sketches.</p>
                         </div>
                         <button onclick="openAddModal('note', event)"
-                            class="add-trigger-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
+                            class="add-trigger-btn shimmer-btn accent-bg hover:opacity-90 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl accent-glow flex items-center gap-2 transition-all active:scale-95 group text-sm md:text-base"
                             style="background-color: var(--accent-color)" aria-label="Add new note">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform" aria-hidden="true"></i>
                             <span data-i18n="addNote">Add Note</span>
@@ -1784,6 +1887,17 @@
                             aria-selected="false" aria-controls="azkar-list">تسابيح</button>
                     </div>
 
+                    <!-- Font Size Controls -->
+                    <div class="flex justify-center items-center gap-4 mb-6 text-slate-400 text-sm">
+                        <button onclick="changeAzkarFontSize(-2)" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span>حجم الخط</span>
+                        <button onclick="changeAzkarFontSize(2)" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
                     <div id="azkar-list" class="grid grid-cols-1 gap-4 pb-24" role="list"></div>
                 </section>
             </div>
@@ -1891,7 +2005,7 @@
             <div class="level-info-center">
                 <div class="current-level-icon">
                     <i class="fa-solid fa-crown mr-2" aria-hidden="true"></i>
-                    <span>Lvl <span id="displayCurrentLevel">1</span></span>
+                    <span id="displayCurrentLevel">Lvl 1</span>
                 </div>
                 <p class="xp-text"><span id="currentXP">0</span> / <span id="nextLevelXP">200</span> XP</p>
             </div>
@@ -2096,7 +2210,7 @@
 
                 <div class="flex gap-2 justify-end pt-2">
                     <button onclick="saveItem(this)" id="btn-save-modal"
-                        class="interactive-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors"
+                        class="interactive-btn shimmer-btn flex-1 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition-colors"
                         aria-label="Save item">
                         <span class="btn-text-content" data-i18n="save">Save</span>
                         <span class="btn-loader" aria-hidden="true">
@@ -2527,6 +2641,10 @@
             stats: { historicXP: 0 }
         };
 
+        // Azkar Font Size State
+        window.azkarFontSize = parseInt(localStorage.getItem('hm_azkar_font')) || 22; // Default 22px
+
+
         window.enterAsGuest = function () {
             localStorage.setItem('hm_guest', 'true');
             document.getElementById('login-screen').classList.add('hidden');
@@ -2609,6 +2727,13 @@
                     );
                 }
             }
+        };
+
+        window.changeAzkarFontSize = function(delta) {
+            window.azkarFontSize = Math.max(14, Math.min(60, window.azkarFontSize + delta));
+            localStorage.setItem('hm_azkar_font', window.azkarFontSize);
+            // Apply immediately
+            document.querySelectorAll('.uthmani-font').forEach(el => el.style.fontSize = window.azkarFontSize + 'px');
         };
 
         function renderCourses() {
@@ -4004,7 +4129,29 @@
                 storageUsage: "Storage Usage",
                 filesUploaded: "files uploaded",
                 refresh: "Refresh",
-                poweredBy: "File storage powered by"
+                poweredBy: "File storage powered by",
+                
+                // --- Missing Translations Added ---
+                navEdu: "Edu", navTask: "Task", navNote: "Note", navZikr: "Zikr", navTime: "Time", navBook: "Book", navBin: "Bin",
+                notesSubtitle: "Capture ideas, voice, and sketches.",
+                trashSubtitle: "Recover items or delete them permanently.",
+                cloudStatus: "Cloud Status",
+                langSubtitle: "English / Arabic",
+                cannotUndo: "This action cannot be undone.",
+                cancel: "Cancel",
+                confirmBtn: "Confirm",
+                dailySnapshot: "Daily Snapshot",
+                dailySnapshotSub: "Here is how you are doing today.",
+                tasksDone: "Tasks Done",
+                remaining: "Remaining",
+                dailyProgress: "Daily Progress",
+                fontSize: "Font Size",
+                setMinutes: "Set Minutes",
+                start: "START",
+                tapToIncrement: "Tap to increment",
+                startFrom: "Start from:",
+                up: "Up",
+                down: "Down"
             },
             ar: {
                 // ... (القديم)
@@ -4043,7 +4190,29 @@
                 storageUsage: "مساحة التخزين",
                 filesUploaded: "ملف مرفوع",
                 refresh: "تحديث",
-                poweredBy: "التخزين بواسطة"
+                poweredBy: "التخزين بواسطة",
+
+                // --- Missing Translations Added ---
+                navEdu: "تعليم", navTask: "مهام", navNote: "ملاحظات", navZikr: "ذكر", navTime: "وقت", navBook: "كتب", navBin: "حذف",
+                notesSubtitle: "سجّل أفكارك، صوتك، ورسوماتك.",
+                trashSubtitle: "استرجع العناصر أو احذفها نهائياً.",
+                cloudStatus: "حالة السحابة",
+                langSubtitle: "إنجليزي / عربي",
+                cannotUndo: "لا يمكن التراجع عن هذا الإجراء.",
+                cancel: "إلغاء",
+                confirmBtn: "تأكيد",
+                dailySnapshot: "ملخص اليوم",
+                dailySnapshotSub: "إليك أداؤك اليوم.",
+                tasksDone: "المهام المنجزة",
+                remaining: "المتبقي",
+                dailyProgress: "التقدم اليومي",
+                fontSize: "حجم الخط",
+                setMinutes: "حدد الدقائق",
+                start: "ابدأ",
+                tapToIncrement: "اضغط للعد",
+                startFrom: "ابدأ من:",
+                up: "تصاعدي",
+                down: "تنازلي"
             }
         };
         let genieOriginRect = null;
@@ -4867,6 +5036,75 @@
             return legacy + (completedTasks * 10) + (booksRead * 100) + (coursesDone * 50);
         }
 
+        // --- Advanced Level System Logic ---
+        function getLevelInfo(xp) {
+            // Infinite Levels: 200 XP per level
+            const level = Math.floor(xp / 200) + 1;
+            
+            // Dynamic Color
+            let color;
+            if (level <= 10) {
+                const colors = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316', '#eab308', '#84cc16', '#10b981'];
+                color = colors[level - 1];
+            } else {
+                const hue = (level * 35) % 360;
+                color = `hsl(${hue}, 80%, 55%)`;
+            }
+
+            // Shape HTML Generation
+            let shapeHTML = '';
+            
+            if (level <= 10) {
+                // Flat Shapes
+                let shapeClass = 'shape-circle';
+                let style = `background: ${color};`;
+                
+                if (level === 2) style = `background: linear-gradient(135deg, ${color} 50%, rgba(255,255,255,0.1) 50%);`;
+                if (level === 3) style = `background: ${color}; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);`;
+                if (level === 4) shapeClass = 'shape-diamond';
+                if (level === 5) { shapeClass = 'shape-diamond'; style = `background: ${color}; opacity: 0.8; border: 1px solid white;`; }
+                if (level === 6) { shapeClass = 'shape-hexagon'; style = `background: linear-gradient(to bottom, ${color}, #000);`; }
+                if (level === 7) { shapeClass = 'shape-hexagon'; style = `background: ${color}; border: 2px solid white;`; }
+                if (level === 8) shapeClass = 'shape-star';
+                if (level === 9) { shapeClass = 'shape-star'; style = `background: ${color}; box-shadow: 0 0 10px ${color};`; }
+                if (level === 10) shapeClass = 'shape-crystal';
+
+                shapeHTML = `<span class="shape-flat ${shapeClass}" style="${style} background-color: ${color};"></span>`;
+            } else {
+                // 3D Animated Shapes
+                const speed = Math.max(1, 5 - (level * 0.05)) + 's'; // Faster as level goes up
+                const type = level % 3;
+                let inner3D = '';
+
+                if (type === 1) { // Cube
+                    inner3D = `
+                        <div class="cube-face cf-front" style="color:${color}"></div>
+                        <div class="cube-face cf-back" style="color:${color}"></div>
+                        <div class="cube-face cf-right" style="color:${color}"></div>
+                        <div class="cube-face cf-left" style="color:${color}"></div>
+                        <div class="cube-face cf-top" style="color:${color}"></div>
+                        <div class="cube-face cf-bottom" style="color:${color}"></div>
+                    `;
+                } else if (type === 2) { // Pyramid
+                    inner3D = `
+                        <div class="pyr-face" style="color:${color}; transform: rotateY(0deg) translateZ(5px) rotateX(30deg);"></div>
+                        <div class="pyr-face" style="color:${color}; transform: rotateY(120deg) translateZ(5px) rotateX(30deg);"></div>
+                        <div class="pyr-face" style="color:${color}; transform: rotateY(240deg) translateZ(5px) rotateX(30deg);"></div>
+                    `;
+                } else { // Sphere (Rings)
+                    inner3D = `
+                        <div class="sphere-ring" style="color:${color}; transform: rotateY(0deg);"></div>
+                        <div class="sphere-ring" style="color:${color}; transform: rotateY(60deg);"></div>
+                        <div class="sphere-ring" style="color:${color}; transform: rotateY(120deg);"></div>
+                    `;
+                }
+
+                shapeHTML = `<div class="shape-3d-container" style="animation-duration: ${speed}">${inner3D}</div>`;
+            }
+
+            return { level, color, shapeHTML };
+        }
+
         function updateWidget() {
             const activeTasks = window.appData.tasks.filter(t => !t.completed && !t.deleted);
             const totalTasks = window.appData.tasks.filter(t => !t.deleted).length;
@@ -4884,12 +5122,28 @@
             }
 
             const realXP = calculateRealXP();
-            const level = Math.floor(realXP / 200) + 1;
+            const lvlInfo = getLevelInfo(realXP);
 
             const badge = document.getElementById('user-status-badge');
             if (badge) {
-                badge.innerHTML = `<i class="fas fa-crown text-yellow-400 mr-1" aria-hidden="true"></i> Lvl ${level}`;
-                badge.className = "text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full inline-block border border-indigo-500/30 cursor-pointer hover:scale-110 transition-transform relative group shadow-sm";
+                // Static styling, no hover scale
+                badge.innerHTML = `
+                    <div class="level-shape-wrapper">${lvlInfo.shapeHTML}</div>
+                    <span>Lvl ${lvlInfo.level}</span>
+                `;
+                badge.style.borderColor = lvlInfo.color;
+                badge.style.boxShadow = `0 0 10px ${lvlInfo.color}20`;
+            }
+
+            // Update Mobile Badge
+            const mobileBadge = document.getElementById('mobile-user-badge');
+            if (mobileBadge) {
+                mobileBadge.innerHTML = `
+                    <div class="level-shape-wrapper" style="width:16px; height:16px;">${lvlInfo.shapeHTML}</div>
+                    <span>${lvlInfo.level}</span>
+                `;
+                mobileBadge.style.borderColor = lvlInfo.color;
+                mobileBadge.style.color = lvlInfo.color;
             }
         }
 
@@ -4900,7 +5154,8 @@
             modal.style.display = 'flex';
 
             let realXP = calculateRealXP();
-            let level = Math.floor(realXP / 200) + 1;
+            const lvlInfo = getLevelInfo(realXP);
+            let level = lvlInfo.level;
             let nextLevelXP = level * 200;
             let prevLevelXP = (level - 1) * 200;
 
@@ -4910,12 +5165,25 @@
             const currentLvlLabel = document.getElementById('currentLvlLabel');
             const nextLvlLabel = document.getElementById('nextLvlLabel');
             const levelProgressBar = document.getElementById('levelProgressBar');
+            const currentLevelIcon = document.querySelector('.current-level-icon');
 
-            if (displayCurrentLevel) displayCurrentLevel.textContent = level;
+            if (displayCurrentLevel) displayCurrentLevel.textContent = "Lvl " + level;
             if (currentXP) currentXP.textContent = realXP;
             if (nextLevelXPEl) nextLevelXPEl.textContent = nextLevelXP;
             if (currentLvlLabel) currentLvlLabel.textContent = "Lvl " + level;
             if (nextLvlLabel) nextLvlLabel.textContent = "Lvl " + (level + 1);
+
+            // Update Modal Icon with Shape
+            if (currentLevelIcon) {
+                currentLevelIcon.innerHTML = `
+                    <div class="level-shape-wrapper" style="width:40px; height:40px; margin-right:10px;">${lvlInfo.shapeHTML}</div>
+                    <span>Lvl ${level}</span>
+                `;
+                currentLevelIcon.style.background = `linear-gradient(135deg, ${lvlInfo.color}20, ${lvlInfo.color}40)`;
+                currentLevelIcon.style.border = `1px solid ${lvlInfo.color}`;
+                currentLevelIcon.style.color = "white";
+                currentLevelIcon.style.boxShadow = `0 0 20px ${lvlInfo.color}40`;
+            }
 
             const levelRange = nextLevelXP - prevLevelXP;
             const progressIntoLevel = realXP - prevLevelXP;
@@ -4923,6 +5191,8 @@
 
             if (levelProgressBar) {
                 levelProgressBar.style.width = percentage + "%";
+                levelProgressBar.style.background = lvlInfo.color;
+                levelProgressBar.style.boxShadow = `0 0 15px ${lvlInfo.color}80`;
                 levelProgressBar.setAttribute('aria-valuenow', percentage);
             }
         };
@@ -5886,15 +6156,22 @@
                 card.setAttribute('aria-label', `Zikr: ${zikr.text.substring(0, 50)}...`);
 
                 if (!isDone) {
-                    card.onclick = () => handleZikrClick(zikr.id, zikr.count);
+                    card.onclick = (e) => {
+                        // Prevent click if clicking copy button
+                        if(e.target.closest('.zikr-copy-btn')) return;
+                        handleZikrClick(zikr.id, zikr.count);
+                    };
                 }
 
                 card.innerHTML = `
                 <div class="flex justify-between items-start z-10 relative">
-                    <div class="uthmani-font text-right flex-1 ml-4">
+                    <div class="zikr-serial">${index + 1}</div>
+                    <div class="uthmani-font text-right flex-1 mx-4" style="font-size: ${window.azkarFontSize}px">
                         ${zikr.text}
                         ${zikr.note ? `<span class="text-sm block mt-2 opacity-80" style="font-family: 'Cairo', sans-serif; color: var(--azkar-gold);">${zikr.note}</span>` : ''}
                     </div>
+                    
+                    <button class="zikr-copy-btn" onclick="copyZikrText('${escapeHtml(zikr.text)}', this)" title="نسخ"><i class="fas fa-copy"></i></button>
                     
                     <div class="relative w-16 h-16 flex-shrink-0 flex items-center justify-center mt-1">
                         <svg class="w-full h-full transform -rotate-90" aria-hidden="true">
@@ -5920,6 +6197,14 @@
             });
         }
 
+        window.copyZikrText = function(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+                setTimeout(() => btn.innerHTML = originalIcon, 1500);
+            });
+        };
+
         function handleZikrClick(id, max) {
             if (azkarProgress[id] === undefined) azkarProgress[id] = max;
 
@@ -5931,7 +6216,7 @@
 
                 if (azkarProgress[id] === 0 && navigator.vibrate) {
                     navigator.vibrate([100, 50, 100]);
-                    triggerConfetti(false);
+                    // triggerConfetti(false); // Removed as requested
                 }
             }
         }
