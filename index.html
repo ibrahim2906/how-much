@@ -1226,6 +1226,15 @@
                     <span class="font-medium nav-text whitespace-nowrap" data-i18n="books">Books</span>
                 </button>
 
+                <button onclick="showPage('ai')"
+    class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group"
+    aria-label="AI Assistant">
+    <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400 group-hover:bg-pink-500 group-hover:text-white transition-all flex-shrink-0">
+        <i class="fas fa-robot text-lg"></i>
+    </div>
+    <span class="font-medium nav-text whitespace-nowrap">AI Assistant</span>
+</button>
+
                 <button onclick="showPage('notes')"
                     class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 text-start group"
                     aria-label="Notes page">
@@ -1383,6 +1392,54 @@
                     </div>
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6" role="list"></div>
                 </section>
+
+                <section id="page-ai" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0 flex flex-col h-full">
+    <!-- AI Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-1 accent-text" style="color: var(--accent-color)">AI Assistant</h2>
+            <p class="text-slate-400 text-xs md:text-sm">Powered by Gemini 2.5 Flash</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="showAICapabilities()" 
+                    class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                    title="AI Capabilities">
+                <i class="fas fa-list-check"></i>
+            </button>
+            <button onclick="openAISettings()" 
+                    class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                    title="AI Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="flex-1 flex flex-col glass-panel rounded-3xl overflow-hidden">
+        <!-- Messages Area -->
+        <div id="ai-chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Welcome message will be inserted here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 border-t border-white/10">
+            <div class="flex gap-3">
+                <input type="text" 
+                       id="ai-input" 
+                       placeholder="Ask me anything or give me a command..."
+                       class="flex-1 bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500"
+                       onkeypress="if(event.key==='Enter') sendAIMessage()">
+                <button onclick="sendAIMessage()" 
+                        class="shimmer-btn accent-bg text-white px-6 py-3 rounded-xl flex items-center gap-2 transition-all"
+                        style="background-color: var(--accent-color)">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 
                 <section id="page-notes" class="page-section hidden max-w-5xl mx-auto pt-2 md:pt-0">
                     <div class="flex justify-between items-end mb-8">
@@ -1713,7 +1770,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div>
                             <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
                                 <i class="fas fa-hand-holding-heart"></i>
@@ -1930,7 +1987,7 @@
                 </div>
             </div>
 
-            <nav class="md:hidden fixed bottom-4 left-2 right-2 h-16 glass-panel rounded-2xl grid grid-cols-7 gap-0 items-center z-40 mobile-dock border border-white/20 px-1"
+            <nav class="md:hidden fixed bottom-4 left-2 right-2 h-16 glass-panel rounded-2xl grid grid-cols-8 gap-0 items-center z-40 mobile-dock border border-white/20 px-1"
                 role="navigation" aria-label="Mobile navigation">
 
                 <button onclick="showPage('courses')"
@@ -1966,7 +2023,14 @@
                     class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5 transition-colors group"
                     aria-label="Timers">
                     <i class="fas fa-stopwatch text-lg mb-1 group-[.active]:text-yellow-400 text-slate-400"></i>
-                    <span class="text-[8px] uppercase font-bold opacity-60">Time</span>
+                    <span class="text-[8px] uppercase font-bold opacity-60">timers</span>
+                </button>
+
+                <button onclick="showPage('ai')"
+                    class="nav-link flex flex-col items-center justify-center h-full rounded-xl hover:bg-white/5                  transition-colors group"
+                    aria-label="AI">
+                    <i class="fas fa-robot text-lg mb-1 group-[.active]:text-pink-400 text-slate-400"></i>
+                    <span class="text-[8px] uppercase font-bold opacity-60">AI</span>
                 </button>
 
                 <button onclick="showPage('books')"
@@ -2036,7 +2100,98 @@
             </div>
         </div>
     </div>
+    <!-- AI Setup Modal -->
+<div id="ai-setup-modal" class="modal-overlay" style="display: none;">
+    <div class="level-card max-w-lg">
+        <div class="modal-header">
+            <h3>🤖 AI Assistant Setup</h3>
+        </div>
 
+        <div class="space-y-4 mt-4">
+            <p class="text-slate-300 text-sm">To use the AI assistant, you need a Gemini API key.</p>
+            
+            <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 text-sm">
+                <p class="font-bold text-indigo-300 mb-2">📝 How to get your API key:</p>
+                <ol class="list-decimal list-inside space-y-1 text-slate-300">
+                    <li>Visit Google AI Studio</li>
+                    <li>Sign in with your Google account</li>
+                    <li>Click "Get API Key"</li>
+                    <li>Copy the key and paste it below</li>
+                </ol>
+                <a href="https://aistudio.google.com/app/apikey" 
+                   target="_blank" 
+                   class="inline-block mt-3 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white text-sm transition-all">
+                    <i class="fas fa-external-link-alt mr-2"></i>Get API Key
+                </a>
+            </div>
+
+            <div>
+                <label class="text-xs text-slate-400 uppercase font-bold mb-2 block">API Key</label>
+                <input type="password" 
+                       id="ai-api-key-input" 
+                       placeholder="Paste your Gemini API key here..."
+                       class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <button onclick="closeAISetupModal()" 
+                        class="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="saveAIApiKey()" 
+                        class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-colors">
+                    Save & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Capabilities Modal -->
+<div id="ai-capabilities-modal" class="modal-overlay" style="display: none;">
+    <div class="level-card max-w-2xl">
+        <div class="modal-header">
+            <h3>🎯 AI Capabilities</h3>
+            <button onclick="closeAICapabilitiesModal()" class="close-btn" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+
+        <div class="space-y-4 mt-4">
+            <div class="bg-white/5 rounded-xl p-4">
+                <h4 class="text-indigo-400 font-bold mb-2 flex items-center gap-2">
+                    <i class="fas fa-plus-circle"></i> Create Items
+                </h4>
+                <ul class="text-sm text-slate-300 space-y-1 ml-6 list-disc">
+                    <li>"Add a new task called 'Buy groceries'"</li>
+                    <li>"Create a book named 'Atomic Habits'"</li>
+                    <li>"Add a course about Python programming"</li>
+                    <li>"Make a note about my meeting ideas"</li>
+                </ul>
+            </div>
+
+            <div class="bg-white/5 rounded-xl p-4">
+                <h4 class="text-red-400 font-bold mb-2 flex items-center gap-2">
+                    <i class="fas fa-trash"></i> Delete Items
+                </h4>
+                <ul class="text-sm text-slate-300 space-y-1 ml-6 list-disc">
+                    <li>"Delete the first task"</li>
+                    <li>"Remove my second book"</li>
+                    <li>"Delete all completed tasks"</li>
+                </ul>
+            </div>
+
+            <div class="bg-white/5 rounded-xl p-4">
+                <h4 class="text-green-400 font-bold mb-2 flex items-center gap-2">
+                    <i class="fas fa-comments"></i> General Chat
+                </h4>
+                <ul class="text-sm text-slate-300 space-y-1 ml-6 list-disc">
+                    <li>Ask questions about anything</li>
+                    <li>Get productivity tips</li>
+                    <li>Request summaries of your data</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
     <div id="widget-modal"
         class="modal-wrapper hidden fixed inset-0 z-[60] flex items-end md:items-center justify-center pointer-events-none p-4 pb-24 md:pb-4"
         role="dialog" aria-modal="true" aria-labelledby="widget-modal-title">
@@ -2632,14 +2787,16 @@
     </script>
 
     <script>
-        window.appData = {
-            courses: [],
-            tasks: [],
-            books: [],
-            notes: [],
-            settings: { theme: 'dark', lang: 'en', accent: '#00d8db' },
-            stats: { historicXP: 0 }
-        };
+        // Add to window.appData initialization (around line 1450)
+window.appData = {
+    courses: [],
+    tasks: [],
+    books: [],
+    notes: [],
+    settings: { theme: 'dark', lang: 'en', accent: '#00d8db' },
+    stats: { historicXP: 0 },
+    aiConfig: { apiKey: null, setupComplete: false } // ← NEW
+};
 
         // Azkar Font Size State
         window.azkarFontSize = parseInt(localStorage.getItem('hm_azkar_font')) || 22; // Default 22px
@@ -6495,6 +6652,381 @@
                 fCanvas.requestRenderAll();
             }
         };
+
+        // ==========================================
+//  AI ASSISTANT SYSTEM
+// ==========================================
+
+let aiConversationHistory = [];
+const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+
+// Initialize AI on page load
+function initAI() {
+    if (!window.appData.aiConfig) {
+        window.appData.aiConfig = { apiKey: null, setupComplete: false };
+    }
+}
+
+// Check if AI is ready
+function checkAISetup() {
+    if (!window.appData.aiConfig.apiKey) {
+        openAISetupModal();
+        return false;
+    }
+    return true;
+}
+
+// Open AI setup modal
+window.openAISetupModal = function() {
+    document.getElementById('ai-setup-modal').style.display = 'flex';
+};
+
+window.closeAISetupModal = function() {
+    document.getElementById('ai-setup-modal').style.display = 'none';
+};
+
+// Save API key
+window.saveAIApiKey = async function() {
+    const apiKey = document.getElementById('ai-api-key-input').value.trim();
+    
+    if (!apiKey) {
+        showToast("❌ Please enter an API key", 'error');
+        return;
+    }
+
+    // Validate API key format
+    if (!apiKey.startsWith('AIzaSy')) {
+        showToast("⚠️ Invalid API key format", 'error');
+        return;
+    }
+
+    // Save to app data
+    window.appData.aiConfig = {
+        apiKey: apiKey,
+        setupComplete: true
+    };
+
+    commitData(); // This will trigger cloud save
+    
+    showToast("✅ API key saved successfully!", 'success');
+    closeAISetupModal();
+    
+    // Show welcome message
+    showAIWelcomeMessage();
+};
+
+// Open AI settings
+window.openAISettings = function() {
+    const currentKey = window.appData.aiConfig.apiKey || '';
+    document.getElementById('ai-api-key-input').value = currentKey;
+    openAISetupModal();
+};
+
+// Show AI capabilities
+window.showAICapabilities = function() {
+    document.getElementById('ai-capabilities-modal').style.display = 'flex';
+};
+
+window.closeAICapabilitiesModal = function() {
+    document.getElementById('ai-capabilities-modal').style.display = 'none';
+};
+
+// Show welcome message
+function showAIWelcomeMessage() {
+    const messagesDiv = document.getElementById('ai-chat-messages');
+    messagesDiv.innerHTML = `
+        <div class="glass-card p-4 rounded-2xl">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-robot text-pink-400"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-white mb-2">👋 Hello! I'm your AI assistant powered by Gemini.</p>
+                    <p class="text-slate-300 text-sm">I can help you:</p>
+                    <ul class="text-sm text-slate-400 mt-2 space-y-1 ml-4 list-disc">
+                        <li>Add/delete tasks, books, courses, and notes</li>
+                        <li>Answer questions</li>
+                        <li>Manage your productivity</li>
+                    </ul>
+                    <p class="text-slate-300 text-sm mt-2">Try: "Add a task to buy groceries" or "Show me all my books"</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Send AI message
+window.sendAIMessage = async function() {
+    if (!checkAISetup()) return;
+
+    const input = document.getElementById('ai-input');
+    const message = input.value.trim();
+    
+    if (!message) return;
+
+    // Add user message to chat
+    addMessageToChat('user', message);
+    input.value = '';
+
+    // Show loading
+    const loadingId = addMessageToChat('assistant', '<i class="fas fa-spinner fa-spin"></i> Thinking...', true);
+
+    try {
+        // Build system prompt with app context
+        const systemPrompt = buildSystemPrompt();
+        
+        // Call Gemini API
+        const response = await callGeminiAPI(systemPrompt, message);
+        
+        // Remove loading message
+        removeMessage(loadingId);
+        
+        // Parse and execute commands
+        const result = await parseAndExecuteCommands(response);
+        
+        // Add AI response
+        addMessageToChat('assistant', result);
+        
+    } catch (error) {
+        removeMessage(loadingId);
+        addMessageToChat('assistant', `❌ Error: ${error.message}`);
+        console.error('AI Error:', error);
+    }
+};
+
+// Build system prompt with app context
+function buildSystemPrompt() {
+    const tasksCount = window.appData.tasks.filter(t => !t.deleted).length;
+    const booksCount = window.appData.books.filter(b => !b.deleted).length;
+    const coursesCount = window.appData.courses.filter(c => !c.deleted).length;
+    const notesCount = window.appData.notes.filter(n => !n.deleted).length;
+
+    return `You are an AI assistant integrated into a productivity app called "How Much - Life OS".
+
+Current user data:
+- Tasks: ${tasksCount}
+- Books: ${booksCount}
+- Courses: ${coursesCount}
+- Notes: ${notesCount}
+
+You can execute commands to modify the app. When the user asks you to add, delete, or modify items, respond with a JSON command block.
+
+Available commands:
+1. ADD_TASK: {"command": "ADD_TASK", "name": "task name", "desc": "description", "optional": false}
+2. ADD_BOOK: {"command": "ADD_BOOK", "name": "book name", "desc": "description"}
+3. ADD_COURSE: {"command": "ADD_COURSE", "name": "course name", "desc": "description"}
+4. ADD_NOTE: {"command": "ADD_NOTE", "name": "note title", "desc": "note content"}
+5. DELETE_TASK: {"command": "DELETE_TASK", "index": 0} (0-based index)
+6. DELETE_BOOK: {"command": "DELETE_BOOK", "index": 0}
+7. DELETE_COURSE: {"command": "DELETE_COURSE", "index": 0}
+8. DELETE_NOTE: {"command": "DELETE_NOTE", "index": 0}
+9. EMPTY_TRASH: {"command": "EMPTY_TRASH"}
+
+Format your response as:
+[COMMAND]
+{json here}
+[/COMMAND]
+
+[RESPONSE]
+Your friendly message to the user
+[/RESPONSE]
+
+If the user is just chatting (not giving commands), only use [RESPONSE] block.`;
+}
+
+// Call Gemini API
+async function callGeminiAPI(systemPrompt, userMessage) {
+    const apiKey = window.appData.aiConfig.apiKey;
+    
+    const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            contents: [
+                {
+                    role: 'user',
+                    parts: [{ text: systemPrompt + '\n\nUser: ' + userMessage }]
+                }
+            ],
+            generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1000
+            }
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('API request failed');
+    }
+
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+}
+
+// Parse and execute commands
+async function parseAndExecuteCommands(aiResponse) {
+    const commandMatch = aiResponse.match(/\[COMMAND\]([\s\S]*?)\[\/COMMAND\]/);
+    const responseMatch = aiResponse.match(/\[RESPONSE\]([\s\S]*?)\[\/RESPONSE\]/);
+
+    let resultMessage = '';
+
+    // Execute commands
+    if (commandMatch) {
+        try {
+            const commandJSON = JSON.parse(commandMatch[1].trim());
+            const execResult = executeCommand(commandJSON);
+            resultMessage += execResult + '\n\n';
+        } catch (e) {
+            console.error('Command parsing error:', e);
+        }
+    }
+
+    // Add AI response
+    if (responseMatch) {
+        resultMessage += responseMatch[1].trim();
+    } else if (!commandMatch) {
+        resultMessage = aiResponse; // Plain chat response
+    }
+
+    return resultMessage || 'Command executed.';
+}
+
+// Execute command
+function executeCommand(cmd) {
+    switch(cmd.command) {
+        case 'ADD_TASK':
+            window.appData.tasks.push({
+                id: Date.now(),
+                name: cmd.name,
+                desc: cmd.desc || '',
+                completed: false,
+                optional: cmd.optional || false,
+                deleted: false,
+                files: []
+            });
+            commitData();
+            refreshAllUI();
+            return `✅ Task "${cmd.name}" added successfully!`;
+
+        case 'ADD_BOOK':
+            window.appData.books.push({
+                id: Date.now(),
+                name: cmd.name,
+                desc: cmd.desc || '',
+                total: 0,
+                done: 0,
+                streak: 0,
+                deleted: false,
+                files: []
+            });
+            commitData();
+            refreshAllUI();
+            return `✅ Book "${cmd.name}" added successfully!`;
+
+        case 'ADD_COURSE':
+            window.appData.courses.push({
+                id: Date.now(),
+                name: cmd.name,
+                desc: cmd.desc || '',
+                total: 0,
+                done: 0,
+                deleted: false,
+                files: []
+            });
+            commitData();
+            refreshAllUI();
+            return `✅ Course "${cmd.name}" added successfully!`;
+
+        case 'ADD_NOTE':
+            window.appData.notes.push({
+                id: Date.now(),
+                name: cmd.name,
+                desc: cmd.desc || '',
+                deleted: false,
+                files: []
+            });
+            commitData();
+            refreshAllUI();
+            return `✅ Note "${cmd.name}" added successfully!`;
+
+        case 'DELETE_TASK':
+            const task = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
+            if (task) {
+                task.deleted = true;
+                commitData();
+                refreshAllUI();
+                return `✅ Task deleted and moved to trash.`;
+            }
+            return '❌ Task not found.';
+
+        case 'DELETE_BOOK':
+            const book = window.appData.books.filter(b => !b.deleted)[cmd.index];
+            if (book) {
+                book.deleted = true;
+                commitData();
+                refreshAllUI();
+                return `✅ Book deleted and moved to trash.`;
+            }
+            return '❌ Book not found.';
+
+        case 'EMPTY_TRASH':
+            emptyTrash(true);
+            return `✅ Trash emptied successfully!`;
+
+        default:
+            return '❌ Unknown command.';
+    }
+}
+
+// Add message to chat UI
+function addMessageToChat(role, content, isLoading = false) {
+    const messagesDiv = document.getElementById('ai-chat-messages');
+    const messageId = 'msg-' + Date.now();
+    
+    const bgClass = role === 'user' ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-white/5 border-white/10';
+    const icon = role === 'user' ? 'fa-user' : 'fa-robot';
+    const iconColor = role === 'user' ? 'text-indigo-400' : 'text-pink-400';
+
+    const messageDiv = document.createElement('div');
+    messageDiv.id = messageId;
+    messageDiv.className = `glass-card p-4 rounded-2xl border ${bgClass}`;
+    messageDiv.innerHTML = `
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl ${role === 'user' ? 'bg-indigo-500/20' : 'bg-pink-500/20'} flex items-center justify-center flex-shrink-0">
+                <i class="fas ${icon} ${iconColor}"></i>
+            </div>
+            <div class="flex-1 text-white whitespace-pre-wrap">${content}</div>
+        </div>
+    `;
+
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    return messageId;
+}
+
+// Remove message
+function removeMessage(messageId) {
+    const msg = document.getElementById(messageId);
+    if (msg) msg.remove();
+}
+
+// Initialize AI when showing AI page
+const originalShowPage = window.showPage;
+window.showPage = function(pageId) {
+    originalShowPage(pageId);
+    
+    if (pageId === 'ai') {
+        initAI();
+        if (checkAISetup()) {
+            const messagesDiv = document.getElementById('ai-chat-messages');
+            if (!messagesDiv.innerHTML.trim()) {
+                showAIWelcomeMessage();
+            }
+        }
+    }
+};
+
     </script>
 </body>
 
