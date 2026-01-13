@@ -1411,6 +1411,11 @@
                     title="AI Settings">
                 <i class="fas fa-cog"></i>
             </button>
+            <button onclick="clearAIHistory()" 
+                class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                title="Clear Chat History">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
     </div>
 
@@ -2829,6 +2834,15 @@ if (!window.appData) {
         window.showPage = function (pageId) {
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`).forEach(el => el.classList.add('active'));
+            // ✅ إخفاء/إظهار الويدجت حسب الصفحة
+    const widgetElement = document.getElementById('mini-widget');
+    if (widgetElement) {
+        if (pageId === 'ai') {
+            widgetElement.style.display = 'none'; // إخفاء في صفحة AI
+        } else {
+            widgetElement.style.display = 'flex'; // إظهار في باقي الصفحات
+        }
+    }
 
 
             const activePage = document.querySelector('.page-section:not(.hidden)');
@@ -6666,10 +6680,19 @@ if (!window.appData) {
 
 let aiConversationHistory = [];
 const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-// Initialize AI on page load
+const MAX_HISTORY_MESSAGES = 20; // الاحتفاظ بآخر 20 رسالة
+
 function initAI() {
     if (!window.appData.aiConfig) {
         window.appData.aiConfig = { apiKey: null, setupComplete: false };
+    }
+    
+    // ✅ تحميل التاريخ المحفوظ
+    const hasHistory = loadConversationHistory();
+    
+    // إذا لم يكن هناك تاريخ، اعرض رسالة الترحيب
+    if (!hasHistory && checkAISetup()) {
+        showAIWelcomeMessage();
     }
 }
 
@@ -6761,7 +6784,6 @@ function showAIWelcomeMessage() {
     `;
 }
 
-// Send AI message
 window.sendAIMessage = async function() {
     if (!checkAISetup()) return;
 
@@ -6770,65 +6792,132 @@ window.sendAIMessage = async function() {
     
     if (!message) return;
 
-    // Add user message to chat
+    // إضافة رسالة المستخدم للشات
     addMessageToChat('user', message);
     input.value = '';
 
-    // Show loading
+    // ✅ حفظ رسالة المستخدم في التاريخ
+    aiConversationHistory.push({
+        role: 'user',
+        content: message,
+        timestamp: Date.now()
+    });
+
+    // عرض مؤشر التحميل
     const loadingId = addMessageToChat('assistant', '<i class="fas fa-spinner fa-spin"></i> Thinking...', true);
 
     try {
-        // Build system prompt with app context
+        // بناء الـ System Prompt مع سياق التطبيق
         const systemPrompt = buildSystemPrompt();
         
-        // Call Gemini API
-        const response = await callGeminiAPI(systemPrompt, message);
+        // ✅ إرسال المحادثة الكاملة مع التاريخ
+        const response = await callGeminiAPIWithHistory(systemPrompt, message);
         
-        // Remove loading message
+        // إزالة مؤشر التحميل
         removeMessage(loadingId);
         
-        // Parse and execute commands
+        // تنفيذ الأوامر
         const result = await parseAndExecuteCommands(response);
         
-        // Add AI response
+        // إضافة رد الـ AI
         addMessageToChat('assistant', result);
+        
+        // ✅ حفظ رد الـ AI في التاريخ
+        aiConversationHistory.push({
+            role: 'assistant',
+            content: result,
+            timestamp: Date.now()
+        });
+
+        // ✅ حفظ التاريخ في LocalStorage
+        saveConversationHistory();
+        
+        // ✅ تحديد حجم التاريخ (الاحتفاظ بآخر X رسالة)
+        if (aiConversationHistory.length > MAX_HISTORY_MESSAGES) {
+            aiConversationHistory = aiConversationHistory.slice(-MAX_HISTORY_MESSAGES);
+            saveConversationHistory();
+        }
         
     } catch (error) {
         removeMessage(loadingId);
-        addMessageToChat('assistant', `❌ Error: ${error.message}`);
+        
+        let errorMsg = error.message || 'Unknown error occurred';
+        
+        addMessageToChat('assistant', `❌ **Error:**\n\n${errorMsg}\n\n💡 **Solutions:**\n• Wait 1-2 minutes\n• Get new API key\n• Check internet connection`);
+        
         console.error('AI Error:', error);
     }
 };
 
-// Build system prompt with app context
 function buildSystemPrompt() {
-    const tasksCount = window.appData.tasks.filter(t => !t.deleted).length;
-    const booksCount = window.appData.books.filter(b => !b.deleted).length;
-    const coursesCount = window.appData.courses.filter(c => !c.deleted).length;
-    const notesCount = window.appData.notes.filter(n => !n.deleted).length;
+    const tasks = window.appData.tasks.filter(t => !t.deleted);
+    const books = window.appData.books.filter(b => !b.deleted);
+    const courses = window.appData.courses.filter(c => !c.deleted);
+    const notes = window.appData.notes.filter(n => !n.deleted);
+
+    // بناء قائمة المهام مع التفاصيل
+    let tasksList = tasks.map((t, i) => 
+        `${i}. ${t.name} ${t.completed ? '✅' : '⬜'} - ${t.desc || 'No description'}`
+    ).join('\n');
+
+    let booksList = books.map((b, i) => 
+        `${i}. ${b.name} (${b.done}/${b.total} pages) - ${b.desc || 'No description'}`
+    ).join('\n');
 
     return `You are an AI assistant integrated into a productivity app called "How Much - Life OS".
 
-Current user data:
-- Tasks: ${tasksCount}
-- Books: ${booksCount}
-- Courses: ${coursesCount}
-- Notes: ${notesCount}
+**Current User Data:**
 
-You can execute commands to modify the app. When the user asks you to add, delete, or modify items, respond with a JSON command block.
+📋 **Tasks (${tasks.length}):**
+${tasksList || 'No tasks'}
 
-Available commands:
-1. ADD_TASK: {"command": "ADD_TASK", "name": "task name", "desc": "description", "optional": false}
-2. ADD_BOOK: {"command": "ADD_BOOK", "name": "book name", "desc": "description"}
-3. ADD_COURSE: {"command": "ADD_COURSE", "name": "course name", "desc": "description"}
-4. ADD_NOTE: {"command": "ADD_NOTE", "name": "note title", "desc": "note content"}
-5. DELETE_TASK: {"command": "DELETE_TASK", "index": 0} (0-based index)
-6. DELETE_BOOK: {"command": "DELETE_BOOK", "index": 0}
-7. DELETE_COURSE: {"command": "DELETE_COURSE", "index": 0}
-8. DELETE_NOTE: {"command": "DELETE_NOTE", "index": 0}
-9. EMPTY_TRASH: {"command": "EMPTY_TRASH"}
+📚 **Books (${books.length}):**
+${booksList || 'No books'}
 
-Format your response as:
+🎓 **Courses:** ${courses.length}
+📝 **Notes:** ${notes.length}
+
+---
+
+**Available Commands:**
+
+1. **ADD_TASK**
+   {"command": "ADD_TASK", "name": "task name", "desc": "description", "optional": false}
+
+2. **EDIT_TASK** ⭐ NEW
+   {"command": "EDIT_TASK", "index": 0, "name": "new name", "desc": "new description"}
+
+3. **COMPLETE_TASK**
+   {"command": "COMPLETE_TASK", "index": 0}
+
+4. **DELETE_TASK**
+   {"command": "DELETE_TASK", "index": 0}
+
+5. **ADD_BOOK**
+   {"command": "ADD_BOOK", "name": "book name", "desc": "description", "total": 300}
+
+6. **EDIT_BOOK** ⭐ NEW
+   {"command": "EDIT_BOOK", "index": 0, "name": "new name", "desc": "new description"}
+
+7. **UPDATE_BOOK_PROGRESS**
+   {"command": "UPDATE_BOOK_PROGRESS", "index": 0, "done": 150}
+
+8. **ADD_COURSE**
+   {"command": "ADD_COURSE", "name": "course name", "desc": "description"}
+
+9. **ADD_NOTE**
+   {"command": "ADD_NOTE", "name": "note title", "desc": "note content"}
+
+10. **SHOW_ALL_TASKS**
+    {"command": "SHOW_ALL_TASKS"}
+
+11. **SHOW_ALL_BOOKS**
+    {"command": "SHOW_ALL_BOOKS"}
+
+---
+
+**Response Format:**
+
 [COMMAND]
 {json here}
 [/COMMAND]
@@ -6837,7 +6926,12 @@ Format your response as:
 Your friendly message to the user
 [/RESPONSE]
 
-If the user is just chatting (not giving commands), only use [RESPONSE] block.`;
+**Important:**
+- When user asks to "edit" or "change" or "update" a task/book, use EDIT command
+- When user says "mark as done" or "complete", use COMPLETE_TASK
+- Always show the current data when user asks "what are my tasks" or "show my books"
+- Be friendly and conversational
+- Remember previous conversation context`;
 }
 
 // Call Gemini API with advanced retry and rate limit handling
@@ -6865,21 +6959,7 @@ async function callGeminiAPI(systemPrompt, userMessage, retryCount = 0) {
             })
         });
 
-        // ✅ معالجة خطأ 429 (Rate Limit)
-        if (response.status === 429) {
-            if (retryCount < maxRetries) {
-                // Exponential backoff: 2s, 4s, 8s
-                const waitTime = Math.pow(2, retryCount + 1) * 1000;
-                
-                showToast(`⏳ Rate limit reached. Retrying in ${waitTime/1000}s...`, 'neutral');
-                
-                await new Promise(resolve => setTimeout(resolve, waitTime));
-                return callGeminiAPI(systemPrompt, userMessage, retryCount + 1);
-            } else {
-                throw new Error('❌ Rate limit exceeded. Please wait 1 minute and try again.\n\nTip: Get a new API key from Google AI Studio.');
-            }
-        }
-
+    
         // ✅ معالجة أخطاء أخرى
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
@@ -6918,6 +6998,98 @@ async function callGeminiAPI(systemPrompt, userMessage, retryCount = 0) {
         
         throw error;
     }
+}
+
+// ✅ دالة جديدة ترسل التاريخ الكامل للـ API
+async function callGeminiAPIWithHistory(systemPrompt, userMessage) {
+    const apiKey = window.appData.aiConfig.apiKey;
+    
+    // بناء المحادثة الكاملة
+    let conversationContents = [];
+    
+    // ✅ إضافة System Prompt كرسالة أولى
+    conversationContents.push({
+        role: 'user',
+        parts: [{ text: systemPrompt }]
+    });
+    
+    // ✅ إضافة التاريخ السابق (آخر 10 رسائل = 5 تبادلات)
+    const recentHistory = aiConversationHistory.slice(-10);
+    recentHistory.forEach(msg => {
+        conversationContents.push({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        });
+    });
+    
+    // ✅ إضافة الرسالة الحالية
+    conversationContents.push({
+        role: 'user',
+        parts: [{ text: userMessage }]
+    });
+    
+    // إرسال الطلب
+    const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            contents: conversationContents,
+            generationConfig: {
+                temperature: 0.7,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 2000
+            }
+        })
+    });
+
+    if (!response.ok) {
+        if (response.status === 429) {
+            throw new Error('⏰ Rate limit reached. Please wait 1 minute and try again.');
+        }
+        throw new Error(`API Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    if (!data.candidates || !data.candidates[0]) {
+        throw new Error('Empty response from AI');
+    }
+    
+    return data.candidates[0].content.parts[0].text;
+}
+
+// ✅ حفظ التاريخ في LocalStorage
+function saveConversationHistory() {
+    try {
+        localStorage.setItem('ai_conversation_history', JSON.stringify(aiConversationHistory));
+        console.log('💾 Conversation saved:', aiConversationHistory.length, 'messages');
+    } catch (e) {
+        console.warn('Failed to save conversation history:', e);
+    }
+}
+
+// ✅ تحميل التاريخ عند فتح الصفحة
+function loadConversationHistory() {
+    try {
+        const saved = localStorage.getItem('ai_conversation_history');
+        if (saved) {
+            aiConversationHistory = JSON.parse(saved);
+            
+            console.log('📥 Loaded conversation history:', aiConversationHistory.length, 'messages');
+            
+            // ✅ عرض آخر 10 رسائل في الواجهة
+            const messagesToShow = aiConversationHistory.slice(-10);
+            messagesToShow.forEach(msg => {
+                addMessageToChat(msg.role, msg.content);
+            });
+            
+            return true;
+        }
+    } catch (e) {
+        console.warn('Failed to load conversation history:', e);
+    }
+    return false;
 }
 
 // Parse and execute commands
@@ -7029,6 +7201,72 @@ function executeCommand(cmd) {
         case 'EMPTY_TRASH':
             emptyTrash(true);
             return `✅ Trash emptied successfully!`;
+        case 'EDIT_TASK':
+            const taskToEdit = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
+            if (taskToEdit) {
+                if (cmd.name) taskToEdit.name = cmd.name;
+                if (cmd.desc !== undefined) taskToEdit.desc = cmd.desc;
+                commitData();
+                refreshAllUI();
+                return `✅ Task "${taskToEdit.name}" updated successfully!`;
+            }
+            return '❌ Task not found.';
+
+        case 'COMPLETE_TASK':
+            const taskToComplete = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
+            if (taskToComplete) {
+                taskToComplete.completed = true;
+                commitData();
+                refreshAllUI();
+                triggerConfetti(false);
+                return `✅ Task "${taskToComplete.name}" marked as complete! 🎉`;
+            }
+            return '❌ Task not found.';
+
+        case 'EDIT_BOOK':
+            const bookToEdit = window.appData.books.filter(b => !b.deleted)[cmd.index];
+            if (bookToEdit) {
+                if (cmd.name) bookToEdit.name = cmd.name;
+                if (cmd.desc !== undefined) bookToEdit.desc = cmd.desc;
+                if (cmd.total) bookToEdit.total = cmd.total;
+                commitData();
+                refreshAllUI();
+                return `✅ Book "${bookToEdit.name}" updated successfully!`;
+            }
+            return '❌ Book not found.';
+
+        case 'UPDATE_BOOK_PROGRESS':
+            const bookToUpdate = window.appData.books.filter(b => !b.deleted)[cmd.index];
+            if (bookToUpdate) {
+                bookToUpdate.done = cmd.done;
+                commitData();
+                refreshAllUI();
+                return `✅ Progress updated: ${cmd.done}/${bookToUpdate.total} pages completed!`;
+            }
+            return '❌ Book not found.';
+
+        case 'SHOW_ALL_TASKS':
+            const allTasks = window.appData.tasks.filter(t => !t.deleted);
+            if (allTasks.length === 0) return '📋 You have no tasks yet.';
+            
+            let taskListMsg = '📋 **Your Tasks:**\n\n';
+            allTasks.forEach((t, i) => {
+                taskListMsg += `${i + 1}. ${t.completed ? '✅' : '⬜'} ${t.name}\n`;
+                if (t.desc) taskListMsg += `   └─ ${t.desc}\n`;
+            });
+            return taskListMsg;
+
+        case 'SHOW_ALL_BOOKS':
+            const allBooks = window.appData.books.filter(b => !b.deleted);
+            if (allBooks.length === 0) return '📚 You have no books yet.';
+            
+            let bookListMsg = '📚 **Your Books:**\n\n';
+            allBooks.forEach((b, i) => {
+                const progress = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
+                bookListMsg += `${i + 1}. ${b.name} (${progress}%)\n`;
+                bookListMsg += `   └─ ${b.done}/${b.total} pages\n`;
+            });
+            return bookListMsg;    
 
         default:
             return '❌ Unknown command.';
@@ -7083,7 +7321,22 @@ window.showPage = function(pageId) {
         }
     }
 };
-
+window.clearAIHistory = function() {
+    // فحص اللغة الحالية
+    const isArabic = window.appData.settings.lang === 'ar';
+    const messageEN = "Are you sure you want to clear all conversation history? This action cannot be undone.";
+    const messageAR = "هل أنت متأكد من حذف جميع سجل المحادثات؟ لا يمكن التراجع عن هذا الإجراء.";
+    const message = isArabic ? messageAR : messageEN;
+    const action = function() {
+        aiConversationHistory = [];
+        localStorage.removeItem('ai_conversation_history');
+        document.getElementById('ai-chat-messages').innerHTML = '';
+        showAIWelcomeMessage();
+        const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+        showToast(successMsg, 'success');
+    };
+    openConfirmModal(message, action);
+};
     </script>
 </body>
 
