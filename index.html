@@ -2723,7 +2723,11 @@
                     const userDocRef = doc(db, "artifacts", appId, "users", currentUser.uid);
 
                     // 1. تجهيز البيانات المقسمة
-                    const profileData = { settings: window.appData.settings, stats: window.appData.stats };
+                    const profileData = { 
+                settings: window.appData.settings, 
+                stats: window.appData.stats,
+                aiConfig: window.appData.aiConfig || { apiKey: null, setupComplete: false }
+            };
                     const tasksData = { tasks: window.appData.tasks };
                     const notesData = { notes: window.appData.notes };
                     const eduData = { courses: window.appData.courses, books: window.appData.books };
@@ -2766,6 +2770,10 @@
 
                     // التأكد من وجود المصفوفات الأساسية بعد الدمج
                     if (!window.appData.notes) window.appData.notes = [];
+                    // ✅ التأكد من وجود aiConfig بعد التحميل
+        if (!window.appData.aiConfig) {
+            window.appData.aiConfig = { apiKey: null, setupComplete: false };
+        }
                     if (!window.appData.tasks) window.appData.tasks = [];
                     if (!window.appData.courses) window.appData.courses = [];
                     if (!window.appData.books) window.appData.books = [];
@@ -6683,8 +6691,20 @@ const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/mo
 const MAX_HISTORY_MESSAGES = 20; // الاحتفاظ بآخر 20 رسالة
 
 function initAI() {
+    // ✅ التأكد من وجود aiConfig
     if (!window.appData.aiConfig) {
         window.appData.aiConfig = { apiKey: null, setupComplete: false };
+    }
+    
+    // ✅ محاولة استرجاع المفتاح من localStorage (نسخة احتياطية)
+    if (!window.appData.aiConfig.apiKey) {
+        const localKey = localStorage.getItem('hm_ai_key');
+        if (localKey) {
+            window.appData.aiConfig.apiKey = localKey;
+            window.appData.aiConfig.setupComplete = true;
+            // حفظ في Firebase للمزامنة
+            commitData();
+        }
     }
     
     // ✅ تحميل التاريخ المحفوظ
@@ -6698,7 +6718,8 @@ function initAI() {
 
 // Check if AI is ready
 function checkAISetup() {
-    if (!window.appData.aiConfig.apiKey) {
+    // ✅ فحص محسّن مع معالجة undefined
+    if (!window.appData.aiConfig || !window.appData.aiConfig.apiKey || window.appData.aiConfig.apiKey.trim() === '') {
         openAISetupModal();
         return false;
     }
@@ -6714,7 +6735,6 @@ window.closeAISetupModal = function() {
     document.getElementById('ai-setup-modal').style.display = 'none';
 };
 
-// Save API key
 window.saveAIApiKey = async function() {
     const apiKey = document.getElementById('ai-api-key-input').value.trim();
     
@@ -6729,15 +6749,22 @@ window.saveAIApiKey = async function() {
         return;
     }
 
-    // Save to app data
+    // ✅ حفظ في البيانات المحلية
     window.appData.aiConfig = {
         apiKey: apiKey,
         setupComplete: true
     };
 
-    commitData(); // This will trigger cloud save
+    // ✅ حفظ في localStorage (للنسخ الاحتياطي)
+    localStorage.setItem('hm_ai_key', apiKey);
+
+    // ✅ حفظ فوراً في Firebase
+    commitData();
     
-    showToast("✅ API key saved successfully!", 'success');
+    // ✅ انتظار قصير للتأكد من الحفظ
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    showToast("✅ API key saved and synced!", 'success');
     closeAISetupModal();
     
     // Show welcome message
