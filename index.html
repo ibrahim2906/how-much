@@ -2787,16 +2787,23 @@
     </script>
 
     <script>
-        // Add to window.appData initialization (around line 1450)
-window.appData = {
-    courses: [],
-    tasks: [],
-    books: [],
-    notes: [],
-    settings: { theme: 'dark', lang: 'en', accent: '#00d8db' },
-    stats: { historicXP: 0 },
-    aiConfig: { apiKey: null, setupComplete: false } // ← NEW
-};
+// Initialize appData with AI config support
+if (!window.appData) {
+    window.appData = {
+        courses: [],
+        tasks: [],
+        books: [],
+        notes: [],
+        settings: { theme: 'dark', lang: 'en', accent: '#00d8db' },
+        stats: { historicXP: 0 },
+        aiConfig: { apiKey: null, setupComplete: false }
+    };
+} else {
+    // Ensure aiConfig exists in existing data
+    if (!window.appData.aiConfig) {
+        window.appData.aiConfig = { apiKey: null, setupComplete: false };
+    }
+}
 
         // Azkar Font Size State
         window.azkarFontSize = parseInt(localStorage.getItem('hm_azkar_font')) || 22; // Default 22px
