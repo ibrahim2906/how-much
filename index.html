@@ -1074,6 +1074,96 @@
         }
         .zikr-copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--azkar-gold); }
         .zikr-copy-btn:active { transform: scale(0.95); }
+
+        /* === ONBOARDING SCREEN STYLES === */
+        #onboarding-screen {
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+        }
+
+        .gender-card {
+            transition: all 0.3s var(--transition-bounce);
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        
+        .gender-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .gender-card.selected {
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.15);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .gender-check {
+            transform: scale(0);
+            transition: transform 0.3s var(--transition-bounce);
+        }
+
+        .gender-card.selected .gender-check {
+            transform: scale(1);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input:focus + .input-highlight {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .input-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: var(--accent-color);
+            transition: width 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Language Toggle Switch */
+        .lang-switch {
+            position: relative;
+            width: 200px;
+            height: 50px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .lang-slider {
+            position: absolute;
+            left: 4px;
+            width: 96px;
+            height: 42px;
+            background: var(--accent-color);
+            border-radius: 21px;
+            transition: transform 0.3s var(--transition-bounce);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .lang-option {
+            flex: 1;
+            text-align: center;
+            z-index: 1;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .lang-switch[data-lang="ar"] .lang-slider {
+            transform: translateX(96px);
+        }
     </style>
 </head>
 
@@ -1167,6 +1257,73 @@
         </div>
     </div>
 
+    <!-- ONBOARDING SCREEN -->
+    <div id="onboarding-screen" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div id="onboarding-card" class="glass-panel w-full max-w-lg p-8 rounded-[2.5rem] relative z-10 border border-white/10 shadow-2xl">
+            
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30 transform rotate-3">
+                    <i class="fas fa-hand-sparkles text-3xl text-white"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2" id="onboarding-title">Welcome</h2>
+                <p class="text-slate-400 text-sm tracking-wide">Let's personalize your experience</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Name Input -->
+                <div class="input-group">
+                    <label class="block text-xs text-indigo-300 font-bold uppercase tracking-widest mb-2 ml-1">What should we call you?</label>
+                    <input type="text" id="ob-name" placeholder="Your Name" 
+                           class="w-full bg-black/20 border-b border-white/10 rounded-t-xl px-4 py-4 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:bg-white/5 transition-colors">
+                    <div class="input-highlight"></div>
+                </div>
+
+                <!-- Gender Selection -->
+                <div>
+                    <label class="block text-xs text-indigo-300 font-bold uppercase tracking-widest mb-3 ml-1">Select Avatar Style</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="gender-card bg-white/5 p-4 rounded-2xl flex flex-col items-center gap-2 relative" onclick="selectGender('male')">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <span class="text-sm font-medium text-slate-300">Male</span>
+                            <div class="absolute top-2 right-2 gender-check text-green-400"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                        <div class="gender-card bg-white/5 p-4 rounded-2xl flex flex-col items-center gap-2 relative" onclick="selectGender('female')">
+                            <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-xl">
+                                <i class="fas fa-user-nurse"></i>
+                            </div>
+                            <span class="text-sm font-medium text-slate-300">Female</span>
+                            <div class="absolute top-2 right-2 gender-check text-green-400"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ob-gender">
+                </div>
+
+                <!-- Language Toggle -->
+                <div class="flex flex-col items-center">
+                    <label class="block text-xs text-indigo-300 font-bold uppercase tracking-widest mb-3">Preferred Language</label>
+                    <div class="lang-switch" onclick="toggleOnboardingLang()" id="ob-lang-switch" data-lang="en">
+                        <div class="lang-slider"></div>
+                        <div class="lang-option text-white">English</div>
+                        <div class="lang-option text-white">العربية</div>
+                    </div>
+                </div>
+
+                <button onclick="finishOnboarding()" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 group">
+                    <span id="ob-btn-text">Get Started</span>
+                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="app-container" class="hidden flex h-[100dvh] overflow-hidden relative">
 
         <aside id="desktop-sidebar"
@@ -1189,7 +1346,7 @@
                 <div class="logo-text overflow-hidden whitespace-nowrap transition-opacity duration-300">
                     <h1 class="text-xl font-bold tracking-tight">How Much</h1>
                     <div id="user-status-badge" onclick="openLevelModal()" 
-                        class="text-[11px] font-bold px-3 py-1 rounded-full inline-flex items-center gap-2 cursor-pointer select-none transition-colors border border-white/10"
+                        class="text-[11px] font-bold px-3 py-1 rounded-full inline-flex items-center gap-2 cursor-pointer select-none transition-colors border border-white/10 mt-1"
                         style="background: rgba(255,255,255,0.05); color: #e2e8f0;"
                         role="button" aria-label="User level status">Loading...</div>
                 </div>
@@ -1280,7 +1437,10 @@
                 <button onclick="showPage('settings')"
                     class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-slate-400 hover:text-white group"
                     aria-label="Settings page">
-                    <img id="user-avatar-small" src=""
+                    <div id="user-avatar-icon" class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 hidden">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <img id="user-avatar-img" src=""
                         class="w-8 h-8 min-w-[2rem] object-cover rounded-full bg-slate-700 hidden flex-shrink-0"
                         alt="User avatar">
                     <div class="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center flex-shrink-0"
@@ -1288,7 +1448,10 @@
                         <i class="fas fa-cog text-lg group-hover:rotate-90 transition-transform duration-500"
                             aria-hidden="true"></i>
                     </div>
-                    <span class="nav-text whitespace-nowrap" data-i18n="settings">Settings</span>
+                    <div class="nav-text overflow-hidden">
+                        <div class="text-sm font-bold text-white truncate" id="sidebar-user-name">User</div>
+                        <div class="text-xs text-slate-500" data-i18n="settings">Settings</div>
+                    </div>
                 </button>
             </div>
         </aside>
@@ -1622,6 +1785,52 @@
 
                 <section id="page-settings" class="page-section hidden max-w-2xl mx-auto pt-2 md:pt-0">
                     <h2 class="text-2xl md:text-3xl font-bold mb-8" data-i18n="settings">Settings</h2>
+
+                    <!-- Profile Settings Card -->
+                    <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+                        <div class="p-6">
+                            <h3 class="font-bold mb-6 flex items-center gap-2 text-white">
+                                <i class="fas fa-user-circle text-indigo-400"></i>
+                                <span data-i18n="profileSettings">Profile Settings</span>
+                            </h3>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="text-xs text-slate-400 uppercase font-bold mb-2 block" data-i18n="displayName">Display Name</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="settings-name-input" 
+                                            class="flex-1 bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                                            placeholder="Your Name">
+                                        <button onclick="saveProfileName()" 
+                                                class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white transition-colors shadow-lg shadow-indigo-500/20">
+                                            <i class="fas fa-save"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs text-slate-400 uppercase font-bold mb-3 block" data-i18n="avatarStyle">Avatar Style</label>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <label class="cursor-pointer flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/10 transition-all">
+                                            <input type="radio" name="settings-gender" value="male" class="hidden" onchange="saveProfileGender(this.value)">
+                                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-lg">
+                                                <i class="fas fa-user-tie"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-slate-300">Male</span>
+                                        </label>
+                                        
+                                        <label class="cursor-pointer flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent has-[:checked]:border-pink-500 has-[:checked]:bg-pink-500/10 transition-all">
+                                            <input type="radio" name="settings-gender" value="female" class="hidden" onchange="saveProfileGender(this.value)">
+                                            <div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-lg">
+                                                <i class="fas fa-user-nurse"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-slate-300">Female</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="glass-panel rounded-3xl overflow-hidden mb-8">
                         <div class="p-6 border-b border-white/5">
@@ -2514,6 +2723,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // ==========================================
         //  CLOUDINARY CONFIGURATION
@@ -2686,19 +2896,16 @@
                         opacity: 0,
                         duration: 0.5,
                         onComplete: () => {
-                            document.getElementById('login-screen').classList.add('hidden');
-                            document.getElementById('app-container').classList.remove('hidden');
-                            gsap.from('#app-container', { opacity: 0, y: 20 });
-                            if (window.showPage) window.showPage('tasks');
+                            // Logic moved to loadData to decide between App or Onboarding
                         }
                     });
 
-                    const avatarEl = document.getElementById('user-avatar-small');
+                    const avatarImg = document.getElementById('user-avatar-img');
                     const iconContainerEl = document.getElementById('settings-icon-container');
 
-                    if (avatarEl && user.photoURL) {
-                        avatarEl.src = user.photoURL;
-                        avatarEl.classList.remove('hidden');
+                    if (avatarImg && user.photoURL) {
+                        avatarImg.src = user.photoURL;
+                        // We will handle visibility in UI update based on profile settings
                     }
                     if (iconContainerEl) iconContainerEl.classList.add('hidden');
 
@@ -2734,6 +2941,7 @@
                     const profileData = { 
                 settings: window.appData.settings, 
                 stats: window.appData.stats,
+                profile: window.appData.profile || {}, // Save profile data
                 aiConfig: window.appData.aiConfig || { apiKey: null, setupComplete: false }
             };
                     const tasksData = { tasks: window.appData.tasks };
@@ -2764,6 +2972,12 @@
         async function loadData(uid) {
             if (!db) return;
 
+            // Check if profile exists first to decide on onboarding
+            const profileRef = doc(db, "artifacts", appId, "users", uid, "data", "profile");
+            
+            // We need to listen to changes, but for the first load we need to know if we show onboarding
+            let isFirstLoad = true;
+
             // الاستماع للمجموعة الفرعية "data" بالكامل لجلب الملفات الأربعة
             const dataCollectionRef = collection(db, "artifacts", appId, "users", uid, "data");
 
@@ -2782,6 +2996,10 @@
         if (!window.appData.aiConfig) {
             window.appData.aiConfig = { apiKey: null, setupComplete: false };
         }
+                    if (!window.appData.profile) {
+                        window.appData.profile = { name: '', gender: '', completed: false };
+                    }
+
                     if (!window.appData.tasks) window.appData.tasks = [];
                     if (!window.appData.courses) window.appData.courses = [];
                     if (!window.appData.books) window.appData.books = [];
@@ -2790,6 +3008,18 @@
                     // حفظ نسخة محلية وتحديث الواجهة
                     localStorage.setItem('hm_data', JSON.stringify(window.appData));
                     refreshAllUI();
+                    
+                    // Decision Logic: Onboarding vs App
+                    if (isFirstLoad) {
+                        document.getElementById('login-screen').classList.add('hidden');
+                        
+                        if (!window.appData.profile.completed) {
+                            window.showOnboarding();
+                        } else {
+                            window.launchApp();
+                        }
+                        isFirstLoad = false;
+                    }
 
                     const statusEl = document.getElementById('cloud-status');
                     if (statusEl) {
@@ -2800,6 +3030,7 @@
                 } else {
                     // مستخدم جديد: قم بإنشاء الهيكل الأولي
                     saveData();
+                    // Will trigger snapshot update, which will trigger onboarding
                 }
             });
         }
@@ -2817,12 +3048,16 @@ if (!window.appData) {
         notes: [],
         settings: { theme: 'dark', lang: 'en', accent: '#00d8db' },
         stats: { historicXP: 0 },
-        aiConfig: { apiKey: null, setupComplete: false }
+        aiConfig: { apiKey: null, setupComplete: false },
+        profile: { name: '', gender: '', completed: false }
     };
 } else {
     // Ensure aiConfig exists in existing data
     if (!window.appData.aiConfig) {
         window.appData.aiConfig = { apiKey: null, setupComplete: false };
+    }
+    if (!window.appData.profile) {
+        window.appData.profile = { name: '', gender: '', completed: false };
     }
 }
 
@@ -2833,9 +3068,12 @@ if (!window.appData) {
         window.enterAsGuest = function () {
             localStorage.setItem('hm_guest', 'true');
             document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
-            refreshAllUI();
-            showPage('tasks');
+            // Guest also needs onboarding if no local data
+            if (!window.appData.profile || !window.appData.profile.completed) {
+                window.showOnboarding();
+            } else {
+                window.launchApp();
+            }
         };
 
         window.toggleSidebar = function () {
@@ -2887,6 +3125,17 @@ if (!window.appData) {
             if (pageId === 'notes') renderNotes();
             if (pageId === 'trash') renderTrash();
             if (pageId === 'azkar') renderAzkarList();
+
+            // Populate Settings Inputs
+            if (pageId === 'settings') {
+                if (document.getElementById('settings-name-input')) {
+                    document.getElementById('settings-name-input').value = window.appData.profile?.name || '';
+                }
+                if (window.appData.profile?.gender) {
+                    const radio = document.querySelector(`input[name="settings-gender"][value="${window.appData.profile.gender}"]`);
+                    if (radio) radio.checked = true;
+                }
+            }
 
             const tl = gsap.timeline();
 
@@ -3754,6 +4003,125 @@ if (!window.appData) {
                 }
             }
         });
+
+        // ==========================================
+        //  ONBOARDING LOGIC
+        // ==========================================
+        
+        window.showOnboarding = function() {
+            const screen = document.getElementById('onboarding-screen');
+            screen.classList.remove('hidden');
+            
+            // Animation: Smooth Reveal
+            gsap.fromTo("#onboarding-card", 
+                { y: 40, opacity: 0, filter: "blur(8px)" },
+                { y: 0, opacity: 1, filter: "blur(0px)", duration: 1, ease: "power3.out" }
+            );
+
+            // Pre-fill if Google data exists
+            if (window.currentUser && window.currentUser.displayName) {
+                document.getElementById('ob-name').value = window.currentUser.displayName;
+            }
+        };
+
+        window.selectGender = function(gender) {
+            document.querySelectorAll('.gender-card').forEach(c => c.classList.remove('selected'));
+            const cards = document.querySelectorAll('.gender-card');
+            if (gender === 'male') cards[0].classList.add('selected');
+            else cards[1].classList.add('selected');
+            
+            document.getElementById('ob-gender').value = gender;
+        };
+
+        window.toggleOnboardingLang = function() {
+            const switchEl = document.getElementById('ob-lang-switch');
+            const current = switchEl.getAttribute('data-lang');
+            const next = current === 'en' ? 'ar' : 'en';
+            
+            switchEl.setAttribute('data-lang', next);
+            
+            // Immediate Preview
+            document.body.classList.toggle('rtl', next === 'ar');
+            
+            // Update Text
+            const title = document.getElementById('onboarding-title');
+            const btnText = document.getElementById('ob-btn-text');
+            
+            if (next === 'ar') {
+                title.innerText = "مرحباً بك";
+                btnText.innerText = "ابدأ الرحلة";
+                document.querySelector('label[for="ob-name"]').innerText = "ماذا تحب أن نناديك؟"; // Fix label selector logic if needed
+            } else {
+                title.innerText = "Welcome";
+                btnText.innerText = "Get Started";
+            }
+        };
+
+        window.finishOnboarding = async function() {
+            const name = document.getElementById('ob-name').value.trim();
+            const gender = document.getElementById('ob-gender').value;
+            const lang = document.getElementById('ob-lang-switch').getAttribute('data-lang');
+
+            if (!name) {
+                showToast("Please enter your name", "error");
+                return;
+            }
+            if (!gender) {
+                showToast("Please select an avatar style", "error");
+                return;
+            }
+
+            // Save Data
+            window.appData.profile = {
+                name: name,
+                gender: gender,
+                completed: true
+            };
+            window.appData.settings.lang = lang;
+            
+            // Trigger Save
+            if (window.triggerCloudSave) window.triggerCloudSave();
+            localStorage.setItem('hm_data', JSON.stringify(window.appData));
+
+            // Play Sound (Optional)
+            const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log(e));
+
+            // Animation: Portal Zoom Exit
+            const card = document.getElementById('onboarding-card');
+            const screen = document.getElementById('onboarding-screen');
+
+            gsap.to(card, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.3,
+                ease: "back.in(1.7)",
+                onComplete: () => {
+                    gsap.to(screen, {
+                        scale: 1.5,
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            screen.classList.add('hidden');
+                            window.launchApp();
+                        }
+                    });
+                }
+            });
+        };
+
+        window.launchApp = function() {
+            document.getElementById('app-container').classList.remove('hidden');
+            refreshAllUI(); // Will apply language and profile settings
+            gsap.from('#app-container', { opacity: 0, scale: 0.95, duration: 0.5 });
+            showPage('tasks');
+            
+            // Show Greeting Toast
+            const hour = new Date().getHours();
+            const greeting = hour < 12 ? (window.appData.settings.lang === 'ar' ? 'صباح الخير' : 'Good Morning') : (window.appData.settings.lang === 'ar' ? 'مساء الخير' : 'Good Evening');
+            showToast(`${greeting}, ${window.appData.profile.name} 👋`, 'success');
+        };
         
         // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
         window.addEventListener('load', () => {
@@ -4301,6 +4669,10 @@ if (!window.appData) {
                 language: "Language", logout: "Logout", back: "Exit",
                 confirm: "Confirm",
 
+                profileSettings: "Profile Settings",
+                displayName: "Display Name",
+                avatarStyle: "Avatar Style",
+
                 // --- (الجديد: الإضافات) ---
                 addCourse: "Add Course", addBook: "Add Book", addTask: "Add Task",
                 markOptional: "Mark as Optional (Side Quest)",
@@ -4361,6 +4733,10 @@ if (!window.appData) {
                 nebulaColor: "لون الخلفية", customizeAccent: "لون التمييز",
                 language: "اللغة", logout: "خروج", back: "رجوع",
                 confirm: "موافق",
+
+                profileSettings: "إعدادات الملف الشخصي",
+                displayName: "الاسم المعروض",
+                avatarStyle: "شكل الصورة الرمزية",
 
                 // --- (الجديد: الإضافات) ---
                 addCourse: "إضافة دورة", addBook: "إضافة كتاب", addTask: "إضافة مهمة",
@@ -5168,6 +5544,24 @@ if (!window.appData) {
             if (trashPage && !trashPage.classList.contains('hidden')) {
                 renderTrash();
             }
+
+            // Update User Profile UI
+            if (window.appData.profile && window.appData.profile.name) {
+                const nameEl = document.getElementById('sidebar-user-name');
+                if (nameEl) nameEl.innerText = window.appData.profile.name;
+
+                const avatarImg = document.getElementById('user-avatar-img');
+                const avatarIcon = document.getElementById('user-avatar-icon');
+                
+                // If user chose a gender avatar, prioritize icon over google photo
+                if (window.appData.profile.gender) {
+                    if (avatarImg) avatarImg.classList.add('hidden');
+                    if (avatarIcon) {
+                        avatarIcon.classList.remove('hidden');
+                        avatarIcon.innerHTML = window.appData.profile.gender === 'male' ? '<i class="fas fa-user-tie"></i>' : '<i class="fas fa-user-nurse"></i>';
+                    }
+                }
+            }
         }
 
         function triggerConfetti(grand = false) {
@@ -5914,6 +6308,30 @@ if (!window.appData) {
             window.appData.settings.accent = c;
             applyAccentColor(c);
             commitData();
+        };
+
+        window.saveProfileName = function() {
+            const nameInput = document.getElementById('settings-name-input');
+            const newName = nameInput.value.trim();
+            
+            if (!newName) {
+                showToast("Please enter a valid name", "error");
+                return;
+            }
+            
+            if (!window.appData.profile) window.appData.profile = {};
+            window.appData.profile.name = newName;
+            commitData();
+            refreshAllUI();
+            showToast("Name updated successfully", "success");
+        };
+
+        window.saveProfileGender = function(gender) {
+            if (!window.appData.profile) window.appData.profile = {};
+            window.appData.profile.gender = gender;
+            commitData();
+            refreshAllUI();
+            showToast("Avatar style updated", "success");
         };
 
         function applyTheme(t) {
@@ -6890,6 +7308,9 @@ function buildSystemPrompt() {
     const courses = window.appData.courses.filter(c => !c.deleted);
     const notes = window.appData.notes.filter(n => !n.deleted);
 
+    // Get User Name
+    const userName = window.appData.profile && window.appData.profile.name ? window.appData.profile.name : 'User';
+
     // بناء قائمة المهام مع التفاصيل
     let tasksList = tasks.map((t, i) => 
         `${i}. ${t.name} ${t.completed ? '✅' : '⬜'} - ${t.desc || 'No description'}`
@@ -6899,7 +7320,7 @@ function buildSystemPrompt() {
         `${i}. ${b.name} (${b.done}/${b.total} pages) - ${b.desc || 'No description'}`
     ).join('\n');
 
-    return `You are an AI assistant integrated into a productivity app called "How Much - Life OS".
+    return `You are an AI assistant integrated into a productivity app called "How Much - Life OS". You are talking to ${userName}.
 
 **Current User Data:**
 
@@ -7368,14 +7789,6 @@ window.clearAIHistory = function() {
         document.getElementById('ai-chat-messages').innerHTML = '';
         showAIWelcomeMessage();
         const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
-        showToast(successMsg, 'success');
-    };
-    openConfirmModal(message, action);
-};
-    </script>
-</body>
-
-</html>
         showToast(successMsg, 'success');
     };
     openConfirmModal(message, action);
