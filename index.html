@@ -5343,6 +5343,9 @@
             let failCount = 0;
 
             for (const file of files) {
+                // Create Progress UI
+                const uiId = createUploadUI(file);
+
                 // 🆕 إضافة 8: معلومات الملف الحالي
                 console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
 
@@ -5375,22 +5378,29 @@
                     console.log(`📁 المجلد: ${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
                     console.log("🚀 إرسال الطلب...");
 
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        body: formData
+                    // Use XHR for progress tracking
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', uploadUrl, true);
+
+                    xhr.upload.onprogress = (e) => {
+                        if (e.lengthComputable) {
+                            const percent = (e.loaded / e.total) * 100;
+                            updateUploadUI(uiId, percent);
+                        }
+                    };
+
+                    const data = await new Promise((resolve, reject) => {
+                        xhr.onload = () => {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                resolve(JSON.parse(xhr.responseText));
+                            } else {
+                                reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
+                            }
+                        };
+                        xhr.onerror = () => reject(new Error('Network Error'));
+                        xhr.send(formData);
                     });
 
-                    // 🆕 إضافة 13: عرض استجابة الخادم
-                    console.log(`📡 استجابة الخادم: ${response.status} ${response.statusText}`);
-
-                    if (!response.ok) {
-                        // 🆕 إضافة 14: قراءة رسالة الخطأ من Cloudinary
-                        const errorText = await response.text();
-                        console.error("❌ خطأ من Cloudinary:", errorText);
-                        throw new Error(`Upload failed: ${response.status} - ${errorText}`);
-                    }
-
-                    const data = await response.json();
                     // 🆕 إضافة 15: عرض الاستجابة الناجحة
                     console.log("✅ استجابة ناجحة:", data);
 
@@ -5408,6 +5418,7 @@
                     window.userStorageInfo.fileCount++;
 
                     // 🆕 إضافة 16: رسالة نجاح مفصلة
+                    completeUploadUI(uiId);
                     console.log(`✅ Uploaded: ${file.name}`);
                     console.log(`  URL: ${data.secure_url}`);
                     successCount++;
@@ -5418,6 +5429,7 @@
                     console.error("   الملف:", file.name);
                     console.error("   التفاصيل:", error.message);
                     showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
+                    errorUploadUI(uiId);
                     failCount++;
                 }
             }
@@ -7906,4 +7918,69 @@ Your friendly message to the user
 </body>
 
 </html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
 
+</html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
+
+</html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
+
+</html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
+
+</html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
+
+</html>
+document.getElementById('ai-chat-messages').innerHTML = '';
+showAIWelcomeMessage();
+const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+showToast(successMsg, 'success');
+};
+openConfirmModal(message, action);
+};
+</script>
+</body>
+
+</html>
