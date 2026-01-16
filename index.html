@@ -7422,11 +7422,11 @@
 
             // بناء قائمة المهام مع التفاصيل
             let tasksList = tasks.map((t, i) =>
-                `${i}. ${t.name} ${t.completed ? '✅' : '⬜'} - ${t.desc || 'No description'}`
+                `${i}. ${t.name} ${t.completed ? '✅' : '⬜'} - ${t.desc || ''}`
             ).join('\n');
 
             let booksList = books.map((b, i) =>
-                `${i}. ${b.name} (${b.done}/${b.total} pages) - ${b.desc || 'No description'}`
+                `${i}. ${b.name} (${b.done}/${b.total} pages) - ${b.desc || ''}`
             ).join('\n');
 
             return `You are an AI assistant integrated into a productivity app called "How Much - Life OS". You are talking to ${userName}.
@@ -7906,3 +7906,4 @@ Your friendly message to the user
 </body>
 
 </html>
+
