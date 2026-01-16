@@ -5315,6 +5315,63 @@
             }, 300);
         };
 
+        // ==========================================
+        //  UPLOAD UI HELPERS
+        // ==========================================
+        function createUploadUI(file) {
+            const container = document.getElementById('file-list-preview');
+            const id = 'upload-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'upload-item';
+            div.innerHTML = `
+                <div class="upload-info">
+                    <span class="truncate max-w-[200px]">${escapeHtml(file.name)}</span>
+                    <span id="${id}-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div id="${id}-bar" class="progress-fill" style="width: 0%"></div>
+                </div>
+            `;
+            
+            if (container) container.insertBefore(div, container.firstChild);
+            return id;
+        }
+
+        function updateUploadUI(id, percent) {
+            const bar = document.getElementById(`${id}-bar`);
+            const text = document.getElementById(`${id}-percent`);
+            if (bar) bar.style.width = `${percent}%`;
+            if (text) text.innerText = `${Math.round(percent)}%`;
+        }
+
+        function completeUploadUI(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('completed');
+                const text = document.getElementById(`${id}-percent`);
+                if (text) text.innerText = 'Done';
+                
+                setTimeout(() => {
+                    el.style.opacity = '0';
+                    el.style.height = '0';
+                    el.style.marginBottom = '0';
+                    el.style.padding = '0';
+                    setTimeout(() => el.remove(), 300);
+                }, 1500);
+            }
+        }
+
+        function errorUploadUI(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('error');
+                const text = document.getElementById(`${id}-percent`);
+                if (text) text.innerText = 'Failed';
+            }
+        }
+
         window.handleFileUpload = async function (input) {
             // 🆕 إضافة 1: رسالة البداية
             console.log("🔵 بدء عملية الرفع...");
@@ -7957,39 +8014,6 @@ Your friendly message to the user
             openConfirmModal(message, action);
         };
     </script>
-</body>
-
-</html>
-document.getElementById('ai-chat-messages').innerHTML = '';
-showAIWelcomeMessage();
-const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
-showToast(successMsg, 'success');
-};
-openConfirmModal(message, action);
-};
-</script>
-</body>
-
-</html>
-document.getElementById('ai-chat-messages').innerHTML = '';
-showAIWelcomeMessage();
-const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
-showToast(successMsg, 'success');
-};
-openConfirmModal(message, action);
-};
-</script>
-</body>
-
-</html>
-document.getElementById('ai-chat-messages').innerHTML = '';
-showAIWelcomeMessage();
-const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
-showToast(successMsg, 'success');
-};
-openConfirmModal(message, action);
-};
-</script>
 </body>
 
 </html>
