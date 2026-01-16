@@ -1258,6 +1258,7 @@
             overflow: hidden;
             animation: slideInUp 0.3s ease-out;
         }
+
         .upload-info {
             display: flex;
             justify-content: space-between;
@@ -1265,12 +1266,14 @@
             font-size: 0.8rem;
             color: #cbd5e1;
         }
+
         .progress-track {
             height: 6px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow: hidden;
         }
+
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #6366f1, #a855f7);
@@ -1278,6 +1281,7 @@
             transition: width 0.2s linear;
             box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
         }
+
         .upload-meta {
             display: flex;
             justify-content: space-between;
@@ -1285,9 +1289,20 @@
             font-size: 0.7rem;
             font-weight: 600;
         }
-        .upload-item.completed .progress-fill { background: #10b981; box-shadow: 0 0 12px rgba(16, 185, 129, 0.4); }
-        .upload-item.error { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-        .upload-item.error .progress-fill { background: #ef4444; }
+
+        .upload-item.completed .progress-fill {
+            background: #10b981;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .upload-item.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .upload-item.error .progress-fill {
+            background: #ef4444;
+        }
     </style>
 </head>
 
@@ -5321,7 +5336,7 @@
         function createUploadUI(file) {
             const container = document.getElementById('file-list-preview');
             const id = 'upload-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-            
+
             const div = document.createElement('div');
             div.id = id;
             div.className = 'upload-item';
@@ -5334,7 +5349,7 @@
                     <div id="${id}-bar" class="progress-fill" style="width: 0%"></div>
                 </div>
             `;
-            
+
             if (container) container.insertBefore(div, container.firstChild);
             return id;
         }
@@ -5352,7 +5367,7 @@
                 el.classList.add('completed');
                 const text = document.getElementById(`${id}-percent`);
                 if (text) text.innerText = 'Done';
-                
+
                 setTimeout(() => {
                     el.style.opacity = '0';
                     el.style.height = '0';
@@ -5436,19 +5451,20 @@
                 return;
             }
 
-            showToast(`⏳ uploading file${files.length} file...`, 'neutral');
+            showToast(`⏳ uploading ${files.length} files...`, 'neutral');
 
             let successCount = 0;
             let failCount = 0;
 
-            for (const file of files) {
-                // Create Progress UI
-                const uiId = createUploadUI(file);
+            // Create Single Progress UI for Batch
+            const batchName = files.length > 1 ? `Uploading ${files.length} files...` : files[0].name;
+            const uiId = createUploadUI({ name: batchName });
 
+            let totalUploadedBytes = 0;
+
+            for (const file of files) {
                 // 🆕 إضافة 8: معلومات الملف الحالي
                 console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-
-
 
                 try {
                     // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
@@ -5483,7 +5499,9 @@
 
                     xhr.upload.onprogress = (e) => {
                         if (e.lengthComputable) {
-                            const percent = (e.loaded / e.total) * 100;
+                            // Calculate batch progress
+                            const currentBatchLoaded = totalUploadedBytes + e.loaded;
+                            const percent = (currentBatchLoaded / newFilesSize) * 100;
                             updateUploadUI(uiId, percent);
                         }
                     };
@@ -5516,8 +5534,9 @@
                     window.userStorageInfo.used += file.size;
                     window.userStorageInfo.fileCount++;
 
+                    totalUploadedBytes += file.size;
+
                     // 🆕 إضافة 16: رسالة نجاح مفصلة
-                    completeUploadUI(uiId);
                     console.log(`✅ Uploaded: ${file.name}`);
                     console.log(`  URL: ${data.secure_url}`);
                     successCount++;
@@ -5528,8 +5547,20 @@
                     console.error("   الملف:", file.name);
                     console.error("   التفاصيل:", error.message);
                     showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
-                    errorUploadUI(uiId);
+
+                    totalUploadedBytes += file.size;
                     failCount++;
+                }
+            }
+
+            // Finalize Batch UI
+            if (failCount === 0) {
+                completeUploadUI(uiId);
+            } else {
+                if (successCount > 0) {
+                    completeUploadUI(uiId);
+                } else {
+                    errorUploadUI(uiId);
                 }
             }
 
