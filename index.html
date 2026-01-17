@@ -2021,48 +2021,47 @@
                         </div>
 
                         <!-- Storage Usage Card -->
-<div class="glass-panel rounded-3xl overflow-hidden mb-8">
-    <div class="p-6">
-        <div class="flex justify-between items-center mb-4">
-            <div>
-                <h3 class="font-bold flex items-center gap-2">
-                    <i class="fab fa-google-drive text-blue-400"></i>
-                    <span data-i18n="storageUsage">Storage Usage</span>
-                </h3>
-                <p class="text-xs text-slate-400 mt-1" id="storage-detail">Loading...</p>
-            </div>
-            <button onclick="calculateUserStorage().then(() => updateStorageUI())"
-                class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all"
-                title="Refresh">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-        </div>
+                        <div class="glass-panel rounded-3xl overflow-hidden mb-8">
+                            <div class="p-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <h3 class="font-bold flex items-center gap-2">
+                                            <i class="fas fa-hdd text-purple-400"></i>
+                                            <span data-i18n="storageUsage">Storage Usage</span>
+                                        </h3>
+                                        <p class="text-xs text-slate-400 mt-1" id="storage-detail">Loading...</p>
+                                    </div>
+                                    <button onclick="calculateUserStorage().then(() => updateStorageUI())"
+                                        class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all"
+                                        title="Refresh">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-2 relative">
-            <div id="storage-progress-bar"
-                class="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-1000"
-                style="width: 0%"></div>
-        </div>
+                                <!-- Progress Bar -->
+                                <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-2 relative">
+                                    <div id="storage-progress-bar"
+                                        class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"
+                                        style="width: 0%"></div>
+                                </div>
 
-        <div class="flex justify-between text-xs text-slate-400">
-            <span id="storage-used">0 MB</span>
-            <span id="storage-limit">15 GB</span>
-        </div>
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span id="storage-used">0 MB</span>
+                                    <span id="storage-limit">100 MB</span>
+                                </div>
 
-        <!-- Google Drive Credit -->
-        <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xs text-slate-500">
-                <i class="fab fa-google-drive text-blue-400"></i>
-                <span>Powered by Google Drive</span>
-            </div>
-            <a href="https://drive.google.com" target="_blank" 
-               class="text-xs text-blue-400 hover:underline">
-                Open Drive →
-            </a>
-        </div>
-    </div>
-</div>
+                                <!-- Cloudinary Credit (No Link) -->
+                                <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                                        <i class="fas fa-cloud"></i>
+                                        <span>File storage powered by</span>
+                                        <span class="text-blue-400 font-bold">
+                                            Cloudinary
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="p-6 border-b border-white/5 flex items-center justify-between">
                             <div class="flex items-center gap-4">
@@ -2890,29 +2889,18 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        window.GoogleAuthProvider = GoogleAuthProvider;
-window.signInWithPopup = signInWithPopup;
-window.auth = null; // سيتم تعيينها لاحقاً
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
         import { getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-        
-        
 
-// ==========================================
-//  GOOGLE DRIVE CONFIGURATION
-// ==========================================
+        // ==========================================
+        //  CLOUDINARY CONFIGURATION
+        // ==========================================
 
-window.DRIVE_CONFIG = {
-    apiEndpoint: 'https://www.googleapis.com/drive/v3',
-    uploadEndpoint: 'https://www.googleapis.com/upload/drive/v3',
-    appFolderName: 'How Much',
-    maxFileSize: 15 * 1024 * 1024 * 1024, // 15 GB
-    quotaLimit: 15 * 1024 * 1024 * 1024   // 15 GB total
-};
-
-window.driveAccessToken = null;
-window.appFolderId = null; // سيتم إنشاؤه تلقائياً
-        
+        window.CLOUDINARY_CONFIG = {
+            cloudName: 'dnpnpmdcf',
+            uploadPreset: 'how_much_app',
+            folder: 'user-files'
+        };
 
         window.USER_STORAGE_LIMIT = 100 * 1024 * 1024; // 100MB
         window.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -2925,103 +2913,68 @@ window.appFolderId = null; // سيتم إنشاؤه تلقائياً
         };
 
         // دالة حساب حجم الملفات المستخدم
+        window.calculateUserStorage = async function () {
+            if (!currentUser || !db) {
+                window.userStorageInfo.used = 0;
+                window.userStorageInfo.fileCount = 0;
+                return;
+            }
 
-window.calculateUserStorage = async function () {
-    if (!currentUser || !db) {
-        window.userStorageInfo = {
-            used: 0,
-            limit: 15 * 1024 * 1024 * 1024,
-            fileCount: 0,
-            appFilesSize: 0
+            try {
+                // جمع أحجام الملفات من جميع العناصر
+                let totalSize = 0;
+                let fileCount = 0;
+
+                // من المهام
+                window.appData.tasks.forEach(task => {
+                    if (task.files && Array.isArray(task.files)) {
+                        task.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
+                });
+
+                // من الملاحظات
+                window.appData.notes.forEach(note => {
+                    if (note.files && Array.isArray(note.files)) {
+                        note.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
+                });
+
+                // من الدورات
+                window.appData.courses.forEach(course => {
+                    if (course.files && Array.isArray(course.files)) {
+                        course.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
+                });
+
+                // من الكتب
+                window.appData.books.forEach(book => {
+                    if (book.files && Array.isArray(book.files)) {
+                        book.files.forEach(file => {
+                            totalSize += (file.size || 0);
+                            fileCount++;
+                        });
+                    }
+                });
+
+                window.userStorageInfo.used = totalSize;
+                window.userStorageInfo.fileCount = fileCount;
+
+                console.log(`📊 Storage: ${(totalSize / 1024 / 1024).toFixed(2)} MB / ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
+
+            } catch (error) {
+                console.error("Storage calculation error:", error);
+            }
         };
-        return;
-    }
 
-    try {
-        // ✅ 1. احصل على الحصة الحقيقية من Drive
-        const realQuota = await getRealDriveQuota();
-
-        // ✅ 2. احسب حجم ملفات التطبيق فقط (للإحصائيات)
-        let appFilesSize = 0;
-        let appFileCount = 0;
-
-        ['tasks', 'notes', 'courses', 'books'].forEach(category => {
-            window.appData[category].forEach(item => {
-                if (item.files && Array.isArray(item.files)) {
-                    item.files.forEach(file => {
-                        if (file.source === 'drive') {
-                            appFilesSize += (file.size || 0);
-                            appFileCount++;
-                        }
-                    });
-                }
-            });
-        });
-
-        // ✅ 3. استخدم البيانات الحقيقية من Drive
-        window.userStorageInfo = {
-            used: realQuota.used,              // ✅ المساحة المستخدمة الفعلية
-            limit: realQuota.total,            // ✅ الحد الأقصى الفعلي
-            available: realQuota.available,    // ✅ المساحة المتبقية
-            fileCount: appFileCount,           // عدد ملفات التطبيق فقط
-            appFilesSize: appFilesSize,        // حجم ملفات التطبيق فقط
-            lastUpdated: Date.now()
-        };
-
-        console.log('📊 Storage Info Updated:');
-        console.log(`   Drive Total: ${(realQuota.total / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   Drive Used: ${(realQuota.used / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   App Files: ${(appFilesSize / 1024 / 1024).toFixed(2)} MB (${appFileCount} files)`);
-
-    } catch (error) {
-        console.error("Storage calculation error:", error);
-        
-        // ✅ Fallback في حالة الخطأ
-        window.userStorageInfo = {
-            used: 0,
-            limit: 15 * 1024 * 1024 * 1024,
-            fileCount: 0,
-            appFilesSize: 0,
-            error: error.message
-        };
-    }
-};
-
-window.updateStorageUI = function () {
-    const usedGB = (window.userStorageInfo.used / 1024 / 1024 / 1024).toFixed(2);
-    const limitGB = (window.userStorageInfo.limit / 1024 / 1024 / 1024).toFixed(0);
-    const appFilesMB = (window.userStorageInfo.appFilesSize / 1024 / 1024).toFixed(2);
-    const percentage = ((window.userStorageInfo.used / window.userStorageInfo.limit) * 100).toFixed(1);
-
-    const detailEl = document.getElementById('storage-detail');
-    const progressBar = document.getElementById('storage-progress-bar');
-    const usedEl = document.getElementById('storage-used');
-    const limitEl = document.getElementById('storage-limit');
-
-    if (detailEl) {
-        // ✅ عرض معلومات مفصّلة
-        detailEl.innerHTML = `
-            ${window.userStorageInfo.fileCount} app files (${appFilesMB} MB)<br>
-            <span class="text-xs text-slate-500">Total Drive usage: ${usedGB} GB</span>
-        `;
-    }
-
-    if (progressBar) {
-        progressBar.style.width = Math.min(100, percentage) + '%';
-
-        // ✅ تغيير اللون حسب النسبة
-        if (percentage >= 90) {
-            progressBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-1000';
-        } else if (percentage >= 70) {
-            progressBar.className = 'h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all duration-1000';
-        } else {
-            progressBar.className = 'h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-1000';
-        }
-    }
-
-    if (usedEl) usedEl.innerText = usedGB + ' GB';
-    if (limitEl) limitEl.innerText = limitGB + ' GB (Drive)';
-};
         // دالة تحديث واجهة معلومات التخزين
         window.updateStorageUI = function () {
             const usedMB = (window.userStorageInfo.used / 1024 / 1024).toFixed(2);
@@ -3071,42 +3024,26 @@ window.updateStorageUI = function () {
 
         try {
             app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    window.auth = auth; // ✅ جعل auth متاح عالمياً
-    db = getFirestore(app);
+            auth = getAuth(app);
+            db = getFirestore(app);
         } catch (e) {
             console.error("Firebase Init Error:", e);
         }
 
         window.handleGoogleLogin = async () => {
-    if (!auth) return;
-    
-    try {
-        const provider = new GoogleAuthProvider();
-        
-        // ✅ طلب صلاحيات Drive من البداية
-        provider.addScope('https://www.googleapis.com/auth/drive.file');
-        provider.addScope('https://www.googleapis.com/auth/drive.appdata');
-        provider.addScope('https://www.googleapis.com/auth/drive.metadata.readonly'); // لقراءة الحصة
-        
-        const result = await signInWithPopup(auth, provider);
-        
-        // ✅ حفظ الـ Access Token
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if (credential && credential.accessToken) {
-            window.driveAccessToken = credential.accessToken;
-            console.log('✅ Drive Access Token saved');
-        }
-        
-    } catch (error) {
-        console.error("Login Error:", error);
-        if (error.code === 'auth/unauthorized-domain') {
-            alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)'.");
-        } else {
-            showToast("Login Failed: " + error.message, 'error');
-        }
-    }
-};
+            if (auth) {
+                try {
+                    await signInWithPopup(auth, new GoogleAuthProvider());
+                } catch (error) {
+                    console.error("Login Error:", error);
+                    if (error.code === 'auth/unauthorized-domain') {
+                        alert("Preview Domain Not Authorized. \n\nPlease use 'Continue Offline (Guest)'.");
+                    } else {
+                        showToast("Login Failed: " + error.message);
+                    }
+                }
+            }
+        };
 
         window.handleLogout = async () => {
             if (auth) await signOut(auth);
@@ -5450,133 +5387,202 @@ window.updateStorageUI = function () {
             }
         }
 
-        // استبدل الدالة الموجودة بهذه النسخة المحدثة
+        window.handleFileUpload = async function (input) {
+            // 🆕 إضافة 1: رسالة البداية
+            console.log("🔵 بدء عملية الرفع...");
 
-window.handleFileUpload = async function (input) {
-    console.log("🔵 Starting upload process...");
+            const files = Array.from(input.files);
+            if (files.length === 0) {
+                console.log("❌ لا توجد ملفات"); // 🆕 إضافة 2
+                return;
+            }
 
-    const files = Array.from(input.files);
-    if (files.length === 0) {
-        console.log("❌ No files selected");
-        return;
-    }
+            // 🆕 إضافة 3: عرض عدد الملفات
+            console.log(`📁 عدد الملفات: ${files.length}`);
 
-    console.log(`📁 Files selected: ${files.length}`);
+            // 🆕 إضافة 4: فحص تسجيل الدخول مع Logging
+            console.log("🔍 فحص تسجيل الدخول...");
+            console.log("window.currentUser:", window.currentUser);
 
-    if (!window.currentUser) {
-        console.error("❌ User not logged in");
-        showToast("⚠️ Please sign in with Google to upload files", 'error');
-        input.value = '';
-        return;
-    }
+            if (!window.currentUser) {
+                console.error("❌ لم يتم تسجيل الدخول");
+                showToast("⚠️ you should sign in", 'error');
+                input.value = '';
+                return;
+            }
 
-    console.log("✅ User authenticated:", window.currentUser.email);
+            // 🆕 إضافة 5: عرض معلومات المستخدم
+            console.log("✅ المستخدم مسجل:", window.currentUser.email);
+            console.log("✅ User ID:", window.currentUser.uid);
 
-    // ✅ تحديث الحصة قبل الرفع
-    await calculateUserStorage();
+            // 🆕 إضافة 6: فحص إعدادات Cloudinary
+            console.log("🔧 فحص إعدادات Cloudinary...");
+            console.log("CLOUDINARY_CONFIG:", window.CLOUDINARY_CONFIG);
 
-    // ✅ حساب المساحة المطلوبة
-    const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
-    const availableSpace = window.userStorageInfo.available || 0;
+            if (!window.CLOUDINARY_CONFIG.cloudName || !window.CLOUDINARY_CONFIG.uploadPreset) {
+                console.error("❌ إعدادات Cloudinary مفقودة!");
+                showToast("❌ Upload settings error", 'error');
+                return;
+            }
 
-    console.log("📊 Storage check:");
-    console.log(`   Available: ${(availableSpace / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   Needed: ${(newFilesSize / 1024 / 1024).toFixed(2)} MB`);
+            // 🆕 إضافة 7: حساب وعرض المساحة
+            const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
+            const totalAfterUpload = window.userStorageInfo.used + newFilesSize;
 
-    // ✅ فحص المساحة المتبقية
-    if (newFilesSize > availableSpace) {
-        const availableMB = (availableSpace / 1024 / 1024).toFixed(2);
-        const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
+            console.log("📊 فحص المساحة:");
+            console.log(`   الحالي: ${(window.userStorageInfo.used / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الملفات الجديدة: ${(newFilesSize / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الإجمالي بعد: ${(totalAfterUpload / 1024 / 1024).toFixed(2)} MB`);
+            console.log(`   الحد الأقصى: ${(USER_STORAGE_LIMIT / 1024 / 1024).toFixed(0)} MB`);
 
-        console.error("❌ Insufficient space");
-        showToast(
-            `⚠️ Insufficient Google Drive storage!\n\n` +
-            `Available: ${availableMB} MB\n` +
-            `Needed: ${neededMB} MB\n\n` +
-            `Please free up space in your Drive.`,
-            'error'
-        );
-        input.value = '';
-        return;
-    }
+            if (totalAfterUpload > window.USER_STORAGE_LIMIT) {
+                const remainingMB = ((USER_STORAGE_LIMIT - window.userStorageInfo.used) / 1024 / 1024).toFixed(2);
+                const neededMB = (newFilesSize / 1024 / 1024).toFixed(2);
 
-    // ✅ متابعة الرفع
-    showToast(`⏳ Uploading ${files.length} file(s) to Google Drive...`, 'neutral');
+                console.error("❌ تجاوز الحد الأقصى للمساحة");
+                showToast(
+                    `⚠️ Insufficient storage space!\n\n` +
+                    `remaining: ${remainingMB} MB\n` +
+                    `needed: ${neededMB} MB\n\n` +
+                    `Delete some old files first.`,
+                    'error'
+                );
+                input.value = '';
+                return;
+            }
 
+            showToast(`⏳ uploading ${files.length} files...`, 'neutral');
 
-    let successCount = 0;
-    let failCount = 0;
+            let successCount = 0;
+            let failCount = 0;
 
-    // ✅ إنشاء UI واحد للباتش
-    const batchName = files.length > 1 ? `Uploading ${files.length} files to Drive...` : files[0].name;
-    const uiId = createUploadUI({ name: batchName });
+            // Create Single Progress UI for Batch
+            const batchName = files.length > 1 ? `Uploading ${files.length} files...` : files[0].name;
+            const uiId = createUploadUI({ name: batchName });
 
-    let totalUploadedBytes = 0;
+            let totalUploadedBytes = 0;
 
-    for (const file of files) {
-        console.log(`\n📤 Uploading: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+            for (const file of files) {
+                // 🆕 إضافة 8: معلومات الملف الحالي
+                console.log(`\n📤 uploading file : ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
 
-        try {
-            // ✅ رفع إلى Drive
-            const fileData = await uploadFileToDrive(file, (percent) => {
-                const currentBatchLoaded = totalUploadedBytes + (file.size * percent / 100);
-                const batchPercent = (currentBatchLoaded / newFilesSize) * 100;
-                updateUploadUI(uiId, batchPercent);
-            });
+                try {
+                    // 🆕 إضافة 9: تحديد نوع المورد (هذا الحل للمشكلة رقم 1)
+                    let resourceType = 'raw';
 
-            // ✅ حفظ البيانات محلياً (مؤقتاً حتى الضغط على Save)
-            tempFiles.push(fileData);
+                    if (file.type.startsWith('image/')) {
+                        resourceType = 'image';
+                    } else if (file.type.startsWith('video/')) {
+                        resourceType = 'video';
+                    }
 
-            // ✅ تحديث الإحصائيات
-            window.userStorageInfo.used += file.size;
-            window.userStorageInfo.fileCount++;
+                    // 🆕 إضافة 10: عرض نوع المورد
+                    console.log(`📋 نوع المورد: ${resourceType}`);
+                    console.log(`📋 نوع الملف: ${file.type}`);
 
-            totalUploadedBytes += file.size;
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', window.CLOUDINARY_CONFIG.uploadPreset);
+                    formData.append('folder', `${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
 
-            console.log(`✅ Uploaded: ${file.name}`);
-            console.log(`   Drive ID: ${fileData.driveId}`);
-            successCount++;
+                    // 🆕 إضافة 11: الرابط الصحيح (حل المشكلة رقم 1)
+                    const uploadUrl = `https://api.cloudinary.com/v1_1/${window.CLOUDINARY_CONFIG.cloudName}/${resourceType}/upload`;
 
-        } catch (error) {
-            console.error("❌ Upload error:", error);
-            console.error("   File:", file.name);
-            console.error("   Details:", error.message);
-            
-            showToast(`❌ Failed: "${file.name}"\n${error.message}`, 'error');
+                    // 🆕 إضافة 12: عرض معلومات الطلب
+                    console.log(`🌐 الرابط: ${uploadUrl}`);
+                    console.log(`📁 المجلد: ${window.CLOUDINARY_CONFIG.folder}/${window.currentUser.uid}`);
+                    console.log("🚀 إرسال الطلب...");
 
-            totalUploadedBytes += file.size;
-            failCount++;
-        }
-    }
+                    // Use XHR for progress tracking
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', uploadUrl, true);
 
-    // ✅ إنهاء UI
-    if (failCount === 0) {
-        completeUploadUI(uiId);
-    } else {
-        if (successCount > 0) {
-            completeUploadUI(uiId);
-        } else {
-            errorUploadUI(uiId);
-        }
-    }
+                    xhr.upload.onprogress = (e) => {
+                        if (e.lengthComputable) {
+                            // Calculate batch progress
+                            const currentBatchLoaded = totalUploadedBytes + e.loaded;
+                            const percent = (currentBatchLoaded / newFilesSize) * 100;
+                            updateUploadUI(uiId, percent);
+                        }
+                    };
 
-    console.log("\n📊 Final results:");
-    console.log(`   Successful: ${successCount}`);
-    console.log(`   Failed: ${failCount}`);
+                    const data = await new Promise((resolve, reject) => {
+                        xhr.onload = () => {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                resolve(JSON.parse(xhr.responseText));
+                            } else {
+                                reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
+                            }
+                        };
+                        xhr.onerror = () => reject(new Error('Network Error'));
+                        xhr.send(formData);
+                    });
 
-    if (successCount > 0) {
-        showToast(`✅ Uploaded ${successCount} file(s) successfully to Drive!`, 'success');
-        renderFilePreview();
-        updateStorageUI();
-    }
+                    // 🆕 إضافة 15: عرض الاستجابة الناجحة
+                    console.log("✅ استجابة ناجحة:", data);
 
-    if (failCount > 0) {
-        showToast(`⚠️ ${failCount} file(s) failed to upload`, 'error');
-    }
+                    tempFiles.push({
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        url: data.secure_url,
+                        publicId: data.public_id,
+                        uploadedAt: Date.now(),
+                        cloudinary: true
+                    });
 
-    input.value = '';
-    console.log("🏁 Upload process completed");
-};
+                    window.userStorageInfo.used += file.size;
+                    window.userStorageInfo.fileCount++;
+
+                    totalUploadedBytes += file.size;
+
+                    // 🆕 إضافة 16: رسالة نجاح مفصلة
+                    console.log(`✅ Uploaded: ${file.name}`);
+                    console.log(`  URL: ${data.secure_url}`);
+                    successCount++;
+
+                } catch (error) {
+                    // 🆕 إضافة 17: معالجة أخطاء مفصلة
+                    console.error("❌ خطأ في الرفع:", error);
+                    console.error("   الملف:", file.name);
+                    console.error("   التفاصيل:", error.message);
+                    showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
+
+                    totalUploadedBytes += file.size;
+                    failCount++;
+                }
+            }
+
+            // Finalize Batch UI
+            if (failCount === 0) {
+                completeUploadUI(uiId);
+            } else {
+                if (successCount > 0) {
+                    completeUploadUI(uiId);
+                } else {
+                    errorUploadUI(uiId);
+                }
+            }
+
+            // 🆕 إضافة 18: تقرير نهائي
+            console.log("\n📊 النتيجة النهائية:");
+            console.log(`   ناجح: ${successCount}`);
+            console.log(`   فاشل: ${failCount}`);
+
+            if (successCount > 0) {
+                showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
+                renderFilePreview();
+                updateStorageUI();
+            }
+
+            if (failCount > 0) {
+                showToast(`⚠️ failed to upload${failCount} file`, 'error');
+            }
+
+            input.value = '';
+            // 🆕 إضافة 19: رسالة النهاية
+            console.log("🏁 انتهت عملية الرفع");
+        };
         function renderFilePreview() {
             const container = document.getElementById('file-list-preview');
             container.innerHTML = '';
@@ -5620,87 +5626,30 @@ window.handleFileUpload = async function (input) {
                 container.appendChild(fileEl);
             });
         }
+        window.removeTempFile = async function (idx) {
+            const file = tempFiles[idx];
 
-window.removeTempFile = async function (idx) {
-    const file = tempFiles[idx];
+            // ✅ حذف من Cloudinary (إذا كان من Cloudinary)
+            if (file.cloudinary && file.publicId) {
+                try {
+                    // ملاحظة: الحذف من Cloudinary يحتاج API Secret
+                    // لذلك سنحذف من الواجهة فقط، والملفات ستُحذف تلقائياً بعد 30 يوم
+                    console.log("File marked for deletion:", file.publicId);
 
-    // ✅ حذف من Drive إذا كان من Drive
-    if (file.source === 'drive' && file.driveId) {
-        try {
-            await deleteFileFromDrive(file.driveId);
-            console.log("✅ File deleted from Drive:", file.driveId);
+                    // تحديث الحجم
+                    window.userStorageInfo.used -= (file.size || 0);
+                    window.userStorageInfo.fileCount--;
 
-            // تحديث الحجم
-            window.userStorageInfo.used -= (file.size || 0);
-            window.userStorageInfo.fileCount--;
+                } catch (error) {
+                    console.warn("Delete error:", error);
+                }
+            }
 
-        } catch (error) {
-            console.warn("Delete error:", error);
-            showToast("⚠️ Could not delete from Drive", 'error');
-            return; // لا تحذف من القائمة إذا فشل الحذف من Drive
-        }
-    }
-
-    // ✅ حذف من القائمة المحلية
-    tempFiles.splice(idx, 1);
-    renderFilePreview();
-    updateStorageUI();
-    showToast("✅ File removed", 'success');
-};
-
-// تحديث بسيط لإظهار أيقونة Drive
-
-function renderFilePreview() {
-    const container = document.getElementById('file-list-preview');
-    container.innerHTML = '';
-
-    console.log("📂 Rendering files:", tempFiles);
-
-    tempFiles.forEach((f, idx) => {
-        let icon = 'fa-file';
-        if (f.type && f.type.includes('image')) icon = 'fa-image';
-        if (f.type && f.type.includes('pdf')) icon = 'fa-file-pdf';
-        if (f.type && f.type.includes('video')) icon = 'fa-video';
-
-        const sizeKB = f.size ? (f.size / 1024).toFixed(1) : '?';
-        
-        // ✅ أيقونة Drive
-        const driveIcon = f.source === 'drive' 
-            ? '<i class="fab fa-google-drive text-blue-400 text-xs ml-1"></i>' 
-            : '';
-
-        const fileEl = document.createElement('div');
-        fileEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded-lg text-xs';
-        fileEl.innerHTML = `
-            <div class="flex items-center gap-2 overflow-hidden flex-1">
-                <i class="fas ${icon} text-slate-400"></i>
-                <div class="flex flex-col overflow-hidden">
-                    <span class="truncate max-w-[150px] flex items-center">
-                        ${escapeHtml(f.name)}
-                        ${driveIcon}
-                    </span>
-                    <span class="text-[10px] text-slate-500">${sizeKB} KB</span>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <!-- ✅ زر التحميل -->
-                <button onclick="downloadFileFromDrive('${f.driveId || ''}', '${escapeHtml(f.name)}')" 
-                        class="text-green-400 hover:text-white" 
-                        title="Download">
-                    <i class="fas fa-download"></i>
-                </button>
-                
-                <!-- زر الحذف -->
-                <button onclick="removeTempFile(${idx})" 
-                        class="text-red-400 hover:text-white" 
-                        title="Delete">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        container.appendChild(fileEl);
-    });
-}
+            tempFiles.splice(idx, 1);
+            renderFilePreview();
+            updateStorageUI();
+            showToast("✅ file deleted", 'success');
+        };
 
         window.moveToTrash = function (type, id, event) {
             event.stopPropagation();
@@ -5725,83 +5674,6 @@ function renderFilePreview() {
                 deleteItemLogic(type, id);
             }
         };
-
-        // ==========================================
-//  DOWNLOAD FILE FROM DRIVE
-// ==========================================
-
-window.downloadFileFromDrive = async function (driveId, filename) {
-    if (!driveId) {
-        showToast("❌ Invalid file", 'error');
-        return;
-    }
-
-    try {
-        showToast("⏳ Preparing download...", 'neutral');
-
-        const token = await getDriveAccessToken();
-
-        // ✅ الحصول على رابط التحميل
-        const response = await fetch(
-            `${DRIVE_CONFIG.apiEndpoint}/files/${driveId}?alt=media`,
-            {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`Download failed: ${response.status}`);
-        }
-
-        const blob = await response.blob();
-
-        // ✅ تحميل الملف
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename || 'downloaded-file';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        URL.revokeObjectURL(link.href);
-        showToast("✅ Download complete!", 'success');
-
-    } catch (error) {
-        console.error("Download error:", error);
-        showToast("❌ Download failed", 'error');
-    }
-};
-
-// ==========================================
-//  CHECK DRIVE QUOTA
-// ==========================================
-
-async function checkDriveQuota() {
-    try {
-        const token = await getDriveAccessToken();
-
-        const response = await fetch(
-            `${DRIVE_CONFIG.apiEndpoint}/about?fields=storageQuota`,
-            {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }
-        );
-
-        const data = await response.json();
-        const quota = data.storageQuota;
-
-        console.log('📊 Drive Storage:');
-        console.log(`   Total: ${(quota.limit / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   Used: ${(quota.usage / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   Available: ${((quota.limit - quota.usage) / 1024 / 1024 / 1024).toFixed(2)} GB`);
-
-        return quota;
-
-    } catch (error) {
-        console.warn('Could not check Drive quota:', error);
-        return null;
-    }
-}
 
         function deleteItemLogic(type, id) {
             let list = [];
@@ -6387,34 +6259,6 @@ async function checkDriveQuota() {
                 window.redoCanvas();
             }
         };
-
-        // ==========================================
-//  DELETE FILE FROM GOOGLE DRIVE
-// ==========================================
-
-async function deleteFileFromDrive(driveId) {
-    const token = await getDriveAccessToken();
-
-    try {
-        const response = await fetch(
-            `${DRIVE_CONFIG.apiEndpoint}/files/${driveId}`,
-            {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            }
-        );
-
-        if (response.ok || response.status === 204) {
-            console.log('✅ File deleted from Drive:', driveId);
-            return true;
-        } else {
-            throw new Error(`Delete failed: ${response.status}`);
-        }
-    } catch (error) {
-        console.error('Delete error:', error);
-        throw error;
-    }
-}
 
         function initFabric() {
             const canvasEl = document.getElementById('fabric-canvas');
@@ -8154,258 +7998,7 @@ Your friendly message to the user
                     return '❌ Unknown command.';
             }
         }
-        // ==========================================
-//  GET DRIVE ACCESS TOKEN
-// ==========================================
 
-async function getDriveAccessToken() {
-    if (!window.currentUser) {
-        throw new Error('User not authenticated');
-    }
-
-    // ✅ إذا كان الـ Token موجود ولم ينتهِ، استخدمه
-    if (window.driveAccessToken) {
-        console.log('✅ Using cached Drive token');
-        return window.driveAccessToken;
-    }
-
-    // ✅ إعادة المصادقة للحصول على Token جديد
-    try {
-        const provider = new GoogleAuthProvider();
-        provider.addScope('https://www.googleapis.com/auth/drive.file');
-        provider.addScope('https://www.googleapis.com/auth/drive.appdata');
-        provider.addScope('https://www.googleapis.com/auth/drive.metadata.readonly');
-        
-        // ✅ استخدام getRedirectResult بدلاً من popup (أفضل للموبايل)
-        const result = await signInWithPopup(auth, provider);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        
-        if (credential && credential.accessToken) {
-            window.driveAccessToken = credential.accessToken;
-            console.log('✅ New Drive token obtained');
-            return credential.accessToken;
-        } else {
-            throw new Error('Failed to get Drive access token');
-        }
-        
-    } catch (error) {
-        console.error('Drive Auth Error:', error);
-        
-        // ✅ رسالة واضحة للمستخدم
-        showToast(
-            '⚠️ Please re-login to enable Google Drive uploads\n\n' +
-            'Sign out and sign in again to grant Drive permissions.',
-            'error'
-        );
-        
-        throw error;
-    }
-}
-
-// ==========================================
-//  GET REAL DRIVE QUOTA FROM GOOGLE
-// ==========================================
-async function getRealDriveQuota() {
-    try {
-        const token = await getDriveAccessToken();
-
-        const response = await fetch(
-            `${DRIVE_CONFIG.apiEndpoint}/about?fields=storageQuota,user`,
-            {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`Failed to get quota: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const quota = data.storageQuota;
-
-        console.log('📊 Real Drive Storage:');
-        console.log(`   Total: ${(quota.limit / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   Used: ${(quota.usage / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`   Available: ${((quota.limit - quota.usage) / 1024 / 1024 / 1024).toFixed(2)} GB`);
-
-        return {
-            total: parseInt(quota.limit) || (15 * 1024 * 1024 * 1024), // 15 GB default
-            used: parseInt(quota.usage) || 0,
-            available: (parseInt(quota.limit) || (15 * 1024 * 1024 * 1024)) - (parseInt(quota.usage) || 0),
-            userEmail: data.user?.emailAddress || ''
-        };
-
-    } catch (error) {
-        console.error('Quota fetch error:', error);
-        
-        // ✅ Fallback: استخدام القيم الافتراضية
-        return {
-            total: 15 * 1024 * 1024 * 1024, // 15 GB
-            used: 0,
-            available: 15 * 1024 * 1024 * 1024,
-            error: error.message
-        };
-    }
-}
-
-// ==========================================
-//  CREATE/GET APP FOLDER
-// ==========================================
-
-async function getOrCreateAppFolder() {
-    if (window.appFolderId) {
-        return window.appFolderId;
-    }
-
-    const token = await getDriveAccessToken();
-
-    try {
-        // 1. البحث عن المجلد الموجود
-        const searchUrl = `${DRIVE_CONFIG.apiEndpoint}/files?` +
-            `q=name='${DRIVE_CONFIG.appFolderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false` +
-            `&fields=files(id,name)`;
-
-        const searchResponse = await fetch(searchUrl, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        const searchData = await searchResponse.json();
-
-        if (searchData.files && searchData.files.length > 0) {
-            // المجلد موجود
-            window.appFolderId = searchData.files[0].id;
-            console.log('✅ App folder found:', window.appFolderId);
-            return window.appFolderId;
-        }
-
-        // 2. إنشاء المجلد
-        const createResponse = await fetch(`${DRIVE_CONFIG.apiEndpoint}/files`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: DRIVE_CONFIG.appFolderName,
-                mimeType: 'application/vnd.google-apps.folder'
-            })
-        });
-
-        const folder = await createResponse.json();
-        window.appFolderId = folder.id;
-        
-        console.log('✅ App folder created:', window.appFolderId);
-        return window.appFolderId;
-
-    } catch (error) {
-        console.error('Folder creation error:', error);
-        throw error;
-    }
-}
-// ==========================================
-//  UPLOAD FILE TO GOOGLE DRIVE
-// ==========================================
-
-async function uploadFileToDrive(file, onProgress) {
-    console.log(`🔵 Starting upload: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
-
-    // ✅ 1. فحص حجم الملف
-    if (file.size > DRIVE_CONFIG.maxFileSize) {
-        throw new Error(`File too large. Max size: ${DRIVE_CONFIG.maxFileSize / 1024 / 1024 / 1024} GB`);
-    }
-
-    // ✅ 2. فحص المساحة المتبقية
-    const currentUsage = window.userStorageInfo.used || 0;
-    if (currentUsage + file.size > DRIVE_CONFIG.quotaLimit) {
-        const remainingMB = ((DRIVE_CONFIG.quotaLimit - currentUsage) / 1024 / 1024).toFixed(2);
-        throw new Error(`Insufficient storage. Available: ${remainingMB} MB`);
-    }
-
-    // ✅ 3. الحصول على Token و Folder
-    const token = await getDriveAccessToken();
-    const folderId = await getOrCreateAppFolder();
-
-    // ✅ 4. إعداد Metadata
-    const metadata = {
-        name: file.name,
-        mimeType: file.type,
-        parents: [folderId]
-    };
-
-    // ✅ 5. إنشاء Multipart Upload
-    const boundary = '-------314159265358979323846';
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const closeDelim = "\r\n--" + boundary + "--";
-
-    const metadataPart = delimiter +
-        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
-        JSON.stringify(metadata);
-
-    const reader = new FileReader();
-    
-    return new Promise((resolve, reject) => {
-        reader.onload = async (e) => {
-            const base64Data = btoa(
-                new Uint8Array(e.target.result)
-                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
-            );
-
-            const filePart = delimiter +
-                `Content-Type: ${file.type}\r\n` +
-                'Content-Transfer-Encoding: base64\r\n\r\n' +
-                base64Data;
-
-            const multipartBody = metadataPart + filePart + closeDelim;
-
-            try {
-                // ✅ 6. رفع الملف
-                const uploadUrl = `${DRIVE_CONFIG.uploadEndpoint}/files?uploadType=multipart&fields=id,name,size,webViewLink,webContentLink`;
-
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', uploadUrl, true);
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                xhr.setRequestHeader('Content-Type', `multipart/related; boundary="${boundary}"`);
-
-                // ✅ 7. تتبع التقدم
-                xhr.upload.onprogress = (e) => {
-                    if (e.lengthComputable && onProgress) {
-                        const percent = (e.loaded / e.total) * 100;
-                        onProgress(percent);
-                    }
-                };
-
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        const response = JSON.parse(xhr.responseText);
-                        console.log('✅ Upload successful:', response);
-                        
-                        resolve({
-                            name: file.name,
-                            type: file.type,
-                            size: file.size,
-                            driveId: response.id,
-                            webViewLink: response.webViewLink,
-                            webContentLink: response.webContentLink,
-                            uploadedAt: Date.now(),
-                            source: 'drive'
-                        });
-                    } else {
-                        reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
-                    }
-                };
-
-                xhr.onerror = () => reject(new Error('Network error'));
-                xhr.send(multipartBody);
-
-            } catch (error) {
-                reject(error);
-            }
-        };
-
-        reader.onerror = () => reject(new Error('File reading failed'));
-        reader.readAsArrayBuffer(file);
-    });
-}
         // Add message to chat UI
         function addMessageToChat(role, content, isLoading = false) {
             const messagesDiv = document.getElementById('ai-chat-messages');
