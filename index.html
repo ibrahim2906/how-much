@@ -1371,28 +1371,40 @@
     </div>
 
     <div id="login-screen"
-        class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-        <div class="glass-panel w-full max-w-md p-8 rounded-3xl text-center border-t border-white/10">
-            <div class="w-20 h-20 accent-bg rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30 transform rotate-3"
-                style="background: var(--accent-color)">
-                <i class="fas fa-chart-pie text-3xl text-white" aria-hidden="true"></i>
+        class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-[#0f172a] overflow-hidden">
+        
+        <!-- Background Effects -->
+        <div class="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="glass-panel w-full max-w-md p-10 rounded-[2.5rem] text-center border border-white/10 shadow-2xl relative z-10 backdrop-blur-xl bg-white/5">
+            
+            <div class="mb-8 relative inline-block">
+                <div class="absolute inset-0 bg-indigo-500 blur-xl opacity-50 rounded-full"></div>
+                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center relative z-10 shadow-lg transform rotate-6 border border-white/20">
+                    <i class="fas fa-meteor text-4xl text-white"></i>
+                </div>
             </div>
-            <h2 class="text-3xl font-bold mb-2 text-white" data-i18n="welcome">Welcome Back</h2>
-            <p class="text-slate-400 mb-8 text-sm" data-i18n="loginSubtitle">Sync your life progress across dimensions.
-            </p>
+
+            <h2 class="text-4xl font-bold mb-3 text-white tracking-tight" data-i18n="welcome">Welcome Back</h2>
+            <p class="text-slate-400 mb-10 text-base font-light tracking-wide" data-i18n="loginSubtitle">Sync your life progress across dimensions.</p>
 
             <button onclick="handleGoogleLogin()"
-                class="w-full bg-white text-slate-900 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all active:scale-95 mb-4 group"
+                class="w-full bg-white text-slate-900 font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-4 hover:bg-indigo-50 transition-all active:scale-95 mb-4 group shadow-lg shadow-white/10"
                 aria-label="Continue with Google">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                    class="w-5 h-5 group-hover:rotate-12 transition-transform" alt="Google logo">
-                <span data-i18n="continueGoogle">Continue with Google</span>
+                    class="w-6 h-6 group-hover:scale-110 transition-transform" alt="Google logo">
+                <span data-i18n="continueGoogle" class="text-lg">Continue with Google</span>
             </button>
 
-            <button onclick="enterAsGuest()" class="text-sm accent-text hover:text-white transition-colors"
+            <button onclick="enterAsGuest()" class="text-sm text-slate-500 hover:text-white transition-colors py-2"
                 data-i18n="continueGuest">
                 Continue Offline (Guest)
             </button>
+        </div>
+        
+        <div class="absolute bottom-8 text-slate-600 text-xs">
+            How Much - Life OS
         </div>
     </div>
 
@@ -1467,6 +1479,19 @@
                         <div class="lang-option text-white">English</div>
                         <div class="lang-option text-white">العربية</div>
                     </div>
+                </div>
+
+                <!-- Privacy Policy Agreement -->
+                <div class="flex items-center justify-center gap-3 px-1">
+                    <div class="relative flex items-center">
+                        <input type="checkbox" id="ob-privacy-check"
+                            class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-white/10 bg-black/20 checked:border-indigo-500 checked:bg-indigo-500 transition-all">
+                        <i class="fas fa-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                    </div>
+                    <label for="ob-privacy-check" class="text-sm text-slate-300 select-none cursor-pointer">
+                        <span id="ob-privacy-text">I agree to the</span>
+                        <button onclick="openOnboardingPrivacy(event)" class="text-indigo-400 hover:text-indigo-300 font-bold hover:underline transition-colors" id="ob-privacy-link">Privacy Policy</button>
+                    </label>
                 </div>
 
                 <button onclick="finishOnboarding()"
@@ -2114,205 +2139,149 @@
                     </button>
 
                 </section>
+                
                 <!-- =====================================================
      صفحة سياسة الخصوصية - Privacy Policy Page
      ===================================================== -->
-                <section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white">🔒 Privacy Policy</h2>
+<section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white">🔒 Privacy Policy</h2>
 
-                    <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
+    <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
 
-                        <div class="text-center pb-6 border-b border-white/10">
-                            <div
-                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                                <i class="fas fa-shield-alt text-3xl text-indigo-400"></i>
-                            </div>
-                            <p class="text-lg text-slate-300 leading-relaxed">
-                                We respect your privacy and are committed to protecting your data. This is an ethical
-                                and moral promise.
-                            </p>
-                        </div>
+        <div class="text-center pb-6 border-b border-white/10">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-3xl text-indigo-400"></i>
+            </div>
+            <p class="text-lg text-slate-300 leading-relaxed">
+                We are committed to transparency. This policy explains exactly how your data is handled technically.
+            </p>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-database"></i>
-                                Data We Collect
-                            </h3>
-                            <div class="bg-white/5 rounded-xl p-4 space-y-3 text-slate-300">
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
-                                    <div>
-                                        <strong>Email Address:</strong> Only when signing in with Google.
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
-                                    <div>
-                                        <strong>Personal Data:</strong> Tasks, books, courses, and notes you add.
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-check-circle text-green-400 mt-1 flex-shrink-0"></i>
-                                    <div>
-                                        <strong>Files:</strong> Images or PDFs you upload (Stored securely).
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-database"></i>
+                Data Collection & Storage
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 space-y-3 text-slate-300 text-sm">
+                <p>We store the following data using <strong>Google Firebase</strong>:</p>
+                <ul class="list-disc list-inside ml-2 space-y-1 text-slate-400">
+                    <li><strong>Account Info:</strong> Email address (via Google Sign-In).</li>
+                    <li><strong>User Content:</strong> Tasks, notes, books, and courses you create.</li>
+                    <li><strong>File Links:</strong> URLs to files you upload (not the files themselves, see below).</li>
+                </ul>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-hand-holding-heart"></i>
-                                Our Commitments
-                            </h3>
-                            <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 space-y-3">
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-ban text-green-300 mt-1 flex-shrink-0"></i>
-                                    <p class="text-slate-200">
-                                        <strong class="text-green-300">We never sell your data</strong> - This is a
-                                        strict ethical boundary.
-                                    </p>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-user-shield text-green-300 mt-1 flex-shrink-0"></i>
-                                    <p class="text-slate-200">
-                                        <strong class="text-green-300">No unauthorized sharing</strong> with advertisers
-                                        or commercial third parties.
-                                    </p>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <i class="fas fa-lock text-green-300 mt-1 flex-shrink-0"></i>
-                                    <p class="text-slate-200">
-                                        <strong class="text-green-300">Secure Storage</strong> on Firebase (Google
-                                        Cloud) infrastructure.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-robot"></i>
+                AI Assistant & API Keys
+            </h3>
+            <div class="bg-pink-500/10 border border-pink-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
+                <p>To use the AI features, you must provide your own <strong>Google Gemini API Key</strong>.</p>
+                <div class="p-3 bg-black/20 rounded-lg mt-2">
+                    <p class="text-xs text-pink-300 font-bold mb-1"><i class="fas fa-exclamation-triangle"></i> Important Disclaimer:</p>
+                    <p class="text-xs opacity-80">
+                        If you use a <strong>Free Tier</strong> API key from Google, your conversation data may be used by Google to improve their products and train their models, according to Google's Terms of Service. We (How Much App) do not read or store your conversations on our servers, but they are processed by Google.
+                    </p>
+                </div>
+                <p class="text-xs mt-2 text-slate-500">
+                    * Chat history is stored locally on your device (Browser Local Storage) for convenience.
+                </p>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-cogs"></i>
-                                How We Use Your Data
-                            </h3>
-                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 space-y-2 text-sm">
-                                <p>• <strong>Sync:</strong> To access your data across different devices.</p>
-                                <p>• <strong>Functionality:</strong> To enable features like timers and tracking.</p>
-                                <p>• <strong>Backup:</strong> To prevent data loss.</p>
-                                <p class="text-xs text-slate-500 mt-3 pt-3 border-t border-white/10">
-                                    <strong>Note:</strong> We do NOT use your data for advertising or marketing
-                                    purposes.
-                                </p>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-cloud-upload-alt"></i>
+                File Uploads & Deletion
+            </h3>
+            <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
+                <p><strong>Storage Provider:</strong> We use <strong>Cloudinary</strong> as a third-party service to host your uploaded files (images, PDFs, audio).</p>
+                
+                <p class="text-purple-300 font-bold mt-2">Deletion Policy:</p>
+                <p>
+                    When you delete a file from the app (or empty the trash), the file is <strong>unlinked</strong> from your account interface immediately. 
+                    However, due to technical caching, the raw file might remain accessible via its direct link on Cloudinary's servers for a period of time before being completely purged.
+                </p>
+                <p class="text-xs text-slate-500 mt-1">Please do not upload highly sensitive personal documents (e.g., IDs, financial records).</p>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-yellow-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-mosque"></i>
-                                Religious Content & Accuracy
-                            </h3>
-                            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
-                                <p class="text-slate-300 text-sm leading-relaxed">
-                                    Azkar content is sourced from trusted references. However,
-                                    <strong class="text-yellow-300">please verify</strong>
-                                    with scholars or trusted books. We strive for accuracy, but errors can occur.
-                                </p>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-lock"></i>
+                Security & Access
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm space-y-2">
+                <p>
+                    <strong class="text-green-400">Transmission:</strong> All data is transmitted over a secure HTTPS connection (SSL).
+                </p>
+                <p>
+                    <strong class="text-green-400">Access Control:</strong> We use Firebase Security Rules to ensure that only you can access your own data and files.
+                </p>
+                <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
+                    Note: While we implement standard security measures, no web application is 100% immune to breaches. Use strong passwords for your Google Account.
+                </p>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-cookie-bite"></i>
-                                Local Storage
-                            </h3>
-                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
-                                <p>We use your browser's Local Storage to save:</p>
-                                <ul class="mt-2 ml-4 space-y-1 list-disc list-inside">
-                                    <li>Preferences (Language, Theme/Colors).</li>
-                                    <li>All data when using "Guest Mode" (Offline).</li>
-                                </ul>
-                                <p class="mt-2 text-xs text-slate-500">
-                                    You can clear this data anytime via your browser settings.
-                                </p>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-laptop-house"></i>
+                Local Data & Public Devices
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
+                <p>To improve performance and enable "Guest Mode", we store some data (like settings and chat history) in your browser's <strong>Local Storage</strong>.</p>
+                <p class="mt-2 text-orange-300">
+                    <strong>Warning:</strong> If you are using a public computer, please make sure to clear your browser cache/data after logging out to ensure your AI chat history is removed from the device.
+                </p>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-red-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Disclaimer
-                            </h3>
-                            <div
-                                class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
-                                <p>• This tool is a personal organizer; we do our best to secure it.</p>
-                                <p>• <strong>Do not upload highly sensitive files</strong> (e.g., Passports, Passwords).
-                                </p>
-                                <p>• We are not responsible for any data loss or misuse.</p>
-                            </div>
-                        </div>
+        <div>
+            <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                <i class="fas fa-user-check"></i>
+                Your Rights
+            </h3>
+            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
+                <ul class="list-disc list-inside space-y-1">
+                    <li>You own your data. We do not sell it to advertisers.</li>
+                    <li>You can export/download your files manually.</li>
+                </ul>
+            </div>
+        </div>
 
-                        <div>
-                            <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                                <i class="fas fa-balance-scale"></i>
-                                Your Rights
-                            </h3>
-                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm space-y-2">
-                                <p><strong>You have the right to:</strong></p>
-                                <ul class="ml-4 space-y-1 list-disc list-inside">
-                                    <li><strong>Access</strong> your data at any time.</li>
-                                    <li><strong>Edit or Delete</strong> any stored information.</li>
-                                    <li><strong>Opt-out</strong> by deleting your account.</li>
-                                </ul>
-                            </div>
-                        </div>
+        <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 mt-6">
+            <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                <i class="fas fa-envelope"></i> Contact
+            </h4>
+            <p class="text-sm text-slate-300 mb-2">
+                For privacy concerns or data deletion requests:
+            </p>
+            <a href="https://wa.me/201025376549" target="_blank"
+               class="text-green-400 hover:underline text-sm flex items-center gap-2 font-bold">
+                <i class="fab fa-whatsapp"></i> Contact Support via WhatsApp
+            </a>
+            <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
+                    Note: We will try to reply to you as soon as possible.
+                </p>
+        </div>
 
-                        <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4">
-                            <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
-                                <i class="fab fa-whatsapp"></i>
-                                Contact Us
-                            </h4>
+        <div class="text-center text-xs text-slate-500 pt-4 border-t border-white/10">
+            Last Updated: January 2026
+        </div>
 
-                            <p class="text-sm text-slate-300">
-                                For privacy questions, data requests, or account deletion:
-                            </p>
+    </div>
 
-                            <div class="mt-2 flex flex-col gap-2">
-                                <a href="https://wa.me/201025376549" target="_blank"
-                                    class="text-green-400 hover:underline text-sm flex items-center gap-2">
-                                    <i class="fab fa-whatsapp"></i>
-                                    Chat via WhatsApp
-                                </a>
-
-                                <p class="text-xs text-slate-500">
-                                    (We will respond as soon as possible)
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/5 rounded-xl p-4 text-sm text-slate-400">
-                            <p><strong>Policy Updates:</strong></p>
-                            <p class="mt-1">
-                                We may update this policy from time to time to reflect changes in our practices.
-                            </p>
-                        </div>
-
-                        <div class="text-center text-xs text-slate-500 pt-4 border-t border-white/10">
-                            <i class="fas fa-calendar-alt mr-1"></i>
-                            Last Updated: January 13, 2026
-                        </div>
-
-                    </div>
-
-                    <div class="mt-6 text-center">
-                        <button onclick="showPage('settings')"
-                            class="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex items-center gap-2 mx-auto">
-                            <i class="fas fa-arrow-left"></i>
-                            <span>Back to Settings</span>
-                        </button>
-                    </div>
-                </section>
-                </section>
-
+    <div class="mt-6 text-center">
+        <button onclick="showPage('settings')"
+            class="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex items-center gap-2 mx-auto">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Settings</span>
+        </button>
+    </div>
+</section>
                 <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20" dir="rtl">
                     <div class="text-center mb-6 relative">
                         <h2 class="text-3xl md:text-5xl font-bold mb-2 drop-shadow-lg uthmani-font"
@@ -2771,6 +2740,24 @@
         </div>
     </div>
 
+    <!-- Onboarding Privacy Modal -->
+    <div id="onboarding-privacy-modal" class="modal-overlay" style="display: none; z-index: 200;">
+        <div class="level-card max-w-2xl max-h-[80vh] flex flex-col">
+            <div class="modal-header flex-shrink-0">
+                <h3 id="ob-privacy-modal-title">Privacy Policy</h3>
+                <button onclick="closeOnboardingPrivacy()" class="close-btn text-white text-2xl">&times;</button>
+            </div>
+            <div id="ob-privacy-content" class="overflow-y-auto p-4 text-slate-300 text-sm space-y-4 custom-scrollbar flex-1">
+                <!-- Content will be cloned here -->
+            </div>
+            <div class="pt-4 border-t border-white/10 mt-auto flex-shrink-0">
+                <button onclick="acceptPrivacyFromModal()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-colors">
+                    <span id="ob-privacy-accept-btn">I Agree</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="drawing-modal" class="fixed inset-0 bg-[#0f172a] hidden flex-col z-[70]" role="dialog" aria-modal="true"
         aria-label="Drawing canvas">
         <div
@@ -3180,7 +3167,7 @@
                     if (isFirstLoad) {
                         document.getElementById('login-screen').classList.add('hidden');
 
-                        if (!window.appData.profile.completed) {
+                        if (!window.appData.profile.completed || !window.appData.profile.privacyAgreed) {
                             window.showOnboarding();
                         } else {
                             window.launchApp();
@@ -3236,7 +3223,7 @@
             localStorage.setItem('hm_guest', 'true');
             document.getElementById('login-screen').classList.add('hidden');
             // Guest also needs onboarding if no local data
-            if (!window.appData.profile || !window.appData.profile.completed) {
+            if (!window.appData.profile || !window.appData.profile.completed || !window.appData.profile.privacyAgreed) {
                 window.showOnboarding();
             } else {
                 window.launchApp();
@@ -4186,8 +4173,13 @@
             );
 
             // Pre-fill if Google data exists
-            if (window.currentUser && window.currentUser.displayName) {
+            if (window.appData.profile && window.appData.profile.name) {
+                document.getElementById('ob-name').value = window.appData.profile.name;
+            } else if (window.currentUser && window.currentUser.displayName) {
                 document.getElementById('ob-name').value = window.currentUser.displayName;
+            }
+            if (window.appData.profile && window.appData.profile.gender) {
+                selectGender(window.appData.profile.gender);
             }
         };
 
@@ -4228,6 +4220,7 @@
             const name = document.getElementById('ob-name').value.trim();
             const gender = document.getElementById('ob-gender').value;
             const lang = document.getElementById('ob-lang-switch').getAttribute('data-lang');
+            const privacyCheck = document.getElementById('ob-privacy-check');
 
             if (!name) {
                 showToast("Please enter your name", "error");
@@ -4236,13 +4229,20 @@
             if (!gender) {
                 showToast("Please select an avatar style", "error");
                 return;
+            }            
+            if (!privacyCheck.checked) {
+                const msg = lang === 'ar' ? "يرجى الموافقة على سياسة الخصوصية" : "Please agree to the Privacy Policy";
+                showToast(msg, "error");
+                return;
             }
 
             // Save Data
             window.appData.profile = {
                 name: name,
                 gender: gender,
-                completed: true
+                completed: true,
+                privacyAgreed: true
+
             };
             window.appData.settings.lang = lang;
 
@@ -4276,6 +4276,54 @@
                     });
                 }
             });
+        };
+
+        window.showPrivacyAgreement = function() {
+            const name = document.getElementById('ob-name').value.trim();
+            const gender = document.getElementById('ob-gender').value;
+            
+
+             // Save Data
+             window.appData.profile = {
+                name: name,
+                gender: gender,
+                completed: false
+            };
+
+            document.getElementById('login-screen').classList.add('hidden');
+            const onboardingScreen = document.getElementById('onboarding-screen');
+            onboardingScreen.classList.remove('hidden');
+
+            const privacyCheck = document.getElementById('ob-privacy-check');
+            if(privacyCheck){
+                privacyCheck.checked = false;
+            }
+
+        }
+        window.openOnboardingPrivacy = function(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('onboarding-privacy-modal');
+            const contentContainer = document.getElementById('ob-privacy-content');
+            const sourceContent = document.querySelector('#page-privacy .glass-panel');
+            
+            if(sourceContent && contentContainer.children.length === 0) {
+                // Clone content from the main privacy page
+                const clone = sourceContent.cloneNode(true);
+                contentContainer.appendChild(clone);
+            }
+            
+            modal.style.display = 'flex';
+        };
+
+        window.closeOnboardingPrivacy = function() {
+            document.getElementById('onboarding-privacy-modal').style.display = 'none';
+        };
+
+        window.acceptPrivacyFromModal = function() {
+
+            window.appData.profile.privacyAgreed = true;
+            document.getElementById('ob-privacy-check').checked = true;
+            closeOnboardingPrivacy();
         };
 
         window.launchApp = function () {
@@ -6373,6 +6421,8 @@
             if (!fCanvas) return;
             const color = document.getElementById('brush-color').value;
 
+
+
             // فحص اللغة الحالية من إعدادات التطبيق
             const isArabic = window.appData && window.appData.settings.lang === 'ar';
 
@@ -8067,13 +8117,7 @@ Your friendly message to the user
 </body>
 
 </html>
-document.getElementById('ai-chat-messages').innerHTML = '';
-showAIWelcomeMessage();
-const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
-showToast(successMsg, 'success');
-};
-openConfirmModal(message, action);
-};
+
 </script>
 </body>
 
