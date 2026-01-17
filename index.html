@@ -2890,8 +2890,13 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        window.GoogleAuthProvider = GoogleAuthProvider;
+window.signInWithPopup = signInWithPopup;
+window.auth = null; // سيتم تعيينها لاحقاً
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
         import { getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        
+        
 
 // ==========================================
 //  GOOGLE DRIVE CONFIGURATION
@@ -3036,8 +3041,9 @@ window.updateStorageUI = function () {
 
         try {
             app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
+    auth = getAuth(app);
+    window.auth = auth; // ✅ جعل auth متاح عالمياً
+    db = getFirestore(app);
         } catch (e) {
             console.error("Firebase Init Error:", e);
         }
