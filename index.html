@@ -7034,7 +7034,9 @@
                         ${zikr.note ? `<span class="text-sm block mt-2 opacity-80" style="font-family: 'Cairo', sans-serif; color: var(--azkar-gold);">${zikr.note}</span>` : ''}
                     </div>
                     
-                    <button class="zikr-copy-btn" onclick="copyZikrText('${escapeHtml(zikr.text)}', this)" title="نسخ"><i class="fas fa-copy"></i></button>
+                    <div class="flex flex-col gap-2">
+                        <button class="zikr-copy-btn" onclick="shareZikrText('${escapeHtml(zikr.text)}')" title="مشاركة"><i class="fas fa-share-alt"></i></button>
+                    </div>
                     
                     <div class="relative w-16 h-16 flex-shrink-0 flex items-center justify-center mt-1">
                         <svg class="w-full h-full transform -rotate-90" aria-hidden="true">
@@ -7066,6 +7068,22 @@
                 btn.innerHTML = '<i class="fas fa-check text-green-400"></i>';
                 setTimeout(() => btn.innerHTML = originalIcon, 1500);
             });
+        };
+
+        window.shareZikrText = async function (text) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        text: text
+                    });
+                } catch (err) {
+                    console.log('Share cancelled or failed', err);
+                }
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('تم نسخ النص (المشاركة غير مدعومة)', 'success');
+                });
+            }
         };
 
         function handleZikrClick(id, max) {
