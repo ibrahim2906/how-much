@@ -44,6 +44,149 @@
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
 
+        /* ==========================================
+   BOTTOM SHEET SYSTEM (Mobile-First)
+   ========================================== */
+
+.bottom-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.bottom-sheet-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
+    border-radius: 24px 24px 0 0;
+    z-index: 101;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.bottom-sheet.active {
+    transform: translateY(0);
+}
+
+.bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    margin: 12px auto 8px;
+    cursor: grab;
+}
+
+.bottom-sheet-handle:active {
+    cursor: grabbing;
+}
+
+.bottom-sheet-header {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.bottom-sheet-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+}
+
+.bottom-sheet-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.bottom-sheet-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.bottom-sheet-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    overscroll-behavior: contain;
+}
+
+/* تحسين الـ Scrollbar */
+.bottom-sheet-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.bottom-sheet-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+/* أنيميشن دخول محسّن */
+@keyframes slideUpBounce {
+    0% {
+        transform: translateY(100%);
+    }
+    60% {
+        transform: translateY(-2%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.bottom-sheet.bounce {
+    animation: slideUpBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* على الشاشات الكبيرة، استخدم Modal عادي */
+@media (min-width: 768px) {
+    .bottom-sheet {
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        border-radius: 24px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+    }
+    
+    .bottom-sheet.active {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .bottom-sheet-handle {
+        display: none;
+    }
+}
+
         @font-face {
             font-family: 'GlobalFont';
             src: local('Cairo');
@@ -1246,6 +1389,34 @@
         .lang-switch[data-lang="ar"] .lang-slider {
             transform: translateX(96px);
         }
+
+        .pull-refresh-indicator {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transition: transform 0.1s ease-out;
+    opacity: 0;
+}
+
+.pull-refresh-indicator.refreshing {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translateX(-50%) rotate(360deg); }
+}
 
         /* Upload Progress Styles */
         .upload-item {
@@ -4739,6 +4910,11 @@
             } catch (err) {
                 console.error("Init Error:", err);
             }
+            // تفعيل Mobile Enhancements
+if (window.innerWidth < 768) {
+    new PullToRefresh();
+    console.log('📱 Mobile optimizations enabled');
+}
         };
         // متغير لتخزين الوظيفة التي سيتم تنفيذها عند الموافقة
         let pendingConfirmAction = null;
@@ -8113,6 +8289,512 @@ Your friendly message to the user
             };
             openConfirmModal(message, action);
         };
+
+        // ==========================================
+//  BOTTOM SHEET SYSTEM
+// ==========================================
+
+class BottomSheet {
+    constructor() {
+        this.overlay = null;
+        this.sheet = null;
+        this.startY = 0;
+        this.currentY = 0;
+        this.isDragging = false;
+        this.threshold = 100; // المسافة للإغلاق
+    }
+
+    create(title, content, options = {}) {
+        // إزالة أي Bottom Sheet موجود
+        this.destroy();
+
+        // إنشاء Overlay
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'bottom-sheet-overlay';
+        this.overlay.onclick = () => this.close();
+
+        // إنشاء Sheet
+        this.sheet = document.createElement('div');
+        this.sheet.className = 'bottom-sheet';
+        
+        this.sheet.innerHTML = `
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-header">
+                <h3 class="bottom-sheet-title">${title}</h3>
+                <button class="bottom-sheet-close" onclick="bottomSheet.close()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="bottom-sheet-body">
+                ${content}
+            </div>
+        `;
+
+        document.body.appendChild(this.overlay);
+        document.body.appendChild(this.sheet);
+
+        // تفعيل Swipe to Close
+        this.initSwipe();
+
+        // فتح بعد Render
+        requestAnimationFrame(() => {
+            this.overlay.classList.add('active');
+            this.sheet.classList.add('active', 'bounce');
+            
+            // إزالة bounce بعد الأنيميشن
+            setTimeout(() => {
+                this.sheet.classList.remove('bounce');
+            }, 500);
+        });
+
+        // منع scroll الخلفية
+        document.body.style.overflow = 'hidden';
+
+        return this;
+    }
+
+    initSwipe() {
+        const handle = this.sheet.querySelector('.bottom-sheet-handle');
+        const header = this.sheet.querySelector('.bottom-sheet-header');
+        const body = this.sheet.querySelector('.bottom-sheet-body');
+
+        // Swipe على الـ Handle والـ Header فقط
+        [handle, header].forEach(el => {
+            el.addEventListener('touchstart', (e) => {
+                this.startY = e.touches[0].clientY;
+                this.isDragging = true;
+                this.sheet.style.transition = 'none';
+            });
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!this.isDragging) return;
+
+            this.currentY = e.touches[0].clientY;
+            const deltaY = this.currentY - this.startY;
+
+            // السماح بالسحب للأسفل فقط
+            if (deltaY > 0) {
+                this.sheet.style.transform = `translateY(${deltaY}px)`;
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            if (!this.isDragging) return;
+
+            const deltaY = this.currentY - this.startY;
+
+            this.sheet.style.transition = '';
+
+            // إذا تم السحب أكثر من الـ Threshold، أغلق
+            if (deltaY > this.threshold) {
+                this.close();
+            } else {
+                // ارجع للوضع الطبيعي
+                this.sheet.style.transform = 'translateY(0)';
+            }
+
+            this.isDragging = false;
+        });
+    }
+
+    close() {
+        if (!this.sheet) return;
+
+        this.overlay.classList.remove('active');
+        this.sheet.classList.remove('active');
+
+        setTimeout(() => {
+            this.destroy();
+        }, 300);
+
+        // إرجاع scroll
+        document.body.style.overflow = '';
+    }
+
+    destroy() {
+        if (this.overlay) this.overlay.remove();
+        if (this.sheet) this.sheet.remove();
+        this.overlay = null;
+        this.sheet = null;
+    }
+}
+
+// إنشاء Instance عام
+window.bottomSheet = new BottomSheet();
+
+// ==========================================
+//  تعديل openAddModal لاستخدام Bottom Sheet على الموبايل
+// ==========================================
+
+const originalOpenAddModal = window.openAddModal;
+
+window.openAddModal = function(type, event) {
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+        // استخدام Bottom Sheet
+        let title = 'Add Item';
+        if (type === 'course') title = 'Add Course';
+        if (type === 'task') title = 'Add Task';
+        if (type === 'book') title = 'Add Book';
+        if (type === 'note') title = 'Add Note';
+
+        // بناء محتوى الـ Form
+        const formContent = buildMobileForm(type);
+
+        bottomSheet.create(title, formContent);
+    } else {
+        // استخدام Modal العادي على Desktop
+        originalOpenAddModal(type, event);
+    }
+};
+
+// ==========================================
+//  بناء Form محسّن للموبايل
+// ==========================================
+
+function buildMobileForm(type) {
+    const statsRow = (type !== 'task' && type !== 'note') ? `
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+                <label class="text-xs text-slate-400 font-bold mb-1 block">${type === 'book' ? 'Total Pages' : 'Total Hours'}</label>
+                <input type="number" id="mobile-total" 
+                    class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-base"
+                    placeholder="0">
+            </div>
+            <div>
+                <label class="text-xs text-slate-400 font-bold mb-1 block">${type === 'book' ? 'Read' : 'Done'}</label>
+                <input type="number" id="mobile-done" 
+                    class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white text-base"
+                    placeholder="0">
+            </div>
+        </div>
+    ` : '';
+
+    const optionalRow = type === 'task' ? `
+        <label class="flex items-center gap-3 bg-black/10 p-3 rounded-xl mb-4 cursor-pointer">
+            <input type="checkbox" id="mobile-optional" class="w-5 h-5 rounded accent-indigo-500">
+            <span class="text-sm text-slate-300">Mark as Optional (Side Quest)</span>
+        </label>
+    ` : '';
+
+    return `
+        <div class="space-y-4">
+            <input type="text" id="mobile-name" 
+                placeholder="Title/Name"
+                class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-white text-base focus:outline-none focus:border-indigo-500"
+                autofocus>
+
+            ${statsRow}
+            ${optionalRow}
+
+            <textarea id="mobile-desc" rows="4" 
+                placeholder="Description/Notes..."
+                class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-white text-base resize-none focus:outline-none focus:border-indigo-500"></textarea>
+
+            <!-- أزرار الإجراءات -->
+            <div class="flex gap-3 pt-2">
+                <button onclick="bottomSheet.close()" 
+                    class="flex-1 py-3 rounded-xl bg-white/10 text-white font-bold">
+                    Cancel
+                </button>
+                <button onclick="saveMobileItem('${type}')" 
+                    class="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold">
+                    Save
+                </button>
+            </div>
+
+            <!-- Quick Actions (اختياري) -->
+            <div class="grid grid-cols-3 gap-2 pt-4 border-t border-white/10">
+                <button onclick="triggerMobileVoice()" 
+                    class="p-3 rounded-xl bg-red-500/20 text-red-400 text-xs font-bold">
+                    <i class="fas fa-microphone mb-1"></i><br>Voice
+                </button>
+                <button onclick="triggerMobileFile()" 
+                    class="p-3 rounded-xl bg-blue-500/20 text-blue-400 text-xs font-bold">
+                    <i class="fas fa-paperclip mb-1"></i><br>File
+                </button>
+                <button onclick="triggerMobileDrawing()" 
+                    class="p-3 rounded-xl bg-pink-500/20 text-pink-400 text-xs font-bold">
+                    <i class="fas fa-palette mb-1"></i><br>Draw
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// ==========================================
+//  حفظ من Bottom Sheet
+// ==========================================
+
+window.saveMobileItem = function(type) {
+    const name = document.getElementById('mobile-name')?.value.trim();
+    if (!name) {
+        showToast("Please enter a name", 'error');
+        return;
+    }
+
+    const desc = document.getElementById('mobile-desc')?.value || '';
+    const total = document.getElementById('mobile-total')?.value || 0;
+    const done = document.getElementById('mobile-done')?.value || 0;
+    const optional = document.getElementById('mobile-optional')?.checked || false;
+
+    const newItem = {
+        id: Date.now(),
+        name: name,
+        desc: desc,
+        deleted: false,
+        files: []
+    };
+
+    if (type === 'task') {
+        newItem.completed = false;
+        newItem.optional = optional;
+        window.appData.tasks.push(newItem);
+    } else if (type === 'book') {
+        newItem.total = parseInt(total);
+        newItem.done = parseInt(done);
+        newItem.streak = 0;
+        window.appData.books.push(newItem);
+    } else if (type === 'course') {
+        newItem.total = parseInt(total);
+        newItem.done = parseInt(done);
+        window.appData.courses.push(newItem);
+    } else if (type === 'note') {
+        window.appData.notes.push(newItem);
+    }
+
+    commitData();
+    refreshAllUI();
+    bottomSheet.close();
+    
+    showToast(`✅ ${type.charAt(0).toUpperCase() + type.slice(1)} added!`, 'success');
+};
+
+// Placeholder functions للـ Quick Actions
+window.triggerMobileVoice = () => showToast('🎤 Voice recording coming soon!', 'neutral');
+window.triggerMobileFile = () => showToast('📎 File upload coming soon!', 'neutral');
+window.triggerMobileDrawing = () => {
+    bottomSheet.close();
+    setTimeout(() => openDrawingCanvas(), 300);
+};
+
+// ==========================================
+//  SWIPE NAVIGATION SYSTEM
+// ==========================================
+
+class SwipeNavigation {
+    constructor() {
+        this.touchStartX = 0;
+        this.touchStartY = 0;
+        this.touchEndX = 0;
+        this.touchEndY = 0;
+        this.minSwipeDistance = 80;
+        
+        this.pages = ['tasks', 'courses', 'books', 'notes', 'ai', 'azkar', 'counters'];
+        this.currentPageIndex = 0;
+        
+        this.init();
+    }
+
+    init() {
+        const contentArea = document.getElementById('content-area');
+        if (!contentArea) return;
+
+        contentArea.addEventListener('touchstart', (e) => {
+            // تجاهل إذا كان Touch على عنصر قابل للتمرير
+            if (e.target.closest('.bottom-sheet-body, textarea, input')) return;
+            
+            this.touchStartX = e.touches[0].clientX;
+            this.touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        contentArea.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].clientX;
+            this.touchEndY = e.changedTouches[0].clientY;
+            
+            this.handleSwipe();
+        }, { passive: true });
+    }
+
+    handleSwipe() {
+        const deltaX = this.touchEndX - this.touchStartX;
+        const deltaY = this.touchEndY - this.touchStartY;
+
+        // تجاهل Swipe العمودي
+        if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+
+        // Swipe Left = Next Page
+        if (deltaX < -this.minSwipeDistance) {
+            this.nextPage();
+        }
+        // Swipe Right = Previous Page
+        else if (deltaX > this.minSwipeDistance) {
+            this.prevPage();
+        }
+    }
+
+    nextPage() {
+        const activePage = document.querySelector('.page-section:not(.hidden)');
+        if (!activePage) return;
+
+        const currentPageId = activePage.id.replace('page-', '');
+        this.currentPageIndex = this.pages.indexOf(currentPageId);
+
+        if (this.currentPageIndex < this.pages.length - 1) {
+            const nextPage = this.pages[this.currentPageIndex + 1];
+            this.animatePageTransition(currentPageId, nextPage, 'left');
+        }
+    }
+
+    prevPage() {
+        const activePage = document.querySelector('.page-section:not(.hidden)');
+        if (!activePage) return;
+
+        const currentPageId = activePage.id.replace('page-', '');
+        this.currentPageIndex = this.pages.indexOf(currentPageId);
+
+        if (this.currentPageIndex > 0) {
+            const prevPage = this.pages[this.currentPageIndex - 1];
+            this.animatePageTransition(currentPageId, prevPage, 'right');
+        }
+    }
+
+    animatePageTransition(fromPage, toPage, direction) {
+        const fromEl = document.getElementById(`page-${fromPage}`);
+        const toEl = document.getElementById(`page-${toPage}`);
+
+        if (!fromEl || !toEl) return;
+
+        // Slide animation
+        const slideOut = direction === 'left' ? '-100%' : '100%';
+        const slideIn = direction === 'left' ? '100%' : '-100%';
+
+        gsap.timeline()
+            .to(fromEl, {
+                x: slideOut,
+                opacity: 0,
+                duration: 0.3,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    fromEl.classList.add('hidden');
+                    gsap.set(fromEl, { x: 0, opacity: 1 });
+                }
+            })
+            .fromTo(toEl, 
+                { x: slideIn, opacity: 0 },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: 0.3,
+                    ease: 'power2.out',
+                    onStart: () => {
+                        toEl.classList.remove('hidden');
+                        showPage(toPage); // تحديث النافذة
+                    }
+                },
+                0.1
+            );
+
+        // إضافة Haptic Feedback
+        if (navigator.vibrate) {
+            navigator.vibrate(10);
+        }
+    }
+}
+
+// تفعيل Swipe Navigation
+const swipeNav = new SwipeNavigation();
+
+// ==========================================
+//  PULL TO REFRESH
+// ==========================================
+
+class PullToRefresh {
+    constructor() {
+        this.startY = 0;
+        this.currentY = 0;
+        this.distance = 0;
+        this.threshold = 80;
+        this.isRefreshing = false;
+        this.indicator = null;
+        
+        this.init();
+    }
+
+    init() {
+        // إنشاء Indicator
+        this.indicator = document.createElement('div');
+        this.indicator.className = 'pull-refresh-indicator';
+        this.indicator.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        document.body.appendChild(this.indicator);
+
+        const contentArea = document.getElementById('content-area');
+        
+        contentArea.addEventListener('touchstart', (e) => {
+            if (contentArea.scrollTop === 0) {
+                this.startY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        contentArea.addEventListener('touchmove', (e) => {
+            if (this.isRefreshing || contentArea.scrollTop > 0) return;
+
+            this.currentY = e.touches[0].clientY;
+            this.distance = this.currentY - this.startY;
+
+            if (this.distance > 0 && this.distance < 150) {
+                this.updateIndicator(this.distance);
+            }
+        }, { passive: true });
+
+        contentArea.addEventListener('touchend', () => {
+            if (this.distance > this.threshold) {
+                this.triggerRefresh();
+            } else {
+                this.resetIndicator();
+            }
+        });
+    }
+
+    updateIndicator(distance) {
+        const progress = Math.min(distance / this.threshold, 1);
+        this.indicator.style.transform = `translateY(${distance / 2}px) rotate(${progress * 360}deg)`;
+        this.indicator.style.opacity = progress;
+    }
+
+    async triggerRefresh() {
+        this.isRefreshing = true;
+        this.indicator.classList.add('refreshing');
+
+        // تحديث البيانات
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        refreshAllUI();
+        if (window.triggerCloudSave) window.triggerCloudSave();
+
+        showToast('✅ Refreshed!', 'success');
+
+        this.resetIndicator();
+        this.isRefreshing = false;
+    }
+
+    resetIndicator() {
+        gsap.to(this.indicator, {
+            y: -60,
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => {
+                this.indicator.classList.remove('refreshing');
+                this.distance = 0;
+            }
+        });
+    }
+}
+
+// CSS للـ Indicator (أضفه في <style>)
+
     </script>
 </body>
 </html>
