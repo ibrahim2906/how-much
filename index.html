@@ -1446,6 +1446,24 @@
         .upload-item.error .progress-fill {
             background: #ef4444;
         }
+
+        @media (max-width: 768px) {
+    #page-azkar .zikr-card {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100%;
+    }
+    
+    #page-azkar {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    /* إصلاح محتوى البطاقة */
+    #page-azkar .zikr-card .flex {
+        max-width: 100%;
+    }
+}
     </style>
 </head>
 
@@ -2425,7 +2443,7 @@
         </button>
     </div>
 </section>
-                <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20" dir="rtl">
+                <section id="page-azkar" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 pb-20 px-2" dir="rtl">
                     <div class="text-center mb-6 relative">
                         <h2 class="text-3xl md:text-5xl font-bold mb-2 drop-shadow-lg uthmani-font"
                             style="color: var(--azkar-gold);">ألا بذكر الله تطمئن القلوب</h2>
@@ -2458,7 +2476,7 @@
                         </button>
                     </div>
 
-                    <div id="azkar-list" class="grid grid-cols-1 gap-4 pb-24" role="list"></div>
+                    <div id="azkar-list" class="space-y-4 pb-24" role="list"></div>
                 </section>
             </div>
 
@@ -7206,7 +7224,7 @@
                 const percent = ((zikr.count - currentCount) / zikr.count) * 100;
 
                 const card = document.createElement('div');
-                card.className = `zikr-card stagger-entry p-5 flex flex-col gap-4 cursor-pointer select-none ${isDone ? 'completed' : ''}`;
+                card.className = `zikr-card stagger-entry p-4 md:p-5 flex flex-col gap-4 cursor-pointer select-none ${isDone ? 'completed' : ''}`;
                 card.style.animationDelay = `${index * 0.05}s`;
                 card.setAttribute('role', 'button');
                 card.setAttribute('aria-label', `Zikr: ${zikr.text.substring(0, 50)}...`);
