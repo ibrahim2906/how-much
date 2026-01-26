@@ -2339,8 +2339,7 @@
      صفحة سياسة الخصوصية - Privacy Policy Page
      ===================================================== -->
                 <section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 px-4 md:px-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white"><i class="fas fa-lock mr-2"></i> Privacy
-                        Policy</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white">🔒 Privacy Policy</h2>
 
                     <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
 
@@ -2682,15 +2681,14 @@
     <div id="ai-setup-modal" class="modal-overlay" style="display: none;">
         <div class="level-card max-w-lg">
             <div class="modal-header">
-                <h3><i class="fas fa-robot mr-2"></i> AI Assistant Setup</h3>
+                <h3>🤖 AI Assistant Setup</h3>
             </div>
 
             <div class="space-y-4 mt-4">
                 <p class="text-slate-300 text-sm">To use the AI assistant, you need a Gemini API key.</p>
 
                 <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 text-sm">
-                    <p class="font-bold text-indigo-300 mb-2"><i class="fas fa-file-alt mr-2"></i> How to get your API
-                        key:</p>
+                    <p class="font-bold text-indigo-300 mb-2">📝 How to get your API key:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300">
                         <li>Visit Google AI Studio</li>
                         <li>Sign in with your Google account</li>
@@ -2727,7 +2725,7 @@
     <div id="ai-capabilities-modal" class="modal-overlay" style="display: none;">
         <div class="level-card max-w-2xl">
             <div class="modal-header">
-                <h3><i class="fas fa-bullseye mr-2"></i> AI Capabilities</h3>
+                <h3>🎯 AI Capabilities</h3>
                 <button onclick="closeAICapabilitiesModal()" class="close-btn"
                     style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
@@ -3643,7 +3641,7 @@
                             <i class="fas fa-book" aria-hidden="true"></i>
                         </div>
                         <div class="text-right mt-6">
-                            <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak || 0} <i class="fas fa-fire"></i></div>
+                            <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak || 0}🔥</div>
                         </div>
                     </div>
                     <h3 class="font-bold text-white me-8">${escapeHtml(b.name)}</h3>
@@ -3979,8 +3977,8 @@
             if (now >= timerEndTime) {
                 window.stopTimer();
                 playAlarmSound();
-                showNotification("Timer Finished!", "Time is up!");
-                showToast("Time is up!", 'success');
+                showNotification("⏰ Timer Finished!", "Time is up!");
+                showToast("⏰ Time is up!", 'success');
             }
         }
 
@@ -4556,7 +4554,7 @@
             // Show Greeting Toast
             const hour = new Date().getHours();
             const greeting = hour < 12 ? (window.appData.settings.lang === 'ar' ? 'صباح الخير' : 'Good Morning') : (window.appData.settings.lang === 'ar' ? 'مساء الخير' : 'Good Evening');
-            showToast(`${greeting}, ${window.appData.profile.name} <i class="fas fa-hand-paper"></i>`, 'success');
+            showToast(`${greeting}, ${window.appData.profile.name} 👋`, 'success');
         };
 
         // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
@@ -5710,7 +5708,7 @@
 
                 console.error("❌ تجاوز الحد الأقصى للمساحة");
                 showToast(
-                    `Insufficient storage space!\n\n` +
+                    `⚠️ Insufficient storage space!\n\n` +
                     `remaining: ${remainingMB} MB\n` +
                     `needed: ${neededMB} MB\n\n` +
                     `Delete some old files first.`,
@@ -5815,7 +5813,7 @@
                     console.error("❌ خطأ في الرفع:", error);
                     console.error("   الملف:", file.name);
                     console.error("   التفاصيل:", error.message);
-                    showToast(`failed "${file.name}"\n${error.message}`, 'error');
+                    showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
 
                     totalUploadedBytes += file.size;
                     failCount++;
@@ -5839,13 +5837,13 @@
             console.log(`   فاشل: ${failCount}`);
 
             if (successCount > 0) {
-                showToast(`uploaded ${successCount} File successfully!`, 'success');
+                showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
                 renderFilePreview();
                 updateStorageUI();
             }
 
             if (failCount > 0) {
-                showToast(`failed to upload${failCount} file`, 'error');
+                showToast(`⚠️ failed to upload${failCount} file`, 'error');
             }
 
             input.value = '';
@@ -5917,7 +5915,7 @@
             tempFiles.splice(idx, 1);
             renderFilePreview();
             updateStorageUI();
-            showToast("file deleted", 'success');
+            showToast("✅ file deleted", 'success');
         };
 
         window.moveToTrash = function (type, id, event) {
@@ -7330,7 +7328,7 @@
                 <!-- Footer: Counter -->
                 <div class="mt-4 flex flex-col items-center justify-center gap-2">
                     <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center transition-transform active:scale-95">
-                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg pointer-events-none" aria-hidden="true">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg" aria-hidden="true">
                             <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none"></circle>
                             <circle id="zikr-ring-${uniqueKey}" cx="40" cy="40" r="34" stroke="${isDone ? '#10b981' : 'var(--azkar-gold)'}" stroke-width="6" fill="none" 
                                     stroke-dasharray="213" stroke-dashoffset="${213 - (213 * percent / 100)}" 
@@ -7339,7 +7337,7 @@
                         </svg>
                         ${isDone
                         ? `<button onclick="resetZikr('${uniqueKey}', ${zikr.count}, event)" 
-                                       class="zikr-action-btn relative z-10 w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
+                                       class="zikr-action-btn w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
                                        aria-label="Reset zikr counter">
                                        <i class="fas fa-undo text-xl"></i>
                                </button>`
@@ -7396,6 +7394,8 @@
                     const offset = 213 - (213 * percent / 100);
                     ringEl.style.strokeDashoffset = offset;
                 } else {
+                    // Set timestamp to prevent accidental immediate reset
+                    window.lastZikrCompletionTime = Date.now();
                     renderAzkarList();
                 }
 
@@ -7407,8 +7407,12 @@
         }
 
         function resetZikr(id, max, event) {
-            if (event) event.stopPropagation();
-            delete azkarProgress[id];
+            event.stopPropagation();
+            // Prevent accidental reset if clicked immediately after completion (within 500ms)
+            if (window.lastZikrCompletionTime && (Date.now() - window.lastZikrCompletionTime < 500)) {
+                return;
+            }
+            azkarProgress[id] = max;
             renderAzkarList();
         }
 
@@ -7738,13 +7742,13 @@
             const apiKey = document.getElementById('ai-api-key-input').value.trim();
 
             if (!apiKey) {
-                showToast("Please enter an API key", 'error');
+                showToast("❌ Please enter an API key", 'error');
                 return;
             }
 
             // Validate API key format
             if (!apiKey.startsWith('AIzaSy')) {
-                showToast("Invalid API key format", 'error');
+                showToast("⚠️ Invalid API key format", 'error');
                 return;
             }
 
@@ -7763,7 +7767,7 @@
             // ✅ انتظار قصير للتأكد من الحفظ
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            showToast("API key saved and synced!", 'success');
+            showToast("✅ API key saved and synced!", 'success');
             closeAISetupModal();
 
             // Show welcome message
@@ -7796,7 +7800,7 @@
                     <i class="fas fa-robot text-pink-400"></i>
                 </div>
                 <div class="flex-1">
-                    <p class="text-white mb-2"><i class="fas fa-hand-paper text-yellow-400"></i> Hello! I'm your AI assistant powered by Gemini.</p>
+                    <p class="text-white mb-2">👋 Hello! I'm your AI assistant powered by Gemini.</p>
                     <p class="text-slate-300 text-sm">I can help you:</p>
                     <ul class="text-sm text-slate-400 mt-2 space-y-1 ml-4 list-disc">
                         <li>Add/delete tasks, books, courses, and notes</li>
@@ -7869,7 +7873,7 @@
 
                 let errorMsg = error.message || 'Unknown error occurred';
 
-                addMessageToChat('assistant', `<i class="fas fa-times-circle text-red-500"></i> **Error:**\n\n${errorMsg}\n\n<i class="fas fa-lightbulb text-yellow-400"></i> **Solutions:**\n• Wait 1-2 minutes\n• Get new API key\n• Check internet connection`);
+                addMessageToChat('assistant', `❌ **Error:**\n\n${errorMsg}\n\n💡 **Solutions:**\n• Wait 1-2 minutes\n• Get new API key\n• Check internet connection`);
 
                 console.error('AI Error:', error);
             }
@@ -8020,7 +8024,7 @@ Your friendly message to the user
                 // إعادة المحاولة في حالة أخطاء الشبكة
                 if (retryCount < maxRetries && (error.message.includes('fetch') || error.message.includes('network'))) {
                     const waitTime = Math.pow(2, retryCount + 1) * 1000;
-                    showToast(`<i class="fas fa-sync-alt fa-spin"></i> Network error. Retrying in ${waitTime / 1000}s...`, 'neutral');
+                    showToast(`🔄 Network error. Retrying in ${waitTime / 1000}s...`, 'neutral');
                     await new Promise(resolve => setTimeout(resolve, waitTime));
                     return callGeminiAPI(systemPrompt, userMessage, retryCount + 1);
                 }
@@ -8074,7 +8078,7 @@ Your friendly message to the user
 
             if (!response.ok) {
                 if (response.status === 429) {
-                    throw new Error('<i class="fas fa-clock"></i> Rate limit reached. Please wait 1 minute and try again.');
+                    throw new Error('⏰ Rate limit reached. Please wait 1 minute and try again.');
                 }
                 throw new Error(`API Error: ${response.status}`);
             }
@@ -8164,7 +8168,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `<i class="fas fa-check-circle text-green-500"></i> Task "${cmd.name}" added successfully!`;
+                    return `✅ Task "${cmd.name}" added successfully!`;
 
                 case 'ADD_BOOK':
                     window.appData.books.push({
@@ -8179,7 +8183,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `<i class="fas fa-check-circle text-green-500"></i> Book "${cmd.name}" added successfully!`;
+                    return `✅ Book "${cmd.name}" added successfully!`;
 
                 case 'ADD_COURSE':
                     window.appData.courses.push({
@@ -8193,7 +8197,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `<i class="fas fa-check-circle text-green-500"></i> Course "${cmd.name}" added successfully!`;
+                    return `✅ Course "${cmd.name}" added successfully!`;
 
                 case 'ADD_NOTE':
                     window.appData.notes.push({
@@ -8205,7 +8209,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `<i class="fas fa-check-circle text-green-500"></i> Note "${cmd.name}" added successfully!`;
+                    return `✅ Note "${cmd.name}" added successfully!`;
 
                 case 'DELETE_TASK':
                     const task = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
@@ -8213,9 +8217,9 @@ Your friendly message to the user
                         task.deleted = true;
                         commitData();
                         refreshAllUI();
-                        return `<i class="fas fa-check-circle text-green-500"></i> Task deleted and moved to trash.`;
+                        return `✅ Task deleted and moved to trash.`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
+                    return '❌ Task not found.';
 
                 case 'DELETE_BOOK':
                     const book = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8223,13 +8227,13 @@ Your friendly message to the user
                         book.deleted = true;
                         commitData();
                         refreshAllUI();
-                        return `<i class="fas fa-check-circle text-green-500"></i> Book deleted and moved to trash.`;
+                        return `✅ Book deleted and moved to trash.`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
+                    return '❌ Book not found.';
 
                 case 'EMPTY_TRASH':
                     emptyTrash(true);
-                    return `<i class="fas fa-check-circle text-green-500"></i> Trash emptied successfully!`;
+                    return `✅ Trash emptied successfully!`;
                 case 'EDIT_TASK':
                     const taskToEdit = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
                     if (taskToEdit) {
@@ -8237,9 +8241,9 @@ Your friendly message to the user
                         if (cmd.desc !== undefined) taskToEdit.desc = cmd.desc;
                         commitData();
                         refreshAllUI();
-                        return `<i class="fas fa-check-circle text-green-500"></i> Task "${taskToEdit.name}" updated successfully!`;
+                        return `✅ Task "${taskToEdit.name}" updated successfully!`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
+                    return '❌ Task not found.';
 
                 case 'COMPLETE_TASK':
                     const taskToComplete = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
@@ -8248,9 +8252,9 @@ Your friendly message to the user
                         commitData();
                         refreshAllUI();
                         triggerConfetti(false);
-                        return `<i class="fas fa-check-circle text-green-500"></i> Task "${taskToComplete.name}" marked as complete! <i class="fas fa-glass-cheers text-yellow-400"></i>`;
+                        return `✅ Task "${taskToComplete.name}" marked as complete! 🎉`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
+                    return '❌ Task not found.';
 
                 case 'EDIT_BOOK':
                     const bookToEdit = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8260,9 +8264,9 @@ Your friendly message to the user
                         if (cmd.total) bookToEdit.total = cmd.total;
                         commitData();
                         refreshAllUI();
-                        return `<i class="fas fa-check-circle text-green-500"></i> Book "${bookToEdit.name}" updated successfully!`;
+                        return `✅ Book "${bookToEdit.name}" updated successfully!`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
+                    return '❌ Book not found.';
 
                 case 'UPDATE_BOOK_PROGRESS':
                     const bookToUpdate = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8270,26 +8274,26 @@ Your friendly message to the user
                         bookToUpdate.done = cmd.done;
                         commitData();
                         refreshAllUI();
-                        return `<i class="fas fa-check-circle text-green-500"></i> Progress updated: ${cmd.done}/${bookToUpdate.total} pages completed!`;
+                        return `✅ Progress updated: ${cmd.done}/${bookToUpdate.total} pages completed!`;
                     }
-                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
+                    return '❌ Book not found.';
 
                 case 'SHOW_ALL_TASKS':
                     const allTasks = window.appData.tasks.filter(t => !t.deleted);
-                    if (allTasks.length === 0) return '<i class="fas fa-clipboard-list text-blue-400"></i> You have no tasks yet.';
+                    if (allTasks.length === 0) return '📋 You have no tasks yet.';
 
-                    let taskListMsg = '<i class="fas fa-clipboard-list text-blue-400"></i> **Your Tasks:**\n\n';
+                    let taskListMsg = '📋 **Your Tasks:**\n\n';
                     allTasks.forEach((t, i) => {
-                        taskListMsg += `${i + 1}. ${t.completed ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="far fa-square text-slate-400"></i>'} ${t.name}\n`;
+                        taskListMsg += `${i + 1}. ${t.completed ? '✅' : '⬜'} ${t.name}\n`;
                         if (t.desc) taskListMsg += `   └─ ${t.desc}\n`;
                     });
                     return taskListMsg;
 
                 case 'SHOW_ALL_BOOKS':
                     const allBooks = window.appData.books.filter(b => !b.deleted);
-                    if (allBooks.length === 0) return '<i class="fas fa-book text-emerald-400"></i> You have no books yet.';
+                    if (allBooks.length === 0) return '📚 You have no books yet.';
 
-                    let bookListMsg = '<i class="fas fa-book text-emerald-400"></i> **Your Books:**\n\n';
+                    let bookListMsg = '📚 **Your Books:**\n\n';
                     allBooks.forEach((b, i) => {
                         const progress = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
                         bookListMsg += `${i + 1}. ${b.name} (${progress}%)\n`;
@@ -8298,7 +8302,7 @@ Your friendly message to the user
                     return bookListMsg;
 
                 default:
-                    return '<i class="fas fa-times-circle text-red-500"></i> Unknown command.';
+                    return '❌ Unknown command.';
             }
         }
 
@@ -8361,7 +8365,7 @@ Your friendly message to the user
                 localStorage.removeItem('ai_conversation_history');
                 document.getElementById('ai-chat-messages').innerHTML = '';
                 showAIWelcomeMessage();
-                const successMsg = isArabic ? 'تم مسح المحادثات!' : 'Chat history cleared!';
+                const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
                 showToast(successMsg, 'success');
             };
             openConfirmModal(message, action);
