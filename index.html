@@ -7328,7 +7328,7 @@
                 <!-- Footer: Counter -->
                 <div class="mt-4 flex flex-col items-center justify-center gap-2">
                     <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center transition-transform active:scale-95">
-                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg" aria-hidden="true">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg pointer-events-none" aria-hidden="true">
                             <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none"></circle>
                             <circle id="zikr-ring-${uniqueKey}" cx="40" cy="40" r="34" stroke="${isDone ? '#10b981' : 'var(--azkar-gold)'}" stroke-width="6" fill="none" 
                                     stroke-dasharray="213" stroke-dashoffset="${213 - (213 * percent / 100)}" 
@@ -7337,7 +7337,7 @@
                         </svg>
                         ${isDone
                         ? `<button onclick="resetZikr('${uniqueKey}', ${zikr.count}, event)" 
-                                       class="zikr-action-btn w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
+                                       class="zikr-action-btn relative z-10 w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
                                        aria-label="Reset zikr counter">
                                        <i class="fas fa-undo text-xl"></i>
                                </button>`
@@ -7408,8 +7408,8 @@
 
         function resetZikr(id, max, event) {
             event.stopPropagation();
-            // Prevent accidental reset if clicked immediately after completion (within 500ms)
-            if (window.lastZikrCompletionTime && (Date.now() - window.lastZikrCompletionTime < 500)) {
+            // Prevent accidental reset if clicked immediately after completion (within 300ms)
+            if (window.lastZikrCompletionTime && (Date.now() - window.lastZikrCompletionTime < 300)) {
                 return;
             }
             azkarProgress[id] = max;
@@ -7960,6 +7960,8 @@ Your friendly message to the user
 [/RESPONSE]
 
 **Important:**
+- **Language:** Always reply in the same language the user speaks (Arabic or English).
+- **General Knowledge:** If the user asks general questions (e.g., "How to learn C++", "What is the capital of France"), answer them helpfully and accurately. You are not limited to app commands.
 - When user asks to "edit" or "change" or "update" a task/book, use EDIT command
 - When user says "mark as done" or "complete", use COMPLETE_TASK
 - Always show the current data when user asks "what are my tasks" or "show my books"
