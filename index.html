@@ -48,144 +48,146 @@
    BOTTOM SHEET SYSTEM (Mobile-First)
    ========================================== */
 
-.bottom-sheet-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
+        .bottom-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
 
-.bottom-sheet-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
+        .bottom-sheet-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
 
-.bottom-sheet {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
-    border-radius: 24px 24px 0 0;
-    z-index: 101;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-}
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
+            border-radius: 24px 24px 0 0;
+            z-index: 101;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+        }
 
-.bottom-sheet.active {
-    transform: translateY(0);
-}
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
 
-.bottom-sheet-handle {
-    width: 40px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    margin: 12px auto 8px;
-    cursor: grab;
-}
+        .bottom-sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 12px auto 8px;
+            cursor: grab;
+        }
 
-.bottom-sheet-handle:active {
-    cursor: grabbing;
-}
+        .bottom-sheet-handle:active {
+            cursor: grabbing;
+        }
 
-.bottom-sheet-header {
-    padding: 12px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
+        .bottom-sheet-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
 
-.bottom-sheet-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: white;
-}
+        .bottom-sheet-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
 
-.bottom-sheet-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-}
+        .bottom-sheet-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-.bottom-sheet-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
+        .bottom-sheet-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-.bottom-sheet-body {
-    padding: 20px;
-    overflow-y: auto;
-    flex: 1;
-    overscroll-behavior: contain;
-}
+        .bottom-sheet-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            overscroll-behavior: contain;
+        }
 
-/* تحسين الـ Scrollbar */
-.bottom-sheet-body::-webkit-scrollbar {
-    width: 4px;
-}
+        /* تحسين الـ Scrollbar */
+        .bottom-sheet-body::-webkit-scrollbar {
+            width: 4px;
+        }
 
-.bottom-sheet-body::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-}
+        .bottom-sheet-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
 
-/* أنيميشن دخول محسّن */
-@keyframes slideUpBounce {
-    0% {
-        transform: translateY(100%);
-    }
-    60% {
-        transform: translateY(-2%);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
+        /* أنيميشن دخول محسّن */
+        @keyframes slideUpBounce {
+            0% {
+                transform: translateY(100%);
+            }
 
-.bottom-sheet.bounce {
-    animation: slideUpBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+            60% {
+                transform: translateY(-2%);
+            }
 
-/* على الشاشات الكبيرة، استخدم Modal عادي */
-@media (min-width: 768px) {
-    .bottom-sheet {
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        top: 50%;
-        transform: translate(-50%, -50%) scale(0.9);
-        border-radius: 24px;
-        max-width: 500px;
-        width: 90%;
-        max-height: 80vh;
-    }
-    
-    .bottom-sheet.active {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    
-    .bottom-sheet-handle {
-        display: none;
-    }
-}
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .bottom-sheet.bounce {
+            animation: slideUpBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* على الشاشات الكبيرة، استخدم Modal عادي */
+        @media (min-width: 768px) {
+            .bottom-sheet {
+                left: 50%;
+                right: auto;
+                bottom: auto;
+                top: 50%;
+                transform: translate(-50%, -50%) scale(0.9);
+                border-radius: 24px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+            }
+
+            .bottom-sheet.active {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            .bottom-sheet-handle {
+                display: none;
+            }
+        }
 
         @font-face {
             font-family: 'GlobalFont';
@@ -1447,45 +1449,45 @@
             background: #ef4444;
         }
 
-/* ==========================================
+        /* ==========================================
    إصلاح صفحة الأذكار للموبايل
    ========================================== */
-#page-azkar {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-}
+        #page-azkar {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
 
-#page-azkar > * {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
+        #page-azkar>* {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
 
-#page-azkar .zikr-card {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    width: calc(100% - 1rem);
-}
+        #page-azkar .zikr-card {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            width: calc(100% - 1rem);
+        }
 
-/* للشاشات الكبيرة فقط */
-@media (min-width: 768px) {
-    #page-azkar {
-        max-width: 48rem !important;
-        margin: 0 auto !important;
-    }
-    
-    #page-azkar > * {
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-    
-    #page-azkar .zikr-card {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-}
+        /* للشاشات الكبيرة فقط */
+        @media (min-width: 768px) {
+            #page-azkar {
+                max-width: 48rem !important;
+                margin: 0 auto !important;
+            }
+
+            #page-azkar>* {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+
+            #page-azkar .zikr-card {
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -1555,22 +1557,29 @@
 
     <div id="login-screen"
         class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-[#0f172a] overflow-hidden">
-        
+
         <!-- Background Effects -->
-        <div class="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-        
-        <div class="glass-panel w-full max-w-md p-10 rounded-[2.5rem] text-center border border-white/10 shadow-2xl relative z-10 backdrop-blur-xl bg-white/5">
-            
+        <div
+            class="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none">
+        </div>
+
+        <div
+            class="glass-panel w-full max-w-md p-10 rounded-[2.5rem] text-center border border-white/10 shadow-2xl relative z-10 backdrop-blur-xl bg-white/5">
+
             <div class="mb-8 relative inline-block">
                 <div class="absolute inset-0 bg-indigo-500 blur-xl opacity-50 rounded-full"></div>
-                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center relative z-10 shadow-lg transform rotate-6 border border-white/20">
+                <div
+                    class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center relative z-10 shadow-lg transform rotate-6 border border-white/20">
                     <i class="fas fa-meteor text-4xl text-white"></i>
                 </div>
             </div>
 
             <h2 class="text-4xl font-bold mb-3 text-white tracking-tight" data-i18n="welcome">Welcome Back</h2>
-            <p class="text-slate-400 mb-10 text-base font-light tracking-wide" data-i18n="loginSubtitle">Sync your life progress across dimensions.</p>
+            <p class="text-slate-400 mb-10 text-base font-light tracking-wide" data-i18n="loginSubtitle">Sync your life
+                progress across dimensions.</p>
 
             <button onclick="handleGoogleLogin()"
                 class="w-full bg-white text-slate-900 font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-4 hover:bg-indigo-50 transition-all active:scale-95 mb-4 group shadow-lg shadow-white/10"
@@ -1585,7 +1594,7 @@
                 Continue Offline (Guest)
             </button>
         </div>
-        
+
         <div class="absolute bottom-8 text-slate-600 text-xs">
             How Much - Life OS
         </div>
@@ -1669,11 +1678,14 @@
                     <div class="relative flex items-center">
                         <input type="checkbox" id="ob-privacy-check"
                             class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-white/10 bg-black/20 checked:border-indigo-500 checked:bg-indigo-500 transition-all">
-                        <i class="fas fa-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                        <i
+                            class="fas fa-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
                     </div>
                     <label for="ob-privacy-check" class="text-sm text-slate-300 select-none cursor-pointer">
                         <span id="ob-privacy-text">I agree to the</span>
-                        <button onclick="openOnboardingPrivacy(event)" class="text-indigo-400 hover:text-indigo-300 font-bold hover:underline transition-colors" id="ob-privacy-link">Privacy Policy</button>
+                        <button onclick="openOnboardingPrivacy(event)"
+                            class="text-indigo-400 hover:text-indigo-300 font-bold hover:underline transition-colors"
+                            id="ob-privacy-link">Privacy Policy</button>
                     </label>
                 </div>
 
@@ -1919,7 +1931,8 @@
                     <div id="books-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6" role="list"></div>
                 </section>
 
-                <section id="page-ai" class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0 px-4 md:px-8 flex flex-col h-full">
+                <section id="page-ai"
+                    class="page-section hidden max-w-4xl mx-auto pt-2 md:pt-0 px-4 md:px-8 flex flex-col h-full">
                     <!-- AI Header -->
                     <div class="flex justify-between items-center mb-4 px-2">
                         <div>
@@ -2321,149 +2334,172 @@
                     </button>
 
                 </section>
-                
+
                 <!-- =====================================================
      صفحة سياسة الخصوصية - Privacy Policy Page
      ===================================================== -->
-<section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 px-4 md:px-8">
-    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white">🔒 Privacy Policy</h2>
+                <section id="page-privacy" class="page-section hidden max-w-3xl mx-auto pt-2 md:pt-0 px-4 md:px-8">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-white"><i class="fas fa-lock mr-2"></i> Privacy
+                        Policy</h2>
 
-    <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
+                    <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6" dir="ltr">
 
-        <div class="text-center pb-6 border-b border-white/10">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                <i class="fas fa-shield-alt text-3xl text-indigo-400"></i>
-            </div>
-            <p class="text-lg text-slate-300 leading-relaxed">
-                We are committed to transparency. This policy explains exactly how your data is handled technically.
-            </p>
-        </div>
+                        <div class="text-center pb-6 border-b border-white/10">
+                            <div
+                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-3xl text-indigo-400"></i>
+                            </div>
+                            <p class="text-lg text-slate-300 leading-relaxed">
+                                We are committed to transparency. This policy explains exactly how your data is handled
+                                technically.
+                            </p>
+                        </div>
 
-        <div>
-            <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-database"></i>
-                Data Collection & Storage
-            </h3>
-            <div class="bg-white/5 rounded-xl p-4 space-y-3 text-slate-300 text-sm">
-                <p>We store the following data using <strong>Google Firebase</strong>:</p>
-                <ul class="list-disc list-inside ml-2 space-y-1 text-slate-400">
-                    <li><strong>Account Info:</strong> Email address (via Google Sign-In).</li>
-                    <li><strong>User Content:</strong> Tasks, notes, books, and courses you create.</li>
-                    <li><strong>File Links:</strong> URLs to files you upload (not the files themselves, see below).</li>
-                </ul>
-            </div>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-database"></i>
+                                Data Collection & Storage
+                            </h3>
+                            <div class="bg-white/5 rounded-xl p-4 space-y-3 text-slate-300 text-sm">
+                                <p>We store the following data using <strong>Google Firebase</strong>:</p>
+                                <ul class="list-disc list-inside ml-2 space-y-1 text-slate-400">
+                                    <li><strong>Account Info:</strong> Email address (via Google Sign-In).</li>
+                                    <li><strong>User Content:</strong> Tasks, notes, books, and courses you create.</li>
+                                    <li><strong>File Links:</strong> URLs to files you upload (not the files themselves,
+                                        see below).</li>
+                                </ul>
+                            </div>
+                        </div>
 
-        <div>
-            <h3 class="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-robot"></i>
-                AI Assistant & API Keys
-            </h3>
-            <div class="bg-pink-500/10 border border-pink-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
-                <p>To use the AI features, you must provide your own <strong>Google Gemini API Key</strong>.</p>
-                <div class="p-3 bg-black/20 rounded-lg mt-2">
-                    <p class="text-xs text-pink-300 font-bold mb-1"><i class="fas fa-exclamation-triangle"></i> Important Disclaimer:</p>
-                    <p class="text-xs opacity-80">
-                        If you use a <strong>Free Tier</strong> API key from Google, your conversation data may be used by Google to improve their products and train their models, according to Google's Terms of Service. We (How Much App) do not read or store your conversations on our servers, but they are processed by Google.
-                    </p>
-                </div>
-                <p class="text-xs mt-2 text-slate-500">
-                    * Chat history is stored locally on your device (Browser Local Storage) for convenience.
-                </p>
-            </div>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-robot"></i>
+                                AI Assistant & API Keys
+                            </h3>
+                            <div
+                                class="bg-pink-500/10 border border-pink-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
+                                <p>To use the AI features, you must provide your own <strong>Google Gemini API
+                                        Key</strong>.</p>
+                                <div class="p-3 bg-black/20 rounded-lg mt-2">
+                                    <p class="text-xs text-pink-300 font-bold mb-1"><i
+                                            class="fas fa-exclamation-triangle"></i> Important Disclaimer:</p>
+                                    <p class="text-xs opacity-80">
+                                        If you use a <strong>Free Tier</strong> API key from Google, your conversation
+                                        data may be used by Google to improve their products and train their models,
+                                        according to Google's Terms of Service. We (How Much App) do not read or store
+                                        your conversations on our servers, but they are processed by Google.
+                                    </p>
+                                </div>
+                                <p class="text-xs mt-2 text-slate-500">
+                                    * Chat history is stored locally on your device (Browser Local Storage) for
+                                    convenience.
+                                </p>
+                            </div>
+                        </div>
 
-        <div>
-            <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-cloud-upload-alt"></i>
-                File Uploads & Deletion
-            </h3>
-            <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
-                <p><strong>Storage Provider:</strong> We use <strong>Cloudinary</strong> as a third-party service to host your uploaded files (images, PDFs, audio).</p>
-                
-                <p class="text-purple-300 font-bold mt-2">Deletion Policy:</p>
-                <p>
-                    When you delete a file from the app (or empty the trash), the file is <strong>unlinked</strong> from your account interface immediately. 
-                    However, due to technical caching, the raw file might remain accessible via its direct link on Cloudinary's servers for a period of time before being completely purged.
-                </p>
-                <p class="text-xs text-slate-500 mt-1">Please do not upload highly sensitive personal documents (e.g., IDs, financial records).</p>
-            </div>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                File Uploads & Deletion
+                            </h3>
+                            <div
+                                class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-sm text-slate-300 space-y-2">
+                                <p><strong>Storage Provider:</strong> We use <strong>Cloudinary</strong> as a
+                                    third-party service to host your uploaded files (images, PDFs, audio).</p>
 
-        <div>
-            <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-lock"></i>
-                Security & Access
-            </h3>
-            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm space-y-2">
-                <p>
-                    <strong class="text-green-400">Transmission:</strong> All data is transmitted over a secure HTTPS connection (SSL).
-                </p>
-                <p>
-                    <strong class="text-green-400">Access Control:</strong> We use Firebase Security Rules to ensure that only you can access your own data and files.
-                </p>
-                <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
-                    Note: While we implement standard security measures, no web application is 100% immune to breaches. Use strong passwords for your Google Account.
-                </p>
-            </div>
-        </div>
+                                <p class="text-purple-300 font-bold mt-2">Deletion Policy:</p>
+                                <p>
+                                    When you delete a file from the app (or empty the trash), the file is
+                                    <strong>unlinked</strong> from your account interface immediately.
+                                    However, due to technical caching, the raw file might remain accessible via its
+                                    direct link on Cloudinary's servers for a period of time before being completely
+                                    purged.
+                                </p>
+                                <p class="text-xs text-slate-500 mt-1">Please do not upload highly sensitive personal
+                                    documents (e.g., IDs, financial records).</p>
+                            </div>
+                        </div>
 
-        <div>
-            <h3 class="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-laptop-house"></i>
-                Local Data & Public Devices
-            </h3>
-            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
-                <p>To improve performance and enable "Guest Mode", we store some data (like settings and chat history) in your browser's <strong>Local Storage</strong>.</p>
-                <p class="mt-2 text-orange-300">
-                    <strong>Warning:</strong> If you are using a public computer, please make sure to clear your browser cache/data after logging out to ensure your AI chat history is removed from the device.
-                </p>
-            </div>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-lock"></i>
+                                Security & Access
+                            </h3>
+                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm space-y-2">
+                                <p>
+                                    <strong class="text-green-400">Transmission:</strong> All data is transmitted over a
+                                    secure HTTPS connection (SSL).
+                                </p>
+                                <p>
+                                    <strong class="text-green-400">Access Control:</strong> We use Firebase Security
+                                    Rules to ensure that only you can access your own data and files.
+                                </p>
+                                <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
+                                    Note: While we implement standard security measures, no web application is 100%
+                                    immune to breaches. Use strong passwords for your Google Account.
+                                </p>
+                            </div>
+                        </div>
 
-        <div>
-            <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                <i class="fas fa-user-check"></i>
-                Your Rights
-            </h3>
-            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
-                <ul class="list-disc list-inside space-y-1">
-                    <li>You own your data. We do not sell it to advertisers.</li>
-                    <li>You can export/download your files manually.</li>
-                </ul>
-            </div>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-laptop-house"></i>
+                                Local Data & Public Devices
+                            </h3>
+                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
+                                <p>To improve performance and enable "Guest Mode", we store some data (like settings and
+                                    chat history) in your browser's <strong>Local Storage</strong>.</p>
+                                <p class="mt-2 text-orange-300">
+                                    <strong>Warning:</strong> If you are using a public computer, please make sure to
+                                    clear your browser cache/data after logging out to ensure your AI chat history is
+                                    removed from the device.
+                                </p>
+                            </div>
+                        </div>
 
-        <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 mt-6">
-            <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
-                <i class="fas fa-envelope"></i> Contact
-            </h4>
-            <p class="text-sm text-slate-300 mb-2">
-                For privacy concerns or data deletion requests:
-            </p>
-            <a href="https://wa.me/201025376549" target="_blank"
-               class="text-green-400 hover:underline text-sm flex items-center gap-2 font-bold">
-                <i class="fab fa-whatsapp"></i> Contact Support via WhatsApp
-            </a>
-            <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
-                    Note: We will try to reply to you as soon as possible.
-                </p>
-        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-user-check"></i>
+                                Your Rights
+                            </h3>
+                            <div class="bg-white/5 rounded-xl p-4 text-slate-300 text-sm">
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li>You own your data. We do not sell it to advertisers.</li>
+                                    <li>You can export/download your files manually.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-        <div class="text-center text-xs text-slate-500 pt-4 border-t border-white/10">
-            Last Updated: January 2026
-        </div>
+                        <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 mt-6">
+                            <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                                <i class="fas fa-envelope"></i> Contact
+                            </h4>
+                            <p class="text-sm text-slate-300 mb-2">
+                                For privacy concerns or data deletion requests:
+                            </p>
+                            <a href="https://wa.me/201025376549" target="_blank"
+                                class="text-green-400 hover:underline text-sm flex items-center gap-2 font-bold">
+                                <i class="fab fa-whatsapp"></i> Contact Support via WhatsApp
+                            </a>
+                            <p class="text-xs text-slate-500 mt-2 border-t border-white/10 pt-2">
+                                Note: We will try to reply to you as soon as possible.
+                            </p>
+                        </div>
 
-    </div>
+                        <div class="text-center text-xs text-slate-500 pt-4 border-t border-white/10">
+                            Last Updated: January 2026
+                        </div>
 
-    <div class="mt-6 text-center">
-        <button onclick="showPage('settings')"
-            class="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex items-center gap-2 mx-auto">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Settings</span>
-        </button>
-    </div>
-</section>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button onclick="showPage('settings')"
+                            class="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex items-center gap-2 mx-auto">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Back to Settings</span>
+                        </button>
+                    </div>
+                </section>
                 <section id="page-azkar" class="page-section hidden w-full pt-2 md:pt-0 pb-20" dir="rtl">
                     <div class="text-center mb-6 relative">
                         <h2 class="text-3xl md:text-5xl font-bold mb-2 drop-shadow-lg uthmani-font"
@@ -2472,30 +2508,30 @@
                     </div>
 
                     <div class="flex justify-center gap-2 mb-8 sticky top-0 z-20 bg-[#064e3b]/80 backdrop-blur-md p-2 mx-2 rounded-2xl border border-white/5 shadow-xl"
-    role="tablist">
-    <button onclick="switchAzkarTab('morning')" id="tab-morning"
-        class="azkar-theme-btn active px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
-        aria-selected="true" aria-controls="azkar-list">أذكار الصباح</button>
-    <button onclick="switchAzkarTab('evening')" id="tab-evening"
-        class="azkar-theme-btn px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
-        aria-selected="false" aria-controls="azkar-list">أذكار المساء</button>
-    <button onclick="switchAzkarTab('general')" id="tab-general"
-        class="azkar-theme-btn px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
-        aria-selected="false" aria-controls="azkar-list">تسابيح</button>
-</div>
+                        role="tablist">
+                        <button onclick="switchAzkarTab('morning')" id="tab-morning"
+                            class="azkar-theme-btn active px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
+                            aria-selected="true" aria-controls="azkar-list">أذكار الصباح</button>
+                        <button onclick="switchAzkarTab('evening')" id="tab-evening"
+                            class="azkar-theme-btn px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
+                            aria-selected="false" aria-controls="azkar-list">أذكار المساء</button>
+                        <button onclick="switchAzkarTab('general')" id="tab-general"
+                            class="azkar-theme-btn px-4 py-2 rounded-xl text-sm md:text-base flex-1" role="tab"
+                            aria-selected="false" aria-controls="azkar-list">تسابيح</button>
+                    </div>
 
                     <!-- Font Size Controls -->
                     <div class="flex justify-center items-center gap-4 mb-6 mx-2 text-slate-400 text-sm">
-    <button onclick="changeAzkarFontSize(-2)"
-        class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-        <i class="fas fa-minus"></i>
-    </button>
-    <span>حجم الخط</span>
-    <button onclick="changeAzkarFontSize(2)"
-        class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-        <i class="fas fa-plus"></i>
-    </button>
-</div>
+                        <button onclick="changeAzkarFontSize(-2)"
+                            class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span>حجم الخط</span>
+                        <button onclick="changeAzkarFontSize(2)"
+                            class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
 
                     <div id="azkar-list" class="space-y-4 pb-24" role="list"></div>
                 </section>
@@ -2646,14 +2682,15 @@
     <div id="ai-setup-modal" class="modal-overlay" style="display: none;">
         <div class="level-card max-w-lg">
             <div class="modal-header">
-                <h3>🤖 AI Assistant Setup</h3>
+                <h3><i class="fas fa-robot mr-2"></i> AI Assistant Setup</h3>
             </div>
 
             <div class="space-y-4 mt-4">
                 <p class="text-slate-300 text-sm">To use the AI assistant, you need a Gemini API key.</p>
 
                 <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 text-sm">
-                    <p class="font-bold text-indigo-300 mb-2">📝 How to get your API key:</p>
+                    <p class="font-bold text-indigo-300 mb-2"><i class="fas fa-file-alt mr-2"></i> How to get your API
+                        key:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300">
                         <li>Visit Google AI Studio</li>
                         <li>Sign in with your Google account</li>
@@ -2690,7 +2727,7 @@
     <div id="ai-capabilities-modal" class="modal-overlay" style="display: none;">
         <div class="level-card max-w-2xl">
             <div class="modal-header">
-                <h3>🎯 AI Capabilities</h3>
+                <h3><i class="fas fa-bullseye mr-2"></i> AI Capabilities</h3>
                 <button onclick="closeAICapabilitiesModal()" class="close-btn"
                     style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
@@ -2929,11 +2966,13 @@
                 <h3 id="ob-privacy-modal-title">Privacy Policy</h3>
                 <button onclick="closeOnboardingPrivacy()" class="close-btn text-white text-2xl">&times;</button>
             </div>
-            <div id="ob-privacy-content" class="overflow-y-auto p-4 text-slate-300 text-sm space-y-4 custom-scrollbar flex-1">
+            <div id="ob-privacy-content"
+                class="overflow-y-auto p-4 text-slate-300 text-sm space-y-4 custom-scrollbar flex-1">
                 <!-- Content will be cloned here -->
             </div>
             <div class="pt-4 border-t border-white/10 mt-auto flex-shrink-0">
-                <button onclick="acceptPrivacyFromModal()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-colors">
+                <button onclick="acceptPrivacyFromModal()"
+                    class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-colors">
                     <span id="ob-privacy-accept-btn">I Agree</span>
                 </button>
             </div>
@@ -3604,7 +3643,7 @@
                             <i class="fas fa-book" aria-hidden="true"></i>
                         </div>
                         <div class="text-right mt-6">
-                            <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak || 0}🔥</div>
+                            <div class="text-xl font-bold accent-text" style="color:var(--accent-color)">${b.streak || 0} <i class="fas fa-fire"></i></div>
                         </div>
                     </div>
                     <h3 class="font-bold text-white me-8">${escapeHtml(b.name)}</h3>
@@ -3940,8 +3979,8 @@
             if (now >= timerEndTime) {
                 window.stopTimer();
                 playAlarmSound();
-                showNotification("⏰ Timer Finished!", "Time is up!");
-                showToast("⏰ Time is up!", 'success');
+                showNotification("Timer Finished!", "Time is up!");
+                showToast("Time is up!", 'success');
             }
         }
 
@@ -4411,7 +4450,7 @@
             if (!gender) {
                 showToast("Please select an avatar style", "error");
                 return;
-            }            
+            }
             if (!privacyCheck.checked) {
                 const msg = lang === 'ar' ? "يرجى الموافقة على سياسة الخصوصية" : "Please agree to the Privacy Policy";
                 showToast(msg, "error");
@@ -4460,13 +4499,13 @@
             });
         };
 
-        window.showPrivacyAgreement = function() {
+        window.showPrivacyAgreement = function () {
             const name = document.getElementById('ob-name').value.trim();
             const gender = document.getElementById('ob-gender').value;
-            
 
-             // Save Data
-             window.appData.profile = {
+
+            // Save Data
+            window.appData.profile = {
                 name: name,
                 gender: gender,
                 completed: false
@@ -4477,31 +4516,31 @@
             onboardingScreen.classList.remove('hidden');
 
             const privacyCheck = document.getElementById('ob-privacy-check');
-            if(privacyCheck){
+            if (privacyCheck) {
                 privacyCheck.checked = false;
             }
 
         }
-        window.openOnboardingPrivacy = function(e) {
-            if(e) e.preventDefault();
+        window.openOnboardingPrivacy = function (e) {
+            if (e) e.preventDefault();
             const modal = document.getElementById('onboarding-privacy-modal');
             const contentContainer = document.getElementById('ob-privacy-content');
             const sourceContent = document.querySelector('#page-privacy .glass-panel');
-            
-            if(sourceContent && contentContainer.children.length === 0) {
+
+            if (sourceContent && contentContainer.children.length === 0) {
                 // Clone content from the main privacy page
                 const clone = sourceContent.cloneNode(true);
                 contentContainer.appendChild(clone);
             }
-            
+
             modal.style.display = 'flex';
         };
 
-        window.closeOnboardingPrivacy = function() {
+        window.closeOnboardingPrivacy = function () {
             document.getElementById('onboarding-privacy-modal').style.display = 'none';
         };
 
-        window.acceptPrivacyFromModal = function() {
+        window.acceptPrivacyFromModal = function () {
 
             window.appData.profile.privacyAgreed = true;
             document.getElementById('ob-privacy-check').checked = true;
@@ -4517,7 +4556,7 @@
             // Show Greeting Toast
             const hour = new Date().getHours();
             const greeting = hour < 12 ? (window.appData.settings.lang === 'ar' ? 'صباح الخير' : 'Good Morning') : (window.appData.settings.lang === 'ar' ? 'مساء الخير' : 'Good Evening');
-            showToast(`${greeting}, ${window.appData.profile.name} 👋`, 'success');
+            showToast(`${greeting}, ${window.appData.profile.name} <i class="fas fa-hand-paper"></i>`, 'success');
         };
 
         // أيضا التحقق عند تحميل الصفحة (للتأكد من أن التايمر لم ينته أثناء إعادة التحميل)
@@ -5671,7 +5710,7 @@
 
                 console.error("❌ تجاوز الحد الأقصى للمساحة");
                 showToast(
-                    `⚠️ Insufficient storage space!\n\n` +
+                    `Insufficient storage space!\n\n` +
                     `remaining: ${remainingMB} MB\n` +
                     `needed: ${neededMB} MB\n\n` +
                     `Delete some old files first.`,
@@ -5776,7 +5815,7 @@
                     console.error("❌ خطأ في الرفع:", error);
                     console.error("   الملف:", file.name);
                     console.error("   التفاصيل:", error.message);
-                    showToast(`❌ failed "${file.name}"\n${error.message}`, 'error');
+                    showToast(`failed "${file.name}"\n${error.message}`, 'error');
 
                     totalUploadedBytes += file.size;
                     failCount++;
@@ -5800,13 +5839,13 @@
             console.log(`   فاشل: ${failCount}`);
 
             if (successCount > 0) {
-                showToast(`✅ uploaded ${successCount} File successfully!`, 'success');
+                showToast(`uploaded ${successCount} File successfully!`, 'success');
                 renderFilePreview();
                 updateStorageUI();
             }
 
             if (failCount > 0) {
-                showToast(`⚠️ failed to upload${failCount} file`, 'error');
+                showToast(`failed to upload${failCount} file`, 'error');
             }
 
             input.value = '';
@@ -5878,7 +5917,7 @@
             tempFiles.splice(idx, 1);
             renderFilePreview();
             updateStorageUI();
-            showToast("✅ file deleted", 'success');
+            showToast("file deleted", 'success');
         };
 
         window.moveToTrash = function (type, id, event) {
@@ -7242,7 +7281,7 @@
             items.forEach((zikr, index) => {
                 // FIX: Use unique key to prevent collision between tabs
                 const uniqueKey = `${currentAzkarMode}_${zikr.id}`;
-                
+
                 const currentCount = azkarProgress[uniqueKey] !== undefined ? azkarProgress[uniqueKey] : zikr.count;
                 const isDone = currentCount === 0;
                 const percent = ((zikr.count - currentCount) / zikr.count) * 100;
@@ -7291,7 +7330,7 @@
                 <!-- Footer: Counter -->
                 <div class="mt-4 flex flex-col items-center justify-center gap-2">
                     <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center transition-transform active:scale-95">
-                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg" aria-hidden="true">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-lg pointer-events-none" aria-hidden="true">
                             <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="none"></circle>
                             <circle id="zikr-ring-${uniqueKey}" cx="40" cy="40" r="34" stroke="${isDone ? '#10b981' : 'var(--azkar-gold)'}" stroke-width="6" fill="none" 
                                     stroke-dasharray="213" stroke-dashoffset="${213 - (213 * percent / 100)}" 
@@ -7300,7 +7339,7 @@
                         </svg>
                         ${isDone
                         ? `<button onclick="resetZikr('${uniqueKey}', ${zikr.count}, event)" 
-                                       class="zikr-action-btn w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
+                                       class="zikr-action-btn relative z-10 w-full h-full rounded-full flex items-center justify-center text-[#10b981] hover:bg-white/5 transition"
                                        aria-label="Reset zikr counter">
                                        <i class="fas fa-undo text-xl"></i>
                                </button>`
@@ -7346,11 +7385,11 @@
                 azkarProgress[id]--;
 
                 if (navigator.vibrate) navigator.vibrate(40);
-                
+
                 // Update UI directly to prevent flickering
                 const countEl = document.getElementById(`zikr-count-${id}`);
                 const ringEl = document.getElementById(`zikr-ring-${id}`);
-                
+
                 if (countEl && ringEl && azkarProgress[id] > 0) {
                     countEl.innerText = azkarProgress[id];
                     const percent = ((max - azkarProgress[id]) / max) * 100;
@@ -7368,8 +7407,8 @@
         }
 
         function resetZikr(id, max, event) {
-            event.stopPropagation();
-            azkarProgress[id] = max;
+            if (event) event.stopPropagation();
+            delete azkarProgress[id];
             renderAzkarList();
         }
 
@@ -7699,13 +7738,13 @@
             const apiKey = document.getElementById('ai-api-key-input').value.trim();
 
             if (!apiKey) {
-                showToast("❌ Please enter an API key", 'error');
+                showToast("Please enter an API key", 'error');
                 return;
             }
 
             // Validate API key format
             if (!apiKey.startsWith('AIzaSy')) {
-                showToast("⚠️ Invalid API key format", 'error');
+                showToast("Invalid API key format", 'error');
                 return;
             }
 
@@ -7724,7 +7763,7 @@
             // ✅ انتظار قصير للتأكد من الحفظ
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            showToast("✅ API key saved and synced!", 'success');
+            showToast("API key saved and synced!", 'success');
             closeAISetupModal();
 
             // Show welcome message
@@ -7757,7 +7796,7 @@
                     <i class="fas fa-robot text-pink-400"></i>
                 </div>
                 <div class="flex-1">
-                    <p class="text-white mb-2">👋 Hello! I'm your AI assistant powered by Gemini.</p>
+                    <p class="text-white mb-2"><i class="fas fa-hand-paper text-yellow-400"></i> Hello! I'm your AI assistant powered by Gemini.</p>
                     <p class="text-slate-300 text-sm">I can help you:</p>
                     <ul class="text-sm text-slate-400 mt-2 space-y-1 ml-4 list-disc">
                         <li>Add/delete tasks, books, courses, and notes</li>
@@ -7830,7 +7869,7 @@
 
                 let errorMsg = error.message || 'Unknown error occurred';
 
-                addMessageToChat('assistant', `❌ **Error:**\n\n${errorMsg}\n\n💡 **Solutions:**\n• Wait 1-2 minutes\n• Get new API key\n• Check internet connection`);
+                addMessageToChat('assistant', `<i class="fas fa-times-circle text-red-500"></i> **Error:**\n\n${errorMsg}\n\n<i class="fas fa-lightbulb text-yellow-400"></i> **Solutions:**\n• Wait 1-2 minutes\n• Get new API key\n• Check internet connection`);
 
                 console.error('AI Error:', error);
             }
@@ -7981,7 +8020,7 @@ Your friendly message to the user
                 // إعادة المحاولة في حالة أخطاء الشبكة
                 if (retryCount < maxRetries && (error.message.includes('fetch') || error.message.includes('network'))) {
                     const waitTime = Math.pow(2, retryCount + 1) * 1000;
-                    showToast(`🔄 Network error. Retrying in ${waitTime / 1000}s...`, 'neutral');
+                    showToast(`<i class="fas fa-sync-alt fa-spin"></i> Network error. Retrying in ${waitTime / 1000}s...`, 'neutral');
                     await new Promise(resolve => setTimeout(resolve, waitTime));
                     return callGeminiAPI(systemPrompt, userMessage, retryCount + 1);
                 }
@@ -8035,7 +8074,7 @@ Your friendly message to the user
 
             if (!response.ok) {
                 if (response.status === 429) {
-                    throw new Error('⏰ Rate limit reached. Please wait 1 minute and try again.');
+                    throw new Error('<i class="fas fa-clock"></i> Rate limit reached. Please wait 1 minute and try again.');
                 }
                 throw new Error(`API Error: ${response.status}`);
             }
@@ -8125,7 +8164,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `✅ Task "${cmd.name}" added successfully!`;
+                    return `<i class="fas fa-check-circle text-green-500"></i> Task "${cmd.name}" added successfully!`;
 
                 case 'ADD_BOOK':
                     window.appData.books.push({
@@ -8140,7 +8179,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `✅ Book "${cmd.name}" added successfully!`;
+                    return `<i class="fas fa-check-circle text-green-500"></i> Book "${cmd.name}" added successfully!`;
 
                 case 'ADD_COURSE':
                     window.appData.courses.push({
@@ -8154,7 +8193,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `✅ Course "${cmd.name}" added successfully!`;
+                    return `<i class="fas fa-check-circle text-green-500"></i> Course "${cmd.name}" added successfully!`;
 
                 case 'ADD_NOTE':
                     window.appData.notes.push({
@@ -8166,7 +8205,7 @@ Your friendly message to the user
                     });
                     commitData();
                     refreshAllUI();
-                    return `✅ Note "${cmd.name}" added successfully!`;
+                    return `<i class="fas fa-check-circle text-green-500"></i> Note "${cmd.name}" added successfully!`;
 
                 case 'DELETE_TASK':
                     const task = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
@@ -8174,9 +8213,9 @@ Your friendly message to the user
                         task.deleted = true;
                         commitData();
                         refreshAllUI();
-                        return `✅ Task deleted and moved to trash.`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Task deleted and moved to trash.`;
                     }
-                    return '❌ Task not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
 
                 case 'DELETE_BOOK':
                     const book = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8184,13 +8223,13 @@ Your friendly message to the user
                         book.deleted = true;
                         commitData();
                         refreshAllUI();
-                        return `✅ Book deleted and moved to trash.`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Book deleted and moved to trash.`;
                     }
-                    return '❌ Book not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
 
                 case 'EMPTY_TRASH':
                     emptyTrash(true);
-                    return `✅ Trash emptied successfully!`;
+                    return `<i class="fas fa-check-circle text-green-500"></i> Trash emptied successfully!`;
                 case 'EDIT_TASK':
                     const taskToEdit = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
                     if (taskToEdit) {
@@ -8198,9 +8237,9 @@ Your friendly message to the user
                         if (cmd.desc !== undefined) taskToEdit.desc = cmd.desc;
                         commitData();
                         refreshAllUI();
-                        return `✅ Task "${taskToEdit.name}" updated successfully!`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Task "${taskToEdit.name}" updated successfully!`;
                     }
-                    return '❌ Task not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
 
                 case 'COMPLETE_TASK':
                     const taskToComplete = window.appData.tasks.filter(t => !t.deleted)[cmd.index];
@@ -8209,9 +8248,9 @@ Your friendly message to the user
                         commitData();
                         refreshAllUI();
                         triggerConfetti(false);
-                        return `✅ Task "${taskToComplete.name}" marked as complete! 🎉`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Task "${taskToComplete.name}" marked as complete! <i class="fas fa-glass-cheers text-yellow-400"></i>`;
                     }
-                    return '❌ Task not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Task not found.';
 
                 case 'EDIT_BOOK':
                     const bookToEdit = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8221,9 +8260,9 @@ Your friendly message to the user
                         if (cmd.total) bookToEdit.total = cmd.total;
                         commitData();
                         refreshAllUI();
-                        return `✅ Book "${bookToEdit.name}" updated successfully!`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Book "${bookToEdit.name}" updated successfully!`;
                     }
-                    return '❌ Book not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
 
                 case 'UPDATE_BOOK_PROGRESS':
                     const bookToUpdate = window.appData.books.filter(b => !b.deleted)[cmd.index];
@@ -8231,26 +8270,26 @@ Your friendly message to the user
                         bookToUpdate.done = cmd.done;
                         commitData();
                         refreshAllUI();
-                        return `✅ Progress updated: ${cmd.done}/${bookToUpdate.total} pages completed!`;
+                        return `<i class="fas fa-check-circle text-green-500"></i> Progress updated: ${cmd.done}/${bookToUpdate.total} pages completed!`;
                     }
-                    return '❌ Book not found.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Book not found.';
 
                 case 'SHOW_ALL_TASKS':
                     const allTasks = window.appData.tasks.filter(t => !t.deleted);
-                    if (allTasks.length === 0) return '📋 You have no tasks yet.';
+                    if (allTasks.length === 0) return '<i class="fas fa-clipboard-list text-blue-400"></i> You have no tasks yet.';
 
-                    let taskListMsg = '📋 **Your Tasks:**\n\n';
+                    let taskListMsg = '<i class="fas fa-clipboard-list text-blue-400"></i> **Your Tasks:**\n\n';
                     allTasks.forEach((t, i) => {
-                        taskListMsg += `${i + 1}. ${t.completed ? '✅' : '⬜'} ${t.name}\n`;
+                        taskListMsg += `${i + 1}. ${t.completed ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="far fa-square text-slate-400"></i>'} ${t.name}\n`;
                         if (t.desc) taskListMsg += `   └─ ${t.desc}\n`;
                     });
                     return taskListMsg;
 
                 case 'SHOW_ALL_BOOKS':
                     const allBooks = window.appData.books.filter(b => !b.deleted);
-                    if (allBooks.length === 0) return '📚 You have no books yet.';
+                    if (allBooks.length === 0) return '<i class="fas fa-book text-emerald-400"></i> You have no books yet.';
 
-                    let bookListMsg = '📚 **Your Books:**\n\n';
+                    let bookListMsg = '<i class="fas fa-book text-emerald-400"></i> **Your Books:**\n\n';
                     allBooks.forEach((b, i) => {
                         const progress = b.total > 0 ? Math.round((b.done / b.total) * 100) : 0;
                         bookListMsg += `${i + 1}. ${b.name} (${progress}%)\n`;
@@ -8259,7 +8298,7 @@ Your friendly message to the user
                     return bookListMsg;
 
                 default:
-                    return '❌ Unknown command.';
+                    return '<i class="fas fa-times-circle text-red-500"></i> Unknown command.';
             }
         }
 
@@ -8322,14 +8361,14 @@ Your friendly message to the user
                 localStorage.removeItem('ai_conversation_history');
                 document.getElementById('ai-chat-messages').innerHTML = '';
                 showAIWelcomeMessage();
-                const successMsg = isArabic ? '✅ تم مسح المحادثات!' : '✅ Chat history cleared!';
+                const successMsg = isArabic ? 'تم مسح المحادثات!' : 'Chat history cleared!';
                 showToast(successMsg, 'success');
             };
             openConfirmModal(message, action);
         };
 
-        
+
     </script>
 </body>
-</html>
 
+</html>
